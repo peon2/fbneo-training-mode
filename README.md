@@ -1,5 +1,7 @@
 # fbneo-training-mode
-a simple training mode for multiple games on the fbneo platform
+A simple training mode for multiple games on the fbneo platform
+
+Written to allow easy incorporation of more games
 
 
 Currently supports:
