@@ -94,5 +94,4 @@ end
 
 function Run()
 	infiniteTime()
-	print(playerTwoInHitstun())
 end
