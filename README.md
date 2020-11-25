@@ -3,6 +3,15 @@ A simple training mode for multiple games on the fbneo platform
 
 Written to allow easy incorporation of more games
 
+You can use this script by launching a fc game with 'TEST GAME'
+
+Go into Game>Lua Scripting>New Lua Script Window>Browse
+
+Select the script and hit run!
+
+Be sure to be playing against P2.
+
+
 
 Currently supports:
 
