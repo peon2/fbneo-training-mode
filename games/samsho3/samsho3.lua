@@ -51,7 +51,7 @@ function playerOneInHitstun()
 end
 
 function playerTwoInHitstun()
-	return rb(0x10f295)~=0
+	return rb(0x10f295)~=0 or rb(0x1086c4)~=0 -- why would ss3 make me do this? 
 end
 
 function readPlayerOneHealth()
@@ -91,5 +91,7 @@ local infiniteTime = function()
 end
 
 function Run() -- runs every frame
+	-- 108561
+	--print(rb(0x1086dc))
 	infiniteTime()
 end
