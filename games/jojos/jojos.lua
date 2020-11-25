@@ -44,7 +44,7 @@ function playerTwoFacingLeft()
 	return rb(0x2034CB9)==0
 end
 
-function _playerOneInHitstun()
+function playerOneInHitstun()
 	return rb(0x205BB39)~=0
 end
 
