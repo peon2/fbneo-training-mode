@@ -60,12 +60,12 @@ function readPlayerOneHealth()
 	return rb(p1health)
 end
 
-function writePlayerOneHealth(health)
-	wb(p2health, health)
-end
-
 function readPlayerTwoHealth()
 	return rb(p2health)
+end
+
+function writePlayerOneHealth(health)
+	wb(p1health, health)
 end
 
 function writePlayerTwoHealth(health)
@@ -88,10 +88,11 @@ function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
 end
 
-function infiniteTime()
+local infiniteTime = function()
 	memory.writebyte(0xFF4008, 0x99)
 end
 
 function Run()
 	infiniteTime()
+	print(playerTwoInHitstun())
 end
