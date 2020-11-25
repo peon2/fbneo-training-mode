@@ -45,7 +45,7 @@ function playerTwoFacingLeft()
 end
 
 function _playerOneInHitstun()
-	
+	return rb(0x205BB39)~=0
 end
 
 function playerTwoInHitstun()
@@ -95,5 +95,4 @@ end
 function Run() -- runs every frame
 	infiniteTime()
 	infiniteCredit()
-	writePlayerOneMeter(p1maxmeter)
 end
