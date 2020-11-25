@@ -316,6 +316,8 @@ recording = {
 	{}, 
 	{}, 
 	recordingslot = 1,
+	hitslot = 1,
+	blockslot,
 	skiptostart = config.recording.skiptostart,
 	skiptofinish = config.recording.skiptofinish,
 }
@@ -864,9 +866,44 @@ function playBack()
 	end
 end
 
+function toggleHitPlayBack()
+	
+end
+
+function hitPlayBack()
+	if not recording.hitslot then return end
+	if not recording.hitplayback and combovars.p2.previouscombo <= combovars.p2.combo then return end
+	
+	recording.hitplayback = true
+	
+	local recordslot = recording[recording.hitslot]
+	if not recordslot then return end
+	
+	if not recordslot.framestart then recordslot.framestart = fc - 1 end
+	
+	local start, finish = 0, #recordslot
+	
+	if recording.skiptostart and recordslot.start then start = recordslot.start end
+	if recording.skiptofinish and recordslot.finish then finish = recordslot.finish end
+	
+	if fc - recordslot.framestart + start > finish then
+		recordslot.framestart = nil
+		if not recording.loop then
+			recording.hitplayback = false
+		end
+	else
+		gui.text(1,1,"Slot "..recording.hitslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
+		local t = recordslot[fc - recordslot.framestart + start].p2
+		local orientated = modulevars.p2.facingleft == recordslot[fc - recordslot.framestart + start].p2facingleft
+		if not orientated and recording.autoturn then
+			t = swapPlayerInput(t)
+		end
+		inputs.setinputs = combinePlayerInputs(inputs.p1, t)
+	end
+end
 
 function setInputs()
-	if inputs.properties.enableinputswap or recording.playback or inputs.properties.enablehold or inputs.properties.p1freeze or inputs.properties.p2freeze then
+	if inputs.properties.enableinputswap or recording.playback or recording.hitplayback or inputs.properties.enablehold or inputs.properties.p1freeze or inputs.properties.p2freeze then
 		joypad.set(inputs.setinputs)
 	end
 end
@@ -903,6 +940,7 @@ end
 
 function toggleInteractiveGuiEnabled(bool)
 	recording.playback = false
+	recording.hitplayback = false
 	recording.enabled = false
 	if not recording[recording.recordingslot] then recording[recording.recordingslot] = {} end
 	recording[recording.recordingslot].framestart = nil
@@ -951,7 +989,9 @@ function drawInteractiveGui()
 		
 			w, h = #v.text*4, 10
 			
-			gui.box(v.x + boxx, v.y + boxy, v.x + boxx + w + 4, v.y + boxy + h, v.bgcolour, v.olcolour)
+			if v.bgcolour ~= bgcolour or v.olcolour ~= bgcolour then
+				gui.box(v.x + boxx, v.y + boxy, v.x + boxx + w + 4, v.y + boxy + h, v.bgcolour, v.olcolour)
+			end
 			gui.text(v.x + boxx + 3, v.y + boxy + 2, v.text)
 		end
 	end
@@ -1044,6 +1084,7 @@ input.registerhotkey(1, toggleInteractiveGuiEnabled)
 input.registerhotkey(2, callGuiSelectionFunc)
 input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
+input.registerhotkey(5, function() recording.hitplayback = true end)
 
 
 function parseInputs() 
@@ -1112,7 +1153,7 @@ function setRegisters()
 		print("Can't auto-swap directions in replays") 
 	end
 	
-	registers.registerbefore = {updateModuleVars, readInputs, swapInputs, logRecording, applyDirection, playBack, freezePlayer, setInputs}
+	registers.registerbefore = {updateModuleVars, readInputs, swapInputs, logRecording, applyDirection, playBack, hitPlayBack, freezePlayer, setInputs}
 	registers.guiregister = {}
 	registers.registerafter = {}
 	
@@ -1216,10 +1257,10 @@ function setRegisters()
 		table.insert(registers.registerafter, meterHandlerP1)
 	else
 		if modulevars.p1.constants.maxmeter and availablefunctions.writeplayeronemeter then
-			print "Using back-up Meter always full"
+			print "Using P1 back-up Meter always full"
 			table.insert(registers.registerafter, instantMeterP1)
 		else
-			print "Can't auto-refill meter"
+			print "Can't auto-refill P1 meter"
 		end
 	end
 	
@@ -1227,10 +1268,10 @@ function setRegisters()
 		table.insert(registers.registerafter, meterHandlerP2)
 	else
 		if modulevars.p2.constants.maxmeter and availablefunctions.writeplayertwometer then
-			print "Using back-up Meter always full"
+			print "Using P2 back-up Meter always full"
 			table.insert(registers.registerafter, instantMeterP2)
 		else
-			print "Can't auto-refill meter"
+			print "Can't auto-refill P2 meter"
 		end
 	end
 

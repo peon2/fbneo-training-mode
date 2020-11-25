@@ -621,6 +621,90 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			end,
 		},
 	},
+	hitplayback = {
+		main = {
+			text = "Select Hit Slot",
+			x = 5,
+			y = 105,
+			olcolour = "black",
+			info = {
+				"Plays back the respective replay slot after hit",
+			},
+			func = 	function()
+						changeInteractiveGuiPage("hitplayback")
+						changeInteractiveGuiSelection(1)
+					end,
+			autofunc =	function(this)
+							if not recording.hitslot then
+								this.text = "Select Hit Slot"
+								this.x = 5					
+							else
+								this.text = "Hit Slot "..recording.hitslot
+								this.x = 25
+							end
+						end,
+		},
+		{
+			text = "None",
+			x = 61,
+			y = 75,
+			func = 	function()
+						recording.hitslot = nil
+						changeInteractiveGuiPage(3)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+		{
+			text = "1",
+			x = 61,
+			y = 85,
+			func = 	function()
+						recording.hitslot = 1
+						changeInteractiveGuiPage(3)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+		{
+			text = "2",
+			x = 61,
+			y = 95,
+			func = 	function()
+						recording.hitslot = 2
+						changeInteractiveGuiPage(3)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+		{
+			text = "3",
+			x = 61,
+			y = 105,
+			func = 	function()
+						recording.hitslot = 3
+						changeInteractiveGuiPage(3)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+		{
+			text = "4",
+			x = 61,
+			y = 115,
+			func = 	function()
+						recording.hitslot = 4
+						changeInteractiveGuiPage(3)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+		{
+			text = "5",
+			x = 61,
+			y = 125,
+			func = 	function()
+						recording.hitslot = 5
+						changeInteractiveGuiPage(3)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+	},
 }
 
 guipages = { -- interactiveguipages
@@ -863,7 +947,22 @@ guipages = { -- interactiveguipages
 		guielements.scrollinginputsize[11],
 		guielements.scrollinginputsize[12],
 		guielements.scrollinginputsize[13],
-	}
+	},
+	hitplayback = {
+		left = guielements.falseleftarrow,
+		right = guielements.falserightarrow,
+		guielements.hitplayback[1],
+		guielements.hitplayback[2],
+		guielements.hitplayback[3],
+		guielements.hitplayback[4],
+		guielements.hitplayback[5],
+		guielements.hitplayback[6],
+		title = {
+			text = "Hit Slot",
+			x = 25,
+			y = 105,
+		},
+	},
 }
 
 if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.playertwoinhitstun then
@@ -884,4 +983,8 @@ end
 
 if availablefunctions.playertwofacingleft then
 	table.insert(guipages[3], guielements.replayautoturn)
+end
+
+if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
+	table.insert(guipages[3], guielements.hitplayback.main)
 end
