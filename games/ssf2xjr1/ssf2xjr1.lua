@@ -61,7 +61,7 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rw(p1health)
+	return rw(p1redhealth)
 end
 
 function writePlayerOneHealth(health)
@@ -71,7 +71,7 @@ function writePlayerOneHealth(health)
 end
 
 function readPlayerTwoHealth()
-	return rw(p2health)
+	return rw(p2redhealth)
 end
 
 function writePlayerTwoHealth(health)
