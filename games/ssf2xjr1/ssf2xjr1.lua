@@ -5,6 +5,10 @@ p2maxhealth = 144
 p1maxmeter = 0x30
 p2maxmeter = 0x30
 
+print "Known issues: "
+print "Hitstun isn't accurate"
+print ""
+
 local p1health = 0xFF8478
 local p1redhealth = 0xff847A
 local p1disphealth = 0xff860A
