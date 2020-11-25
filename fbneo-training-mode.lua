@@ -34,7 +34,7 @@ local defaultconfig = {
 	p1 = {
 		-- Health
 		refillhealthspeed = 10,
-		instantrefillhealth = true,
+		instantrefillhealth = false,
 		refillhealthenabled = true,
 		refillmeterspeed = 10,
 		instantrefillmeter = false,
@@ -436,7 +436,10 @@ function updateModuleVars()
 	if availablefunctions.playertwoinhitstun then
 		modulevars.p2.inhitstun = playerTwoInHitstun()
 	end
-	
+	if availablefunctions.playeroneinhitstun then
+		modulevars.p1.inhitstun = playerOneInHitstun()
+	end
+
 	if availablefunctions.readplayeronehealth then
 		modulevars.p1.previoushealth = modulevars.p1.health
 		modulevars.p1.health = readPlayerOneHealth()
@@ -450,10 +453,17 @@ function updateModuleVars()
 	if availablefunctions.playertwofacingleft then
 		modulevars.p2.facingleft = playerTwoFacingLeft()
 	end
-	
+	if availablefunctions.playeronefacingleft then
+		modulevars.p1.facingleft = playerOneFacingLeft()
+	end
+
 	if availablefunctions.readplayeronemeter then
 		modulevars.p1.meter = readPlayerOneMeter()
 	end
+	if availablefunctions.readplayertwometer then
+		modulevars.p2.meter = readPlayerTwoMeter()
+	end
+
 end
 
 
@@ -488,10 +498,10 @@ function healthHandlerP1()
 	
 	if combovars.p1.refillhealth ~= 0 then
 		if (combovars.p1.refillhealth + modulevars.p1.health >= modulevars.p1.constants.maxhealth) or combovars.p1.instantrefillhealth then
-			writePlayerTwoHealth(modulevars.p1.constants.maxhealth)
+			writePlayerOneHealth(modulevars.p1.constants.maxhealth)
 			combovars.p1.refillhealth = 0
 		else
-			writePlayerTwoHealth(modulevars.p1.health + combovars.p1.refillhealth)
+			writePlayerOneHealth(modulevars.p1.health + combovars.p1.refillhealth)
 		end
 	end
 end
@@ -522,15 +532,18 @@ function meterHandlerP1()
 			writePlayerOneMeter(modulevars.p1.meter + combovars.p1.refillmeter)
 		end
 	end
+
 end
 
 function instantHealthP1()
 	if not combovars.p1.refillhealthenabled then return end
+	if not combovars.p1.instantrefillhealth then return end
 	writePlayerOneHealth(modulevars.p1.constants.maxhealth)
 end
 
 function instantMeterP1()
 	if not combovars.p1.refillmeterenabled then return end
+	if not combovars.p1.instantrefillmeter then return end
 	writePlayerOneMeter(modulevars.p1.constants.maxmeter)
 end
 
@@ -595,20 +608,20 @@ function healthHandlerP2()
 end
 
 function meterHandlerP2()
-	
+
 	if not combovars.p2.refillmeterenabled then return end
 	
 	if combovars.p2.instantrefillmeter then
 		writePlayerTwoMeter(modulevars.p2.constants.maxmeter)
 	end
 	
-	if combovars.p2.combo ~= combovars.p2.previouscombo and not modulevars.p2.inhitstun then
+	if combovars.p1.combo ~= combovars.p1.previouscombo and not modulevars.p1.inhitstun then
 		if combovars.p2.refillmeter == 0 then
 			combovars.p2.refillmeter = math.ceil((modulevars.p2.constants.maxmeter - modulevars.p2.meter) / combovars.p2.refillmeterspeed) -- refill speed
 		end
 	end
 	
-	if modulevars.p2.inhitstun then
+	if modulevars.p1.inhitstun then
 		combovars.p2.refillmeter = 0
 	end
 	
@@ -623,12 +636,14 @@ function meterHandlerP2()
 end
 
 function instantHealthP2()
-	if not combovars.p2.healthrefillenabled then return end
+	if not combovars.p2.refillhealthenabled then return end
+	if not combovars.p2.instantrefillhealth then return end
 	writePlayerTwoHealth(modulevars.p2.constants.maxhealth)
 end
 
 function instantMeterP2()
-	if not combovars.p2.meterrefillenabled then return end
+	if not combovars.p2.refillmeterenabled then return end
+	if not combovars.p2.instantrefillmeter then return end
 	writePlayerTwoMeter(modulevars.p2.constants.maxmeter)
 end
 
@@ -1119,7 +1134,38 @@ function setRegisters()
 		end
 		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
 	end
-	
+
+	if availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
+		table.insert(registers.guiregister, comboHandlerP1)
+	else
+		if not availablefunctions.readplayeronehealth then
+			str = str .. "player one health read and "
+		end
+		if not availablefunctions.playeroneinhitstun then
+			str = str .. "player one hitstun and "
+		end
+		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
+	end
+
+	if modulevars.p1.constants.maxhealth and availablefunctions.readplayeronehealth and availablefunctions.writeplayeronehealth and availablefunctions.playeroneinhitstun then
+		table.insert(registers.registerafter, healthHandlerP1)
+	else
+		str = ""
+		if not modulevars.p1.constants.maxhealth then
+			str = str .. "max health and "
+		end
+		if not availablefunctions.readplayeronehealth then
+			str = str .. "player one health read and "
+		end
+		if not availablefunctions.writeplayeronehealth then
+			str = str .. "player one health write and "
+		end
+		if not availablefunctions.playeroneinhitstun then
+			str = str .. "player one hitstun and "
+		end
+		print(str:sub(1,#str-5) .. " not set, can't do health refill for p1.\n")
+	end
+
 	if modulevars.p2.constants.maxhealth and availablefunctions.readplayertwohealth and availablefunctions.writeplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, healthHandlerP2)
 	else
@@ -1151,7 +1197,20 @@ function setRegisters()
 		end
 		print(str:sub(1,#str-5) .. " not set, can't do health refill for p1.\n")
 	end
-	
+
+	if modulevars.p2.constants.maxhealth and availablefunctions.writeplayertwohealth then
+		table.insert(registers.registerafter, instantHealthP2)
+	else
+		str = ""
+		if not modulevars.p2.constants.maxhealth then
+			str = str .. "max health and "
+		end
+		if not availablefunctions.writeplayertwohealth then
+			str = str .. "player two health write and "
+		end
+		print(str:sub(1,#str-5) .. " not set, can't do health refill for p2.\n")
+	end
+
 	if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, meterHandlerP1)
 	else
@@ -1163,6 +1222,17 @@ function setRegisters()
 		end
 	end
 	
+	if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer and availablefunctions.writeplayertwometer and availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
+		table.insert(registers.registerafter, meterHandlerP2)
+	else
+		if modulevars.p2.constants.maxmeter and availablefunctions.writeplayertwometer then
+			print "Using back-up Meter always full"
+			table.insert(registers.registerafter, instantMeterP2)
+		else
+			print "Can't auto-refill meter"
+		end
+	end
+
 	if availablefunctions.hitboxesreg and availablefunctions.hitboxesregafter then
 		table.insert(registers.guiregister, hitboxesReg)
 		table.insert(registers.registerafter, hitboxesRegAfter)
