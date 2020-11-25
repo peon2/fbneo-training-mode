@@ -29,4 +29,4 @@ Samurai Shodown 3
 
 Street Fighter Alpha 2
 
-
+Super Street Fighter 2X - Grand Master Challenge
