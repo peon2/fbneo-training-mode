@@ -762,7 +762,7 @@ function toggleRecording(bool)
 		recording[recording.recordingslot] = {}
 		recording.framestart = fc
 	else
-		if not recording[recording.recordingslot].start then
+		if not recording[recording.recordingslot].start then -- if nothing is recorded
 			recording[recording.recordingslot] = {}			
 		end
 	end
@@ -780,13 +780,15 @@ function logRecording()
 	}
 	
 	if not recording[recording.recordingslot].start then
-		if orTable(tab.p2) then
+		if orTable(tab.p2) and not tab.p2.Coin then
 			recording[recording.recordingslot].start = fc - recording.framestart
+			print("start"..fc - recording.framestart)
 		end
 	end
 	
 	if orTable(tab.p2) and not tab.p2.Coin then
 		recording[recording.recordingslot].finish = fc - recording.framestart
+		print("finish"..fc - recording.framestart)
 	end
 	
 	if availablefunctions.playertwofacingleft then
@@ -815,7 +817,10 @@ function togglePlayBack(bool)
 	toggleSwapInputs(false)
 	
 	local recordslot = recording[recording.recordingslot]
-	if not recordslot then return end
+	if not recordslot.start then -- if nothing is recorded
+		recording[recording.recordingslot] = {}		
+	end
+	if not recordslot[1] then return end
 	
 	if bool then recording.playback = true end
 	if bool == false then recording.playback = false 
@@ -866,18 +871,17 @@ function playBack()
 	end
 end
 
-function toggleHitPlayBack()
-	
-end
-
 function hitPlayBack()
 	if not recording.hitslot then return end
 	if not recording.hitplayback and combovars.p2.previouscombo <= combovars.p2.combo then return end
 	
 	recording.hitplayback = true
 	
-	local recordslot = recording[recording.hitslot]
-	if not recordslot then return end
+	local recordslot = recording[recording.recordingslot]
+	if not recordslot.start then -- if nothing is recorded
+		recording[recording.recordingslot] = {}		
+	end
+	if not recordslot[1] then return end
 	
 	if not recordslot.framestart then recordslot.framestart = fc - 1 end
 	
