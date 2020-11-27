@@ -984,6 +984,7 @@ function drawInteractiveGui()
 			if not v.x then v.x = 0 end
 			if not v.y then v.y = 0 end
 			if not v.text then v.text = " " end
+			if not v.textcolour then v.textcolour = "white" end
 			if not v.bgcolour then v.bgcolour = bgcolour end
 			if not v.olcolour then v.olcolour = bgcolour end
 		
@@ -992,7 +993,7 @@ function drawInteractiveGui()
 			if v.bgcolour ~= bgcolour or v.olcolour ~= bgcolour then
 				gui.box(v.x + boxx, v.y + boxy, v.x + boxx + w + 4, v.y + boxy + h, v.bgcolour, v.olcolour)
 			end
-			gui.text(v.x + boxx + 3, v.y + boxy + 2, v.text)
+			gui.text(v.x + boxx + 3, v.y + boxy + 2, v.text, v.textcolour)
 		end
 	end
 	
@@ -1003,13 +1004,14 @@ function drawInteractiveGui()
 	if not selection.x then selection.x = 0 end
 	if not selection.y then selection.y = 0 end
 	if not selection.text then selection.text = "" end
+	if not selection.textcolour then selection.textcolour = "white" end
 	if not selection.bgcolour then selection.bgcolour = bgcolour end
 	if not selection.olcolour then selection.olcolour = bgcolour end
 		
 	w, h = #selection.text*4, 10
 	colour = interactivegui.selectioncolour
 	gui.box(selection.x + boxx, selection.y + boxy, selection.x + boxx + w + 4, selection.y + boxy + h, selection.bgcolour, colour)
-	gui.text(selection.x + boxx + 3, selection.y + boxy + 2, selection.text)
+	gui.text(selection.x + boxx + 3, selection.y + boxy + 2, selection.text, selection.textcolour)
 	
 end
 

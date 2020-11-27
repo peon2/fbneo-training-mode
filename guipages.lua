@@ -579,6 +579,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				changeInteractiveGuiPage(3)
 				changeInteractiveGuiSelection(3)
 			end,
+			autofunc =	function(this)
+							if recording[1][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "2",
@@ -589,6 +596,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				changeInteractiveGuiPage(3)
 				changeInteractiveGuiSelection(3)
 			end,
+			autofunc =	function(this)
+							if recording[2][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "3",
@@ -599,6 +613,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				changeInteractiveGuiPage(3)
 				changeInteractiveGuiSelection(3)
 			end,
+			autofunc =	function(this)
+							if recording[3][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "4",
@@ -609,6 +630,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				changeInteractiveGuiPage(3)
 				changeInteractiveGuiSelection(3)
 			end,
+			autofunc =	function(this)
+							if recording[4][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "5",
@@ -619,6 +647,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				changeInteractiveGuiPage(3)
 				changeInteractiveGuiSelection(3)
 			end,
+			autofunc =	function(this)
+							if recording[5][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 	},
 	hitplayback = {
@@ -663,6 +698,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						changeInteractiveGuiPage(3)
 						changeInteractiveGuiSelection(3)
 					end,
+			autofunc =	function(this)
+							if recording[1][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "2",
@@ -673,6 +715,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						changeInteractiveGuiPage(3)
 						changeInteractiveGuiSelection(3)
 					end,
+			autofunc =	function(this)
+							if recording[2][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "3",
@@ -683,6 +732,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						changeInteractiveGuiPage(3)
 						changeInteractiveGuiSelection(3)
 					end,
+			autofunc =	function(this)
+							if recording[3][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "4",
@@ -693,6 +749,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						changeInteractiveGuiPage(3)
 						changeInteractiveGuiSelection(3)
 					end,
+			autofunc =	function(this)
+							if recording[4][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 		{
 			text = "5",
@@ -703,6 +766,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						changeInteractiveGuiPage(3)
 						changeInteractiveGuiSelection(3)
 					end,
+			autofunc =	function(this)
+							if recording[5][1] then -- if something is in the slot 
+								this.textcolour = "yellow"
+							else
+								this.textcolour = "white"
+							end
+						end,
 		},
 	},
 }
