@@ -5,6 +5,9 @@ p2maxhealth = 144
 p1maxmeter = 0x30
 p2maxmeter = 0x30
 
+p1stuned=0
+p2stuned=0
+
 print "Known issues: "
 print "Hitstun isn't accurate"
 print ""
@@ -57,11 +60,31 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	return rb(0xff84ad)~=0
+	ADD=21
+
+	if rb(0xff8495) == 0 and p1stuned <= ADD then
+		p1stuned=p1stuned-1
+	elseif rb(0xff8495) == 0 and p1stuned == 1 then
+		p1stuned = 0
+	else
+		p1stuned=rb(0xff8495)+ADD
+	end
+
+	return p1stuned > 0
 end
 
 function playerTwoInHitstun()
-	return rb(0xff88ad)~=0
+	ADD=21
+
+	if rb(0xff8895) == 0 and p2stuned <= ADD then
+		p2stuned=p2stuned-1
+	elseif rb(0xff8895) == 0 and p2stuned == 1 then
+		p2stuned = 0
+	else
+		p2stuned=rb(0xff8895)+ADD
+	end
+
+	return p2stuned > 0
 end
 
 function readPlayerOneHealth()
@@ -69,9 +92,24 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	ww(p1health, health)
-	ww(p1redhealth, health)
-	ww(p1disphealth, health)
+	p1action = rb(0xff8451)
+	p2action = rb(0xff8851)
+	refill = false
+	if readPlayerOneHealth() < 10 then
+		-- if health < 10 we refill regardless of the state
+		refill = true
+	elseif ((p1action ~= 0x14 and p1action ~=0xe and p1action ~= 8) and (p2action==2 or p2action==0)) then
+		-- this only refills when p2 is idle or crouching and p1 is not blocking or after being hit/thrown
+		refill = true
+	elseif (p1action ~= 8) and readPlayerOneHealth() < 50 then
+		-- when health is depleting try to refill even if it will cause some small glitches
+		refill = true
+	end
+	if refill then
+		ww(p1health, health)
+		ww(p1redhealth, health)
+		ww(p1disphealth, health)
+	end
 end
 
 function readPlayerTwoHealth()
@@ -79,9 +117,24 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	ww(p2health, health)
-	ww(p2redhealth, health)
-	ww(p2disphealth, health)
+	p1action = rb(0xff8451)
+	p2action = rb(0xff8851)
+	refill = false
+	if readPlayerTwoHealth() < 10 then
+		-- if health < 10 we refill regardless of the state
+		refill = true
+	elseif ((p2action ~= 0x14 and p2action ~=0xe and p2action ~= 8) and (p1action==2 or p1action==0)) then
+		-- this only refills when p1 is idle or crouching and p2 is not blocking or after being hit/thrown
+		refill = true
+	elseif (p2action ~= 8) and readPlayerTwoHealth() < 50 then
+		-- when health is depleting try to refill even if it will cause some small glitches
+		refill = true
+	end
+	if refill then
+		ww(p2health, health)
+		ww(p2redhealth, health)
+		ww(p2disphealth, health)
+	end
 end
 
 function readPlayerOneMeter()
@@ -120,11 +173,15 @@ local infiniteTime = function()
 end
 
 local neverEnd = function()
-	if combovars.p1.refillmeterenabled and readPlayerOneHealth() < 2 then
-		writePlayerOneHealth(p1maxhealth)
+
+	-- try to refill when health < 10 to avoid round ending
+	p2h = readPlayerTwoHealth()
+	if p2h < 10 then
+		writePlayerTwoHealth(p2maxhealth)
 	end
-	if combovars.p2.refillmeterenabled and readPlayerTwoHealth() < 2 then
-		writePlayerTwoHealth(p1maxhealth)
+	p1h = readPlayerOneHealth()
+	if p1h < 10 then
+		writePlayerOneHealth(p1maxhealth)
 	end
 end
 
