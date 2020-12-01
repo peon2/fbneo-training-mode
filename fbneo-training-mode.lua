@@ -158,7 +158,7 @@ end
 
 availablefunctions = {}
 
-function checkAvailableFunctions() -- SETUP availablefunctions TABLE
+checkAvailableFunctions = function() -- SETUP availablefunctions TABLE
 	-- Training mode functions
 	if Run then availablefunctions.run = true end
 	if playerOneInHitstun then availablefunctions.playeroneinhitstun = true end
@@ -227,7 +227,7 @@ modulevars = {
 	constants = {},
 }
 
-function setAvailableConstants()  -- SETUP modulevars CONSTANTS TABLES
+setAvailableConstants = function()  -- SETUP modulevars CONSTANTS TABLES
 	if p1maxhealth then modulevars.p1.constants.maxhealth = p1maxhealth end
 	if p2maxhealth then modulevars.p2.constants.maxhealth = p2maxhealth end
 	if p1maxmeter then modulevars.p1.constants.maxmeter = p1maxmeter end
@@ -428,14 +428,14 @@ function changeConfig(tab, index, value, otherlocation, otherindex) -- table in 
 	end
 end
 
-function saveConfig()
+local saveConfig = function()
 	if not availablefunctions.tablesave or not config.changed then return end
 	config.changed = nil -- only saves if the config has changed
 	print("Saving config")
 	assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
 end
 
-function updateModuleVars()
+local updateModuleVars = function()
 	if availablefunctions.playertwoinhitstun then
 		modulevars.p2.inhitstun = playerTwoInHitstun()
 	end
@@ -470,7 +470,7 @@ function updateModuleVars()
 end
 
 
-function comboHandlerP1()
+local comboHandlerP1 = function()
 
 	combovars.p1.healthdiff = modulevars.p1.previoushealth - modulevars.p1.health
 	
@@ -485,7 +485,7 @@ function comboHandlerP1()
 	end
 end
 
-function healthHandlerP1()
+local healthHandlerP1 = function()
 
 	if not combovars.p1.refillhealthenabled then return end
 	
@@ -509,7 +509,7 @@ function healthHandlerP1()
 	end
 end
 
-function meterHandlerP1()
+local meterHandlerP1 = function()
 
 	if not combovars.p1.refillmeterenabled then return end
 	
@@ -538,20 +538,20 @@ function meterHandlerP1()
 
 end
 
-function instantHealthP1()
+local instantHealthP1 = function()
 	if not combovars.p1.refillhealthenabled then return end
 	if not combovars.p1.instantrefillhealth then return end
 	writePlayerOneHealth(modulevars.p1.constants.maxhealth)
 end
 
-function instantMeterP1()
+local instantMeterP1 = function()
 	if not combovars.p1.refillmeterenabled then return end
 	if not combovars.p1.instantrefillmeter then return end
 	writePlayerOneMeter(modulevars.p1.constants.maxmeter)
 end
 
 
-function comboHandlerP2()
+local comboHandlerP2 = function()
 
 	combovars.p2.healthdiff = modulevars.p2.previoushealth - modulevars.p2.health
 	
@@ -586,7 +586,7 @@ function comboHandlerP2()
    gui.text(combovars.totaltextx,combovars.totaltexty,"Total: " .. combovars.p2.comboDamage,combovars.totaltextcolour)
 end
 
-function healthHandlerP2()
+local healthHandlerP2 = function()
 	
 	if not combovars.p2.refillhealthenabled then return end
 
@@ -610,7 +610,7 @@ function healthHandlerP2()
 	end
 end
 
-function meterHandlerP2()
+local meterHandlerP2 = function()
 
 	if not combovars.p2.refillmeterenabled then return end
 	
@@ -638,13 +638,13 @@ function meterHandlerP2()
 	end
 end
 
-function instantHealthP2()
+local instantHealthP2 = function()
 	if not combovars.p2.refillhealthenabled then return end
 	if not combovars.p2.instantrefillhealth then return end
 	writePlayerTwoHealth(modulevars.p2.constants.maxhealth)
 end
 
-function instantMeterP2()
+local instantMeterP2 = function()
 	if not combovars.p2.refillmeterenabled then return end
 	if not combovars.p2.instantrefillmeter then return end
 	writePlayerTwoMeter(modulevars.p2.constants.maxmeter)
@@ -655,7 +655,7 @@ local guiinputs = {
 	P2 = {previousinputs={}},
 }
 
-function readGuiInputs()
+local readGuiInputs = function()
 	local input
 	for i,v in pairs(joypad.get()) do -- check every button
 		player = i:sub(1,2)
@@ -668,7 +668,7 @@ function readGuiInputs()
 	end
 end
 
-function readInputs()
+local readInputs = function()
 	local input
 	for i,v in pairs(joypad.get()) do -- check every button
 		player = i:sub(1,2)
@@ -685,13 +685,13 @@ function readInputs()
 end
 
 
-function toggleSwapInputs(bool)
+local toggleSwapInputs = function(bool)
 	if bool == false then inputs.properties.enableinputswap = false return end
 	if bool == true then inputs.properties.enableinputswap = true return end
 	inputs.properties.enableinputswap = not inputs.properties.enableinputswap
 end
 
-function swapInputs()
+local swapInputs = function()
 
 	if not inputs.properties.enableinputswap then return end
 	
@@ -704,7 +704,7 @@ function swapInputs()
 end
 
 
-function swapPlayerInput(player)
+local swapPlayerInput = function(player)
 	
 	local tab = copytable(player) -- shallow copy
 	
@@ -715,7 +715,7 @@ function swapPlayerInput(player)
 	
 end
 
-function combinePlayerInputs(P1, P2)
+combinePlayerInputs = function(P1, P2)
 	
 	if type(P1) ~= "table" or type(P2) ~= "table" then return end
 	
@@ -730,7 +730,7 @@ function combinePlayerInputs(P1, P2)
 	return t
 end
 
-function freezePlayer(player)
+local freezePlayer = function(player)
 	
 	if player == 1 or not player then
 		if inputs.properties.p1freeze then
@@ -749,7 +749,7 @@ function freezePlayer(player)
 	end
 end
 
-function toggleRecording(bool)
+local toggleRecording = function(bool)
 	recording.playback = false
 	
 	if bool then recording.enabled = true end
@@ -768,7 +768,7 @@ function toggleRecording(bool)
 	end
 end
 
-function logRecording()
+local logRecording = function()
 
 	if not recording.enabled then return end
 	if not recording[recording.recordingslot] then recording[recording.recordingslot] = {} end
@@ -782,13 +782,11 @@ function logRecording()
 	if not recording[recording.recordingslot].start then
 		if orTable(tab.p2) and not tab.p2.Coin then
 			recording[recording.recordingslot].start = fc - recording.framestart
-			print("start"..fc - recording.framestart)
 		end
 	end
 	
 	if orTable(tab.p2) and not tab.p2.Coin then
 		recording[recording.recordingslot].finish = fc - recording.framestart
-		print("finish"..fc - recording.framestart)
 	end
 	
 	if availablefunctions.playertwofacingleft then
@@ -800,7 +798,7 @@ function logRecording()
 	
 end
 
-function tableList()
+local tableList = function()
 	local tab = {}
 	local count = 0
 	for _,v in ipairs(recording) do
@@ -812,11 +810,12 @@ function tableList()
 	return tab
 end
 
-function togglePlayBack(bool)
+local togglePlayBack = function(bool)
 	recording.enabled = false
 	toggleSwapInputs(false)
 	
 	local recordslot = recording[recording.recordingslot]
+	
 	if not recordslot.start then -- if nothing is recorded
 		recording[recording.recordingslot] = {}		
 	end
@@ -829,7 +828,6 @@ function togglePlayBack(bool)
 	if not recording.playback then 
 		recordslot.framestart = nil
 	else
-	
 		if recording.randomise then
 			local pos
 			local recordings = tableList()
@@ -837,13 +835,13 @@ function togglePlayBack(bool)
 				pos = math.random(#recordings)
 			end
 			if recordings[pos] ~= nil then
-				recording.recordingslot = recordings[pos]
+				recording.recordingslot = pos
 			end
 		end
 	end
 end
 
-function playBack()
+local playBack = function()
 	if not recording.playback then return end
 	local recordslot = recording[recording.recordingslot]
 	if not recordslot then return end
@@ -871,7 +869,7 @@ function playBack()
 	end
 end
 
-function hitPlayBack()
+local hitPlayBack = function()
 	if not recording.hitslot then return end
 	if not recording.hitplayback and combovars.p2.previouscombo <= combovars.p2.combo then return end
 	
@@ -906,13 +904,13 @@ function hitPlayBack()
 	end
 end
 
-function setInputs()
+local setInputs = function()
 	if inputs.properties.enableinputswap or recording.playback or recording.hitplayback or inputs.properties.enablehold or inputs.properties.p1freeze or inputs.properties.p2freeze then
 		joypad.set(inputs.setinputs)
 	end
 end
 
-function setDirection(player, ...) -- getting a player to hold down/up etc.
+local setDirection = function(player, ...) -- getting a player to hold down/up etc.
 	local dir1, dir2 = ...
 
 	inputs.properties.enablehold = dir1 or dir2
@@ -932,7 +930,7 @@ function setDirection(player, ...) -- getting a player to hold down/up etc.
 
 end
 
-function applyDirection() -- getting a player to hold down/up etc.
+local applyDirection = function() -- getting a player to hold down/up etc.
 	if not inputs.properties.enablehold then return end
 	for i, _ in pairs(inputs.properties.p1hold) do
 		inputs.setinputs["P1 "..i] = true
@@ -942,7 +940,7 @@ function applyDirection() -- getting a player to hold down/up etc.
 	end
 end
 
-function toggleInteractiveGuiEnabled(bool)
+local toggleInteractiveGuiEnabled = function(bool)
 	recording.playback = false
 	recording.hitplayback = false
 	recording.enabled = false
@@ -958,7 +956,7 @@ function toggleInteractiveGuiEnabled(bool)
 	inputs.properties.p2freeze = interactivegui.enabled
 end
 
-function drawInteractiveGui()
+local drawInteractiveGui = function()
 
 	if not interactivegui.enabled then return end
 	
@@ -1019,13 +1017,13 @@ function drawInteractiveGui()
 	
 end
 
-function callGuiSelectionFunc()
+local callGuiSelectionFunc = function()
 	local func = interactiveguipages[interactivegui.page][interactivegui.selection].func
 	if not interactivegui.enabled or not func then return end
 	func()
 end
 
-function interactiveGuiSelectionInfo()
+local interactiveGuiSelectionInfo = function()
 	local info = interactiveguipages[interactivegui.page][interactivegui.selection].info
 	if not interactivegui.enabled or not info then return end
 	
@@ -1045,7 +1043,7 @@ function interactiveGuiSelectionInfo()
 end
 
 
-function changeInteractiveGuiPage(n)
+changeInteractiveGuiPage = function(n)
 	if not interactivegui.enabled then return end
 	if not n then n = 1 end
 	
@@ -1068,7 +1066,7 @@ function changeInteractiveGuiPage(n)
 	end
 end
 
-function changeInteractiveGuiSelection(n)
+changeInteractiveGuiSelection = function(n)
 	if not interactivegui.enabled then return end
 	if not n then n = interactivegui.selection+1 end
 	local page = interactiveguipages[interactivegui.page] -- current page
@@ -1093,7 +1091,7 @@ input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page
 input.registerhotkey(5, function() recording.hitplayback = true end)
 
 
-function parseInputs() 
+local parseInputs = function() 
 	--inspired by grouflons and crystal_cubes menus
 	if guiinputs.P1.coin and not guiinputs.P1.previousinputs.coin then -- one clean input
 		guiinputs.P1.coinframestart = fc
@@ -1148,7 +1146,7 @@ local registers = {
 	registerafter = {},
 }
 
-function setRegisters()
+setRegisters = function()
 	
 	checkAvailableFunctions()
 	setAvailableConstants()
@@ -1339,7 +1337,7 @@ function setRegisters()
 	end)
 end
 
-function exitprocedure()
+local exitprocedure = function()
 	saveConfig()
 end
 
