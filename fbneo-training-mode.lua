@@ -316,7 +316,7 @@ recording = {
 	{}, 
 	{}, 
 	recordingslot = 1,
-	hitslot = 1,
+	hitslot,
 	blockslot,
 	skiptostart = config.recording.skiptostart,
 	skiptofinish = config.recording.skiptofinish,
@@ -875,9 +875,20 @@ local hitPlayBack = function()
 	
 	recording.hitplayback = true
 	
-	local recordslot = recording[recording.recordingslot]
+	if recording.randomise then
+		local pos
+		local recordings = tableList()
+		if #recordings > 0 then
+			pos = math.random(#recordings)
+		end
+		if recordings[pos] ~= nil then
+			recording.hitslot = pos
+		end
+	end
+	
+	local recordslot = recording[recording.hitslot]
 	if not recordslot.start then -- if nothing is recorded
-		recording[recording.recordingslot] = {}		
+		recording[recording.hitslot] = {}		
 	end
 	if not recordslot[1] then return end
 	
@@ -910,7 +921,7 @@ local setInputs = function()
 	end
 end
 
-local setDirection = function(player, ...) -- getting a player to hold down/up etc.
+setDirection = function(player, ...) -- getting a player to hold down/up etc.
 	local dir1, dir2 = ...
 
 	inputs.properties.enablehold = dir1 or dir2
