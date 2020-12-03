@@ -123,7 +123,7 @@ fs = io.open("tableio.lua","r")
 if fs then
 	dofile("tableio.lua")
 	fs = io.open("games/"..dirname.."//config.lua","r")
-	if fs and not USEDEFAULTCONFIG then
+	if fs then
 		config = table.load("games/"..dirname.."//config.lua")
 		if not config then
 			print("Can't read config file found for "..dirname..", using default config")
