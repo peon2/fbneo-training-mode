@@ -128,7 +128,6 @@ do
 		local str = fs:read( "*all" ) -- checking the contents of the config file to make sure its just a table
 		fs:close()
 		if str:sub(1,40) ~= "assert(rb,\"Run fbneo-training-mode.lua\")" then return nil end
-		if str:sub(-1,-1) ~= "}" then return nil end
 	
 		local ftables, err = loadfile( sfile )
 		if err then return _,err end
