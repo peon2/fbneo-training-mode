@@ -433,10 +433,12 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		olcolour = "black",
 		func = 	function()
 					if inputs.properties.scrollinginput.state+1 < 5 then
-						changeConfig("inputs","state",inputs.properties.scrollinginput.state+1,inputs.properties.scrollinginput)
+						inputs.properties.scrollinginput.state = inputs.properties.scrollinginput.state+1
+						changeConfig("inputs","state",inputs.properties.scrollinginput.state)
 						scrollingInputReload()
 					else
-						changeConfig("inputs","state",1,inputs.properties.scrollinginput)
+						inputs.properties.scrollinginput.state = 1
+						changeConfig("inputs","state",inputs.properties.scrollinginput.state)
 						scrollingInputReload()
 					end
 				end,
@@ -456,6 +458,29 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 							this.x = 100
 						end
 					end,
+	},
+	scrollinginputframestoggle = {
+		text = "Display scrolling input frame numbers",
+		x = 76,
+		y = 90,
+		info = {
+			"Toggles frame numbers displayed along with scrolling inputs",
+		},
+		olcolour = "black",
+		func = function()
+					inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
+					changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
+					scrollingInputReload()
+				end,
+		autofunc =	function(this)
+					if inputs.properties.scrollinginput.frames then
+						this.text = "Frame number display on"
+						this.x = 20
+					else
+						this.text = "Frame number display off"
+						this.x = 16
+					end
+				end,
 	},
 	replayautoturn = {
 		text = "Auto-Turn",
@@ -990,6 +1015,7 @@ guipages = { -- interactiveguipages
 		},
 		guielements.scrollinginputstate,
 		guielements.scrollinginputsize.main,
+		guielements.scrollinginputframestoggle,
 	},
 	scrollinginputsize = {
 		left = guielements.falseleftarrow,

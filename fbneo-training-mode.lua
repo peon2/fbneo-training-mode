@@ -79,6 +79,7 @@ local defaultconfig = {
 		iconsize = 10,
 		coinleniency = 10,
 		state = 1,
+		framenumbersenabled = false,
 	},
 	
 	recording = {
@@ -296,6 +297,7 @@ inputs = {
 		scrollinginput = {
 			iconsize = config.inputs.iconsize,
 			state = config.inputs.state,
+			frames = config.inputs.framenumbersenabled,
 		},
 		coinleniency = config.inputs.coinleniency,
 		enableinputswap = false,
@@ -329,7 +331,12 @@ recording = {
 ----------------------------------------------
 -- TRYING TO OPEN HITBOXES
 ----------------------------------------------
-local hitbox = games[dirname].hitboxes
+if games[dirname] then
+	hitbox = games[dirname].hitboxes
+else
+	print("Game not supported")
+	return
+end
 
 if hitbox then
 	fs = io.open("hitboxes/"..hitbox..".lua","r")

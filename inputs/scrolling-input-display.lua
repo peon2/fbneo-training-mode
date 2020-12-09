@@ -15,12 +15,19 @@ http://code.google.com/p/gens-rerecording/downloads/list
 
 version      = "11/10/2010"
 
---iconfile     = "icons-neogeo-32.png"  --file containing the icons to be shown
+function toggleshowframes()
+	margin_top = 16 - inputs.properties.scrollinginput.iconsize
+	if inputs.properties.scrollinginput.frames then
+		margin_left  = 0.4    --space from the left of the screen, in tiles, for player 1
+		margin_right = 7      --space from the right of the screen, in tiles, for player 2
+	else
+		margin_left  = 1      --space from the left of the screen, in tiles, for player 1
+		margin_right = 3      --space from the right of the screen, in tiles, for player 2
+	end
+end
+toggleshowframes()
 
-buffersize   = 10     --how many lines to show
-margin_left  = 1      --space from the left of the screen, in tiles, for player 1
-margin_right = 3      --space from the right of the screen, in tiles, for player 2
-margin_top   = 2      --space from the top of the screen, in tiles
+buffersize   = 13     --how many lines to show
 timeout      = 240    --how many idle frames until old lines are cleared on the next input
 screenwidth  = 256    --pixel width of the screen for spacing calculations (only applies if emu.screenwidth() is unavailable)
 

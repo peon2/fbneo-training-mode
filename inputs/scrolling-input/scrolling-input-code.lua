@@ -24,6 +24,15 @@ local draw = { [1] = true, [2] = true }
 local inp  = { [1] =   {}, [2] =   {} }
 local idle = { [1] =    0, [2] =    0 }
 
+local allinputcounters  = { [1] =   {}, [2] =   {} }
+local nullinputcounters = { [1] = {[1] = 0}, [2] = {[1] = 0}}  -- counters for null input for player 1 and player 2
+local activeinputcounters = { [1] = {[1] = 0}, [2] = {[1] = 0}}  -- counters for active inputs player 1 and player 2
+
+local isplayernullinput = { [1] = true, [2] = true }
+local frameskip_currval = 0
+local frameskip_prevval = 0
+local was_frameskip = false
+
 for m, scheme in ipairs(gamekeys) do --Detect what set to use.
 	if string.find(iconfile:lower(), scheme.set[1]:lower()) then
 		module = scheme
@@ -115,6 +124,7 @@ readimages()
 -- update functions
 
 local function filterinput(p, frame)
+	isplayernullinput[p] = true
 	for pressed, state in pairs(joypad.getdown(p)) do --Check current controller state >
 		for row, name in pairs(module) do               --but ignore non-gameplay buttons.
 			if pressed == name[keyset]
@@ -123,6 +133,7 @@ local function filterinput(p, frame)
 		--MAME also has unusual names for the start buttons.
 			or pressed == p .. (p == 1 and " Player " or " Players ") .. tostring(name[keyset]) then
 				frame[row] = state
+				isplayernullinput[p] = false
 				break
 			end
 		end
@@ -145,21 +156,54 @@ local function detectchanges(lastframe, thisframe)
 			break
 		end
 	end
+	if lastframe then                               -- zass: add check for full state change
+		for key, state in pairs(lastframe) do       -- also check that a key last frame
+			if thisframe and not thisframe[key] then  --that wasn't pressed this frame >
+				changed = true                          --then changes were made.
+				break
+			end
+		end
+	end
 end
 
-local function updaterecords(player, frame, input)
+-- updated by zass to show counters
+local function updaterecords(player, frame, nullinputcounters, activeinputcounters)
+	max_input = 999    --how long to hold input counter for
+	if allinputcounters == nil then
+		allinputcounters = { [1] =   {}, [2] =   {} }
+	else
+		if allinputcounters[player] == nil then
+			allinputcounters[player] = {}
+		end
+	end
+	local input = allinputcounters[player]
+
 	if changed then                         --If changes were made >
-		if idle[player] < timeout then        --and the player hasn't been idle too long >
-			for record = buffersize, 2, -1 do
+		for record = buffersize, 2, -1 do
+			if input ~= nil then
 				input[record] = input[record-1]   --then shift every old record by 1 >
 			end
-		else
-			for record = buffersize, 2, -1 do
-				input[record] = nil               --otherwise wipe out the old records.
-			end
+			nullinputcounters[record] = nullinputcounters[record-1]   --then shift every old record by 1 >
+			activeinputcounters[record] = activeinputcounters[record-1]   --then shift every old record by 1 >
 		end
 		idle[player] = 0                      --Reset the idle count >
 		input[1] = {}                         --and set current input as record 1 >
+		if isplayernullinput[player] == true then
+			nullinputcounters[1] = 1;
+			activeinputcounters[1] = 0;
+			if was_frameskip then
+				nullinputcounters[1] = 2;
+				activeinputcounters[1] = 0;
+			end
+		else
+			nullinputcounters[1] = 0;
+			activeinputcounters[1] = 1;
+			if was_frameskip then
+				nullinputcounters[1] = 0;
+				activeinputcounters[1] = 2;
+			end
+
+		end
 		local index = 1
 		for row, name in ipairs(module) do    --but the order must not deviate from gamekeys.
 			for key, state in pairs(frame) do
@@ -171,7 +215,46 @@ local function updaterecords(player, frame, input)
 			end
 		end
 	else
+		if idle[player] == nil then
+			idle[player] = 0
+		end
 		idle[player] = idle[player]+1         --Increment the idle count if nothing changed.
+		if isplayernullinput[player] == true then
+			nullinputcounters[1] = nullinputcounters[1] + 1
+			if nullinputcounters[1] > max_input then
+				nullinputcounters[1] = max_input
+			end
+			if was_frameskip then             -- increment again if there was a frameskip
+				nullinputcounters[1] = nullinputcounters[1] + 1
+				if nullinputcounters[1] > max_input then
+					nullinputcounters[1] = max_input
+				end
+			end
+		else
+			activeinputcounters[1] = activeinputcounters[1] + 1
+			if activeinputcounters[1] > max_input then
+				activeinputcounters[1] = max_input
+			end
+			if was_frameskip then
+				activeinputcounters[1] = activeinputcounters[1] + 1
+				if activeinputcounters[1] > max_input then
+					activeinputcounters[1] = max_input
+				end
+			end
+		end
+	end
+end
+
+-- added by zass, increment counters if frameskip
+local function checkframeskip()
+	frameskip_address = 0xFF801D
+	frameskip_prevval = frameskip_currval
+	frameskip_currval = memory.readbyte(frameskip_address)
+	local x = frameskip_currval - frameskip_prevval
+	if x % 2 == 0 then
+		was_frameskip = true
+	else
+		was_frameskip = false
 	end
 end
 
@@ -194,9 +277,9 @@ end
 ----------------------------------------------------------------------------------------------------
 -- hotkey functions
 
-local togglestate = inputs.properties.scrollinginput.state
-
 function togglescrollinginputsplayer()
+	local togglestate = inputs.properties.scrollinginput.state
+
 	if togglestate==1 then
 		draw[1] = true
 		draw[2] = false
@@ -324,9 +407,36 @@ function scrollingInputReg()
 	gui.text(0,0,"")
 	for player = 1, 2 do
 		if draw[player] then
-			for line in pairs(inp[player]) do
-				for index,row in pairs(inp[player][line]) do
-					display(margin[player] + (index-1)*effective_width, margin[3] + (line-1)*icon_size, row)
+			local i = 0
+			local skip = 0
+			for line in pairs(allinputcounters[player]) do
+				if inputs.properties.scrollinginput.frames then
+					i = i + 1
+					if nullinputcounters[player][i] > 0 and i == 1 then
+						gui.text(margin[player] + effective_width - 10, margin[3] + (line-1)*icon_size, "" .. nullinputcounters[player][i], 0xAACCCCFF)
+					elseif i == 1 then
+						if nullinputcounters[player][i+1] and nullinputcounters[player][i+1] > 0 then
+							gui.text(margin[player] + effective_width - 10, margin[3] + (line-1)*icon_size, "" .. nullinputcounters[player][i+1], 0xAACCCCFF)
+						end
+						gui.text(margin[player] + effective_width  + 5, margin[3] + (line-1)*icon_size, "" .. activeinputcounters[player][i])
+					-- if it's line 2 or higher
+					elseif activeinputcounters[player][i] == 0 then
+						skip = skip + 1 -- log a skip for an empty input
+					else
+						if nullinputcounters[player][i+1] and nullinputcounters[player][i+1] > 0 then
+							gui.text(margin[player] + effective_width - 10, margin[3] + (line-1-skip)*icon_size, "" .. nullinputcounters[player][i+1], 0xAACCCCFF)
+						end
+						gui.text(margin[player] + effective_width  + 5, margin[3] + (line-1-skip)*icon_size, "" .. activeinputcounters[player][i], "yellow")
+					end
+
+					-- display inputs, skipping a line for every empty input.
+					for index,row in pairs(allinputcounters[player][line]) do
+						display(margin[player] + (index-1)*effective_width + 30, margin[3] + (line-1-skip)*icon_size, row)
+					end
+				else
+					for index,row in pairs(allinputcounters[player][line]) do
+						display(margin[player] + (index-1)*effective_width, margin[3] + (line-1)*icon_size, row)
+					end
 				end
 			end
 		end
@@ -339,10 +449,13 @@ function scrollingInputRegAfter()
 	margin[3] = margin_top*icon_size
 	for player = 1, 2 do
 		thisframe = {}
+		if player == 1 and emu.romname() == "ssf2xjr1" then
+			checkframeskip() -- only check frameskip once
+		end
 		filterinput(player, thisframe)
 		compositeinput(thisframe)
 		detectchanges(lastframe[player], thisframe)
-		updaterecords(player, thisframe, inp[player])
+		updaterecords(player, thisframe, nullinputcounters[player], activeinputcounters[player])
 		lastframe[player] = thisframe
 	end
 	if recording then
@@ -351,8 +464,8 @@ function scrollingInputRegAfter()
 end
 
 function scrollingInputReload()
-	icon_size = inputs.properties.scrollinginput.iconsize
-	togglestate = inputs.properties.scrollinginput.state
+	toggleshowframes()
+	icon_size, image_icon_size = inputs.properties.scrollinginput.iconsize
 	readimages()
 	togglescrollinginputsplayer()
 end
