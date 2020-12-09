@@ -16,19 +16,20 @@ return {
 },
 -- Table: {3}
 {
-   ["coinleniency"]=10,
+   ["state"]=3,
    ["simpleinputenabled"]=true,
-   ["state"]=1,
    ["iconsize"]=10,
+   ["coinleniency"]=10,
+   ["framenumbersenabled"]=true,
 },
 -- Table: {4}
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["refillmeterspeed"]=10,
-   ["refillhealthspeed"]=10,
    ["instantrefillhealth"]=false,
    ["refillhealthenabled"]=true,
+   ["refillmeterspeed"]=10,
+   ["refillhealthspeed"]=10,
 },
 -- Table: {5}
 {
@@ -53,9 +54,9 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["refillmeterspeed"]=10,
-   ["refillhealthspeed"]=10,
    ["instantrefillhealth"]=false,
    ["refillhealthenabled"]=true,
+   ["refillmeterspeed"]=10,
+   ["refillhealthspeed"]=10,
 },
 }
