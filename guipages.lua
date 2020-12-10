@@ -800,6 +800,39 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						end,
 		},
 	},
+	hitboxsettings = {
+		text = "Change hitbox settings",
+		x = 40,
+		y = 110,
+		olcolour = "black",
+		func = 	function()
+					changeInteractiveGuiPage("hitboxsettings")
+					changeInteractiveGuiSelection(2)
+				end,
+		info = {
+			"Change hitbox settings",
+		},
+	},
+	hitboxstate = {
+		text = "Hitboxes On",
+		x = 76,
+		y = 50,
+		func = 	function()
+			changeConfig("hitbox", "enabled", not hitboxes.enabled, hitboxes)
+		end,
+		info = {
+			"Toggles hitboxes on and off",
+		},
+		autofunc = 	function(this)
+			if hitboxes.enabled then
+				this.text = "Hitboxes On"
+				this.x = 76
+			else
+				this.text = "Hitboxes Off"
+				this.x = 72
+			end
+		end
+	},
 }
 
 guipages = { -- interactiveguipages
@@ -1017,6 +1050,25 @@ guipages = { -- interactiveguipages
 		guielements.scrollinginputsize.main,
 		guielements.scrollinginputframestoggle,
 	},
+	hitboxsettings = {
+		title = {
+			text = "Hitbox Settings",
+			x = interactivegui.boxxlength/2 - 28,
+			y = 1,
+		},
+		{
+			text = "<",
+			olcolour = "black",
+			info = {
+				"Back",
+			},
+			func =	function()
+						changeInteractiveGuiPage(1)
+						changeInteractiveGuiSelection(3)
+					end,
+		},
+		guielements.hitboxstate,
+	},
 	scrollinginputsize = {
 		left = guielements.falseleftarrow,
 		right = guielements.falserightarrow,
@@ -1071,6 +1123,10 @@ end
 
 if scrollingInputReg then -- if scrolling-input-display.lua is loaded
 	table.insert(guipages[1], guielements.scrollinginputsettings)
+end
+
+if hitboxesReg then -- if a hitbox file is loaded
+	table.insert(guipages[1], guielements.hitboxsettings)
 end
 
 if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then -- if input-display.lua is loaded

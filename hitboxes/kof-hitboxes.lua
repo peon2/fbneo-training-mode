@@ -624,10 +624,12 @@ end)
 whatgame()
 
 function hitboxesReg()
-	render_hitboxes()
+	if hitboxes.enabled then
+		render_hitboxes()
+	end
 end
 
-function kofhitboxesRegAfter()
+function hitboxesRegAfter()
 	globals.register_count = (globals.register_count or 0) + 1
 	globals.last_frame = globals.last_frame or fc()
 	if globals.register_count == 1 then

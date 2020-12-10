@@ -87,6 +87,10 @@ local defaultconfig = {
 		skiptostart = false,
 		skiptofinish = false,
 	},
+	
+	hitbox = {
+		enabled = true,
+	},
 }
 
 local config = defaultconfig
@@ -134,14 +138,15 @@ if fs then
 			local check = true 
 			for i, v in pairs(defaultconfig) do
 				for j, k in pairs(v) do
-					if type(k) ~= type(config[i][j]) then
-						check = false
-						print("Error reading value "..i.."."..j.." from config file, reverting to default")
+					if not config[i] or type(k) ~= type(config[i][j]) then
+						if not config[i] then
+							config[i] = defaultconfig[i]					
+						else
+							config[i][j] = defaultconfig[i][j]
+						end
+						print("Error reading value "..i.."."..j.." from config file, using default")
 					end
 				end
-			end
-			if not check then
-				config = defaultconfig
 			end
 		end
 	else
@@ -310,6 +315,10 @@ inputs = {
 	p2 = {},
 	other = {},
 	setinputs = {},
+}
+
+hitboxes = {
+	enabled = config.hitbox.enabled,
 }
 
 recording = {

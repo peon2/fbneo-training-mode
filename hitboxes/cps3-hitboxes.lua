@@ -517,7 +517,9 @@ end)
 whatgame()
 
 function hitboxesReg()
-	render_hitboxes()
+	if hitboxes.enabled then
+		render_hitboxes()
+	end
 end
 
 
