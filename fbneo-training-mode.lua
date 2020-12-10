@@ -10,6 +10,7 @@ local games = {
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	xmvsf = {"xmvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa2 = {"sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	lb2 = {"lastbld2", hitboxes = "cps3-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -1251,6 +1252,7 @@ setRegisters = function()
 	
 	if modulevars.p1.constants.maxhealth and availablefunctions.writeplayeronehealth then
 		table.insert(registers.registerafter, instantHealthP1)
+		combovars.p1.instantrefillhealth = true
 	else
 		str = ""
 		if not modulevars.p1.constants.maxhealth then
@@ -1264,6 +1266,7 @@ setRegisters = function()
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.writeplayertwohealth then
 		table.insert(registers.registerafter, instantHealthP2)
+		combovars.p2.instantrefillhealth = true
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
@@ -1281,6 +1284,7 @@ setRegisters = function()
 		if modulevars.p1.constants.maxmeter and availablefunctions.writeplayeronemeter then
 			print "Using P1 back-up Meter always full"
 			table.insert(registers.registerafter, instantMeterP1)
+			combovars.p1.instantrefillmeter = true
 		else
 			print "Can't auto-refill P1 meter"
 		end
@@ -1292,6 +1296,7 @@ setRegisters = function()
 		if modulevars.p2.constants.maxmeter and availablefunctions.writeplayertwometer then
 			print "Using P2 back-up Meter always full"
 			table.insert(registers.registerafter, instantMeterP2)
+			combovars.p2.instantrefillmeter = true
 		else
 			print "Can't auto-refill P2 meter"
 		end
