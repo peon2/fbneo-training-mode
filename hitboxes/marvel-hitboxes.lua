@@ -75,7 +75,7 @@ local profile = {
 		["xmcotaj3"] = -0xCEC, ["xmcotaar1"] = -0xCEC, --941217
 		["xmcotaj2"] = -0xB52, --941219
 		["xmcotaj1"] = -0xB24, --941222
-		["xmcota"] = 0, ["xmcotaa"] = 0, ["xmcotad"] = 0, ["xmcotahr1"] = 0, ["xmcotaj"] = 0, ["xmcotau"] = 0, --950105
+		["xmcota"] = 0x36, ["xmcotaa"] = 0, ["xmcotad"] = 0, ["xmcotahr1"] = 0, ["xmcotaj"] = 0, ["xmcotau"] = 0, --950105
 		["xmcotah"] = 0x36, --950331
 	},
 	push_check = { base = 0x00A010,

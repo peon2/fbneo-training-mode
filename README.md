@@ -32,3 +32,5 @@ Street Fighter Alpha 2
 Super Street Fighter 2X - Grand Master Challenge
 
 X-Men vs Street Fighter
+
+X-Men: Children of the Atom
