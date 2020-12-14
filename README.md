@@ -12,6 +12,8 @@ Select the script and hit run!
 Be sure to be playing against P2.
 
 
+Video showing usage of the simple options: https://www.youtube.com/watch?v=sWxGWU1npm0
+
 
 Currently supports:
 
