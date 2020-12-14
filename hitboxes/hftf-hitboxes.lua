@@ -230,7 +230,7 @@ end
 
 function hitboxesReg() 
 	if hitboxes.enabled then
-		render_hitboxes()
+		drawHitboxes()
 	end
 end
 
