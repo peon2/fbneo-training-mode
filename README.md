@@ -21,6 +21,8 @@ Cyberbots
 
 JoJo's Bizarre Adventure: Heritage for the Future
 
+JoJo's Venture
+
 The Last Blade 2
 
 Marvel vs Capcom - Clash of Super Heroes
