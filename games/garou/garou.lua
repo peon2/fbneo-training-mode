@@ -39,22 +39,6 @@ translationtable = {
 	["Button D"] = 11,
 }
 
-function playerOneFacingLeft()
-
-end
-
-function playerTwoFacingLeft()
-
-end
-
-function playerOneInHitstun()
-
-end
-
-function playerTwoInHitstun()
-
-end
-
 function readPlayerOneHealth()
 	return rb(0x10048E)
 end
@@ -87,11 +71,6 @@ function writePlayerTwoMeter(meter)
 	wb(0x1005BE, meter)
 end
 
-function maxMeter()
-	memory.writebyte(0x1004BE, 0x80)
-	memory.writebyte(0x1005BE, 0x80)
-end
-
 function infiniteTime()
 	memory.writebyte(0x107490,0x99)
 end
@@ -104,5 +83,4 @@ end
 function Run() -- runs every frame
 	infiniteTime()
 	maxCredits()
-	maxMeter()
 end
