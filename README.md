@@ -30,6 +30,8 @@ Marvel vs Capcom - Clash of Super Heroes
 Red Earth
 
 Samurai Shodown 3
+ 
+Garou Mark Of The Wolves
 
 Street Fighter Alpha 2
 
