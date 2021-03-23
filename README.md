@@ -30,6 +30,8 @@ Marvel vs Capcom - Clash of Super Heroes
 Red Earth
 
 Samurai Shodown 3
+
+Samurai Shodown 5 Special
  
 Garou Mark Of The Wolves
 
