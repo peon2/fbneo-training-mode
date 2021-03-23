@@ -17,8 +17,10 @@ local games = {
 	sfa2 = {"sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	lb2 = {"lastbld2", hitboxes = "cps3-hitboxes", iconfile = "icons-neogeo-32.png"},
 	samsho3 = {"samsho3", iconfile = "icons-neogeo-32.png"},
+	samsh5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	vhuntjr2 = {"vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"}
 }
 
 local usage = function()
