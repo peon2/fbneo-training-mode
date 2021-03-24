@@ -18,14 +18,14 @@ return {
 -- Table: {3}
 {
    ["state"]=1,
-   ["simpleinputenabled"]=true,
+   ["simpleinputenabled"]=false,
    ["iconsize"]=10,
-   ["coinleniency"]=10,
-   ["framenumbersenabled"]=false,
+   ["coinleniency"]=11,
+   ["framenumbersenabled"]=true,
 },
 -- Table: {4}
 {
-   ["enabled"]=true,
+   ["enabled"]=false,
 },
 -- Table: {5}
 {
@@ -59,7 +59,7 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=false,
+   ["instantrefillhealth"]=true,
    ["refillhealthenabled"]=true,
    ["refillmeterspeed"]=10,
    ["refillhealthspeed"]=10,

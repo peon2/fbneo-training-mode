@@ -89,8 +89,23 @@ end
 
 function infiniteTime()
 	memory.writebyte(0x2060701,154)
+	gui.text(184,72, "Stun: " ..rb(0x206AADA), "green")
 end
 
 function Run()
 	infiniteTime()
+	P2StunMeter = rb(0x206AADA)
+	P2StunCounter = rb(0x206AB13)
+	P2UnitID = memory.readbyte(0x206AB25)
+
+	if P2UnitID == 0 then P2StunResistance = 36
+	elseif	P2UnitID == 1 then P2StunResistance = 34
+	elseif	P2UnitID == 2 then P2StunResistance = 30
+	elseif	P2UnitID == 3 then P2StunResistance = 28
+	end
+	
+	P2TotalSR = P2StunResistance + (P2StunCounter*5) -- maths to figure out stun cap
+	
+	gui.text(184,72, "Stun: " ..P2StunMeter, "green")
+	gui.text(168,82, "Max Stun: " ..P2TotalSR, "green")
 end
