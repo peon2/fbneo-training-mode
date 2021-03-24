@@ -20,6 +20,7 @@ local games = {
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhuntjr2 = {"vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	samsh5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
 }
 
 local usage = function()
