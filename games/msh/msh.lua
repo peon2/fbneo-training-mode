@@ -76,27 +76,22 @@ function infiniteTime()
 end
 
 function gemsPlayerOne()
-    memory.writebyte(0xFF41B6, 0x00)
-    memory.writebyte(0xFF41B7, 0x02)
-    memory.writebyte(0xFF41B8, 0x04)
-    memory.writebyte(0xFF41B9, 0x06)
-    memory.writebyte(0xFF41BA, 0x08)
-    memory.writebyte(0xFF41BB, 0x0A)
-    
-end
+    memory.writebyte(0xFF41B6, 0x00)	--Power
+    memory.writebyte(0xFF41B7, 0x02)	--Time
+    memory.writebyte(0xFF41B8, 0x04)	--Space
+    memory.writebyte(0xFF41B9, 0x06)	--Soul
+    memory.writebyte(0xFF41BA, 0x08)	--Reality
+    memory.writebyte(0xFF41BB, 0x0A)	--Mind
 
-gemLoop = true
+end
 
 function Run() -- runs every frame
 
 	infiniteTime()
 
-    while gmeLoop == true do
-
-        gemsPlayerOne()
-
-        gemLoop = false
-    end
-
+	for gemMem = 0xFF41B6, 0xFF41BB, 1 do
+		if rb(gemMem) ~= 0x00 and rb(gemMem) ~= 0x02 and rb(gemMem) ~= 0x04 and rb(gemMem) ~= 0x06 and rb(gemMem) ~= 0x08 and rb(gemMem) ~= 0x0A then
+				gemsPlayerOne()
+		end
+	end
 end
-
