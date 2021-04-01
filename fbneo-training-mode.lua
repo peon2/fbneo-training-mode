@@ -21,6 +21,11 @@ local games = {
 	vhuntjr2 = {"vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	samsh5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
+	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 }
 
 local usage = function()

@@ -42,3 +42,13 @@ Super Street Fighter 2X - Grand Master Challenge
 X-Men vs Street Fighter
 
 X-Men: Children of the Atom
+
+Marvel Super Heroes
+
+Marvel Super Heroes vs Street Fighter
+
+The King Of Fighters '98
+
+The King Of Fighteres 2002
+
+Ninja Masters
