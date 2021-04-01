@@ -40,8 +40,6 @@ local usage = function()
 		print "Read function info with P1 Button 2"
 end
 
-print(usage())
-
 local defaultconfig = {
 	p1 = {
 		-- Health
@@ -1377,6 +1375,9 @@ setRegisters = function()
 		end
 		garbage()
 	end)
+	
+	print()
+	usage()
 end
 
 local exitprocedure = function()
