@@ -35,6 +35,8 @@ Samurai Shodown 5 Special
  
 Garou Mark Of The Wolves
 
+Waku Waku 7
+
 Street Fighter Alpha 2
 
 Super Street Fighter 2X - Grand Master Challenge
