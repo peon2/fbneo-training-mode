@@ -24,6 +24,9 @@ local p2meter2 = 0x100297
 local p1stocks = 0x100159
 local p2stocks = 0x100299
 
+local p1combocounter = 0x10679d
+local p2combocounter = 0x1067c7
+
 translationtable = {
 	{
 		"coin",
@@ -51,17 +54,33 @@ translationtable = {
 	["Button D"] = 11,
 }
 
+function playerOneFacingLeft()
+	return rb(0x100119) == 0
+end
+
+function playerTwoFacingLeft()
+	return rb(0x100259) == 0
+end
+
+function playerOneInHitstun()
+	return rb(p2combocounter) ~= 0
+end
+
+function playerTwoInHitstun()
+	return rb(p1combocounter) ~= 0
+end
 
 function readPlayerOneHealth(health)
-	return rb(0x10014A)
+	return rb(p1health1)
 end
+
 function writePlayerOneHealth(health)
 	wb(p1health1, health)
 	wb(p1health2, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(0x10028A)
+	return rb(p2health1)
 end
 
 function writePlayerTwoHealth(health)
