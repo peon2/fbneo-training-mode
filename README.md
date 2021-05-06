@@ -54,3 +54,13 @@ The King Of Fighters '98
 The King Of Fighteres 2002
 
 Ninja Masters
+
+Dino Rex
+
+Matrimelee
+
+Super Gem Fighter
+
+Art of Fighting 3
+
+World Heroes Perfect

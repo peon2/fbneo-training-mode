@@ -8,6 +8,7 @@ local fc = emu.framecount()
 
 local games = {
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
+	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -22,11 +23,15 @@ local games = {
 	vhuntjr2 = {"vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	samsh5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	matrim = {"matrim", iconfile = "icons-neogeo-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
 	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
+	whp = {"whp", iconfile = "icons-neogeo-32.png"},
 }
 
 local usage = function()
@@ -161,7 +166,9 @@ if fs then
 	else
 		print("Config file not found for "..dirname..", using default")
 	end
-	assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
+	if dirname ~= nil and dirname~="" then
+		assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
+	end
 else
 	print("Can't read/write")
 end
@@ -457,7 +464,7 @@ end
 local saveConfig = function()
 	if not availablefunctions.tablesave or not config.changed then return end
 	config.changed = nil -- only saves if the config has changed
-	print("Saving config")
+	print("Saving config: " ..dirname.."//config.lua")
 	assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
 end
 
@@ -1270,7 +1277,6 @@ setRegisters = function()
 	
 	if modulevars.p1.constants.maxhealth and availablefunctions.writeplayeronehealth then
 		table.insert(registers.registerafter, instantHealthP1)
-		combovars.p1.instantrefillhealth = true
 	else
 		str = ""
 		if not modulevars.p1.constants.maxhealth then
@@ -1284,7 +1290,6 @@ setRegisters = function()
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.writeplayertwohealth then
 		table.insert(registers.registerafter, instantHealthP2)
-		combovars.p2.instantrefillhealth = true
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
