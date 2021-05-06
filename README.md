@@ -17,50 +17,52 @@ Video showing usage of the simple options: https://www.youtube.com/watch?v=sWxGW
 
 Currently supports:
 
+Art of Fighting 3
+
 Cyberbots
+
+Dino Rex
+ 
+Garou Mark Of The Wolves
 
 JoJo's Bizarre Adventure: Heritage for the Future
 
 JoJo's Venture
 
+The King Of Fighters '98
+
+The King Of Fighteres 2002
+
 The Last Blade 2
 
+Matrimelee
+
+Marvel Super Heroes
+
+Marvel Super Heroes vs Street Fighter
+
 Marvel vs Capcom - Clash of Super Heroes
+
+Ninja Masters
 
 Red Earth
 
 Samurai Shodown 3
 
 Samurai Shodown 5 Special
- 
-Garou Mark Of The Wolves
-
-Waku Waku 7
 
 Street Fighter Alpha 2
 
+Super Gem Fighter
+
 Super Street Fighter 2X - Grand Master Challenge
+
+Vampire Hunter
+
+Waku Waku 7
+
+World Heroes Perfect
 
 X-Men vs Street Fighter
 
 X-Men: Children of the Atom
-
-Marvel Super Heroes
-
-Marvel Super Heroes vs Street Fighter
-
-The King Of Fighters '98
-
-The King Of Fighteres 2002
-
-Ninja Masters
-
-Dino Rex
-
-Matrimelee
-
-Super Gem Fighter
-
-Art of Fighting 3
-
-World Heroes Perfect
