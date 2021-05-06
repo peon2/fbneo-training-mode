@@ -30,11 +30,11 @@ return {
 -- Table: {5}
 {
    ["instantrefillmeter"]=false,
-   ["refillmeterenabled"]=true,
-   ["refillhealthspeed"]=10,
-   ["refillhealthenabled"]=true,
+   ["refillmeterenabled"]=false,
    ["instantrefillhealth"]=true,
+   ["refillhealthenabled"]=true,
    ["refillmeterspeed"]=10,
+   ["refillhealthspeed"]=10,
 },
 -- Table: {6}
 {
@@ -52,16 +52,16 @@ return {
    ["combotextcolour2"]=16711935,
    ["combotextx"]=180,
    ["totaltextcolour"]=16711935,
-   ["combotexty"]=42,
    ["damagetextcolour"]=16711935,
+   ["combotexty"]=42,
 },
 -- Table: {8}
 {
    ["instantrefillmeter"]=false,
-   ["refillmeterenabled"]=true,
-   ["refillhealthspeed"]=10,
-   ["refillhealthenabled"]=true,
+   ["refillmeterenabled"]=false,
    ["instantrefillhealth"]=false,
+   ["refillhealthenabled"]=true,
    ["refillmeterspeed"]=10,
+   ["refillhealthspeed"]=10,
 },
 }

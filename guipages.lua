@@ -87,6 +87,33 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						end
 					end,
 	},
+	p1meterlesser = {
+		text = "P1 meter settings",
+		x = 40,
+		y = 50,
+		olcolour = "black",
+		info = {
+			"Controls how P1 meter is handled",
+		},
+		func = 	function() 
+					if combovars.p1.refillmeterenabled then
+						changeConfig("p1", "refillmeterenabled", false, combovars.p1)
+						changeConfig("p1", "instantrefillmeter", false, combovars.p1)
+					else
+						changeConfig("p1", "refillmeterenabled", true, combovars.p1)
+						changeConfig("p1", "instantrefillmeter", true, combovars.p1)
+					end
+				end,
+		autofunc = 	function(this)
+						if not combovars.p1.refillmeterenabled then
+							this.text = "No Refill"
+							this.x = 92
+						else
+							this.text = "Always Full"
+							this.x = 84
+						end
+					end,
+	},
 	p2hold = {
 		none = {
 			text = "None",
@@ -1115,6 +1142,8 @@ guipages = { -- interactiveguipages
 
 if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.playertwoinhitstun then
 	table.insert(guipages[1], guielements.p1meter)
+elseif modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then
+	table.insert(guipages[1], guielements.p1meterlesser)
 end
 
 if inputDisplayReg then -- if input-display.lua is loaded
