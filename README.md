@@ -49,7 +49,15 @@ Ninja Masters
 
 Red Earth
 
+Samurai Shodown
+
+Samurai Shodown 2
+
 Samurai Shodown 3
+
+Samurai Shodown 4
+
+Samurai Shodown 5
 
 Samurai Shodown 5 Special
 
