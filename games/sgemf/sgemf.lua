@@ -1,5 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
--- most of these values came from https://github.com/jedpossum/EmuLuaScripts/blob/master/cybots.lua
+-- most of these values came from FlabCaptain's sgemf training mode script
 
 print "Known Issues: with sgemf"
 print "Chain combos sometimes won't update the combo counter properly on whiffed attacks."

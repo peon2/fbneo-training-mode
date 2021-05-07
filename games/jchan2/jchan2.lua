@@ -1,5 +1,7 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
+
+-- some training mode stuff taken from https://github.com/ehtrashy/Jchan2TrainingScript
 -- P1 UID is 0x200F82, P2 UID is 20120E
 
 p1maxhealth = 0x7FFF
