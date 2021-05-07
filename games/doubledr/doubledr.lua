@@ -1,23 +1,24 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with samsho"
-print "Issues with reading/writing health and meter"
+p1maxhealth = 0x6800 -- word
+p2maxhealth = 0x6800
+-- health tends towards 0x6800 from 0 as damage is taken
+
+print "Known Issues: with doubledr"
+print "Flipping the replay when characters swap sides"
 print ""
 
-p1maxhealth = 0x80
-p2maxhealth = 0x80
+p1maxmeter = 0x40
+p2maxmeter = 0x40
 
-p1maxmeter = 0x20
-p2maxmeter = 0x20
+local p1health = 0x100450
+local p2health = 0x100550
 
-local p1health = 0x104c9b
-local p2health = 0x1036e7
+local p1meter = 0x100510
+local p2meter = 0x100610
 
-local p1meter = 0x104cd0
-local p2meter = 0x104f10
-
-local p1direction = 0x10105c
-local p2direction = 0x100ad0
+local p1combocounter = 0x10061f
+local p2combocounter = 0x10051f
 
 translationtable = {
 	{
@@ -46,34 +47,36 @@ translationtable = {
 	["Button D"] = 11,
 }
 
-function playerOneFacingLeft()
-	return rb(p1direction)==1
+function _playerOneFacingLeft()
+
 end
 
-function playerTwoFacingLeft()
-	return rb(p2direction)==0
+function _playerTwoFacingLeft()
+
 end
 
-function _playerOneInHitstun()
+function playerOneInHitstun()
+	return rb(p2combocounter)~=0
 end
 
-function _playerTwoInHitstun()
+function playerTwoInHitstun()
+	return rb(p1combocounter)~=0
 end
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	return p1maxhealth-rb(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	wb(p1health, p1maxhealth-health)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health)
+	return p2maxhealth-rb(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	wb(p2health, p1maxhealth-health)
 end
 
 function readPlayerOneMeter()
@@ -93,9 +96,10 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0x100Ac6, 0x98)
+	wb(0x102242, 0x9a)
 end
 
 function Run()
 	infiniteTime()
+	wb(0x108E84,1) -- unlock secret chars
 end
