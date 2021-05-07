@@ -35,6 +35,10 @@ JoJo's Bizarre Adventure: Heritage for the Future
 
 JoJo's Venture
 
+The King Of Fighters '94
+
+The King Of Fighters '95
+
 The King Of Fighters '98
 
 The King Of Fighteres 2002

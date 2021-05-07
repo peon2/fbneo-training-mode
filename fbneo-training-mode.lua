@@ -18,6 +18,8 @@ local games = {
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-jchan2-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
+	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof95 = {"kof95", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	lb2 = {"lastbld2", hitboxes = "cps3-hitboxes", iconfile = "icons-neogeo-32.png"},
