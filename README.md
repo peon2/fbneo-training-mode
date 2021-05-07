@@ -22,6 +22,8 @@ Art of Fighting 3
 Cyberbots
 
 Dino Rex
+
+Double Dragon (Neo-Geo)
  
 Garou Mark Of The Wolves
 
