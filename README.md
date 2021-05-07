@@ -25,6 +25,8 @@ Dino Rex
  
 Garou Mark Of The Wolves
 
+Jackie Chan in Fists of Fire
+
 JoJo's Bizarre Adventure: Heritage for the Future
 
 JoJo's Venture

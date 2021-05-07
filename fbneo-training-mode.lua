@@ -3,6 +3,7 @@ wb = memory.writebyte
 ww = memory.writeword
 rb = memory.readbyte
 rw = memory.readword
+rws = memory.readwordsigned
 
 local fc = emu.framecount()
 
@@ -11,6 +12,7 @@ local games = {
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-jchan2-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
 	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -50,7 +52,7 @@ local defaultconfig = {
 	p1 = {
 		-- Health
 		refillhealthspeed = 10,
-		instantrefillhealth = false,
+		instantrefillhealth = true,
 		refillhealthenabled = true,
 		refillmeterspeed = 10,
 		instantrefillmeter = false,
