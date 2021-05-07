@@ -4,6 +4,7 @@ ww = memory.writeword
 rb = memory.readbyte
 rw = memory.readword
 rws = memory.readwordsigned
+rdw = memory.readdword
 
 local fc = emu.framecount()
 
@@ -24,7 +25,11 @@ local games = {
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
 	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},
+	samsho2 = {"samsho2", iconfile = "icons-neogeo-32.png"},
 	samsho3 = {"samsho3", iconfile = "icons-neogeo-32.png"},
+	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
+	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
 	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
 	sfa2 = {"sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
