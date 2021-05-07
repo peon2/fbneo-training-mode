@@ -23,6 +23,8 @@ Cyberbots
 
 Dino Rex
 
+Dragonball Z 2 - Super Battle
+
 Double Dragon (Neo-Geo)
  
 Garou Mark Of The Wolves

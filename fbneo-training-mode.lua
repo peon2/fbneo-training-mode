@@ -12,6 +12,7 @@ local games = {
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
+	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
 	doubledr = {"doubledr", iconfile= "icons-neogeo-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-jchan2-32.png"},
