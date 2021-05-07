@@ -25,6 +25,7 @@ local games = {
 	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
 	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
 	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},

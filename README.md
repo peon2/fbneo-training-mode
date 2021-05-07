@@ -49,6 +49,8 @@ Marvel Super Heroes vs Street Fighter
 
 Marvel vs Capcom - Clash of Super Heroes
 
+Mighty Warriors
+
 Ninja Masters
 
 Red Earth
