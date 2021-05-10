@@ -26,6 +26,7 @@ local games = {
 	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
 }
 
 local usage = function()

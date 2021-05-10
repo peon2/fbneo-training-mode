@@ -4,33 +4,39 @@ return {
 {
    ["recording"]={2},
    ["inputs"]={3},
-   ["p2"]={4},
-   ["interactivegui"]={5},
-   ["combogui"]={6},
-   ["p1"]={7},
+   ["hitbox"]={4},
+   ["p2"]={5},
+   ["interactivegui"]={6},
+   ["combogui"]={7},
+   ["p1"]={8},
 },
 -- Table: {2}
 {
-   ["skiptostart"]=false,
-   ["skiptofinish"]=false,
+   ["skiptostart"]=true,
+   ["skiptofinish"]=true,
 },
 -- Table: {3}
 {
-   ["coinleniency"]=10,
-   ["simpleinputenabled"]=true,
    ["state"]=1,
+   ["simpleinputenabled"]=true,
    ["iconsize"]=10,
+   ["coinleniency"]=10,
+   ["framenumbersenabled"]=false,
 },
 -- Table: {4}
 {
-   ["instantrefillmeter"]=false,
-   ["refillmeterenabled"]=true,
-   ["refillmeterspeed"]=10,
-   ["refillhealthspeed"]=10,
-   ["instantrefillhealth"]=false,
-   ["refillhealthenabled"]=true,
+   ["enabled"]=false,
 },
 -- Table: {5}
+{
+   ["instantrefillmeter"]=false,
+   ["refillmeterenabled"]=true,
+   ["refillhealthenabled"]=true,
+   ["refillhealthspeed"]=10,
+   ["refillmeterspeed"]=10,
+   ["instantrefillhealth"]=false,
+},
+-- Table: {6}
 {
    ["boxxd"]=8,
    ["boxym"]=9,
@@ -40,22 +46,22 @@ return {
    ["bg"]=4042322175,
    ["selectioncolour"]=4278190335,
 },
--- Table: {6}
+-- Table: {7}
 {
    ["combotextcolour"]=4294902015,
    ["combotextcolour2"]=16711935,
    ["combotextx"]=180,
    ["totaltextcolour"]=16711935,
-   ["damagetextcolour"]=16711935,
    ["combotexty"]=42,
+   ["damagetextcolour"]=16711935,
 },
--- Table: {7}
+-- Table: {8}
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["refillmeterspeed"]=10,
-   ["refillhealthspeed"]=10,
-   ["instantrefillhealth"]=true,
    ["refillhealthenabled"]=true,
+   ["refillhealthspeed"]=10,
+   ["refillmeterspeed"]=10,
+   ["instantrefillhealth"]=true,
 },
 }
