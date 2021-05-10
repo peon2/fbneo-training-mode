@@ -3,20 +3,41 @@ wb = memory.writebyte
 ww = memory.writeword
 rb = memory.readbyte
 rw = memory.readword
+rws = memory.readwordsigned
+rdw = memory.readdword
 
 local fc = emu.framecount()
 
 local games = {
+	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
+	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
+	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
+	doubledr = {"doubledr", iconfile= "icons-neogeo-32.png"},
+	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-jchan2-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
-	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	xmvsf = {"xmvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	xmcota = {"xmcota", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa2 = {"sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof95 = {"kof95", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	lb2 = {"lastbld2", hitboxes = "cps3-hitboxes", iconfile = "icons-neogeo-32.png"},
+	matrim = {"matrim", iconfile = "icons-neogeo-32.png"},
+	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
+	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
+	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},
+	samsho2 = {"samsho2", iconfile = "icons-neogeo-32.png"},
 	samsho3 = {"samsho3", iconfile = "icons-neogeo-32.png"},
+	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
+	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
+	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	sfa2 = {"sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhuntjr2 = {"vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -41,13 +62,11 @@ local usage = function()
 		print "Read function info with P1 Button 2"
 end
 
-print(usage())
-
 local defaultconfig = {
 	p1 = {
 		-- Health
 		refillhealthspeed = 10,
-		instantrefillhealth = false,
+		instantrefillhealth = true,
 		refillhealthenabled = true,
 		refillmeterspeed = 10,
 		instantrefillmeter = false,
@@ -163,7 +182,9 @@ if fs then
 	else
 		print("Config file not found for "..dirname..", using default")
 	end
-	assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
+	if dirname ~= nil and dirname~="" then
+		assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
+	end
 else
 	print("Can't read/write")
 end
@@ -459,7 +480,7 @@ end
 local saveConfig = function()
 	if not availablefunctions.tablesave or not config.changed then return end
 	config.changed = nil -- only saves if the config has changed
-	print("Saving config")
+	print("Saving config: " ..dirname.."//config.lua")
 	assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
 end
 
@@ -1272,7 +1293,6 @@ setRegisters = function()
 	
 	if modulevars.p1.constants.maxhealth and availablefunctions.writeplayeronehealth then
 		table.insert(registers.registerafter, instantHealthP1)
-		combovars.p1.instantrefillhealth = true
 	else
 		str = ""
 		if not modulevars.p1.constants.maxhealth then
@@ -1286,7 +1306,6 @@ setRegisters = function()
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.writeplayertwohealth then
 		table.insert(registers.registerafter, instantHealthP2)
-		combovars.p2.instantrefillhealth = true
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
@@ -1378,6 +1397,9 @@ setRegisters = function()
 		end
 		garbage()
 	end)
+	
+	print()
+	usage()
 end
 
 local exitprocedure = function()

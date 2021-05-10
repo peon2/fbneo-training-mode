@@ -83,7 +83,7 @@ end
 table.insert(inp,{games,i})
 
 --------------------------------------------------------------------------------
---Heritage for the Future 4-button (CPS3 system)
+--Cyberbots (CPS2 system)
 games = {"cybots"}
 x,dx = 0x8,0x128
 y,dy = 0xd0,0
@@ -96,9 +96,28 @@ for n=1,2 do
 	i[n.."L"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Low Attack",   "P"..n.." Button 1"}
 	i[n.."H"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x4, "P"..n.." High Attack", "P"..n.." Button 2"}
 	i[n.."B"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x4, "P"..n.." Boost", "P"..n.." Button 3"}
-	i[n.."W"] = {x+dx*(n-1)+0x48, y+dy*(n-1)+0x4, "P"..n.." Weapon",    "P"..n.." Button 4"}
-	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",        n..(n==1 and " Player" or " Players").." Start"}
-	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",         "Coin "..n}
+	i[n.."W"] = {x+dx*(n-1)+0x48, y+dy*(n-1)+0x4, "P"..n.." Weapon","P"..n.." Button 4"}
+	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start", n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin", "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
+--Super Gem Fighter (CPS2 system)
+games = {"sgemf"}
+x,dx = 0x8,0x128
+y,dy = 0xd0,0
+i = {}
+for n=1,2 do
+	i[n.."^" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<" ] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">" ] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."P"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Punch",   "P"..n.." Button 1"}
+	i[n.."K"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x4, "P"..n.." Kick", "P"..n.." Button 2"}
+	i[n.."S"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x4, "P"..n.." Special", "P"..n.." Button 3"}
+	i[n.."St" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start", n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin", "Coin "..n}
 end
 table.insert(inp,{games,i})
 
@@ -141,6 +160,88 @@ for n=1,2 do
 	i[n.."B"] = {x+dx*(n-1)+0x28, y+dy*(n-1)+0x4, "P"..n.." Button B", "P"..n.." Button 2"}
 	i[n.."C"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Button C", "P"..n.." Button 3"}
 	i[n.."D"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x4, "P"..n.." Button D", "P"..n.." Button 4"}
+	i[n.."S"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",    n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",     "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
+--Jackie Chan
+
+games = {"jchan2"}
+x,dx = 0x10,0xe0
+y,dy = 0xc8,0
+i = {}
+for n=1,2 do
+	i[n.."^"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<"] = {x+dx*(n-1)+0x08, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">"] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."LP"] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Button 1", "P"..n.." Button 1"}
+	i[n.."HP"] = {x+dx*(n-1)+0x28, y+dy*(n-1)+0x4, "P"..n.." Button 2", "P"..n.." Button 2"}
+	i[n.."LK"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Button 3", "P"..n.." Button 3"}
+	i[n.."HK"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x4, "P"..n.." Button 4", "P"..n.." Button 4"}
+	i[n.."S"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",    n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",     "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
+--Mighty Warriors
+
+games = {"mwarr"}
+x,dx = 0x10,0xe0
+y,dy = 0xc8,0
+i = {}
+for n=1,2 do
+	i[n.."^"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<"] = {x+dx*(n-1)+0x08, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">"] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."A"] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Button 1", "P"..n.." Button 1"}
+	i[n.."B"] = {x+dx*(n-1)+0x28, y+dy*(n-1)+0x4, "P"..n.." Button 2", "P"..n.." Button 2"}
+	i[n.."C"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Button 3", "P"..n.." Button 3"}
+	i[n.."S"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",    n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",     "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
+--Banpresto
+
+games = {"dbz2"}
+x,dx = 0x10,0xe0
+y,dy = 0xc8,0
+i = {}
+for n=1,2 do
+	i[n.."^"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<"] = {x+dx*(n-1)+0x08, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">"] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."A"] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Button 1", "P"..n.." Button 1"}
+	i[n.."B"] = {x+dx*(n-1)+0x28, y+dy*(n-1)+0x4, "P"..n.." Button 2", "P"..n.." Button 2"}
+	i[n.."C"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Button 3", "P"..n.." Button 3"}
+	i[n.."D"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x4, "P"..n.." Button 4", "P"..n.." Button 4"}
+	i[n.."S"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",    n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",     "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
+--Taito
+
+games = {"dinorex"}
+x,dx = 0x10,0xe0
+y,dy = 0xc8,0
+i = {}
+for n=1,2 do
+	i[n.."^"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<"] = {x+dx*(n-1)+0x08, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">"] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."1"] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Fire 1", "P"..n.." Button 1"}
+	i[n.."2"] = {x+dx*(n-1)+0x28, y+dy*(n-1)+0x4, "P"..n.." Fire 2", "P"..n.." Button 2"}
+	i[n.."3"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Fire 3", "P"..n.." Button 3"}
 	i[n.."S"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",    n..(n==1 and " Player" or " Players").." Start"}
 	i[n.."c"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",     "Coin "..n}
 end

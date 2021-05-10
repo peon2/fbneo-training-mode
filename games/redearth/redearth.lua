@@ -89,7 +89,6 @@ end
 
 function infiniteTime()
 	memory.writebyte(0x2060701,154)
-	gui.text(184,72, "Stun: " ..rb(0x206AADA), "green")
 end
 
 function Run()

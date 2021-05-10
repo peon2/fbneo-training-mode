@@ -21,7 +21,7 @@ return {
    ["simpleinputenabled"]=true,
    ["iconsize"]=10,
    ["coinleniency"]=10,
-   ["framenumbersenabled"]=false,
+   ["framenumbersenabled"]=true,
 },
 -- Table: {4}
 {
@@ -30,11 +30,11 @@ return {
 -- Table: {5}
 {
    ["instantrefillmeter"]=false,
-   ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=false,
-   ["refillhealthenabled"]=true,
-   ["refillmeterspeed"]=10,
+   ["refillmeterenabled"]=false,
    ["refillhealthspeed"]=10,
+   ["refillhealthenabled"]=true,
+   ["instantrefillhealth"]=false,
+   ["refillmeterspeed"]=10,
 },
 -- Table: {6}
 {
@@ -50,18 +50,18 @@ return {
 {
    ["combotextcolour"]=4294902015,
    ["combotextcolour2"]=16711935,
-   ["combotextx"]=180,
+   ["combotextx"]=170,
    ["totaltextcolour"]=16711935,
+   ["combotexty"]=45,
    ["damagetextcolour"]=16711935,
-   ["combotexty"]=42,
 },
 -- Table: {8}
 {
    ["instantrefillmeter"]=false,
-   ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=true,
-   ["refillhealthenabled"]=true,
-   ["refillmeterspeed"]=10,
+   ["refillmeterenabled"]=false,
    ["refillhealthspeed"]=10,
+   ["refillhealthenabled"]=true,
+   ["instantrefillhealth"]=false,
+   ["refillmeterspeed"]=10,
 },
 }

@@ -50,10 +50,10 @@ return {
 {
    ["combotextcolour"]=4294902015,
    ["combotextcolour2"]=16711935,
-   ["combotextx"]=180,
+   ["combotextx"]=177,
    ["totaltextcolour"]=16711935,
    ["damagetextcolour"]=16711935,
-   ["combotexty"]=42,
+   ["combotexty"]=55,
 },
 -- Table: {8}
 {

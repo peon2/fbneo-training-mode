@@ -19,7 +19,7 @@ return {
 {
    ["state"]=1,
    ["simpleinputenabled"]=true,
-   ["iconsize"]=10,
+   ["iconsize"]=15,
    ["coinleniency"]=10,
    ["framenumbersenabled"]=false,
 },
@@ -31,10 +31,10 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=false,
    ["refillhealthenabled"]=true,
-   ["refillmeterspeed"]=10,
    ["refillhealthspeed"]=10,
+   ["refillmeterspeed"]=10,
+   ["instantrefillhealth"]=false,
 },
 -- Table: {6}
 {
@@ -50,18 +50,18 @@ return {
 {
    ["combotextcolour"]=4294902015,
    ["combotextcolour2"]=16711935,
-   ["combotextx"]=180,
+   ["combotextx"]=145,
    ["totaltextcolour"]=16711935,
-   ["damagetextcolour"]=16711935,
    ["combotexty"]=42,
+   ["damagetextcolour"]=16711935,
 },
 -- Table: {8}
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=true,
    ["refillhealthenabled"]=true,
-   ["refillmeterspeed"]=10,
    ["refillhealthspeed"]=10,
+   ["refillmeterspeed"]=10,
+   ["instantrefillhealth"]=true,
 },
 }

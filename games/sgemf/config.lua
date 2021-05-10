@@ -59,7 +59,7 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=true,
+   ["instantrefillhealth"]=false,
    ["refillhealthenabled"]=true,
    ["refillmeterspeed"]=10,
    ["refillhealthspeed"]=10,
