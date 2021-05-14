@@ -87,12 +87,13 @@ function _writePlayerTwoMeter(meter)
 	
 end
 
-function infiniteTime()
+local function infiniteTime()
 	memory.writebyte(0x2060701,154)
 end
 
-function Run()
-	infiniteTime()
+stunMeterEnabled = true
+
+local function stunMeter()
 	P2StunMeter = rb(0x206AADA)
 	P2StunCounter = rb(0x206AB13)
 	P2UnitID = memory.readbyte(0x206AB25)
@@ -106,5 +107,11 @@ function Run()
 	P2TotalSR = P2StunResistance + (P2StunCounter*5) -- maths to figure out stun cap
 	
 	gui.text(184,72, "Stun: " ..P2StunMeter, "green")
-	gui.text(168,82, "Max Stun: " ..P2TotalSR, "green")
+	gui.text(168,82, "Max Stun: " ..P2TotalSR, "green")	
+
+end
+
+function Run()
+	infiniteTime()
+	if stunMeterEnabled then stunMeter() end
 end

@@ -1,0 +1,11 @@
+v0.21.05.14
+
+Refactored some internal code.
+Changed some gui options to select on button release for quicker menu usage.
+Added support for game-specific guipages [see Red Earth]
+
+X-Men Children of the Atom:
+Added some missing features and fixed existing ones
+Added xmcotabh (Boss Hack) as a recognised rom.
+
+Added support for Kabuki Klash (kabukikl)

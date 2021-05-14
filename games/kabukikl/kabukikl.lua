@@ -1,26 +1,28 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-p1maxhealth = 0x90
-p2maxhealth = 0x90
-p1maxmeter = 0x8E
-p2maxmeter = 0x8E
+p1maxhealth = 0x64
+p2maxhealth = 0x64
 
-local p1health = 0xFF4191
-local p2health = 0xFF4591
+p1maxmeter = 0x3C
+p2maxmeter = 0x3C
 
-local p1meter = 0xFF4195
-local p2meter = 0xFF4595
+local p1health = 0x100e56
+local p2health = 0x100f56
 
-local p1combocounter = 0xFF4110
-local p2combocounter = 0xFF4510
+local p1meter = 0x100e6e
+local p2meter = 0x100f6e
 
-local p1direction = 0xFF404d
-local p2direction = 0xFF444d
+local p1direction = 0x100eb9 -- seems to be some sort of lead to animation pointers
+local p2direction = 0x100fb9
+
+local p1combocounter = 0x100f5c
+local p2combocounter = 0x100e5c
 
 translationtable = {
 	{
 		"coin",
 		"start",
+		"select",
 		"up",
 		"down",
 		"left",
@@ -29,29 +31,26 @@ translationtable = {
 		"button2",
 		"button3",
 		"button4",
-		"button5",
-		"button6",
 	},
 	["Coin"] = 1,
 	["Start"] = 2,
-	["Up"] = 3,
-	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
-	["Weak Punch"] = 7,
-	["Medium Punch"] = 8,
-	["Strong Punch"] = 9,
-	["Weak Kick"] = 10,
-	["Medium Kick"] = 11,
-	["Strong Kick"] = 12
+	["Select"] = 3,
+	["Up"] = 4,
+	["Down"] = 5,
+	["Left"] = 6,
+	["Right"] = 7,
+	["Button A"] = 8,
+	["Button B"] = 9,
+	["Button C"] = 10,
+	["Button D"] = 11,
 }
 
 function playerOneFacingLeft()
-	return rb(0xFF404d)==0
+	return rb(p1direction)==2
 end
 
 function playerTwoFacingLeft()
-	return rb(0xFF444d)==0
+	return rb(p2direction)==2
 end
 
 function playerOneInHitstun()
@@ -79,7 +78,7 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter, meter)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
@@ -87,17 +86,17 @@ function writePlayerOneMeter(meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter, meter)
+	return rb(p1meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	wb(p1meter, meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0xFF4808,0x99)
+	ww(0x103a16, 0x9900)
 end
 
-function Run()
+function Run() -- runs every frame
 	infiniteTime()
 end

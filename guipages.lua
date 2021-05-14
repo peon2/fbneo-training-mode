@@ -258,233 +258,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 4,
 		y = 90,
 		olcolour = "black",
-		func = 	function()
-					changeInteractiveGuiPage("scrollingtextsettings")
-					changeInteractiveGuiSelection(2)
-				end,
-	},
-	scrollinginputsize = {
-		main = {
-			text = "Scrolling input text size ",
-			x = 4,
-			y = 70,
-			info = {
-				"Sets the size of the scrolling input text images",
-			},
-			olcolour = "black",
-			func = 		function()
-							changeInteractiveGuiPage("scrollinginputsize")
-							changeInteractiveGuiSelection(inputs.properties.scrollinginput.iconsize-7)
-						end,
-			autofunc = 	function(this)
-							this.text = "Scrolling input text size "..(inputs.properties.scrollinginput.iconsize-7)
-						end,
-		},
-		{
-			text = "1",
-			x = 108,
-			y = 10,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 8, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "2",
-			x = 108,
-			y = 20,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 9, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "3",
-			x = 108,
-			y = 30,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 10, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "4",
-			x = 108,
-			y = 40,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 11, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "5",
-			x = 108,
-			y = 50,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 12, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "6",
-			x = 108,
-			y = 60,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 13, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "7",
-			x = 108,
-			y = 70,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 14, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "8",
-			x = 108,
-			y = 80,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 15, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "9",
-			x = 108,
-			y = 90,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 16, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "10",
-			x = 108,
-			y = 100,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 17, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "11",
-			x = 108,
-			y = 110,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 18, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "12",
-			x = 108,
-			y = 120,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 19, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-		{
-			text = "13",
-			x = 108,
-			y = 130,
-			func =	function()
-						changeInteractiveGuiPage("scrollingtextsettings")
-						changeInteractiveGuiSelection(2)
-					end,
-			selectfunc =	function()
-								changeConfig("inputs", "iconsize", 20, inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end,
-		},
-	},
-	scrollinginputstate = {
-		text = "Set the state of the scrolling input",
-		x = 76,
-		y = 50,
-		info = {
-			"Controls which player inputs are displayed",
-		},
-		olcolour = "black",
-		func = 	function()
-					if inputs.properties.scrollinginput.state+1 < 5 then
-						inputs.properties.scrollinginput.state = inputs.properties.scrollinginput.state+1
-						changeConfig("inputs","state",inputs.properties.scrollinginput.state)
-						scrollingInputReload()
-					else
-						inputs.properties.scrollinginput.state = 1
-						changeConfig("inputs","state",inputs.properties.scrollinginput.state)
-						scrollingInputReload()
-					end
-				end,
-		autofunc =	function(this)
-						local state = inputs.properties.scrollinginput.state
-						if state == 1 then
-							this.text = "P1 inputs"
-							this.x = 76
-						elseif state == 2 then
-							this.text = "P2 inputs"
-							this.x = 76
-						elseif state == 3 then
-							this.text = "P1 & P2 inputs"
-							this.x = 56
-						else
-							this.text = "Off"
-							this.x = 100
-						end
-					end,
+		func = 	function() CIG("scrollingtextsettings", 2) end,
 	},
 	scrollinginputframestoggle = {
 		text = "Display scrolling input frame numbers",
@@ -532,181 +306,32 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 					end,
 		},
 	coininputleniency = {
-		main = {
-			text = "Coin leniency",
-			x = 64,
-			y = 30,
-			olcolour = "black",
-			info = {
-				"This controls how many frames you have between each coin input",
-				"10 frames allows for faster usage",
-				"but 15 might be easier for slow fingers",
-			},
-			func = 		function()
-							changeInteractiveGuiPage("coininputleniency")
-							changeInteractiveGuiSelection(inputs.properties.coinleniency - 9)
-						end,
-			autofunc = 	function(this)
-							this.text = "Coin leniency "..(inputs.properties.coinleniency)
-						end,
+		text = "Coin leniency",
+		x = 64,
+		y = 30,
+		olcolour = "black",
+		info = {
+			"This controls how many frames you have between each coin input",
+			"10 frames allows for faster usage",
+			"but 15 might be easier for slow fingers",
 		},
-		{
-			text = "10",
-			x = 120,
-			y = 30,
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-						changeConfig("inputs", "coinleniency", 10, inputs.properties)
+		func = 		function()
+						local Elements = {
+							{text = "10"},
+							{text = "11"},
+							{text = "12"},
+							{text = "13"},
+							{text = "14"},
+							{text = "15"},
+						}
+						CIG("coininputleniency", inputs.properties.coinleniency - 9)
+						local rf = function(n) return function() changeConfig("inputs", "coinleniency", n+9, inputs.properties) CIG(1, 3) end end
+						guipages.temp = createPopUpMenu(guipages[1], rf, nil, nil, Elements, 136, 30, nil)
+						CIG("temp", recording.hitplayback)
 					end,
-		},
-		{
-			text = "11",
-			x = 120,
-			y = 40,
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-						changeConfig("inputs", "coinleniency", 11, inputs.properties)
+		autofunc = 	function(this)
+						this.text = "Coin leniency "..(inputs.properties.coinleniency)
 					end,
-		},
-		{
-			text = "12",
-			x = 120,
-			y = 50,
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-						changeConfig("inputs", "coinleniency", 12, inputs.properties)
-					end,
-		},
-		{
-			text = "13",
-			x = 120,
-			y = 60,
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-						changeConfig("inputs", "coinleniency", 13, inputs.properties)
-					end,
-		},
-		{
-			text = "14",
-			x = 120,
-			y = 70,
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-						changeConfig("inputs", "coinleniency", 14, inputs.properties)
-					end,
-		},
-		{
-			text = "15",
-			x = 120,
-			y = 80,
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-						changeConfig("inputs", "coinleniency", 15, inputs.properties)
-					end,
-		},
-	},
-	slotselection = {
-		title = {
-			text = "Recording Menu",
-			x = interactivegui.boxxlength/2 - 28,
-			y = 1,
-		},
-		slotselection = {
-			text = "Slot",
-			x = 41,
-			y = 45,
-		},
-		{
-			text = "1",
-			x = 61,
-			y = 25,
-			func = 	function()
-				recording.recordingslot = 1
-				changeInteractiveGuiPage(3)
-				changeInteractiveGuiSelection(3)
-			end,
-			autofunc =	function(this)
-							if recording[1][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "2",
-			x = 61,
-			y = 35,
-			func = 	function()
-				recording.recordingslot = 2
-				changeInteractiveGuiPage(3)
-				changeInteractiveGuiSelection(3)
-			end,
-			autofunc =	function(this)
-							if recording[2][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "3",
-			x = 61,
-			y = 45,
-			func = 	function()
-				recording.recordingslot = 3
-				changeInteractiveGuiPage(3)
-				changeInteractiveGuiSelection(3)
-			end,
-			autofunc =	function(this)
-							if recording[3][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "4",
-			x = 61,
-			y = 55,
-			func = 	function()
-				recording.recordingslot = 4
-				changeInteractiveGuiPage(3)
-				changeInteractiveGuiSelection(3)
-			end,
-			autofunc =	function(this)
-							if recording[4][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "5",
-			x = 61,
-			y = 65,
-			func = 	function()
-				recording.recordingslot = 5
-				changeInteractiveGuiPage(3)
-				changeInteractiveGuiSelection(3)
-			end,
-			autofunc =	function(this)
-							if recording[5][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
 	},
 	hitplayback = {
 		main = {
@@ -717,10 +342,29 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			info = {
 				"Plays back the respective replay slot after hit",
 			},
-			func = 	function()
-						changeInteractiveGuiPage("hitplayback")
-						changeInteractiveGuiSelection(1)
-					end,
+			func = 		function()
+							local Elements = {
+								{},
+								{},
+								{},
+								{},
+								{},
+								{y = 75, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(3, 3) end end, autofunc = function() end}
+							}
+							local rf = function(n) return function() recording.hitslot = n CIG(3, 3) end end
+							local af = function(n) return
+								function(this)
+									if recording[n][1] then -- if something is in the slot 
+										this.textcolour = "yellow"
+									else
+										this.textcolour = "white"
+									end
+								end
+							end
+							
+							guipages.temp = createPopUpMenu(guipages[3], rf, nil, af, Elements, 72, 85, nil)
+							CIG("temp", recording.hitplayback) 
+						end,
 			autofunc =	function(this)
 							if not recording.hitslot then
 								this.text = "Select Hit Slot"
@@ -730,101 +374,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 								this.x = 25
 							end
 						end,
-		},
-		{
-			text = "None",
-			x = 61,
-			y = 75,
-			func = 	function()
-						recording.hitslot = nil
-						changeInteractiveGuiPage(3)
-						changeInteractiveGuiSelection(3)
-					end,
-		},
-		{
-			text = "1",
-			x = 61,
-			y = 85,
-			func = 	function()
-						recording.hitslot = 1
-						changeInteractiveGuiPage(3)
-						changeInteractiveGuiSelection(3)
-					end,
-			autofunc =	function(this)
-							if recording[1][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "2",
-			x = 61,
-			y = 95,
-			func = 	function()
-						recording.hitslot = 2
-						changeInteractiveGuiPage(3)
-						changeInteractiveGuiSelection(3)
-					end,
-			autofunc =	function(this)
-							if recording[2][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "3",
-			x = 61,
-			y = 105,
-			func = 	function()
-						recording.hitslot = 3
-						changeInteractiveGuiPage(3)
-						changeInteractiveGuiSelection(3)
-					end,
-			autofunc =	function(this)
-							if recording[3][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "4",
-			x = 61,
-			y = 115,
-			func = 	function()
-						recording.hitslot = 4
-						changeInteractiveGuiPage(3)
-						changeInteractiveGuiSelection(3)
-					end,
-			autofunc =	function(this)
-							if recording[4][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
-		},
-		{
-			text = "5",
-			x = 61,
-			y = 125,
-			func = 	function()
-						recording.hitslot = 5
-						changeInteractiveGuiPage(3)
-						changeInteractiveGuiSelection(3)
-					end,
-			autofunc =	function(this)
-							if recording[5][1] then -- if something is in the slot 
-								this.textcolour = "yellow"
-							else
-								this.textcolour = "white"
-							end
-						end,
+		
 		},
 	},
 	hitboxsettings = {
@@ -832,10 +382,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 40,
 		y = 110,
 		olcolour = "black",
-		func = 	function()
-					changeInteractiveGuiPage("hitboxsettings")
-					changeInteractiveGuiSelection(2)
-				end,
+		func = 	function() CIG("hitboxsettings", 2) end,
 		info = {
 			"Change hitbox settings",
 		},
@@ -871,7 +418,7 @@ guipages = { -- interactiveguipages
 		},
 		guielements.leftarrow,
 		guielements.rightarrow,
-		guielements.coininputleniency.main,
+		guielements.coininputleniency,
 	},
 	{ -- Dummy
 		title = {
@@ -888,7 +435,7 @@ guipages = { -- interactiveguipages
 			info = {
 				"Allows you to set P2 to hold an ordinal point",
 			},
-			func = function() interactivegui.selection = 1 changeInteractiveGuiPage("setdirectionp2") end,
+			func = function() CIG("setdirectionp2", 1) end,
 			olcolour = "black",
 			autofunc = 	function(this)
 							local str = "P2 holding "
@@ -942,10 +489,21 @@ guipages = { -- interactiveguipages
 			x = 41,
 			y = 45,
 			olcolour = "black",
-			func = 	function()
-				changeInteractiveGuiPage("slotselection")
-				changeInteractiveGuiSelection(recording.recordingslot)
-			end,
+			func = 		function()
+							local rf = function(n) return function() recording.recordingslot = n CIG(3, 3) end end
+							local af = function(n) return
+								function(this)
+									if recording[n][1] then -- if something is in the slot 
+										this.textcolour = "yellow"
+									else
+										this.textcolour = "white"
+									end
+								end
+							end
+							
+							guipages.temp = createPopUpMenu(guipages[3], rf, nil, af, nil, 72, 25, 5)
+							CIG("temp", recording.recordingslot) 
+						end,
 			autofunc = 	function(this) -- calls every frame this is visible
 							this.text = "Slot "..recording.recordingslot
 						end,
@@ -1032,30 +590,6 @@ guipages = { -- interactiveguipages
 			y = 70,
 		},
 	},
-	slotselection = { -- move these into guielements
-		left = guielements.falseleftarrow,
-		right = guielements.falserightarrow,
-		title = guielements.slotselection.title,
-		text = guielements.slotselection.slotselection,
-		guielements.slotselection[1],
-		guielements.slotselection[2],
-		guielements.slotselection[3],
-		guielements.slotselection[4],
-		guielements.slotselection[5],
-	},
-	coininputleniency = {
-		main = {
-			text = "Coin leniency",
-			x = 64,
-			y = 30,
-		},
-		guielements.coininputleniency[1],
-		guielements.coininputleniency[2],
-		guielements.coininputleniency[3],
-		guielements.coininputleniency[4],
-		guielements.coininputleniency[5],
-		guielements.coininputleniency[6],
-	},
 	scrollingtextsettings = {
 		title = {
 			text = "Scrolling Input Settings",
@@ -1068,13 +602,66 @@ guipages = { -- interactiveguipages
 			info = {
 				"Back",
 			},
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
+			func =	function() CIG(1,3) end,
+		},
+		{
+			text = "Set the state of the scrolling input",
+			x = 76,
+			y = 50,
+			info = {
+				"Controls which player inputs are displayed",
+			},
+			olcolour = "black",
+			func = 	function()
+						local Elements = {
+							{text = "P1 inputs"},
+							{text = "P2 inputs"},
+							{text = "P1 & P2 inputs"},
+							{text = "Off"},
+						}
+						local rf = function(n) return function()
+							changeConfig("inputs","state",n,inputs.properties.scrollinginput)
+							scrollingInputReload()
+							CIG("scrollingtextsettings",2)
+						end end
+						guipages.temp = createPopUpMenu(guipages.scrollingtextsettings, rf, nil, nil, Elements, 120, 30, nil)
+						CIG("temp", inputs.properties.scrollinginput.state)
+					end,
+			autofunc =	function(this)
+						local state = inputs.properties.scrollinginput.state
+						if state == 1 then
+							this.text = "P1 inputs"
+							this.x = 76
+						elseif state == 2 then
+							this.text = "P2 inputs"
+							this.x = 76
+						elseif state == 3 then
+							this.text = "P1 & P2 inputs"
+							this.x = 56
+						else
+							this.text = "Off"
+							this.x = 100
+						end
 					end,
 		},
-		guielements.scrollinginputstate,
-		guielements.scrollinginputsize.main,
+		{
+			text = "Scrolling input text size ",
+			x = 4,
+			y = 70,
+			info = {
+				"Sets the size of the scrolling input text images",
+			},
+			olcolour = "black",
+			func = 		function() -- generate a new page and switch to it
+							local rf = function() return function() CIG("scrollingtextsettings", 2) end end
+							local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
+							guipages.temp = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)
+							CIG("temp", inputs.properties.scrollinginput.iconsize-7)
+						end,
+			autofunc = 	function(this)
+							this.text = "Scrolling input text size "..(inputs.properties.scrollinginput.iconsize-7)
+						end,
+		},
 		guielements.scrollinginputframestoggle,
 	},
 	hitboxsettings = {
@@ -1089,54 +676,9 @@ guipages = { -- interactiveguipages
 			info = {
 				"Back",
 			},
-			func =	function()
-						changeInteractiveGuiPage(1)
-						changeInteractiveGuiSelection(3)
-					end,
+			func =	function() CIG(1,3) end,
 		},
 		guielements.hitboxstate,
-	},
-	scrollinginputsize = {
-		left = guielements.falseleftarrow,
-		right = guielements.falserightarrow,
-		title = {
-			text = "Basic Settings",
-			x = interactivegui.boxxlength/2 - 28,
-			y = 1,
-		},
-		main = {
-			text = "Scrolling input text size",
-			x = 4,
-			y = 70,
-		},
-		guielements.scrollinginputsize[1],
-		guielements.scrollinginputsize[2],
-		guielements.scrollinginputsize[3],
-		guielements.scrollinginputsize[4],
-		guielements.scrollinginputsize[5],
-		guielements.scrollinginputsize[6],
-		guielements.scrollinginputsize[7],
-		guielements.scrollinginputsize[8],
-		guielements.scrollinginputsize[9],
-		guielements.scrollinginputsize[10],
-		guielements.scrollinginputsize[11],
-		guielements.scrollinginputsize[12],
-		guielements.scrollinginputsize[13],
-	},
-	hitplayback = {
-		left = guielements.falseleftarrow,
-		right = guielements.falserightarrow,
-		guielements.hitplayback[1],
-		guielements.hitplayback[2],
-		guielements.hitplayback[3],
-		guielements.hitplayback[4],
-		guielements.hitplayback[5],
-		guielements.hitplayback[6],
-		title = {
-			text = "Hit Slot",
-			x = 25,
-			y = 105,
-		},
 	},
 }
 
@@ -1168,4 +710,11 @@ end
 
 if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
 	table.insert(guipages[3], guielements.hitplayback.main)
+end
+
+if fexists("games/"..dirname.."/guipages.lua") then
+	print("A")
+	dofile("games/"..dirname.."/guipages.lua")
+	table.insert(guipages, guicustompage)
+	print(guicustompage)
 end

@@ -18,6 +18,7 @@ local games = {
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-jchan2-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
+	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
 	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof95 = {"kof95", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -43,7 +44,7 @@ local games = {
 	wakuwak7 = {"wakuwak7" , iconfile = "icons-neogeo-32.png"},
 	whp = {"whp", iconfile = "icons-neogeo-32.png"},
 	xmvsf = {"xmvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	xmcota = {"xmcota", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	xmcota = {"xmcota", "xmcotabh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 }
 
 local usage = function()
@@ -121,8 +122,17 @@ local defaultconfig = {
 
 local config = defaultconfig
 local rom = emu.romname()
-local dirname
+dirname = ""
 local interactiveguipages = {}
+
+function fexists(s)
+	local fs = io.open(s,"r")
+	local res = fs~=nil
+	if (res) then
+		fs:close()
+	end
+	return res
+end
 
 do -- file checking logic + variable tables
 ----------------------------------------------
@@ -141,9 +151,8 @@ if not dirname then dirname = "" end
 ----------------------------------------------
 -- CHECK IF ROM MEMORY FILE EXISTS
 ----------------------------------------------
-local fs = io.open("games/"..dirname.."/"..dirname..".lua","r")
 
-if fs then
+if fexists("games/"..dirname.."/"..dirname..".lua") then
 	dofile("games/"..dirname.."/"..dirname..".lua")
 else
 	print("Memory addresses not found for "..rom)
@@ -151,12 +160,10 @@ end
 ----------------------------------------------
 -- CHECK IF TABLEIO IS PRESENT AND TRYING TO OPEN CONFIG FILE
 ----------------------------------------------
-fs = io.open("tableio.lua","r")
-if fs then
+if fexists("tableio.lua") then
 	dofile("tableio.lua")
-	fs = io.open("games/"..dirname.."//config.lua","r")
-	if fs then
-		config = table.load("games/"..dirname.."//config.lua")
+	if fexists("games/"..dirname.."/config.lua") then
+		config = table.load("games/"..dirname.."/config.lua")
 		if not config then
 			print("Can't read config file found for "..dirname..", using default config")
 			config = defaultconfig
@@ -377,8 +384,7 @@ else
 end
 
 if hitbox then
-	fs = io.open("hitboxes/"..hitbox..".lua","r")
-	if fs then
+	if fexists("hitboxes/"..hitbox..".lua") then
 		dofile("hitboxes/"..hitbox..".lua")
 		else
 		print("Hitbox file "..games[dirname].hitboxes.."not found for "..rom)
@@ -390,13 +396,10 @@ end
 ----------------------------------------------	
 -- TRYING TO DISPLAY INPUTS
 ----------------------------------------------
-fs = io.open("inputs\\input-display.lua","r")
 	
-if fs then
-	fs = io.open("inputs\\input-modules.lua","r")
-	
-	if fs then
-		dofile("inputs\\input-display.lua")
+if fexists("inputs/input-display.lua") then
+	if fexists("inputs/input-modules.lua") then
+		dofile("inputs/input-display.lua")
 	else
 		print("input-modules.lua not found")
 	end
@@ -406,14 +409,10 @@ end
 
 if games[dirname].iconfile then
 	iconfile = games[dirname].iconfile
-	fs = io.open("inputs\\scrolling-input\\"..iconfile,"r")
-	if fs then
-		fs = io.open("inputs\\scrolling-input-display.lua","r")
-	
-		if fs then
-			fs = io.open("inputs\\scrolling-input\\scrolling-input-code.lua","r")
-			if fs then
-				dofile("inputs\\scrolling-input-display.lua")
+	if fexists("inputs/scrolling-input/"..iconfile) then
+		if fexists("inputs/scrolling-input-display.lua") then
+			if fexists("inputs/scrolling-input/scrolling-input-code.lua") then
+				dofile("inputs/scrolling-input-display.lua")
 			else
 				print("scrolling-input-code.lua not found")
 			end
@@ -421,7 +420,7 @@ if games[dirname].iconfile then
 			print("scrolling-input-display.lua not found")
 		end
 	else
-		print("inputs\\scrolling-input\\"..iconfile.." not found")
+		print("inputs/scrolling-input/"..iconfile.." not found")
 	end
 else
 	print("No scrolling input image found for "..rom)
@@ -433,9 +432,7 @@ end
 ----------------------------------------------
 -- CHECK IF GUI PAGES EXISTS AND OPEN
 ----------------------------------------------
-local fs = io.open("guipages.lua","r")
-
-if fs then
+if fexists("guipages.lua") then
 	dofile("guipages.lua")
 	interactiveguipages = guipages
 else
@@ -1045,7 +1042,7 @@ local drawInteractiveGui = function()
 			if not v.textcolour then v.textcolour = "white" end
 			if not v.bgcolour then v.bgcolour = bgcolour end
 			if not v.olcolour then v.olcolour = bgcolour end
-		
+			
 			w, h = #v.text*4, 10
 			
 			if v.bgcolour ~= bgcolour or v.olcolour ~= bgcolour then
@@ -1079,6 +1076,12 @@ local callGuiSelectionFunc = function()
 	func()
 end
 
+local callGuiSelectionReleaseFunc = function()
+	local func = interactiveguipages[interactivegui.page][interactivegui.selection].releasefunc
+	if not interactivegui.enabled or not func then return end
+	func()
+end
+
 local interactiveGuiSelectionInfo = function()
 	local info = interactiveguipages[interactivegui.page][interactivegui.selection].info
 	if not interactivegui.enabled or not info then return end
@@ -1098,6 +1101,75 @@ local interactiveGuiSelectionInfo = function()
 	end
 end
 
+createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements, startx, starty, numofelements)
+	
+	menu = {}
+	
+	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
+		menu["a"..i] = v
+	end
+		
+	local but
+	
+	if (Elements) then -- fallback to the default, passed elements, if needed
+		for i, v in ipairs(Elements) do
+			-- create buttons
+			but = {}
+			if (v.releasefunc) then
+				but.releasefunc = v.releasefunc(i)
+			else
+				if (releasefunc) then but.releasefunc = releasefunc(i) end
+			end
+			
+			if (v.selectfunc) then
+				but.selectfunc = v.selectfunc(i)
+			else
+				if (selectfunc) then but.selectfunc = selectfunc(i) end
+			end
+			
+			if (v.autofunc) then
+				but.autofunc = v.autofunc(i)
+			else
+				if (autofunc) then but.autofunc = autofunc(i) end
+			end
+			
+			if (v.text) then 
+				but.text = v.text
+			else
+				but.text = tostring(i)
+			end
+			
+			if (v.x) then
+				but.x = v.x
+			else 
+				but.x = startx
+			end
+			
+			if (v.y) then
+				but.y = v.y
+			else 
+				but.y = starty+(i-1)*10
+			end
+
+			table.insert(menu, but)
+		end		
+	else
+		for i = 1, numofelements do
+			-- create buttons
+			but = {}
+			if (releasefunc) then but.releasefunc = releasefunc(i) end
+			if (selectfunc) then but.selectfunc = selectfunc(i) end
+			if (autofunc) then but.autofunc = autofunc(i) end
+			but.text = tostring(i)
+			but.x = startx
+			but.y = starty+(i-1)*10
+			table.insert(menu, but)
+		end
+	end
+	
+	return menu
+	
+end
 
 changeInteractiveGuiPage = function(n)
 	if not interactivegui.enabled then return end
@@ -1138,6 +1210,11 @@ changeInteractiveGuiSelection = function(n)
 	end
 end
 
+CIG = function(page, selection) -- macro, both of these are used together so often
+	changeInteractiveGuiPage(page)
+	changeInteractiveGuiSelection(selection)
+end
+
 
 --fall backs in case can't read joypad input
 input.registerhotkey(1, toggleInteractiveGuiEnabled) 
@@ -1174,6 +1251,10 @@ local parseInputs = function()
 	
 	if guiinputs.P1.button1 and not guiinputs.P1.previousinputs.button1 then
 		callGuiSelectionFunc()
+	end
+	
+	if not guiinputs.P1.button1 and guiinputs.P1.previousinputs.button1 then
+		callGuiSelectionReleaseFunc()
 	end
 	
 	if guiinputs.P1.button2 then -- maybe add a func2 to buttons and move this to button3
