@@ -45,6 +45,13 @@ translationtable = {
 	["Button D"] = 11,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=138,
+		combotexty=55,
+	},
+}
+
 function playerOneFacingLeft()
 	local ptr = rdw(0x108332) -- pointer to some sort of memory block
 	return rb(ptr+0xF)==2

@@ -54,6 +54,13 @@ translationtable = {
 	["Button D"] = 11,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=140,
+		combotexty=42,
+	},
+}
+
 function playerOneFacingLeft()
 	return rb(0x100119) == 0
 end

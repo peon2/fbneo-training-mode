@@ -1,23 +1,23 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with samsho"
-print "Issues with reading/writing health and meter"
-print ""
-
 p1maxhealth = 0x80
 p2maxhealth = 0x80
 
-p1maxmeter = 0x20
-p2maxmeter = 0x20
+p1maxmeter = 0x8000
+p2maxmeter = 0x8000
 
-local p1health = 0x104c9b
-local p2health = 0x1036e7
+local p1health = 0x1092ed
+local p2health = 0x1093ed
 
-local p1meter = 0x104cd0
-local p2meter = 0x104f10
+local p1meter = 0x1094a4
+local p2meter = 0x1095a4
 
-local p1direction = 0x10105c
-local p2direction = 0x100ad0
+local p1direction = 0x1080bd
+local p2direction = 0x10847d
+
+print "Known Issues: with aof2"
+print "Hitstun detector can be inconsistent"
+print ""
 
 translationtable = {
 	{
@@ -48,13 +48,13 @@ translationtable = {
 
 gamedefaultconfig = {
 	combogui = {
-		combotextx=180,
-		combotexty=42,
+		combotextx=138,
+		combotexty=35,
 	},
 }
 
 function playerOneFacingLeft()
-	return rb(p1direction)==1
+	return rb(p1direction)==0
 end
 
 function playerTwoFacingLeft()
@@ -64,7 +64,8 @@ end
 function _playerOneInHitstun()
 end
 
-function _playerTwoInHitstun()
+function playerTwoInHitstun()
+	return rb(0x1093C0)==0x06 or rb(0x1093C0)==0x07 -- damage animation?
 end
 
 function readPlayerOneHealth()
@@ -84,25 +85,25 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter)
+	return rw(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+	ww(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rw(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	ww(p2meter, meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0x100Ac6, 0x98)
+	memory.writeword(0x108406, 0x5000)
 end
 
-function Run()
+function Run() -- runs every frame
 	infiniteTime()
 end

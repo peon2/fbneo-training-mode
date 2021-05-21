@@ -1,3 +1,19 @@
+v0.21.05.21
+
+Removed config.lua files.
+Added gamedefaultconfig for each game, these can be used to set default game config options.
+Added fillable backgrounds to some buttons for visual indication.
+
+Marvel Super Heroes vs Street Fighter:
+Cleaned up some code and completed functionality.
+
+X-Men vs. Street Fighter:
+Cleaned up some code and completed functionality.
+
+Added support Art of Fighting (aof)
+
+Added support of Art of Fighting 2 (aof2)
+
 v0.21.05.14
 
 Refactored some internal code.

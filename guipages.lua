@@ -64,15 +64,27 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		info = {
 			"Controls how P1 meter is handled",
 		},
-		func = 	function() 
-					if not combovars.p1.refillmeterenabled then
-						changeConfig("p1", "refillmeterenabled", true, combovars.p1) 
-						changeConfig("p1", "instantrefillmeter", true, combovars.p1) 
-					elseif combovars.p1.refillmeterenabled and combovars.p1.instantrefillmeter then
-						changeConfig("p1", "instantrefillmeter", false, combovars.p1) 
-					else
-						changeConfig("p1", "refillmeterenabled", false, combovars.p1) 
-					end
+		func = 	function()
+					local Elements = {
+						{text = "No Refill", selectfunc = function() return function() changeConfig("p1", "refillmeterenabled", false, combovars.p1) end end},
+						{text = "Always Full", selectfunc = function() return
+							function()
+								changeConfig("p1", "refillmeterenabled", true, combovars.p1)
+								changeConfig("p1", "instantrefillmeter", true, combovars.p1)
+							end
+						end},
+						{text = "Fill after Combo", selectfunc = function() return
+							function()
+								changeConfig("p1", "refillmeterenabled", true, combovars.p1)
+								changeConfig("p1", "instantrefillmeter", false, combovars.p1)
+							end
+						end},
+					}
+					local rf = function(n) return function()
+						CIG(1,3)
+					end end
+					guipages.temp = createPopUpMenu(guipages[1], rf, nil, nil, Elements, 140, 40, nil)
+					CIG("temp", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillmeterenabled then
@@ -309,6 +321,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		text = "Coin leniency",
 		x = 64,
 		y = 30,
+		fillpercent = 0,
 		olcolour = "black",
 		info = {
 			"This controls how many frames you have between each coin input",
@@ -324,13 +337,15 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 							{text = "14"},
 							{text = "15"},
 						}
-						CIG("coininputleniency", inputs.properties.coinleniency - 9)
-						local rf = function(n) return function() changeConfig("inputs", "coinleniency", n+9, inputs.properties) CIG(1, 3) end end
-						guipages.temp = createPopUpMenu(guipages[1], rf, nil, nil, Elements, 136, 30, nil)
+						CIG("coininputleniency", inputs.properties.coinleniency - 10)
+						local rf = function() return function() CIG(1, 3) end end
+						local sf = function(n) return function() changeConfig("inputs", "coinleniency", n+9, inputs.properties) end end
+						guipages.temp = createPopUpMenu(guipages[1], rf, sf, nil, Elements, 136, 30, nil)
 						CIG("temp", recording.hitplayback)
 					end,
 		autofunc = 	function(this)
 						this.text = "Coin leniency "..(inputs.properties.coinleniency)
+						this.fillpercent = (inputs.properties.coinleniency-10)/5
 					end,
 	},
 	hitplayback = {
@@ -651,6 +666,7 @@ guipages = { -- interactiveguipages
 			info = {
 				"Sets the size of the scrolling input text images",
 			},
+			fillpercent = 0,
 			olcolour = "black",
 			func = 		function() -- generate a new page and switch to it
 							local rf = function() return function() CIG("scrollingtextsettings", 2) end end
@@ -660,6 +676,7 @@ guipages = { -- interactiveguipages
 						end,
 			autofunc = 	function(this)
 							this.text = "Scrolling input text size "..(inputs.properties.scrollinginput.iconsize-7)
+							this.fillpercent = (inputs.properties.scrollinginput.iconsize-8)/12
 						end,
 		},
 		guielements.scrollinginputframestoggle,
@@ -713,8 +730,6 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 end
 
 if fexists("games/"..dirname.."/guipages.lua") then
-	print("A")
 	dofile("games/"..dirname.."/guipages.lua")
 	table.insert(guipages, guicustompage)
-	print(guicustompage)
 end

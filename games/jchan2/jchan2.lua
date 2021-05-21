@@ -49,6 +49,13 @@ translationtable = {
 	["Button 4"] = 11,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=145,
+		combotexty=42,
+	},
+}
+
 function playerOneFacingLeft()
 	return bit.band(bit.bxor(rb(0x200F86), rb(0x200F90)),0x2)==2 -- flags that check if a sprite needs to be flipped
 end

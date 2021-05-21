@@ -42,6 +42,13 @@ translationtable = {
 	["Fire 3"] = 8,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=180,
+		combotexty=42,
+	},
+}
+
 function _playerOneFacingLeft() -- hahahahaha dino rex doesnt have crossups
 end
 

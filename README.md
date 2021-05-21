@@ -17,6 +17,10 @@ Video showing usage of the simple options: https://www.youtube.com/watch?v=sWxGW
 
 Currently supports:
 
+Art of Fighting
+
+Art of Fighting 2
+
 Art of Fighting 3
 
 Cyberbots
@@ -34,6 +38,8 @@ Jackie Chan in Fists of Fire
 JoJo's Bizarre Adventure: Heritage for the Future
 
 JoJo's Venture
+
+Kabuki Klash
 
 The King Of Fighters '94
 

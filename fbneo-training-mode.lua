@@ -9,6 +9,8 @@ rdw = memory.readdword
 local fc = emu.framecount()
 
 local games = {
+	aof = {"aof", iconfile = "icons-neogeo-32.png"},
+	aof2 = {"aof2", iconfile = "icons-neogeo-32.png"},
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
@@ -94,6 +96,7 @@ local defaultconfig = {
 	interactivegui = {
 		bg = 0xF0F0F0FF,
 		ol = 0x000000FF,
+		barcolour = "yellow",
 		boxxd = 8, -- divisor
 		boxxm = 7, -- multiplier
 		boxyd = 10, -- divisor
@@ -160,12 +163,24 @@ end
 ----------------------------------------------
 -- CHECK IF TABLEIO IS PRESENT AND TRYING TO OPEN CONFIG FILE
 ----------------------------------------------
+-- TRY TO USE CONFIG.LUA, THEN A GAME'S DEFAULT CONFIG, THEN THE GENERAL DEFAULT CONFIG
+----------------------------------------------
 if fexists("tableio.lua") then
 	dofile("tableio.lua")
+	if not gamedefaultconfig then -- comes from game luas
+		print "Game default config not found."
+	else
+		for i, v in pairs(gamedefaultconfig) do
+			if not config[i] then config[i]={} end
+			for j, k in pairs(v) do
+				config[i][j] = k
+			end
+		end
+	end
 	if fexists("games/"..dirname.."/config.lua") then
 		config = table.load("games/"..dirname.."/config.lua")
 		if not config then
-			print("Can't read config file found for "..dirname..", using default config")
+			print("Can't read config file found for "..dirname..", using default config.")
 			config = defaultconfig
 		else -- if the file is loaded, make sure the contents are at least superifically correct
 			local check = true 
@@ -177,13 +192,11 @@ if fexists("tableio.lua") then
 						else
 							config[i][j] = defaultconfig[i][j]
 						end
-						print("Error reading value "..i.."."..j.." from config file, using default")
+						print("Error reading value "..i.."."..j.." from config file, using default.")
 					end
 				end
 			end
 		end
-	else
-		print("Config file not found for "..dirname..", using default")
 	end
 	if dirname ~= nil and dirname~="" then
 		assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
@@ -242,6 +255,7 @@ interactivegui = {
 	-- CONFIGS
 	bgcolour = config.interactivegui.bg,
 	olcolour = config.interactivegui.ol,
+	barcolour = config.interactivegui.barcolour,
 	boxx = emu.screenwidth()/config.interactivegui.boxxd, -- proportions of the screen
 	boxy = emu.screenheight()/config.interactivegui.boxyd,
 	boxx2 = config.interactivegui.boxxm*(emu.screenwidth()/config.interactivegui.boxxd),
@@ -1028,13 +1042,14 @@ local drawInteractiveGui = function()
 	selection = page[interactivegui.selection]
 
 	local w, h, colour
+	
+	local barcolour = interactivegui.barcolour
 	for i,v in pairs(page) do
 		if v.autofunc then
 			v:autofunc()
 		end
 		
-		if i ~= interactivegui.selection then 
-			--FC uses 5.1 at the time of writing so I can't goto
+		if i ~= interactivegui.selection then
 	
 			if not v.x then v.x = 0 end
 			if not v.y then v.y = 0 end
@@ -1044,6 +1059,11 @@ local drawInteractiveGui = function()
 			if not v.olcolour then v.olcolour = bgcolour end
 			
 			w, h = #v.text*4, 10
+			
+			if (v.fillpercent) then
+				gui.box(v.x + boxx, v.y + boxy, v.x + boxx + (w + 4)*v.fillpercent, v.y + boxy + h, barcolour)
+				v.bgcolour = nil
+			end
 			
 			if v.bgcolour ~= bgcolour or v.olcolour ~= bgcolour then
 				gui.box(v.x + boxx, v.y + boxy, v.x + boxx + w + 4, v.y + boxy + h, v.bgcolour, v.olcolour)
@@ -1065,6 +1085,10 @@ local drawInteractiveGui = function()
 		
 	w, h = #selection.text*4, 10
 	colour = interactivegui.selectioncolour
+	if (selection.fillpercent) then
+		gui.box(selection.x + boxx, selection.y + boxy, selection.x + boxx + (w + 4)*selection.fillpercent, selection.y + boxy + h, barcolour)
+		selection.bgcolour = nil
+	end
 	gui.box(selection.x + boxx, selection.y + boxy, selection.x + boxx + w + 4, selection.y + boxy + h, selection.bgcolour, colour)
 	gui.text(selection.x + boxx + 3, selection.y + boxy + 2, selection.text, selection.textcolour)
 	
