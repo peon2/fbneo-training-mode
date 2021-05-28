@@ -37,7 +37,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 0,
 		olcolour = "black",
 	},
-	instanthealthrefill = {
+	instanthealthrefill = {  -- this should eventually be rewritten to follow p1meter below
 			text = "Instant health refill off",
 			x = 36,
 			y = 85,
@@ -56,53 +56,75 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 							end
 						end,
 	},
+	p1healthmax = {
+		text = "P1 Max Health",
+		x = 80,
+		y = 100,
+		fillpercent = 0,
+		olcolour = "black",
+		info = {
+			"Controls how much health P1 gains",
+		},
+		func = 		function()
+						local uf = 	function(n) 
+										if n then
+											modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
+										end
+										return modulevars.p2.maxhealth
+									end
+						guipages.temp = createScrollingBar(guipages[2], 145, 100, 1, modulevars.p2.constants.maxhealth, uf, 43)
+						CIG("temp")
+					end,
+		autofunc = 	function(this)
+						this.text = "Max Health: "..modulevars.p2.maxhealth
+						this.x = 136-#this.text*4
+						this.fillpercent = modulevars.p2.maxhealth/modulevars.p2.constants.maxhealth
+					end,
+	},
 	p1meter = {
 		text = "P1 meter settings",
 		x = 40,
-		y = 50,
+		y = 45,
 		olcolour = "black",
 		info = {
 			"Controls how P1 meter is handled",
 		},
 		func = 	function()
 					local Elements = {
-						{text = "No Refill", selectfunc = function() return function() changeConfig("p1", "refillmeterenabled", false, combovars.p1) end end},
-						{text = "Always Full", selectfunc = function() return
+						{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p1", "refillmeterenabled", false, combovars.p1) end end},
+						{text = "Meter Always Full", selectfunc = function() return
 							function()
 								changeConfig("p1", "refillmeterenabled", true, combovars.p1)
 								changeConfig("p1", "instantrefillmeter", true, combovars.p1)
 							end
 						end},
-						{text = "Fill after Combo", selectfunc = function() return
+						{text = "Fill Meter after Combo", selectfunc = function() return
 							function()
 								changeConfig("p1", "refillmeterenabled", true, combovars.p1)
 								changeConfig("p1", "instantrefillmeter", false, combovars.p1)
 							end
 						end},
 					}
-					local rf = function(n) return function()
-						CIG(1,3)
-					end end
 					guipages.temp = createPopUpMenu(guipages[1], rf, nil, nil, Elements, 140, 40, nil)
 					CIG("temp", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillmeterenabled then
-							this.text = "No Refill"
-							this.x = 92
+							this.text = "No Meter Refill"
+							this.x = 68
 						elseif combovars.p1.refillmeterenabled and combovars.p1.instantrefillmeter then
-							this.text = "Always Full"
-							this.x = 84
+							this.text = "Meter Always Full"
+							this.x = 60
 						else
-							this.text = "Fill after Combo"
-							this.x = 64
+							this.text = "Fill Meter after Combo"
+							this.x = 40
 						end
 					end,
 	},
-	p1meterlesser = {
+	p1meterlesser = { -- this should eventually be removed and functionality folded into the above function
 		text = "P1 meter settings",
 		x = 40,
-		y = 50,
+		y = 45,
 		olcolour = "black",
 		info = {
 			"Controls how P1 meter is handled",
@@ -118,15 +140,40 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillmeterenabled then
-							this.text = "No Refill"
-							this.x = 92
+							this.text = "No Meter Refill"
+							this.x = 78
 						else
-							this.text = "Always Full"
-							this.x = 84
+							this.text = "Meter Always Full"
+							this.x = 60
 						end
 					end,
 	},
-	p2hold = {
+	p1metermax = {
+		text = "P1 Max Meter",
+		x = 80,
+		y = 60,
+		fillpercent = 0,
+		olcolour = "black",
+		info = {
+			"Controls how much meter P1 gains",
+		},
+		func = 		function()
+						local uf = 	function(n) 
+										if n then
+											modulevars.p1.maxmeter = modulevars.p1.maxmeter+n
+										end
+										return modulevars.p1.maxmeter
+									end
+						guipages.temp = createScrollingBar(guipages[1], 140, 60, 0, modulevars.p1.constants.maxmeter, uf, 45)
+						CIG("temp")
+					end,
+		autofunc = 	function(this)
+						this.text = "Max Meter: "..modulevars.p1.maxmeter
+						this.x = 128-#this.text*4
+						this.fillpercent = modulevars.p1.maxmeter/modulevars.p1.constants.maxmeter
+					end,
+	},
+	p2hold = { -- clean this up with a pop up menu
 		none = {
 			text = "None",
 			x = 200,
@@ -248,7 +295,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	simpledisplaytoggle = {
 		text = "Simple input display on",
 		x = 36,
-		y = 70,
+		y = 75,
 		info = {
 			"toggles simple display down the bottom of the screen",
 		},
@@ -699,10 +746,13 @@ guipages = { -- interactiveguipages
 	},
 }
 
+-- if meter is set up in file
 if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.playertwoinhitstun then
 	table.insert(guipages[1], guielements.p1meter)
+	table.insert(guipages[1], guielements.p1metermax)
 elseif modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then
 	table.insert(guipages[1], guielements.p1meterlesser)
+	table.insert(guipages[1], guielements.p1metermax)
 end
 
 if inputDisplayReg then -- if input-display.lua is loaded
@@ -717,8 +767,9 @@ if hitboxesReg then -- if a hitbox file is loaded
 	table.insert(guipages[1], guielements.hitboxsettings)
 end
 
-if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then -- if input-display.lua is loaded
+if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then -- if health is set up in file
 	table.insert(guipages[2], guielements.instanthealthrefill)
+	table.insert(guipages[2], guielements.p1healthmax)
 end
 
 if availablefunctions.playertwofacingleft then

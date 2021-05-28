@@ -6,6 +6,8 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
+FBNEO_TRAINING_MODE_VERSION = "v0.21.05.28"
+
 local fc = emu.framecount()
 
 local games = {
@@ -13,11 +15,13 @@ local games = {
 	aof2 = {"aof2", iconfile = "icons-neogeo-32.png"},
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
+	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
-	doubledr = {"doubledr", iconfile= "icons-neogeo-32.png"},
+	doubledr = {"doubledr", iconfile = "icons-neogeo-32.png"},
+	fatfursp = {"fatfursp", iconfile = "icons-neogeo-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-jchan2-32.png"},
+	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
 	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
@@ -32,6 +36,9 @@ local games = {
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
+	rbff1 = {"rbff1", iconfile = "icons-neogeo-32.png"},
+	rbff2 = {"rbff2", "rbff2h", iconfile = "icons-neogeo-32.png"},
+	rbffspec = {"rbffspec", iconfile = "icons-neogeo-32"},
 	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
 	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},
 	samsho2 = {"samsho2", iconfile = "icons-neogeo-32.png"},
@@ -50,7 +57,7 @@ local games = {
 }
 
 local usage = function()
-		print "Beta for fbneo-training-script"
+		print ("Beta for fbneo-training-script ("..FBNEO_TRAINING_MODE_VERSION..")")
 		print "Replay with 1 coin press"
 		print "Record with 2 coin presses"
 		print "Swap inputs with 3 coin presses"
@@ -59,6 +66,7 @@ local usage = function()
 		print "Move around the menu with left/right"
 		print "Select a function with P1 Button 1"
 		print "Read function info with P1 Button 2"
+		print "Return to the previous menu with P1 Button 3"
 end
 
 local defaultconfig = {
@@ -284,10 +292,22 @@ modulevars = {
 }
 
 setAvailableConstants = function()  -- SETUP modulevars CONSTANTS TABLES
-	if p1maxhealth then modulevars.p1.constants.maxhealth = p1maxhealth end
-	if p2maxhealth then modulevars.p2.constants.maxhealth = p2maxhealth end
-	if p1maxmeter then modulevars.p1.constants.maxmeter = p1maxmeter end
-	if p2maxmeter then modulevars.p2.constants.maxmeter = p2maxmeter end
+	if p1maxhealth then 
+		modulevars.p1.constants.maxhealth = p1maxhealth
+		modulevars.p1.maxhealth = p1maxhealth
+	end
+	if p2maxhealth then 
+		modulevars.p2.constants.maxhealth = p2maxhealth
+		modulevars.p2.maxhealth = p2maxhealth 
+	end
+	if p1maxmeter then 
+		modulevars.p1.constants.maxmeter = p1maxmeter
+		modulevars.p1.maxmeter = p1maxmeter
+	end
+	if p2maxmeter then 
+		modulevars.p2.constants.maxmeter = p2maxmeter
+		modulevars.p2.maxmeter = p2maxmeter
+end
 	if translationtable then modulevars.constants.translationtable = translationtable end
 end
 
@@ -547,7 +567,7 @@ local healthHandlerP1 = function()
 	
 	if combovars.p1.combo ~= combovars.p1.previouscombo and not modulevars.p1.inhitstun then
 		if combovars.p1.refillhealth == 0 then
-			combovars.p1.refillhealth = math.ceil((modulevars.p1.constants.maxhealth - modulevars.p1.health) / combovars.p1.refillhealthspeed) -- refill speed
+			combovars.p1.refillhealth = math.ceil((modulevars.p1.maxhealth - modulevars.p1.health) / combovars.p1.refillhealthspeed) -- refill speed
 		end
 	end
 	
@@ -556,8 +576,8 @@ local healthHandlerP1 = function()
 	end
 	
 	if combovars.p1.refillhealth ~= 0 then
-		if (combovars.p1.refillhealth + modulevars.p1.health >= modulevars.p1.constants.maxhealth) or combovars.p1.instantrefillhealth then
-			writePlayerOneHealth(modulevars.p1.constants.maxhealth)
+		if (combovars.p1.refillhealth + modulevars.p1.health >= modulevars.p1.maxhealth) or combovars.p1.instantrefillhealth then
+			writePlayerOneHealth(modulevars.p1.maxhealth)
 			combovars.p1.refillhealth = 0
 		else
 			writePlayerOneHealth(modulevars.p1.health + combovars.p1.refillhealth)
@@ -570,12 +590,12 @@ local meterHandlerP1 = function()
 	if not combovars.p1.refillmeterenabled then return end
 	
 	if combovars.p1.instantrefillmeter then
-		writePlayerOneMeter(modulevars.p1.constants.maxmeter)
+		writePlayerOneMeter(modulevars.p1.maxmeter)
 	end
 	
 	if combovars.p2.combo ~= combovars.p2.previouscombo and not modulevars.p2.inhitstun then
 		if combovars.p1.refillmeter == 0 then
-			combovars.p1.refillmeter = math.ceil((modulevars.p1.constants.maxmeter - modulevars.p1.meter) / combovars.p1.refillmeterspeed) -- refill speed
+			combovars.p1.refillmeter = math.ceil((modulevars.p1.maxmeter - modulevars.p1.meter) / combovars.p1.refillmeterspeed) -- refill speed
 		end
 	end
 	
@@ -584,8 +604,8 @@ local meterHandlerP1 = function()
 	end
 	
 	if combovars.p1.refillmeter ~= 0 then
-		if (combovars.p1.refillmeter + modulevars.p1.meter >= modulevars.p1.constants.maxmeter) then
-			writePlayerOneMeter(modulevars.p1.constants.maxmeter)
+		if (combovars.p1.refillmeter + modulevars.p1.meter >= modulevars.p1.maxmeter) then
+			writePlayerOneMeter(modulevars.p1.maxmeter)
 			combovars.p1.refillmeter = 0
 		else
 			writePlayerOneMeter(modulevars.p1.meter + combovars.p1.refillmeter)
@@ -597,13 +617,13 @@ end
 local instantHealthP1 = function()
 	if not combovars.p1.refillhealthenabled then return end
 	if not combovars.p1.instantrefillhealth then return end
-	writePlayerOneHealth(modulevars.p1.constants.maxhealth)
+	writePlayerOneHealth(modulevars.p1.maxhealth)
 end
 
 local instantMeterP1 = function()
 	if not combovars.p1.refillmeterenabled then return end
 	if not combovars.p1.instantrefillmeter then return end
-	writePlayerOneMeter(modulevars.p1.constants.maxmeter)
+	writePlayerOneMeter(modulevars.p1.maxmeter)
 end
 
 
@@ -648,7 +668,7 @@ local healthHandlerP2 = function()
 
 	if combovars.p2.combo ~= combovars.p2.previouscombo and not modulevars.p2.inhitstun then
 		if combovars.p2.refillhealth == 0 then
-			combovars.p2.refillhealth = math.ceil((modulevars.p2.constants.maxhealth - modulevars.p2.health) / combovars.p2.refillhealthspeed) -- refill speed
+			combovars.p2.refillhealth = math.ceil((modulevars.p2.maxhealth - modulevars.p2.health) / combovars.p2.refillhealthspeed) -- refill speed
 		end
 	end
 	
@@ -657,8 +677,8 @@ local healthHandlerP2 = function()
 	end
 	
 	if combovars.p2.refillhealth ~= 0 then
-		if (combovars.p2.refillhealth + modulevars.p2.health >= modulevars.p2.constants.maxhealth) or combovars.p2.instantrefillhealth then
-			writePlayerTwoHealth(modulevars.p2.constants.maxhealth)
+		if (combovars.p2.refillhealth + modulevars.p2.health >= modulevars.p2.maxhealth) or combovars.p2.instantrefillhealth then
+			writePlayerTwoHealth(modulevars.p2.maxhealth)
 			combovars.p2.refillhealth = 0
 		else
 			writePlayerTwoHealth(modulevars.p2.health + combovars.p2.refillhealth)
@@ -671,12 +691,12 @@ local meterHandlerP2 = function()
 	if not combovars.p2.refillmeterenabled then return end
 	
 	if combovars.p2.instantrefillmeter then
-		writePlayerTwoMeter(modulevars.p2.constants.maxmeter)
+		writePlayerTwoMeter(modulevars.p2.maxmeter)
 	end
 	
 	if combovars.p1.combo ~= combovars.p1.previouscombo and not modulevars.p1.inhitstun then
 		if combovars.p2.refillmeter == 0 then
-			combovars.p2.refillmeter = math.ceil((modulevars.p2.constants.maxmeter - modulevars.p2.meter) / combovars.p2.refillmeterspeed) -- refill speed
+			combovars.p2.refillmeter = math.ceil((modulevars.p2.maxmeter - modulevars.p2.meter) / combovars.p2.refillmeterspeed) -- refill speed
 		end
 	end
 	
@@ -685,8 +705,8 @@ local meterHandlerP2 = function()
 	end
 	
 	if combovars.p2.refillmeter ~= 0 then
-		if (combovars.p2.refillmeter + modulevars.p2.meter >= modulevars.p2.constants.maxmeter) then
-			writePlayerTwoMeter(modulevars.p2.constants.maxmeter)
+		if (combovars.p2.refillmeter + modulevars.p2.meter >= modulevars.p2.maxmeter) then
+			writePlayerTwoMeter(modulevars.p2.maxmeter)
 			combovars.p2.refillmeter = 0
 		else
 			writePlayerTwoMeter(modulevars.p2.meter + combovars.p2.refillmeter)
@@ -697,17 +717,17 @@ end
 local instantHealthP2 = function()
 	if not combovars.p2.refillhealthenabled then return end
 	if not combovars.p2.instantrefillhealth then return end
-	writePlayerTwoHealth(modulevars.p2.constants.maxhealth)
+	writePlayerTwoHealth(modulevars.p2.maxhealth)
 end
 
 local instantMeterP2 = function()
 	if not combovars.p2.refillmeterenabled then return end
 	if not combovars.p2.instantrefillmeter then return end
-	writePlayerTwoMeter(modulevars.p2.constants.maxmeter)
+	writePlayerTwoMeter(modulevars.p2.maxmeter)
 end
 
 local guiinputs = {
-	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0},
+	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0, leftframecount = 0, rightframecount = 0},
 	P2 = {previousinputs={}},
 }
 
@@ -726,6 +746,7 @@ end
 
 local readInputs = function()
 	local input
+	inputs.setinputs = {}
 	for i,v in pairs(joypad.get()) do -- check every button
 		player = i:sub(1,2)
 		input = i:sub(4)
@@ -735,11 +756,31 @@ local readInputs = function()
 			inputs.p2[input] = v
 		else
 			inputs.other[i] = v
+			inputs.setinputs[i] = v
 		end
 	end
-	inputs.setinputs = {}
 end
 
+local combinePlayerInputs = function(P1, P2, other)
+	
+	if type(P1) ~= "table" or type(P2) ~= "table" then return end
+	
+	local t = {}
+	
+	for i,v in pairs(P1) do
+		t["P1 "..i] = v
+	end
+	for i,v in pairs(P2) do
+		t["P2 "..i] = v
+	end
+	if type(other)=="table" then
+		for i,v in pairs(other) do
+			t[i] = v
+		end
+	end
+	
+	return t
+end
 
 local toggleSwapInputs = function(bool)
 	if bool == false then inputs.properties.enableinputswap = false return end
@@ -755,7 +796,7 @@ local swapInputs = function()
 	inputs.p1 = inputs.p2
 	inputs.p2 = tab
 	
-	tab = combinePlayerInputs(inputs.p1, inputs.p2)
+	tab = combinePlayerInputs(inputs.p1, inputs.p2, inputs.other)
 	inputs.setinputs = tab
 end
 
@@ -769,21 +810,6 @@ local swapPlayerInput = function(player)
 	
 	return tab
 	
-end
-
-combinePlayerInputs = function(P1, P2)
-	
-	if type(P1) ~= "table" or type(P2) ~= "table" then return end
-	
-	local t = {}
-	
-	for i,v in pairs(P1) do
-		t["P1 "..i] = v
-	end
-	for i,v in pairs(P2) do
-		t["P2 "..i] = v
-	end
-	return t
 end
 
 local freezePlayer = function(player)
@@ -921,7 +947,7 @@ local playBack = function()
 		if not orientated and recording.autoturn then
 			t = swapPlayerInput(t)
 		end
-		inputs.setinputs = combinePlayerInputs(inputs.p1, t)
+		inputs.setinputs = combinePlayerInputs(inputs.p1, t, inputs.other)
 	end
 end
 
@@ -967,7 +993,7 @@ local hitPlayBack = function()
 		if not orientated and recording.autoturn then
 			t = swapPlayerInput(t)
 		end
-		inputs.setinputs = combinePlayerInputs(inputs.p1, t)
+		inputs.setinputs = combinePlayerInputs(inputs.p1, t, inputs.other)
 	end
 end
 
@@ -1094,45 +1120,18 @@ local drawInteractiveGui = function()
 	
 end
 
-local callGuiSelectionFunc = function()
-	local func = interactiveguipages[interactivegui.page][interactivegui.selection].func
-	if not interactivegui.enabled or not func then return end
-	func()
-end
-
-local callGuiSelectionReleaseFunc = function()
-	local func = interactiveguipages[interactivegui.page][interactivegui.selection].releasefunc
-	if not interactivegui.enabled or not func then return end
-	func()
-end
-
-local interactiveGuiSelectionInfo = function()
-	local info = interactiveguipages[interactivegui.page][interactivegui.selection].info
-	if not interactivegui.enabled or not info then return end
-	
-	local largest = 0
-	local sw, sh, y2 = interactivegui.sw, interactivegui.sh, interactivegui.boxy2
-	
-	
-	for _,v in ipairs(info) do
-		if largest < #v then largest = #v end
-	end
-	
-	gui.box(sw/2 - 3 - (largest)*2, y2 - (#info)*10, sw/2 + 1 + (largest)*2, y2, 0x89cfefff, "black")
-	
-	for i,v in ipairs(info) do
-		gui.text(sw/2 - #v*2, y2 - (#info)*10 + 2 + (i-1)*10, v)
-	end
-end
-
 createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements, startx, starty, numofelements)
+	
+	if releasefunc == nil then
+		releasefunc = function() return function() CIG(interactivegui.previouspage, interactivegui.previousselection) end end
+	end
 	
 	menu = {}
 	
 	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
 		menu["a"..i] = v
 	end
-		
+	
 	local but
 	
 	if (Elements) then -- fallback to the default, passed elements, if needed
@@ -1195,9 +1194,95 @@ createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements
 	
 end
 
+createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, closingfunc, autofunc, text)
+	local menu = {}
+	if not text then text = "" end
+	
+	local barlen = max - min
+	
+	if not length then length = barlen end
+	
+	text = string.format("%"..(length/2 - (#text/2)).."s", text) -- centre text
+	text = string.format("%-"..(length - (#text/2)).."s", text)
+	
+	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
+		menu["a"..i] = v
+	end
+	
+	menu.min = 	{
+					x = x-(#tostring(min))*2,
+					y = y+10,
+					text = tostring(min)
+				}
+	
+	menu.max = 	{
+					x = x+(#text)*4-(#tostring(max))*2,
+					y = y+10,
+					text = tostring(max)
+				}
+	
+	local but = {}
+	but.x = x
+	but.y = y
+	but.text = text
+	but.olcolour = "black"
+	but.val = updatefunc()
+	but.fillpercent = (but.val-min)/barlen
+	
+	local workingframes = function(n) -- get faster the longer it runs
+		if (n < 60) then
+			if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+			return 0
+		elseif (n < 120) then
+			return 1
+		elseif (n < 180) then
+			return 5
+		end
+		return 10
+	end
+	
+	but.autofunc = 	function(this)
+		but.val = updatefunc()
+		local d = 0
+		if guiinputs.P1.left then
+			
+			d = workingframes(guiinputs.P1.leftframecount) 
+			
+			if but.val-d>=min then
+				updatefunc(-d)
+			else
+				updatefunc(max-but.val)
+			end
+		end
+		if guiinputs.P1.right then
+		
+			d = workingframes(guiinputs.P1.rightframecount) 
+		
+			if but.val+d<=max then
+				updatefunc(d)
+			else
+				updatefunc(min-but.val)
+			end
+		end
+		but.fillpercent = (but.val-min)/barlen
+		if autofunc then autofunc() end
+	end
+	
+	if closingfunc then
+		but.func = closingfunc
+	else
+		but.func = 	function() CIG(interactivegui.previouspage, interactivegui.previousselection) end
+	end
+	
+	menu[1] = but
+	
+	return menu
+end
+
 changeInteractiveGuiPage = function(n)
 	if not interactivegui.enabled then return end
-	if not n then n = 1 end
+	if not n then n = interactivegui.page+1 end
+	interactivegui.previouspage = interactivegui.page -- keep previous for backing out
 	
 	if interactiveguipages[n] then -- if the page exists go there
 		interactivegui.page = n
@@ -1212,16 +1297,22 @@ changeInteractiveGuiPage = function(n)
 	local page = interactiveguipages[interactivegui.page]
 	
 	if interactivegui.selection > #page then -- make sure selection is in bounds
+		interactivegui.previousselection = interactivegui.selection
 		interactivegui.selection = #page
 	elseif interactivegui.selection < 1 then
+		interactivegui.previousselection = interactivegui.selection
 		interactivegui.selection = 1
 	end
 end
 
 changeInteractiveGuiSelection = function(n)
 	if not interactivegui.enabled then return end
-	if not n then n = interactivegui.selection+1 end
 	local page = interactiveguipages[interactivegui.page] -- current page
+	if (#page<=1) then 
+		interactivegui.selection = 1
+		return
+	end
+	if not n then n = interactivegui.selection+1 end
 	
 	if page[n] then -- if the selection exists go there
 		interactivegui.selection = n
@@ -1239,6 +1330,42 @@ CIG = function(page, selection) -- macro, both of these are used together so oft
 	changeInteractiveGuiSelection(selection)
 end
 
+
+local callGuiSelectionFunc = function()
+	local func = interactiveguipages[interactivegui.page][interactivegui.selection].func
+	if not interactivegui.enabled or not func then return end
+	func()
+end
+
+local callGuiSelectionReleaseFunc = function()
+	local func = interactiveguipages[interactivegui.page][interactivegui.selection].releasefunc
+	if not interactivegui.enabled or not func then return end
+	func()
+end
+
+local interactiveGuiSelectionInfo = function()
+	local info = interactiveguipages[interactivegui.page][interactivegui.selection].info
+	if not interactivegui.enabled or not info then return end
+	
+	local largest = 0
+	local sw, sh, y2 = interactivegui.sw, interactivegui.sh, interactivegui.boxy2
+	
+	
+	for _,v in ipairs(info) do
+		if largest < #v then largest = #v end
+	end
+	
+	gui.box(sw/2 - 3 - (largest)*2, y2 - (#info)*10, sw/2 + 1 + (largest)*2, y2, 0x89cfefff, "black")
+	
+	for i,v in ipairs(info) do
+		gui.text(sw/2 - #v*2, y2 - (#info)*10 + 2 + (i-1)*10, v)
+	end
+end
+
+local interactiveGuiSelectionBack = function()
+	if not interactivegui.enabled then return end
+	CIG(interactivegui.previouspage, interactivegui.previousselection)
+end
 
 --fall backs in case can't read joypad input
 input.registerhotkey(1, toggleInteractiveGuiEnabled) 
@@ -1281,20 +1408,33 @@ local parseInputs = function()
 		callGuiSelectionReleaseFunc()
 	end
 	
-	if guiinputs.P1.button2 then -- maybe add a func2 to buttons and move this to button3
+	if guiinputs.P1.button2 then
 		interactiveGuiSelectionInfo()
 	end
 	
-	if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then
-		changeInteractiveGuiSelection(interactivegui.selection-1)
+	if guiinputs.P1.button3 and not guiinputs.P1.previousinputs.button3 then -- back button
+		interactiveGuiSelectionBack()
 	end
 	
-	if guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
-		changeInteractiveGuiSelection(interactivegui.selection+1)
+	if guiinputs.P1.left then
+		guiinputs.P1.leftframecount = guiinputs.P1.leftframecount+1  -- used in scrolling bars
+		if not guiinputs.P1.previousinputs.left then
+			guiinputs.P1.leftframecount = 0
+			changeInteractiveGuiSelection(interactivegui.selection-1)
+		end
+	end
+	
+	if guiinputs.P1.right then
+		guiinputs.P1.rightframecount = guiinputs.P1.rightframecount+1 -- used in scrolling bars
+		if not guiinputs.P1.previousinputs.right then
+			guiinputs.P1.rightframecount = 0
+			changeInteractiveGuiSelection(interactivegui.selection+1)
+		end
 	end
 	
 	guiinputs.P1.previousinputs.coin = guiinputs.P1.coin
 	guiinputs.P1.previousinputs.button1 = guiinputs.P1.button1
+	guiinputs.P1.previousinputs.button2 = guiinputs.P1.button2
 	guiinputs.P1.previousinputs.button3 = guiinputs.P1.button3
 	guiinputs.P1.previousinputs.left = guiinputs.P1.left
 	guiinputs.P1.previousinputs.right = guiinputs.P1.right

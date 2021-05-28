@@ -1,3 +1,23 @@
+v0.21.05.28
+
+Added setting P1 meter.
+Added setting P2 health.
+
+Added fillable bars you can adjust with left/right.
+
+Bound button 3 to be 'back' in menus.
+
+Cleaned up some menu items.
+
+JoJo's Bizarre Adventure: Heritage for the Future:
+Made hitboxes scale better at fullscreen.
+
+Added partial support for Daraku Tenshi (daraku)
+Added support for Fatal Fury Special (fatfursp)
+Added support for Real Bout Fatal Fury (rbff1)
+Added support for Real Bout Fatal Fury 2 (rbff2h)
+Added support for Real Bout Fatal Fury Special (rbffspec)
+
 v0.21.05.21
 
 Removed config.lua files.
@@ -10,9 +30,9 @@ Cleaned up some code and completed functionality.
 X-Men vs. Street Fighter:
 Cleaned up some code and completed functionality.
 
-Added support Art of Fighting (aof)
+Added support for Art of Fighting (aof)
 
-Added support of Art of Fighting 2 (aof2)
+Added support for Art of Fighting 2 (aof2)
 
 v0.21.05.14
 

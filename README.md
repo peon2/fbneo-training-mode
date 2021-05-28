@@ -25,12 +25,16 @@ Art of Fighting 3
 
 Cyberbots
 
+Daraku Tenshi
+
 Dino Rex
 
 Dragonball Z 2 - Super Battle
 
 Double Dragon (Neo-Geo)
- 
+
+Fatal Fury Special
+
 Garou Mark Of The Wolves
 
 Jackie Chan in Fists of Fire
@@ -47,7 +51,7 @@ The King Of Fighters '95
 
 The King Of Fighters '98
 
-The King Of Fighteres 2002
+The King Of Fighters 2002
 
 The Last Blade 2
 
@@ -64,6 +68,12 @@ Mighty Warriors
 Ninja Masters
 
 Red Earth
+
+Real Bout Fatal Fury
+
+Real Bout Fatal Fury 2
+
+Real Bout Fatal Fury Special
 
 Samurai Shodown
 
