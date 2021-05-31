@@ -33,6 +33,8 @@ Dragonball Z 2 - Super Battle
 
 Double Dragon (Neo-Geo)
 
+Fatal Fury 3 - Road to the Final Victory
+
 Fatal Fury Special
 
 Garou Mark Of The Wolves

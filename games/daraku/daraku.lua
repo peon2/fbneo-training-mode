@@ -1,9 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with daraku"
-print "Can't set timer"
-print ""
-
 p1maxhealth = 0x61
 p2maxhealth = 0x61
 
@@ -114,24 +110,19 @@ function writePlayerOneMeter(meter)
 	end
 end
 --[[
-Need to investigate how game allocates to figure this out
-local timer = { -- timer location is based on p1 character
-	0x6002176, -- Yuiren
-	0x6001976, -- Yuiran
-	0x6001976, -- Cool
-	0x6001b76, -- Harry
-	0x6001b76, -- Taro
-	0x6001d76, -- Roche
-	0x6002b76, -- Torao
-	0x6001f76, -- Haiji
-	0x6001976, -- Trigger
-	0x6001976, -- Carlos
-}
+0x60004a0 => head of a linked list? The data all seemed to be sequential though
+head+0x10 => next link
+head+0x14 => last link???
+last link adr-0x600 => link with timer???
+	links seem to be allocated in blocks of 0x200 so its 3 links back
+link with timer + 0xD4 = timer location
+	timer is read as a dword but its only ever the size of a word
+--]]
 
 function infiniteTime()
-	ww(timer[rb(p1character)+1], 0x1530)
+	ww(rdw(0x60004b4)-0x52A, 0x1530)
 end
---]]
+
 function Run() -- runs every frame
-	--infiniteTime()
+	infiniteTime()
 end

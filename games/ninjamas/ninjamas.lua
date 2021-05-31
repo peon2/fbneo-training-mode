@@ -6,10 +6,6 @@ p2maxhealth = 0xD0
 p1maxmeter = 0x60
 p2maxmeter = 0x60
 
-print "Known Issues: with ninjamas"
-print "GUI not working"
-print ""
-
 translationtable = {
 	{
 		"coin",
@@ -39,7 +35,7 @@ translationtable = {
 
 gamedefaultconfig = {
 	combogui = {
-		combotextx=180,
+		combotextx=150,
 		combotexty=42,
 	},
 }

@@ -19,6 +19,7 @@ local games = {
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
 	doubledr = {"doubledr", iconfile = "icons-neogeo-32.png"},
+	fatfury3 = {"fatfury3", iconfile = "icons-neogeo-32.png"},
 	fatfursp = {"fatfursp", iconfile = "icons-neogeo-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
