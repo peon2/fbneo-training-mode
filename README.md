@@ -99,8 +99,12 @@ Vampire Hunter
 
 Waku Waku 7
 
+Waku Waku 7 Boss Hack
+
 World Heroes Perfect
 
 X-Men vs Street Fighter
 
 X-Men: Children of the Atom
+
+X-Men: Children of the Atom Boss Hack
