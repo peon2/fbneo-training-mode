@@ -6,7 +6,7 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.05.28"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.06"
 
 local fc = emu.framecount()
 
