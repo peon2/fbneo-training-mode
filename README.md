@@ -69,6 +69,8 @@ Mighty Warriors
 
 Ninja Masters
 
+Rage of the Dragons
+
 Red Earth
 
 Real Bout Fatal Fury

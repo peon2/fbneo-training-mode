@@ -72,7 +72,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 										end
 										return modulevars.p2.maxhealth
 									end
-						guipages.temp = createScrollingBar(guipages[2], 145, 100, 1, modulevars.p2.constants.maxhealth, uf, 43)
+						guipages.temp = createScrollingBar(guipages[2], 145, 100, 1, modulevars.p2.constants.maxhealth, uf, interactivegui.boxxlength/2)
 						CIG("temp")
 					end,
 		autofunc = 	function(this)
@@ -164,7 +164,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 										end
 										return modulevars.p1.maxmeter
 									end
-						guipages.temp = createScrollingBar(guipages[1], 140, 60, 0, modulevars.p1.constants.maxmeter, uf, 45)
+						guipages.temp = createScrollingBar(guipages[1], 140, 60, 0, modulevars.p1.constants.maxmeter, uf, interactivegui.boxxlength/2)
 						CIG("temp")
 					end,
 		autofunc = 	function(this)
@@ -317,6 +317,9 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 4,
 		y = 90,
 		olcolour = "black",
+		info = {
+			"Change scrolling input settings",
+		},
 		func = 	function() CIG("scrollingtextsettings", 2) end,
 	},
 	scrollinginputframestoggle = {
@@ -442,7 +445,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	hitboxsettings = {
 		text = "Change hitbox settings",
 		x = 40,
-		y = 110,
+		y = 105,
 		olcolour = "black",
 		func = 	function() CIG("hitboxsettings", 2) end,
 		info = {

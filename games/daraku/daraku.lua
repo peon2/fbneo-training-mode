@@ -9,8 +9,8 @@ p2maxmeter = 0x2C
 local p1health = 0x602DF1B
 local p2health = 0x602E11B
 
-local p1meter = 0x602DF21
-local p2meter = 0x602E121
+local p1meter = 0x602E121
+local p2meter = 0x602DF21
 
 
 local p1direction = 0x602de52

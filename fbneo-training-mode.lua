@@ -6,7 +6,7 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.06"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.06.04"
 
 local fc = emu.framecount()
 
@@ -37,6 +37,7 @@ local games = {
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
+	rotd = {"rotd", hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
 	rbff1 = {"rbff1", iconfile = "icons-neogeo-32.png"},
 	rbff2 = {"rbff2", "rbff2h", iconfile = "icons-neogeo-32.png"},
 	rbffspec = {"rbffspec", iconfile = "icons-neogeo-32"},
@@ -1202,6 +1203,8 @@ createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, clos
 	local barlen = max - min
 	
 	if not length then length = barlen end
+	
+	length = length/4 -- account for text size
 	
 	text = string.format("%"..(length/2 - (#text/2)).."s", text) -- centre text
 	text = string.format("%-"..(length - (#text/2)).."s", text)
