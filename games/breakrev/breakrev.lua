@@ -1,24 +1,22 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-p1maxhealth = 0xB4
-p2maxhealth = 0xB4
+p1maxhealth = 0x1E00 -- word
+p2maxhealth = 0x1E00
 
-p1maxmeter = 0xD8
-p2maxmeter = 0xD8
+p1maxmeter = 0x3
+p2maxmeter = 0x3
 
-local p1health = 0x1024CF	-- health + 3 is red health
-local p1char2health = 0x1027BF
-local p2health = 0x102357
-local p2char2health = 0x102067
+local p1health = 0x10734E
+local p2health = 0x1078AE
 
-local p1meter = 0x1024E3
-local p2meter = 0x10236B
+local p1meter = 0x107361
+local p2meter = 0x1078C1
 
-local p1direction = 0x102427
-local p2direction = 0x1022AF
+local p1direction = 0x107364
+local p2direction = 0x107365
 
-local p1combocounter = 0x102351
-local p2combocounter = 0x1024C9
+local p1combocounter = 0x107943
+local p2combocounter = 0x1073E3
 
 translationtable = {
 	{
@@ -48,31 +46,18 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	hud = {
-		combotextx=146,
-		combotexty=37,
-		comboenabled=true,
-		p1healthx=40,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=268,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=94,
-		p1metery=206,
-		p1meterenabled=true,
-		p2meterx=216,
-		p2metery=206,
-		p2meterenabled=true,
+	combogui = {
+		combotextx=140,
+		combotexty=42,
 	},
 }
 
 function playerOneFacingLeft()
-	return bit.band(rb(p1direction), 1)
+	return rb(p1direction)==0xFF
 end
 
 function playerTwoFacingLeft()
-	return bit.band(rb(p2direction), 1)
+	return rb(p2direction)==0xFF
 end
 
 function playerOneInHitstun()
@@ -84,21 +69,19 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	return rw(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
-	wb(p1health+3, health) -- red health
+	ww(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health)
+	return rw(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
-	wb(p2health+3, health) -- red health
+	ww(p2health, health)
 end
 
 function readPlayerOneMeter()
@@ -110,15 +93,15 @@ function writePlayerOneMeter(meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rb(p1meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	wb(p1meter, meter)
 end
 
 function infiniteTime()
-	memory.writeword(0x106B11, 0x3CFF)
+	wb(0x107C27, 0x63)
 end
 
 function Run() -- runs every frame

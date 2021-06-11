@@ -9,9 +9,8 @@ p2maxmeter = 0x2C
 local p1health = 0x602DF1B
 local p2health = 0x602E11B
 
-local p1meter = 0x602E121
-local p2meter = 0x602DF21
-
+local p1meter = 0x602DF21
+local p2meter = 0x602E121
 
 local p1direction = 0x602de52
 local p2direction = 0x602e052
@@ -103,7 +102,7 @@ function readPlayerTwoMeter()
 	return rb(p1meter)
 end
 
-function writePlayerOneMeter(meter)
+function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
 	if (meter==p2maxmeter) then -- activates the timer
 		wb(p2meter+1, 1)

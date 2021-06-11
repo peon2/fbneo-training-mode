@@ -23,6 +23,8 @@ Art of Fighting 2
 
 Art of Fighting 3
 
+Breakers Revenge
+
 Cyberbots
 
 Daraku Tenshi
@@ -98,6 +100,8 @@ Super Gem Fighter
 Super Street Fighter 2X - Grand Master Challenge
 
 Vampire Hunter
+
+Voltage Fighter Gowcaizer
 
 Waku Waku 7
 

@@ -6,7 +6,7 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.06.04"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.06.11"
 
 local fc = emu.framecount()
 
@@ -14,6 +14,7 @@ local games = {
 	aof = {"aof", iconfile = "icons-neogeo-32.png"},
 	aof2 = {"aof2", iconfile = "icons-neogeo-32.png"},
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
+	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
@@ -22,6 +23,7 @@ local games = {
 	fatfury3 = {"fatfury3", iconfile = "icons-neogeo-32.png"},
 	fatfursp = {"fatfursp", iconfile = "icons-neogeo-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	gowcaizr = {"gowcaizr", iconfile = "icons-neogeo-32.png"},
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
@@ -92,13 +94,30 @@ local defaultconfig = {
 	},
 	
 	-- Combo Gui
-	combogui = {
+	hud = {
+		p1healthx = 10,
+		p1healthy = 10,
+		p1healthtextcolour = 0xFFFFFFFF,
+		p1healthenabled = false,
+		p2healthx = 180,
+		p2healthy = 10,
+		p2healthtextcolour = 0xFFFFFFFF,
+		p2healthenabled = false,
+		p1meterx = 10,
+		p1metery = 100,
+		p1metertextcolour = 0xFFFFFFFF,
+		p1meterenabled = false,
+		p2meterx = 180,
+		p2metery = 100,
+		p2metertextcolour = 0xFFFFFFFF,
+		p2meterenabled = false,
 		combotextx = 180,
 		combotexty = 42,
 		combotextcolour = 0xFFFF00FF,
 		combotextcolour2 = 0x00FF00FF,
 		damagetextcolour = 0x00FF00FF,
 		totaltextcolour = 0x00FF00FF,
+		comboenabled = false,
 	},
 	
 	-- Interactive Gui
@@ -273,6 +292,9 @@ interactivegui = {
 	boxxlength = (config.interactivegui.boxxm-1)*(emu.screenwidth()/config.interactivegui.boxxd), -- commonly used calculations
 	boxylength = (config.interactivegui.boxym-1)*(emu.screenheight()/config.interactivegui.boxyd),
 	selectioncolour = config.interactivegui.selectioncolour,
+	movehud = false,
+	movehudselected = false,
+	movehudselection = 1,
 }
 
 modulevars = {
@@ -350,20 +372,39 @@ combovars = {
 		instantrefillmeter = config.p2.instantrefillmeter,
 		refillmeterenabled = config.p2.refillmeterenabled,
 	},
-	-- CONFIGS
-	-- combos
-	combotextx = config.combogui.combotextx,
-	combotexty = config.combogui.combotexty+10,
-	combotextcolour = config.combogui.combotextcolour,
-	combotextcolour2 = config.combogui.combotextcolour2,
-	damagetextx = config.combogui.combotextx-4,
-	damagetexty = config.combogui.combotexty,
-	damagetextcolour = config.combogui.damagetextcolour,
-	totaltextx = config.combogui.combotextx,
-	totaltexty = config.combogui.combotexty+20,
-	totaltextcolour = config.combogui.totaltextcolour,
-	-- 
 	
+}
+
+hud = {
+	-- CONFIGS
+	-- p1health
+	p1healthx = config.hud.p1healthx,
+	p1healthy = config.hud.p1healthy,
+	p1healthtextcolour = config.hud.p1healthtextcolour,
+	p1healthenabled = config.hud.p1healthenabled,
+	--p1meter
+	p1meterx = config.hud.p1meterx,
+	p1metery = config.hud.p1metery,
+	p1metertextcolour = config.hud.p1metertextcolour,
+	p1meterenabled = config.hud.p1meterenabled,
+	--p2health
+	p2healthx = config.hud.p2healthx,
+	p2healthy = config.hud.p2healthy,
+	p2healthtextcolour = config.hud.p2healthtextcolour,
+	p2healthenabled = config.hud.p2healthenabled,
+	--p2meter
+	p2meterx = config.hud.p2meterx,
+	p2metery = config.hud.p2metery,
+	p2metertextcolour = config.hud.p2healthtextcolour,
+	p2meterenabled = config.hud.p2meterenabled,
+	-- combos
+	combotextx = config.hud.combotextx,
+	combotexty = config.hud.combotexty,
+	combotextcolour = config.hud.combotextcolour,
+	combotextcolour2 = config.hud.combotextcolour2,
+	damagetextcolour = config.hud.damagetextcolour,
+	totaltextcolour = config.hud.totaltextcolour,
+	comboenabled = config.hud.comboenabled,
 }
 
 inputs = {
@@ -644,24 +685,16 @@ local comboHandlerP2 = function()
 	end
 	
 	if modulevars.p2.inhitstun then
-		gui.text(combovars.combotextx,combovars.combotexty,"Combo: "..combovars.p2.combo,combovars.combotextcolour)
 		combovars.p2.displaycombo = combovars.p2.combo
-	else
-		gui.text(combovars.combotextx,combovars.combotexty,"Combo: "..combovars.p2.displaycombo,combovars.combotextcolour2)
 	end
 	
 	if combovars.p2.healthdiff > 0 then
-		gui.text(combovars.damagetextx,combovars.damagetexty,"Damage: " ..combovars.p2.healthdiff,combovars.damagetextcolour)
 		combovars.p2.previousdamage = combovars.p2.healthdiff
 		if combovars.p2.combo == 1 then
 			combovars.p2.comboDamage=0
 		end
 		combovars.p2.comboDamage = combovars.p2.comboDamage + combovars.p2.healthdiff
-	else
-		gui.text(combovars.damagetextx,combovars.damagetexty,"Damage: " .. combovars.p2.previousdamage,combovars.damagetextcolour)
 	end
-   
-   gui.text(combovars.totaltextx,combovars.totaltexty,"Total: " .. combovars.p2.comboDamage,combovars.totaltextcolour)
 end
 
 local healthHandlerP2 = function()
@@ -729,12 +762,14 @@ local instantMeterP2 = function()
 end
 
 local guiinputs = {
-	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0, leftframecount = 0, rightframecount = 0},
+	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0, leftframecount = 0, rightframecount = 0, downframecount = 0, upframecount = 0,},
 	P2 = {previousinputs={}},
 }
 
 local readGuiInputs = function()
 	local input
+	guiinputs.P1.previousinputs = copytable(guiinputs.P1)
+	guiinputs.P2.previousinputs = copytable(guiinputs.P2)
 	for i,v in pairs(joypad.get()) do -- check every button
 		player = i:sub(1,2)
 		input = i:sub(4)
@@ -834,6 +869,8 @@ local freezePlayer = function(player)
 end
 
 local toggleRecording = function(bool)
+
+	if interactivegui.movehud then return end
 	recording.playback = false
 	
 	if bool then recording.enabled = true end
@@ -898,6 +935,7 @@ local togglePlayBack = function(bool)
 	recording.enabled = false
 	toggleSwapInputs(false)
 	
+	if interactivegui.movehud then return end
 	local recordslot = recording[recording.recordingslot]
 	
 	if not recordslot.start then -- if nothing is recorded
@@ -1039,6 +1077,7 @@ local toggleInteractiveGuiEnabled = function(bool)
 	recording.playback = false
 	recording.hitplayback = false
 	recording.enabled = false
+	interactivegui.movehud = false
 	if not recording[recording.recordingslot] then recording[recording.recordingslot] = {} end
 	recording[recording.recordingslot].framestart = nil
 	inputs.properties.enableinputswap = false
@@ -1257,8 +1296,7 @@ createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, clos
 			else
 				updatefunc(max-but.val)
 			end
-		end
-		if guiinputs.P1.right then
+		elseif guiinputs.P1.right then
 		
 			d = workingframes(guiinputs.P1.rightframecount) 
 		
@@ -1287,6 +1325,7 @@ changeInteractiveGuiPage = function(n)
 	if not interactivegui.enabled then return end
 	if not n then n = interactivegui.page+1 end
 	interactivegui.previouspage = interactivegui.page -- keep previous for backing out
+	interactivegui.previousselection = interactivegui.selection
 	
 	if interactiveguipages[n] then -- if the page exists go there
 		interactivegui.page = n
@@ -1301,10 +1340,8 @@ changeInteractiveGuiPage = function(n)
 	local page = interactiveguipages[interactivegui.page]
 	
 	if interactivegui.selection > #page then -- make sure selection is in bounds
-		interactivegui.previousselection = interactivegui.selection
 		interactivegui.selection = #page
 	elseif interactivegui.selection < 1 then
-		interactivegui.previousselection = interactivegui.selection
 		interactivegui.selection = 1
 	end
 end
@@ -1333,7 +1370,6 @@ CIG = function(page, selection) -- macro, both of these are used together so oft
 	changeInteractiveGuiPage(page)
 	changeInteractiveGuiSelection(selection)
 end
-
 
 local callGuiSelectionFunc = function()
 	local func = interactiveguipages[interactivegui.page][interactivegui.selection].func
@@ -1372,15 +1408,18 @@ local interactiveGuiSelectionBack = function()
 end
 
 --fall backs in case can't read joypad input
-input.registerhotkey(1, toggleInteractiveGuiEnabled) 
+input.registerhotkey(1, toggleInteractiveGuiEnabled)
 input.registerhotkey(2, callGuiSelectionFunc)
 input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
 input.registerhotkey(5, function() recording.hitplayback = true end)
 
-
-local parseInputs = function() 
+local parseGUIInputs = function()
 	--inspired by grouflons and crystal_cubes menus
+	
+	-- some general input stuff put at the start, could be put in its own function
+	
+	-- opening the menu and operating coin functionality
 	if guiinputs.P1.coin and not guiinputs.P1.previousinputs.coin then -- one clean input
 		guiinputs.P1.coinframestart = fc
 		guiinputs.P1.coinpresscount = guiinputs.P1.coinpresscount+1
@@ -1404,6 +1443,34 @@ local parseInputs = function()
 		guiinputs.P1.coinpresscount = 0
 	end
 	
+	-- Count how many frames each input has been held
+	if guiinputs.P1.left then
+		guiinputs.P1.leftframecount = guiinputs.P1.leftframecount+1
+	else
+		guiinputs.P1.leftframecount = 0
+	end
+	
+	if guiinputs.P1.right then
+		guiinputs.P1.rightframecount = guiinputs.P1.rightframecount+1
+	else
+		guiinputs.P1.rightframecount = 0
+	end
+	
+	if guiinputs.P1.down then
+		guiinputs.P1.downframecount = guiinputs.P1.downframecount+1
+	else
+		guiinputs.P1.downframecount = 0
+	end
+	
+	if guiinputs.P1.up then
+		guiinputs.P1.upframecount = guiinputs.P1.upframecount+1
+	else
+		guiinputs.P1.upframecount = 0
+	end
+	
+	-- unless the gui is open we don't need to parse anything else
+	if not interactivegui.enabled then return end 
+	
 	if guiinputs.P1.button1 and not guiinputs.P1.previousinputs.button1 then
 		callGuiSelectionFunc()
 	end
@@ -1420,30 +1487,130 @@ local parseInputs = function()
 		interactiveGuiSelectionBack()
 	end
 	
-	if guiinputs.P1.left then
-		guiinputs.P1.leftframecount = guiinputs.P1.leftframecount+1  -- used in scrolling bars
-		if not guiinputs.P1.previousinputs.left then
-			guiinputs.P1.leftframecount = 0
-			changeInteractiveGuiSelection(interactivegui.selection-1)
-		end
-	end
-	
-	if guiinputs.P1.right then
-		guiinputs.P1.rightframecount = guiinputs.P1.rightframecount+1 -- used in scrolling bars
-		if not guiinputs.P1.previousinputs.right then
-			guiinputs.P1.rightframecount = 0
-			changeInteractiveGuiSelection(interactivegui.selection+1)
-		end
-	end
-	
-	guiinputs.P1.previousinputs.coin = guiinputs.P1.coin
-	guiinputs.P1.previousinputs.button1 = guiinputs.P1.button1
-	guiinputs.P1.previousinputs.button2 = guiinputs.P1.button2
-	guiinputs.P1.previousinputs.button3 = guiinputs.P1.button3
-	guiinputs.P1.previousinputs.left = guiinputs.P1.left
-	guiinputs.P1.previousinputs.right = guiinputs.P1.right
+	if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then
+		changeInteractiveGuiSelection(interactivegui.selection-1)
+	elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
+		changeInteractiveGuiSelection(interactivegui.selection+1)
+	end	
 end
 
+local HUDElements = {}
+
+toggleMoveHUD = function(bool)
+	toggleInteractiveGuiEnabled(false)
+	interactivegui.movehud = bool
+	interactivegui.movehudselected = false
+	if bool then interactivegui.movehud = true guiinputs.P1.previousinputs.button1 = true -- stop double pressing
+	elseif bool == false then interactivegui.movehud = false
+	else interactivegui.movehud = not interactivegui.movehud end
+	
+	inputs.properties.p1freeze = interactivegui.movehud
+	inputs.properties.p2freeze = interactivegui.movehud
+end
+
+function drawHUD() -- all parts of the hud should be dropped in here
+
+	if interactivegui.enabled then return end
+	
+	for _, v in ipairs(HUDElements) do
+		if v.enabled() then v.drawfunc() end
+	end
+end
+
+local hudworkingframes = function(n) -- get faster the longer it runs
+	if (n < 60) then
+		if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+		return 0
+	elseif (n < 120) then
+		return 1
+	elseif (n < 180) then
+		return 5
+	end
+	return 10
+end
+
+local moveHUD = function()
+
+	if not interactivegui.movehud then return end
+	
+	-- pick different hud elements, hook them up to changeconfig
+	
+	local col = 0xff8000ff -- orange
+	if interactivegui.movehudselected then
+		col = bit.bor(0xff0000ff, 0x00040000*(fc%40))
+	end
+	local x = HUDElements[interactivegui.movehudselection].x()
+	local y = HUDElements[interactivegui.movehudselection].y()
+	gui.pixel(x, y, col)
+	col = 0xffffffff
+	local enabled = HUDElements[interactivegui.movehudselection].enabled()
+	if not enabled then
+		col = 0x0000ffff
+	end
+	gui.text(x, y-10, "("..x..","..y..")", col)
+	
+	if not interactivegui.movehudselected then
+		gui.text(1,1,"Left/Right to pick a element.")
+		gui.text(1,10,"Button1 to select an element.")
+		gui.text(1,20,"Button2 to hide/show an element.")
+		gui.text(1,30,"Button3 to back out.")
+		if guiinputs.P1.button1 and not guiinputs.P1.previousinputs.button1 then -- on
+			interactivegui.movehudselected = true
+			return
+		end
+		
+		if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then -- switch through different elements
+			interactivegui.movehudselection = interactivegui.movehudselection-1
+			if interactivegui.movehudselection < 1 then interactivegui.movehudselection = #HUDElements end
+		elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
+			interactivegui.movehudselection = interactivegui.movehudselection+1
+			if interactivegui.movehudselection > #HUDElements then interactivegui.movehudselection = 1 end
+		end
+	end
+	
+	if guiinputs.P1.button2 and not guiinputs.P1.previousinputs.button2 then -- hide
+		if enabled==nil then enabled=false end
+		HUDElements[interactivegui.movehudselection].enabled(not enabled)
+	end
+	
+	if guiinputs.P1.button3 and not guiinputs.P1.previousinputs.button3 then -- back
+		toggleMoveHUD(false)
+		return
+	end
+	
+	if not interactivegui.movehudselected then return end
+	
+	gui.text(1,1,"Left/Right/Up/Down to move an element.")
+	gui.text(1,10,"Button1 to return.")
+	gui.text(1,20,"Button2 to hide/show an element.")
+	gui.text(1,30,"Button3 to back out.")
+	
+	if guiinputs.P1.button1 and not guiinputs.P1.previousinputs.button1 then -- off
+		interactivegui.movehudselected = false
+	end
+	
+	local d = 0
+	local pos
+	if guiinputs.P1.left then
+		d = hudworkingframes(guiinputs.P1.leftframecount)*-1
+		pos = HUDElements[interactivegui.movehudselection].x(x+d)
+		if (pos < 0) then HUDElements[interactivegui.movehudselection].x(interactivegui.sw) end -- stay in bounds
+	elseif guiinputs.P1.right then
+		d = hudworkingframes(guiinputs.P1.rightframecount) 
+		pos = HUDElements[interactivegui.movehudselection].x(x+d)
+		if (pos > interactivegui.sw) then HUDElements[interactivegui.movehudselection].x(0) end -- stay in bounds
+	end
+	
+	if guiinputs.P1.up then
+		d = hudworkingframes(guiinputs.P1.upframecount)*-1
+		pos = HUDElements[interactivegui.movehudselection].y(y+d)
+		if (pos < 0) then HUDElements[interactivegui.movehudselection].y(interactivegui.sh) end -- stay in bounds
+	elseif guiinputs.P1.down then
+		d = hudworkingframes(guiinputs.P1.downframecount) 
+		pos = HUDElements[interactivegui.movehudselection].y(y+d)
+		if (pos > interactivegui.sh) then HUDElements[interactivegui.movehudselection].y(0) end -- stay in bounds
+	end
+end
 
 local registers = {
 	registerbefore = {},
@@ -1451,7 +1618,21 @@ local registers = {
 	registerafter = {},
 }
 
-setRegisters = function()
+local drawcomboHUD = function()
+	if combovars.p2.healthdiff > 0 then
+		gui.text(hud.combotextx-4,hud.combotexty,"Damage: " ..combovars.p2.healthdiff,hud.damagetextcolour)
+	else
+		gui.text(hud.combotextx-4,hud.combotexty,"Damage: " .. combovars.p2.previousdamage,hud.damagetextcolour)
+	end
+	if modulevars.p2.inhitstun then
+		gui.text(hud.combotextx,hud.combotexty+10,"Combo: "..combovars.p2.combo,hud.combotextcolour)
+	else
+		gui.text(hud.combotextx,hud.combotexty+10,"Combo: "..combovars.p2.displaycombo,hud.combotextcolour2)
+	end
+   	gui.text(hud.combotextx,hud.combotexty+20,"Total: " .. combovars.p2.comboDamage,hud.totaltextcolour)
+end
+
+setRegisters = function() -- pre-calc stuff
 	
 	checkAvailableFunctions()
 	setAvailableConstants()
@@ -1473,9 +1654,23 @@ setRegisters = function()
 	end
 	
 	local str = ""
+
+	if availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
+		table.insert(registers.guiregister, comboHandlerP1)
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1healthx", n, hud) end return hud.p1healthx end, y = function(n) if n then changeConfig("hud", "p1healthy", n, hud) end return hud.p1healthy end, enabled = function(n) if n or n==false then changeConfig("hud", "p1healthenabled", n, hud) end return hud.p1healthenabled end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health, hud.p1healthtextcolour) end})
+	else
+		if not availablefunctions.readplayeronehealth then
+			str = str .. "player one health read and "
+		end
+		if not availablefunctions.playeroneinhitstun then
+			str = str .. "player one hitstun and "
+		end
+		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
+	end
 		
 	if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.guiregister, comboHandlerP2)
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n or n==false then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
 	else
 		if not availablefunctions.readplayertwohealth then
 			str = str .. "player two health read and "
@@ -1486,20 +1681,9 @@ setRegisters = function()
 		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
 	end
 
-	if availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
-		table.insert(registers.guiregister, comboHandlerP1)
-	else
-		if not availablefunctions.readplayeronehealth then
-			str = str .. "player one health read and "
-		end
-		if not availablefunctions.playeroneinhitstun then
-			str = str .. "player one hitstun and "
-		end
-		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
-	end
-
 	if modulevars.p1.constants.maxhealth and availablefunctions.readplayeronehealth and availablefunctions.writeplayeronehealth and availablefunctions.playeroneinhitstun then
 		table.insert(registers.registerafter, healthHandlerP1)
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n or n==false then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
 	else
 		str = ""
 		if not modulevars.p1.constants.maxhealth then
@@ -1562,28 +1746,39 @@ setRegisters = function()
 		print(str:sub(1,#str-5) .. " not set, can't do health refill for p2.\n")
 	end
 
-	if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
-		table.insert(registers.registerafter, meterHandlerP1)
-	else
-		if modulevars.p1.constants.maxmeter and availablefunctions.writeplayeronemeter then
-			print "Using P1 back-up Meter always full"
-			table.insert(registers.registerafter, instantMeterP1)
-			combovars.p1.instantrefillmeter = true
+	if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter then
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1meterx", n, hud) end return hud.p1meterx end, y = function(n) if n then changeConfig("hud", "p1metery", n, hud) end return hud.p1metery end, enabled = function(n) if n or n==false then changeConfig("hud", "p1meterenabled", n, hud) end return hud.p1meterenabled end, drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end})
+		if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
+			table.insert(registers.registerafter, meterHandlerP1)
 		else
-			print "Can't auto-refill P1 meter"
+			if modulevars.p1.constants.maxmeter and availablefunctions.writeplayeronemeter then
+				print "Using P1 back-up Meter always full"
+				table.insert(registers.registerafter, instantMeterP1)
+				combovars.p1.instantrefillmeter = true
+			else
+				print "Can't auto-refill P1 meter"
+			end
 		end
+	else
+		print "Can't auto-refill P1 meter"
 	end
 	
-	if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer and availablefunctions.writeplayertwometer and availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
-		table.insert(registers.registerafter, meterHandlerP2)
-	else
-		if modulevars.p2.constants.maxmeter and availablefunctions.writeplayertwometer then
-			print "Using P2 back-up Meter always full"
-			table.insert(registers.registerafter, instantMeterP2)
-			combovars.p2.instantrefillmeter = true
+	
+	if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer then
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2meterx", n, hud) end return hud.p2meterx end, y = function(n) if n then changeConfig("hud", "p2metery", n, hud) end return hud.p2metery end, enabled = function(n) if n or n==false then changeConfig("hud", "p2meterenabled", n, hud) end return hud.p2meterenabled end, drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end})	
+		if availablefunctions.writeplayertwometer and availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
+			table.insert(registers.registerafter, meterHandlerP2)
 		else
-			print "Can't auto-refill P2 meter"
+			if modulevars.p2.constants.maxmeter and availablefunctions.writeplayertwometer then
+				print "Using P2 back-up Meter always full"
+				table.insert(registers.registerafter, instantMeterP2)
+				combovars.p2.instantrefillmeter = true
+			else
+				print "Can't auto-refill P2 meter"
+			end
 		end
+	else
+		print "Can't auto-refill P2 meter"
 	end
 
 	if availablefunctions.hitboxesreg and availablefunctions.hitboxesregafter then
@@ -1606,11 +1801,13 @@ setRegisters = function()
 		print("Can't display scrolling inputs")
 	end
 	
-	table.insert(registers.guiregister, drawInteractiveGui) -- this should always be near the top
-		
+	table.insert(registers.guiregister, drawHUD)
+	table.insert(registers.guiregister, drawInteractiveGui)
+	
 	if modulevars.constants.translationtable then
 		table.insert(registers.registerbefore, readGuiInputs)
-		table.insert(registers.guiregister, parseInputs)
+		table.insert(registers.guiregister, parseGUIInputs)
+		table.insert(registers.guiregister, moveHUD)
 	else
 		print("No translation table found, can't read or process inputs from controller, use lua hotkeys")
 	end

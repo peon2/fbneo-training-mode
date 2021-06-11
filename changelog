@@ -1,3 +1,15 @@
+v0.21.06.11
+
+Fixed some back button functionality.
+Added a 'Player Page' with options for controlling P1&P2 Health and Meter.
+Added a 'HUD Settings' option for moving around/hiding HUD elements.
+
+Daraku Tenshi:
+Fixed meter issue properly.
+
+Added support for breakrev
+Added support for gowcaizr
+
 v0.21.06.04
 
 Made some gui functionality fit in the page better

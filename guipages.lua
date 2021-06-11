@@ -36,30 +36,73 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = interactivegui.boxx2 - interactivegui.boxx - 12,
 		y = 0,
 		olcolour = "black",
-	},
-	instanthealthrefill = {  -- this should eventually be rewritten to follow p1meter below
-			text = "Instant health refill off",
-			x = 36,
-			y = 85,
-			info = {
-				"Controls whether p2 health refills gradually or not",
-			},
-			olcolour = "black",
-			func = 	function() changeConfig("p2", "instantrefillhealth", not combovars.p2.instantrefillhealth, combovars.p2) end,
-			autofunc = 	function(this)
-							if combovars.p2.instantrefillhealth then
-								this.text = "Instant health refill on"
-								this.x = 40
-							else
-								this.text = "Instant health refill off"
-								this.x = 36
+	},--[[
+	p1health = {  -- this should eventually be rewritten to follow p1meter below
+		text = "Instant health refill off",
+		x = 36,
+		y = 25,
+		info = {
+			"Controls whether P1 health refills gradually or not",
+		},
+		olcolour = "black",
+		func = 	function() changeConfig("p1", "instantrefillhealth", not combovars.p1.instantrefillhealth, combovars.p1) end,
+		autofunc = 	function(this)
+						if combovars.p1.instantrefillhealth then
+							this.text = "Instant health refill on"
+							this.x = 136-#this.text*4
+						else
+							this.text = "Instant health refill off"
+							this.x = 136-#this.text*4
+						end
+					end,
+	}, ]]--
+	p1health = {
+		text = "Health settings",
+		x = 40,
+		y = 25,
+		olcolour = "black",
+		info = {
+			"Controls how P1 health is handled",
+		},
+		func = 	function()
+					local Elements = {
+						{text = "No Health Refill", selectfunc = function() return function() changeConfig("p1", "refillhealthenabled", false, combovars.p1) end end},
+						{text = "Health Always Full", selectfunc = function() return
+							function()
+								changeConfig("p1", "refillhealthenabled", true, combovars.p1)
+								changeConfig("p1", "instantrefillhealth", true, combovars.p1)
 							end
-						end,
+						end},
+						
+					}
+					if availablefunctions.playeroneinhitstun then -- won't always be available
+						Elements[3] = 	{text = "Fill Health after Combo", selectfunc = function() return
+											function()
+												changeConfig("p1", "refillhealthenabled", true, combovars.p1)
+												changeConfig("p1", "instantrefillhealth", false, combovars.p1)
+											end
+										end}
+					end
+					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 25, nil)
+					CIG("temp", inputs.properties.scrollinginput.state)
+				end,
+		autofunc = 	function(this)
+						if not combovars.p1.refillhealthenabled then
+							this.text = "No Health Refill"
+							this.x = 136-#this.text*4
+						elseif combovars.p1.refillhealthenabled and combovars.p1.instantrefillhealth then
+							this.text = "Health Always Full"
+							this.x = 136-#this.text*4
+						else
+							this.text = "Fill Health after Combo"
+							this.x = 136-#this.text*4
+						end
+					end,
 	},
 	p1healthmax = {
-		text = "P1 Max Health",
+		text = "Max Health",
 		x = 80,
-		y = 100,
+		y = 40,
 		fillpercent = 0,
 		olcolour = "black",
 		info = {
@@ -68,23 +111,23 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		func = 		function()
 						local uf = 	function(n) 
 										if n then
-											modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
+											modulevars.p1.maxhealth = modulevars.p1.maxhealth+n
 										end
-										return modulevars.p2.maxhealth
+										return modulevars.p1.maxhealth
 									end
-						guipages.temp = createScrollingBar(guipages[2], 145, 100, 1, modulevars.p2.constants.maxhealth, uf, interactivegui.boxxlength/2)
+						guipages.temp = createScrollingBar(guipages[2], 145, 40, 1, modulevars.p1.constants.maxhealth, uf, interactivegui.boxxlength/2)
 						CIG("temp")
 					end,
 		autofunc = 	function(this)
-						this.text = "Max Health: "..modulevars.p2.maxhealth
+						this.text = "Max Health: "..modulevars.p1.maxhealth
 						this.x = 136-#this.text*4
-						this.fillpercent = modulevars.p2.maxhealth/modulevars.p2.constants.maxhealth
+						this.fillpercent = modulevars.p1.maxhealth/modulevars.p1.constants.maxhealth
 					end,
 	},
 	p1meter = {
-		text = "P1 meter settings",
+		text = "Meter settings",
 		x = 40,
-		y = 45,
+		y = 55,
 		olcolour = "black",
 		info = {
 			"Controls how P1 meter is handled",
@@ -98,60 +141,36 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 								changeConfig("p1", "instantrefillmeter", true, combovars.p1)
 							end
 						end},
-						{text = "Fill Meter after Combo", selectfunc = function() return
-							function()
-								changeConfig("p1", "refillmeterenabled", true, combovars.p1)
-								changeConfig("p1", "instantrefillmeter", false, combovars.p1)
-							end
-						end},
+						
 					}
-					guipages.temp = createPopUpMenu(guipages[1], rf, nil, nil, Elements, 140, 40, nil)
+					if availablefunctions.playertwoinhitstun then -- won't always be available
+						Elements[3] = 	{text = "Fill Meter after Combo", selectfunc = function() return
+											function()
+												changeConfig("p1", "refillmeterenabled", true, combovars.p1)
+												changeConfig("p1", "instantrefillmeter", false, combovars.p1)
+											end
+										end}
+					end
+					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 55, nil)
 					CIG("temp", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillmeterenabled then
 							this.text = "No Meter Refill"
-							this.x = 68
+							this.x = 136-#this.text*4
 						elseif combovars.p1.refillmeterenabled and combovars.p1.instantrefillmeter then
 							this.text = "Meter Always Full"
-							this.x = 60
+							this.x = 136-#this.text*4
 						else
 							this.text = "Fill Meter after Combo"
-							this.x = 40
-						end
-					end,
-	},
-	p1meterlesser = { -- this should eventually be removed and functionality folded into the above function
-		text = "P1 meter settings",
-		x = 40,
-		y = 45,
-		olcolour = "black",
-		info = {
-			"Controls how P1 meter is handled",
-		},
-		func = 	function() 
-					if combovars.p1.refillmeterenabled then
-						changeConfig("p1", "refillmeterenabled", false, combovars.p1)
-						changeConfig("p1", "instantrefillmeter", false, combovars.p1)
-					else
-						changeConfig("p1", "refillmeterenabled", true, combovars.p1)
-						changeConfig("p1", "instantrefillmeter", true, combovars.p1)
-					end
-				end,
-		autofunc = 	function(this)
-						if not combovars.p1.refillmeterenabled then
-							this.text = "No Meter Refill"
-							this.x = 78
-						else
-							this.text = "Meter Always Full"
-							this.x = 60
+							this.x = 136-#this.text*4
 						end
 					end,
 	},
 	p1metermax = {
-		text = "P1 Max Meter",
+		text = "Max Meter",
 		x = 80,
-		y = 60,
+		y = 70,
 		fillpercent = 0,
 		olcolour = "black",
 		info = {
@@ -164,13 +183,149 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 										end
 										return modulevars.p1.maxmeter
 									end
-						guipages.temp = createScrollingBar(guipages[1], 140, 60, 0, modulevars.p1.constants.maxmeter, uf, interactivegui.boxxlength/2)
+						guipages.temp = createScrollingBar(guipages[2], 144, 70, 0, modulevars.p1.constants.maxmeter, uf, interactivegui.boxxlength/2-4)
 						CIG("temp")
 					end,
 		autofunc = 	function(this)
 						this.text = "Max Meter: "..modulevars.p1.maxmeter
-						this.x = 128-#this.text*4
+						this.x = 136-#this.text*4
 						this.fillpercent = modulevars.p1.maxmeter/modulevars.p1.constants.maxmeter
+					end,
+	},
+	p2health = {
+		text = "Health settings",
+		x = 40,
+		y = 105,
+		olcolour = "black",
+		info = {
+			"Controls how P2 health is handled",
+		},
+		func = 	function()
+					local Elements = {
+						{text = "No Health Refill", selectfunc = function() return function() changeConfig("p2", "refillhealthenabled", false, combovars.p2) end end},
+						{text = "Health Always Full", selectfunc = function() return
+							function()
+								changeConfig("p2", "refillhealthenabled", true, combovars.p2)
+								changeConfig("p2", "instantrefillhealth", true, combovars.p2)
+							end
+						end},
+						
+					}
+					if availablefunctions.playertwoinhitstun then -- won't always be available
+						Elements[3] = 	{text = "Fill Health after Combo", selectfunc = function() return
+											function()
+												changeConfig("p2", "refillhealthenabled", true, combovars.p2)
+												changeConfig("p2", "instantrefillhealth", false, combovars.p2)
+											end
+										end}
+					end
+					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 105, nil)
+					CIG("temp", inputs.properties.scrollinginput.state)
+				end,
+		autofunc = 	function(this)
+						if not combovars.p2.refillhealthenabled then
+							this.text = "No Health Refill"
+							this.x = 136-#this.text*4
+						elseif combovars.p2.refillhealthenabled and combovars.p2.instantrefillhealth then
+							this.text = "Health Always Full"
+							this.x = 136-#this.text*4
+						else
+							this.text = "Fill Health after Combo"
+							this.x = 136-#this.text*4
+						end
+					end,
+	},
+	p2healthmax = {
+		text = "Max Health",
+		x = 80,
+		y = 120,
+		fillpercent = 0,
+		olcolour = "black",
+		info = {
+			"Controls how much health P2 gains",
+		},
+		func = 		function()
+						local uf = 	function(n) 
+										if n then
+											modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
+										end
+										return modulevars.p2.maxhealth
+									end
+						guipages.temp = createScrollingBar(guipages[2], 145, 120, 1, modulevars.p2.constants.maxhealth, uf, interactivegui.boxxlength/2)
+						CIG("temp")
+					end,
+		autofunc = 	function(this)
+						this.text = "Max Health: "..modulevars.p2.maxhealth
+						this.x = 136-#this.text*4
+						this.fillpercent = modulevars.p2.maxhealth/modulevars.p2.constants.maxhealth
+					end,
+	},
+	p2meter = {
+		text = "Meter settings",
+		x = 40,
+		y = 135,
+		olcolour = "black",
+		info = {
+			"Controls how P2 meter is handled",
+		},
+		func = 	function()
+					local Elements = {
+						{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p2", "refillmeterenabled", false, combovars.p2) end end},
+						{text = "Meter Always Full", selectfunc = function() return
+							function()
+								changeConfig("p2", "refillmeterenabled", true, combovars.p1)
+								changeConfig("p2", "instantrefillmeter", true, combovars.p1)
+							end
+						end},
+						
+					}
+					if availablefunctions.playertwoinhitstun then -- won't always be available
+						Elements[3] = 	{text = "Fill Meter after Combo", selectfunc = function() return
+											function()
+												changeConfig("p2", "refillmeterenabled", true, combovars.p2)
+												changeConfig("p2", "instantrefillmeter", false, combovars.p2)
+											end
+										end}
+					end
+					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 135, nil)
+					CIG("temp", inputs.properties.scrollinginput.state)
+				end,
+		autofunc = 	function(this)
+						if not combovars.p2.refillmeterenabled then
+							this.text = "No Meter Refill"
+							this.x = 136-#this.text*4
+						elseif combovars.p2.refillmeterenabled and combovars.p1.instantrefillmeter then
+							this.text = "Meter Always Full"
+							this.x = 136-#this.text*4
+						else
+							this.text = "Fill Meter after Combo"
+							this.x = 136-#this.text*4
+						end
+					end,
+	},
+	p2metermax = {
+		text = "Max Meter",
+		x = 80,
+		y = 150,
+		fillpercent = 0,
+		olcolour = "black",
+		info = {
+			"Controls how much meter P2 gains",
+		},
+		func = 		function()
+						local uf = 	function(n) 
+										if n then
+											modulevars.p2.maxmeter = modulevars.p2.maxmeter+n
+										end
+										return modulevars.p2.maxmeter
+									end
+						guipages.temp = createScrollingBar(guipages[2], 144, 150, 0, modulevars.p2.constants.maxmeter, uf, interactivegui.boxxlength/2)
+						CIG("temp")
+					end,
+		autofunc = 	function(this)
+						this.text = "Max Meter: "..modulevars.p2.maxmeter
+						this.x = 136-#this.text*4
+						this.fillpercent = modulevars.p2.maxmeter/modulevars.p2.constants.maxmeter
 					end,
 	},
 	p2hold = { -- clean this up with a pop up menu
@@ -295,7 +450,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	simpledisplaytoggle = {
 		text = "Simple input display on",
 		x = 36,
-		y = 75,
+		y = 45,
 		info = {
 			"toggles simple display down the bottom of the screen",
 		},
@@ -315,7 +470,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	scrollinginputsettings = {
 		text = "Change scrolling input settings",
 		x = 4,
-		y = 90,
+		y = 60,
 		olcolour = "black",
 		info = {
 			"Change scrolling input settings",
@@ -366,7 +521,19 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 							this.x = 5
 						end
 					end,
+	},
+	hudsettings = {
+		text = "HUD Settings",
+		x = 80,
+		y = 15,
+		olcolour = "black",
+		info = {
+			"Move and hide parts of the HUD",
 		},
+		func = 	function()
+					toggleMoveHUD(true)
+				end,
+	},
 	coininputleniency = {
 		text = "Coin leniency",
 		x = 64,
@@ -445,7 +612,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	hitboxsettings = {
 		text = "Change hitbox settings",
 		x = 40,
-		y = 105,
+		y = 75,
 		olcolour = "black",
 		func = 	function() CIG("hitboxsettings", 2) end,
 		info = {
@@ -483,7 +650,27 @@ guipages = { -- interactiveguipages
 		},
 		guielements.leftarrow,
 		guielements.rightarrow,
+		guielements.hudsettings,
 		guielements.coininputleniency,
+	},
+	{ -- Players
+		title = {
+			text = "Player Settings",
+			x = interactivegui.boxxlength/2 - 30,
+			y = 1,
+		},
+		guielements.leftarrow,
+		guielements.rightarrow,
+		p1 = {
+			text = "P1",
+			x = 2,
+			y = 15,
+		},
+		p2 = {
+			text = "P2",
+			x = 2,
+			y = 95,
+		},
 	},
 	{ -- Dummy
 		title = {
@@ -749,15 +936,6 @@ guipages = { -- interactiveguipages
 	},
 }
 
--- if meter is set up in file
-if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.playertwoinhitstun then
-	table.insert(guipages[1], guielements.p1meter)
-	table.insert(guipages[1], guielements.p1metermax)
-elseif modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then
-	table.insert(guipages[1], guielements.p1meterlesser)
-	table.insert(guipages[1], guielements.p1metermax)
-end
-
 if inputDisplayReg then -- if input-display.lua is loaded
 	table.insert(guipages[1], guielements.simpledisplaytoggle)
 end
@@ -770,17 +948,34 @@ if hitboxesReg then -- if a hitbox file is loaded
 	table.insert(guipages[1], guielements.hitboxsettings)
 end
 
-if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then -- if health is set up in file
-	table.insert(guipages[2], guielements.instanthealthrefill)
+-- if health is set up in file
+if availablefunctions.writeplayeronehealth and modulevars.p1.constants.maxhealth then -- if health is set up in file
+	table.insert(guipages[2], guielements.p1health)
 	table.insert(guipages[2], guielements.p1healthmax)
 end
 
+-- if meter is set up in file
+if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then
+	table.insert(guipages[2], guielements.p1meter)
+	table.insert(guipages[2], guielements.p1metermax)
+end
+
+if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then -- if health is set up in file
+	table.insert(guipages[2], guielements.p2health)
+	table.insert(guipages[2], guielements.p2healthmax)
+end
+
+if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer and availablefunctions.writeplayertwometer then
+	table.insert(guipages[2], guielements.p2meter)
+	table.insert(guipages[2], guielements.p2metermax)
+end
+
 if availablefunctions.playertwofacingleft then
-	table.insert(guipages[3], guielements.replayautoturn)
+	table.insert(guipages[4], guielements.replayautoturn)
 end
 
 if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
-	table.insert(guipages[3], guielements.hitplayback.main)
+	table.insert(guipages[4], guielements.hitplayback.main)
 end
 
 if fexists("games/"..dirname.."/guipages.lua") then
