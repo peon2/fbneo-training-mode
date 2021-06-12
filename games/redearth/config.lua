@@ -31,10 +31,10 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=false,
-   ["refillhealthenabled"]=true,
    ["refillmeterspeed"]=10,
    ["refillhealthspeed"]=10,
+   ["instantrefillhealth"]=false,
+   ["refillhealthenabled"]=true,
 },
 -- Table: {6}
 {
@@ -59,9 +59,9 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["instantrefillhealth"]=true,
-   ["refillhealthenabled"]=true,
    ["refillmeterspeed"]=10,
    ["refillhealthspeed"]=10,
+   ["instantrefillhealth"]=true,
+   ["refillhealthenabled"]=true,
 },
 }

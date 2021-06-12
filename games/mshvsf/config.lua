@@ -12,8 +12,8 @@ return {
 },
 -- Table: {2}
 {
-   ["skiptostart"]=false,
-   ["skiptofinish"]=false,
+   ["skiptostart"]=true,
+   ["skiptofinish"]=true,
 },
 -- Table: {3}
 {
@@ -25,16 +25,16 @@ return {
 },
 -- Table: {4}
 {
-   ["enabled"]=true,
+   ["enabled"]=false,
 },
 -- Table: {5}
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["refillmeterspeed"]=10,
-   ["refillhealthspeed"]=10,
    ["instantrefillhealth"]=false,
    ["refillhealthenabled"]=true,
+   ["refillmeterspeed"]=10,
+   ["refillhealthspeed"]=10,
 },
 -- Table: {6}
 {
@@ -59,9 +59,9 @@ return {
 {
    ["instantrefillmeter"]=false,
    ["refillmeterenabled"]=true,
-   ["refillmeterspeed"]=10,
-   ["refillhealthspeed"]=10,
    ["instantrefillhealth"]=false,
    ["refillhealthenabled"]=true,
+   ["refillmeterspeed"]=10,
+   ["refillhealthspeed"]=10,
 },
 }
