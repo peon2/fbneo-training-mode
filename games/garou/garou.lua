@@ -39,6 +39,13 @@ translationtable = {
 	["Button D"] = 11,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=134,
+		combotexty=55,
+	},
+}
+
 function readPlayerOneHealth()
 	return rb(0x10048E)
 end

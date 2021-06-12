@@ -1,12 +1,21 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues:"
-print "Doesn't track direction or hitstun"
-
 p1maxhealth = 0x90
 p2maxhealth = 0x90
-p1maxmeter = 0x8F
-p2maxmeter = 0x8F
+p1maxmeter = 0x8E
+p2maxmeter = 0x8E
+
+local p1health = 0xFF4191
+local p2health = 0xFF4591
+
+local p1meter = 0xFF4195
+local p2meter = 0xFF4595
+
+local p1combocounter = 0xFF4110
+local p2combocounter = 0xFF4510
+
+local p1direction = 0xFF404d
+local p2direction = 0xFF444d
 
 translationtable = {
 	{
@@ -37,52 +46,59 @@ translationtable = {
 	["Strong Kick"] = 12
 }
 
-function _playerOneFacingLeft()
+gamedefaultconfig = {
+	combogui = {
+		combotextx=180,
+		combotexty=42,
+	},
+}
 
+function playerOneFacingLeft()
+	return rb(0xFF404d)==0
 end
 
-function _playerTwoFacingLeft()
-
+function playerTwoFacingLeft()
+	return rb(0xFF444d)==0
 end
 
-function _playerOneInHitstun()
-	
+function playerOneInHitstun()
+	return rb(p2combocounter)~=0
 end
 
-function _playerTwoInHitstun()
-
+function playerTwoInHitstun()
+	return rb(p1combocounter)~=0
 end
 
 function readPlayerOneHealth()
-	return rb(0xFF4055)
+	return rb(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(0xFF4055, health)
+	wb(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(0xFF4055)
+	return rb(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(0xFF4455, health)
+	wb(p2health, health)
 end
 
 function readPlayerOneMeter()
-	return rb(0xFF4191, meter)
+	return rb(p1meter, meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(0xFF4191, meter)
+	wb(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(0xFF4591, meter)
+	return rb(p2meter, meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0xFF4591, meter)
+	wb(p2meter, meter)
 end
 
 function infiniteTime()

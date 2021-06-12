@@ -36,6 +36,13 @@ translationtable = {
 	["Not in use 2"] = 12,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=176,
+		combotexty=55,
+	},
+}
+
 function playerOneFacingLeft()
 	return rb(0x2034899)==0
 end

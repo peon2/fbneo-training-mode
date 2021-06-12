@@ -6,10 +6,29 @@ p2maxhealth = 0x90
 p1maxmeter = 0x03
 p2maxmeter = 0x03
 
-print "Known Issues: with mshsf"
-print "GUI noting working"
-print ""
+local p1health = 0xFF3A51
+local p1redhealth = 0xFF3A5B
+local p1char2health = 0xFF4251
+local p1char2redhealth = 0xFF425B
+local p1charactive = 0xFF3A61 -- 0 for point, 1 for anchor
 
+local p2health = 0xFF3E51
+local p2redhealth = 0xFF3E5B
+local p2char2health = 0xFF4651
+local p2char2redhealth = 0xFF465B
+local p2charactive = 0xFF3E61 -- 0 for point, 1 for anchor
+
+local p1meter = 0xFF3A54 -- both chars share the same meter
+local p2meter = 0xFF3E54
+
+local p1combocounter = 0xFF4110 -- both chars share the same combo counter
+local p2combocounter = 0xFF4510
+
+local p1direction = 0xFF384b -- 0 is facing left
+local p1char2direction = 0xFF404b
+
+local p2direction = 0xFF3C4b
+local p2char2direction = 0xFF444B
 translationtable = {
 	{
 		"coin",
@@ -39,50 +58,77 @@ translationtable = {
 	["Strong Kick"] = 12
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=178,
+		combotexty=32,
+	},
+}
+
+function playerOneFacingLeft()
+	if (rb(p1charactive)==0) then
+		return rb(p1direction)==0
+	end
+	return rb(p1char2direction)==0
+end
+
+function playerTwoFacingLeft()
+	if (rb(p2charactive)==0) then
+		return rb(p2direction)==0
+	end
+	return rb(p2char2direction)==0
+end
+
+function playerOneInHitstun()
+	return rb(p2combocounter)~=0
+end
+
+function playerTwoInHitstun()
+	return rb(p1combocounter)~=0
+end
+
 function readPlayerOneHealth()
-	rb(0xFF3A51)
-    rb(0xFF3A5B)
-    rb(0xFF4251)
-    rb(0xFF425B)
-    return
+	if (rb(p1charactive)==0) then
+		return rb(p1health)
+	end
+	return rb(p1char2health)
 end
 
 function writePlayerOneHealth(health)
-	wb(0xFF3A51, health)
-    wb(0xFF3A5B, health)
-    wb(0xFF4251, health)
-    wb(0xFF425B, health)
+	wb(p1health, health)
+    wb(p1redhealth, health)
+    wb(p1char2health, health)
+    wb(p1char2redhealth, health)
 end
 
 function readPlayerTwoHealth()
-	rb(0xFF3E51)
-    rb(0xFF3E5B)
-    rb(0xFF4651)
-    rb(0xFF465B)
-    return
+	if (rb(p2charactive)==0) then
+		return rb(p2health)
+	end
+	return rb(p2char2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(0xFF3E51, health)
-    wb(0xFF3E5B, health)
-    wb(0xFF4651, health)
-    wb(0xFF465B, health)
+	wb(p2health, health)
+    wb(p2redhealth, health)
+    wb(p2char2health, health)
+    wb(p2char2redhealth, health)
 end
 
 function readPlayerOneMeter()
-	return rb(0xFF3A54)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(0xFF3A54, meter)
+	wb(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(0xFF3E54)
+	return rb(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0xFF3E54, meter)
+	wb(p2meter, meter)
 end
 
 function infiniteTime()

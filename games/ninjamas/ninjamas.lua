@@ -1,14 +1,10 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
---p1maxhealth = 0xD0
+p1maxhealth = 0xD0
 p2maxhealth = 0xD0
 
 p1maxmeter = 0x60
 p2maxmeter = 0x60
-
-print "Known Issues: with ninjamas"
-print "GUI not working"
-print ""
 
 translationtable = {
 	{
@@ -37,6 +33,29 @@ translationtable = {
 	["Button D"] = 11,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=150,
+		combotexty=42,
+	},
+}
+
+function playerOneFacingLeft()
+	return rb(0x100d21)==0
+end
+	
+function playerTwoFacingLeft()
+		return rb(0x101d21)==0
+end
+
+function playerOneInHitstun()
+	return rb(0x100089)~=0
+end
+
+function playerTwoInHitstun()
+	return rb(0x101089)~=0
+end
+
 function readPlayerOneHealth()
 	return rb(0x100050)
 end
@@ -58,7 +77,12 @@ function readPlayerOneMeter()
 end
 
 function writePlayerOneMeter(meter)
-	wb(0x1000AE, meter)
+	-- After meter is used ingame it turns grey and is disabled until it reaches 0
+	if rb(0x1000AC) == 7 then
+		wb(0x1000AE, 0)
+	else
+		wb(0x1000AE, meter)
+	end
 end
 
 function readPlayerTwoMeter()
@@ -66,7 +90,11 @@ function readPlayerTwoMeter()
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0x1010AE, meter)
+	if rb(0x1010AC) == 7 then
+		wb(0x1010AE, 0)
+	else
+		wb(0x1010AE, meter)
+	end
 end
 
 function infiniteTime()

@@ -17,16 +17,28 @@ Video showing usage of the simple options: https://www.youtube.com/watch?v=sWxGW
 
 Currently supports:
 
+Art of Fighting
+
+Art of Fighting 2
+
 Art of Fighting 3
 
+Breakers Revenge
+
 Cyberbots
+
+Daraku Tenshi
 
 Dino Rex
 
 Dragonball Z 2 - Super Battle
 
 Double Dragon (Neo-Geo)
- 
+
+Fatal Fury 3 - Road to the Final Victory
+
+Fatal Fury Special
+
 Garou Mark Of The Wolves
 
 Jackie Chan in Fists of Fire
@@ -35,13 +47,15 @@ JoJo's Bizarre Adventure: Heritage for the Future
 
 JoJo's Venture
 
+Kabuki Klash
+
 The King Of Fighters '94
 
 The King Of Fighters '95
 
 The King Of Fighters '98
 
-The King Of Fighteres 2002
+The King Of Fighters 2002
 
 The Last Blade 2
 
@@ -57,7 +71,15 @@ Mighty Warriors
 
 Ninja Masters
 
+Rage of the Dragons
+
 Red Earth
+
+Real Bout Fatal Fury
+
+Real Bout Fatal Fury 2
+
+Real Bout Fatal Fury Special
 
 Samurai Shodown
 
@@ -79,10 +101,16 @@ Super Street Fighter 2X - Grand Master Challenge
 
 Vampire Hunter
 
+Voltage Fighter Gowcaizer
+
 Waku Waku 7
+
+Waku Waku 7 Boss Hack
 
 World Heroes Perfect
 
 X-Men vs Street Fighter
 
 X-Men: Children of the Atom
+
+X-Men: Children of the Atom Boss Hack

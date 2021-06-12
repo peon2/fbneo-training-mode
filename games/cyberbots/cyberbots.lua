@@ -37,6 +37,13 @@ translationtable = {
 	["Weapon"] = 10,
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=176,
+		combotexty=49,
+	},
+}
+
 local p2InHitstun = 0xffe9f7 -- not working right, frame behind, triggers when arm is off. And triggers when p1 is hit.
 local p2HealthAddr = 0xFF85E5
 local timer = 0xFFEBA0

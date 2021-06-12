@@ -1,0 +1,79 @@
+v0.21.06.11
+
+Fixed some back button functionality.
+Added a 'Player Page' with options for controlling P1&P2 Health and Meter.
+Added a 'HUD Settings' option for moving around/hiding HUD elements.
+
+Daraku Tenshi:
+Fixed meter issue properly.
+
+Added support for breakrev
+Added support for gowcaizr
+
+v0.21.06.04
+
+Made some gui functionality fit in the page better
+
+Daraku Tenshi:
+Fixed meter issue.
+
+Added support for Rage of the Dragons (rotd)
+
+v0.21.06
+
+Daraku Tenshi:
+Finished support.
+
+Ninja Masters:
+Finished support. (Thanks to Ivy-IV)
+
+Added support for Waku Waku 7 Boss Hack (wakuwak7bh)
+Added support for Fatal Fury 3 (fatfury3)
+
+v0.21.05.28
+
+Added setting P1 meter.
+Added setting P2 health.
+
+Added fillable bars you can adjust with left/right.
+
+Bound button 3 to be 'back' in menus.
+
+Cleaned up some menu items.
+
+JoJo's Bizarre Adventure: Heritage for the Future:
+Made hitboxes scale better at fullscreen.
+
+Added partial support for Daraku Tenshi (daraku)
+Added support for Fatal Fury Special (fatfursp)
+Added support for Real Bout Fatal Fury (rbff1)
+Added support for Real Bout Fatal Fury 2 (rbff2h)
+Added support for Real Bout Fatal Fury Special (rbffspec)
+
+v0.21.05.21
+
+Removed config.lua files.
+Added gamedefaultconfig for each game, these can be used to set default game config options.
+Added fillable backgrounds to some buttons for visual indication.
+
+Marvel Super Heroes vs Street Fighter:
+Cleaned up some code and completed functionality.
+
+X-Men vs. Street Fighter:
+Cleaned up some code and completed functionality.
+
+Added support for Art of Fighting (aof)
+
+Added support for Art of Fighting 2 (aof2)
+
+v0.21.05.14
+
+Refactored some internal code.
+Changed some gui options to select on button release for quicker menu usage.
+Added support for game-specific guipages [see Red Earth]
+
+X-Men Children of the Atom:
+Added some missing features and fixed existing ones
+Added xmcotabh (Boss Hack) as a recognised rom.
+
+Added support for Kabuki Klash (kabukikl)

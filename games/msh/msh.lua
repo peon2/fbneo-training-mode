@@ -39,6 +39,13 @@ translationtable = {
 	["Strong Kick"] = 12
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=180,
+		combotexty=42,
+	},
+}
+
 function readPlayerOneHealth()
 	return rb(0xFF4191)
 end

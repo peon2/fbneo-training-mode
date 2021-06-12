@@ -51,6 +51,13 @@ translationtable = {
 	["Strong Kick"] = 12
 }
 
+gamedefaultconfig = {
+	combogui = {
+		combotextx=180,
+		combotexty=42,
+	},
+}
+
 function playerOneFacingLeft()
 	return rw(0xFF8454) >= rw(0xFF8854)
 end

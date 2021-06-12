@@ -1,12 +1,34 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues:"
-print "Doesn't track direction or hitstun"
-
 p1maxhealth = 0x90
 p2maxhealth = 0x90
 p1maxmeter = 3
 p2maxmeter = 3
+
+-- p1 char 1 UID is 0xff4000
+-- p1 char 2 UID is 0xff4800
+local p1health = 0xff4211
+local p1redhealth = 0xff421b
+local p1char2health = 0xff4a11
+local p1char2redhealth = 0xff4a1b
+local p1charactive = 0xff4220 -- 0 for point, 1 for anchor
+
+-- p2 char 1 UID is 0xff4400
+-- p2 char 2 UID is 0xff4c00
+local p2health = 0xff4611
+local p2redhealth = 0xff461b
+local p2char2health = 0xff4e11
+local p2char2redhealth = 0xff4e1b
+local p2charactive = 0xff4620 -- 0 for point, 1 for anchor
+
+local p1meter = 0xff4214 -- both chars share the same meter
+local p2meter = 0xff4614
+
+local p1combocounter = 0xff4110 -- both chars share the same combo counter
+local p2combocounter = 0xff4510
+
+local p1direction = 0xff404b -- 0 is facing left, both chars share the same direction flag
+local p2direction = 0xff444b
 
 translationtable = {
 	{
@@ -37,64 +59,73 @@ translationtable = {
 	["Strong Kick"] = 12
 }
 
-function _playerOneFacingLeft()
+gamedefaultconfig = {
+	combogui = {
+		combotextx=180,
+		combotexty=50,
+	},
+}
 
+function playerOneFacingLeft()
+	return rb(p1direction)==0
 end
 
-function _playerTwoFacingLeft()
-
+function playerTwoFacingLeft()
+	return rb(p2direction)==0
 end
 
-function _playerOneInHitstun()
-	
+function playerOneInHitstun()
+	return rb(p2combocounter)~=0
 end
 
-function _playerTwoInHitstun()
-
+function playerTwoInHitstun()
+	return rb(p1combocounter)~=0
 end
 
 function readPlayerOneHealth()
-	return rw(0xff4000+0x210)
+	if (rb(p1charactive)==0) then
+		return rb(p1health)
+	end
+	return rb(p1char2health)
 end
 
 function writePlayerOneHealth(health)
-	ww(0xff4000+0x210, health)
-	ww(0xff4800+0x21a, health)
-	ww(0xff4000+0x21a, health)
-	ww(0xff4800+0x21a, health)
+	wb(p1health, health)
+    wb(p1redhealth, health)
+    wb(p1char2health, health)
+    wb(p1char2redhealth, health)
 end
 
 function readPlayerTwoHealth()
-	return rw(0xff4400+0x210)
+	if (rb(p2charactive)==0) then
+		return rb(p2health)
+	end
+	return rb(p2char2health)
 end
 
 function writePlayerTwoHealth(health)
-	ww(0xff4400+0x210, health)
-	ww(0xff4c00+0x21a, health)
-	ww(0xff4400+0x21a, health)
-	ww(0xff4c00+0x21a, health)
+	wb(p2health, health)
+    wb(p2redhealth, health)
+    wb(p2char2health, health)
+    wb(p2char2redhealth, health)
 end
 
 function readPlayerOneMeter()
-	return rb(0xff4000+0x214, meter)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(0xff4000+0x214, meter)
-    ww(0xff4000+0x212, 0x90)
-	wb(0xff4800+0x214, meter)
-    ww(0xff4800+0x212, 0x90)
+	wb(p1meter, meter)
+    ww(0xff4212, 0x90) -- percentage of bar
 end
 
 function readPlayerTwoMeter()
-	return rb(0xff4400+0x214, meter)
+	return rb(p2meter, meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0xff4400+0x214, meter)
-    ww(0xff4400+0x212, 0x90)
-	wb(0xff4c00+0x214, meter)
-    ww(0xff4c00+0x212, 0x90)
+	wb(p2meter, meter)
+    ww(0xff4612, 0x90) -- percentage of bar
 end
 
 function infiniteTime()
