@@ -23,6 +23,8 @@ Art of Fighting 2
 
 Art of Fighting 3
 
+Asura Buster
+
 Breakers Revenge
 
 Cyberbots
