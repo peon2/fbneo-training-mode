@@ -42,9 +42,16 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=140,
+	hud = {
+		combotextx=138,
 		combotexty=42,
+		comboenabled=true,
+		p1healthx=35,
+		p1healthy=17,
+		p1healthenabled=true,
+		p2healthx=258,
+		p2healthy=17,
+		p2healthenabled=true,
 	},
 }
 

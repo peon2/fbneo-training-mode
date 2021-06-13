@@ -43,9 +43,22 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
+	hud = {
 		combotextx=180,
 		combotexty=42,
+		comboenabled=true,
+		p1healthx=22,
+		p1healthy=16,
+		p1healthenabled=true,
+		p2healthx=288,
+		p2healthy=16,
+		p2healthenabled=true,
+		p1meterx=22,
+		p1metery=223,
+		p1meterenabled=true,
+		p2meterx=288,
+		p2metery=223,
+		p2meterenabled=true,
 	},
 }
 
@@ -119,6 +132,5 @@ function infiniteTime()
 end
 
 function Run()
-	gui.text(50,50,readPlayerOneHealth())
 	infiniteTime()
 end

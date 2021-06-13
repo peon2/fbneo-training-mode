@@ -38,9 +38,22 @@ gamedefaultconfig = {
 	hitbox = {
 		enabled=true,
 	},
-	combogui = {
+	hud = {
 		combotextx=180,
 		combotexty=42,
+		comboenabled=true,
+		p1healthx=49,
+		p1healthy=12,
+		p1healthenabled=true,
+		p2healthx=324,
+		p2healthy=12,
+		p2healthenabled=true,
+		p1meterx=162,
+		p1metery=28,
+		p1meterenabled=true,
+		p2meterx=220,
+		p2metery=28,
+		p2meterenabled=true,
 	},
 }
 

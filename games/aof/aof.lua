@@ -12,7 +12,7 @@ local p2health = 0x1093cd
 local p1meter = 0x1094a4
 local p2meter = 0x1095a4
 
-print "Known Issues: with aof3"
+print "Known Issues: with aof"
 print "Hitstun detector can be inconsistent"
 print "No sideswap on replays"
 print ""
@@ -45,9 +45,22 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
+	hud = {
 		combotextx=138,
 		combotexty=35,
+		comboenabled=true,
+		p1healthx=10,
+		p1healthy=16,
+		p1healthenabled=true,
+		p2healthx=282,
+		p2healthy=16,
+		p2healthenabled=true,
+		p1meterx=10,
+		p1metery=25,
+		p1meterenabled=true,
+		p2meterx=275,
+		p2metery=25,
+		p2meterenabled=true,
 	},
 }
 

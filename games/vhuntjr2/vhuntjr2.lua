@@ -45,23 +45,49 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=180,
-		combotexty=42,
+	hud = {
+		p1healthx=34,
+		p1healthy=24,
+		p1healthenabled=true,
+		p2healthx=339,
+		p2healthy=24,
+		p2healthenabled=true,
+		p1meterx=164,
+		p1metery=34,
+		p1meterenabled=true,
+		p2meterx=208,
+		p2metery=34,
+		p2meterenabled=true,
 	},
 }
 
+function readPlayerOneHealth()
+	return rb(p1health)
+end
+
 function writePlayerOneHealth(health)
 	wb(p1health, health)
+end
+
+function readPlayerTwoHealth()
+	return rb(p2health)
 end
 
 function writePlayerTwoHealth(health)
 	wb(p2health, health)
 end
 
+function readPlayerOneMeter()
+	return rw(p1meter)
+end
+
 function writePlayerOneMeter(meter)
 	ww(p1meter, meter)
 	wb(p1stocks, 0x0A)
+end
+
+function readPlayerTwoMeter()
+	return rw(p2meter)
 end
 
 function writePlayerTwoMeter(meter)

@@ -6,9 +6,6 @@ p2maxhealth = 0xff
 p1maxmeter = 0xff
 p2maxmeter = 0xff
 
-
-
-
 local p1health1 = 0x10014A
 local p1health2 = 0x10014B
 
@@ -55,9 +52,22 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
+	hud = {
 		combotextx=140,
 		combotexty=42,
+		comboenabled=true,
+		p1healthx=27,
+		p1healthy=21,
+		p1healthenabled=true,
+		p2healthx=266,
+		p2healthy=21,
+		p2healthenabled=true,
+		p1meterx=121,
+		p1metery=200,
+		p1meterenabled=true,
+		p2meterx=180,
+		p2metery=200,
+		p2meterenabled=true,
 	},
 }
 

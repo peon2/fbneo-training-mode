@@ -36,26 +36,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = interactivegui.boxx2 - interactivegui.boxx - 12,
 		y = 0,
 		olcolour = "black",
-	},--[[
-	p1health = {  -- this should eventually be rewritten to follow p1meter below
-		text = "Instant health refill off",
-		x = 36,
-		y = 25,
-		info = {
-			"Controls whether P1 health refills gradually or not",
-		},
-		olcolour = "black",
-		func = 	function() changeConfig("p1", "instantrefillhealth", not combovars.p1.instantrefillhealth, combovars.p1) end,
-		autofunc = 	function(this)
-						if combovars.p1.instantrefillhealth then
-							this.text = "Instant health refill on"
-							this.x = 136-#this.text*4
-						else
-							this.text = "Instant health refill off"
-							this.x = 136-#this.text*4
-						end
-					end,
-	}, ]]--
+	},
 	p1health = {
 		text = "Health settings",
 		x = 40,

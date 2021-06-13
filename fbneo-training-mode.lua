@@ -51,10 +51,10 @@ local games = {
 	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
 	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
 	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
-	sfa2 = {"sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfa2 = {"sfa2", "sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	vhuntjr2 = {"vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	vhuntjr2 = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	wakuwak7 = {"wakuwak7", "wakuwak7bh", iconfile = "icons-neogeo-32.png"},
 	whp = {"whp", iconfile = "icons-neogeo-32.png"},
 	xmvsf = {"xmvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -1498,6 +1498,7 @@ end
 local HUDElements = {}
 
 toggleMoveHUD = function(bool)
+	if #HUDElements==0 then return end
 	toggleInteractiveGuiEnabled(false)
 	interactivegui.movehud = bool
 	interactivegui.movehudselected = false
@@ -1656,35 +1657,30 @@ setRegisters = function() -- pre-calc stuff
 	
 	local str = ""
 
-	if availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
-		table.insert(registers.guiregister, comboHandlerP1)
+	if availablefunctions.readplayeronehealth then
 		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1healthx", n, hud) end return hud.p1healthx end, y = function(n) if n then changeConfig("hud", "p1healthy", n, hud) end return hud.p1healthy end, enabled = function(n) if n or n==false then changeConfig("hud", "p1healthenabled", n, hud) end return hud.p1healthenabled end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health, hud.p1healthtextcolour) end})
+		if availablefunctions.playeroneinhitstun then
+			table.insert(registers.guiregister, comboHandlerP1)
+		else
+			print "player one hitstun not set, can't do combos.\n"
+		end
 	else
-		if not availablefunctions.readplayeronehealth then
-			str = str .. "player one health read and "
-		end
-		if not availablefunctions.playeroneinhitstun then
-			str = str .. "player one hitstun and "
-		end
-		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
+		print "player one health read not set, can't do combos.\n"
 	end
 		
-	if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
-		table.insert(registers.guiregister, comboHandlerP2)
+	if availablefunctions.readplayertwohealth then
 		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n or n==false then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
+		if availablefunctions.playertwoinhitstun then
+			table.insert(registers.guiregister, comboHandlerP2)
+		else
+			print "player two hitstun not set, can't do combos.\n"
+		end
 	else
-		if not availablefunctions.readplayertwohealth then
-			str = str .. "player two health read and "
-		end
-		if not availablefunctions.playertwoinhitstun then
-			str = str .. "player two hitstun and "
-		end
-		print(str:sub(1,#str-5) .. " not set, can't do combos.\n")
+		print "player two health read not set, can't do combos.\n"
 	end
 
 	if modulevars.p1.constants.maxhealth and availablefunctions.readplayeronehealth and availablefunctions.writeplayeronehealth and availablefunctions.playeroneinhitstun then
 		table.insert(registers.registerafter, healthHandlerP1)
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n or n==false then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
 	else
 		str = ""
 		if not modulevars.p1.constants.maxhealth then
@@ -1704,6 +1700,7 @@ setRegisters = function() -- pre-calc stuff
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.readplayertwohealth and availablefunctions.writeplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, healthHandlerP2)
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n or n==false then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
