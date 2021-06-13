@@ -187,6 +187,21 @@ gamekeys = {
 		{      "4",   "circle", "Button 5" },
 		{      "S",    "start",    "Start" },
 	},
+	{ set =
+	{ "asurabus",       pcsx,        fba,       mame },
+	{      "l",     "left",     "Left",     "Left" },
+	{      "r",    "right",    "Right",    "Right" },
+	{      "u",       "up",       "Up",       "Up" },
+	{      "d",     "down",     "Down",     "Down" },
+	{     "ul"},
+	{     "ur"},
+	{     "dl"},
+	{     "dr"},
+	{      "A",   "square", "Button 1", "Button 1" },
+	{      "B", "triangle", "Button 2", "Button 2" },
+	{      "C",        "x", "Button 3", "Button 3" },
+	{      "S",    "start",    "Start",    "Start" },
+	},
 }
 
 --folder with scrolling-input-code.lua, icon files, & frame dump folder (relative to this lua file)

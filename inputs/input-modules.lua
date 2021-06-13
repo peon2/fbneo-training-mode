@@ -346,3 +346,23 @@ i = {
 table.insert(inp,{games,i})
 
 --------------------------------------------------------------------------------
+--Fuuki FG-3
+
+games = {"asurabus"}
+x,dx = 0x10,0xe0
+y,dy = 0xc8,0
+i = {}
+for n=1,2 do
+	i[n.."^"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v"] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<"] = {x+dx*(n-1)+0x08, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">"] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."A"] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Button 1", "P"..n.." Button 1"}
+	i[n.."B"] = {x+dx*(n-1)+0x28, y+dy*(n-1)+0x4, "P"..n.." Button 2", "P"..n.." Button 2"}
+	i[n.."C"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x4, "P"..n.." Button 3", "P"..n.." Button 3"}
+	i[n.."S"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",    n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c"] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",     "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
