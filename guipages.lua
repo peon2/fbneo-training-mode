@@ -273,8 +273,8 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p2", "refillmeterenabled", false, combovars.p2) end end},
 						{text = "Meter Always Full", selectfunc = function() return
 							function()
-								changeConfig("p2", "refillmeterenabled", true, combovars.p1)
-								changeConfig("p2", "instantrefillmeter", true, combovars.p1)
+								changeConfig("p2", "refillmeterenabled", true, combovars.p2)
+								changeConfig("p2", "instantrefillmeter", true, combovars.p2)
 							end
 						end},
 						
@@ -294,7 +294,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						if not combovars.p2.refillmeterenabled then
 							this.text = "No Meter Refill"
 							this.x = 136-#this.text*4
-						elseif combovars.p2.refillmeterenabled and combovars.p1.instantrefillmeter then
+						elseif combovars.p2.refillmeterenabled and combovars.p2.instantrefillmeter then
 							this.text = "Meter Always Full"
 							this.x = 136-#this.text*4
 						else

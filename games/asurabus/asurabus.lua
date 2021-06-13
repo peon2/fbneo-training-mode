@@ -1,14 +1,16 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
 p1maxhealth = 0xEF
---p2maxhealth = 0xEF
+p2maxhealth = 0xEF
 
-p1maxmeter = 0x50
-p2maxmeter = 0x50
+p1maxmeter = 0x40
+p2maxmeter = 0x40
 
-print "Known Issues: with asurabus"
-print "GUI noting working"
-print ""
+local p1direction = 0x4033DB
+local p2direction = 0x404091
+
+local p1combocounter = 0x403DBD
+local p2combocounter = 0x404A7D
 
 translationtable = {
 	{
@@ -33,6 +35,42 @@ translationtable = {
 	["Button 3"] = 9,
 }
 
+gamedefaultconfig = {
+	hud = {
+		combotextx=146,
+		combotexty=42,
+		comboenabled=true,
+		p1healthx=22,
+		p1healthy=16,
+		p1healthenabled=true,
+		p2healthx=288,
+		p2healthy=16,
+		p2healthenabled=true,
+		p1meterx=22,
+		p1metery=223,
+		p1meterenabled=true,
+		p2meterx=288,
+		p2metery=223,
+		p2meterenabled=true,
+	},
+}
+
+function playerOneFacingLeft()
+	return rb(p1direction)==0
+end
+
+function playerTwoFacingLeft()
+	return rb(p2direction)==0
+end
+
+function playerOneInHitstun()
+	return rb(p2combocounter)~=0
+end
+
+function playerTwoInHitstun()
+	return rb(p1combocounter)~=0
+end
+
 function readPlayerOneHealth()
 	return rb(0x4034EB)
 end
@@ -50,12 +88,12 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(0x4034F3)
+	return rb(0x4034EF)
 end
 
 function writePlayerOneMeter(meter)
 	wb(0x4034EF, meter)
-    wb(0x4034F3, meter)
+	wb(0x4034F3, meter)
 end
 
 function readPlayerTwoMeter()
@@ -64,7 +102,7 @@ end
 
 function writePlayerTwoMeter(meter)
 	wb(0x4041AD, meter)
-    wb(0x4041A9, meter)
+	wb(0x4041A9, meter)
 end
 
 function infiniteTime()
@@ -72,11 +110,11 @@ function infiniteTime()
 end
 
 function secretCharacters()
-    wb(0x408837, 0x01)
-    wb(0x408839, 0x01)
+	wb(0x408837, 0x01)
+	wb(0x408839, 0x01)
 end
 
 function Run() -- runs every frame
 	infiniteTime()
-    secretCharacters()
+	secretCharacters()
 end
