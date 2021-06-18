@@ -6,15 +6,16 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.06.11"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.06.18"
 
 local fc = emu.framecount()
 
 local games = {
+	[""] = {}, -- null case
 	aof = {"aof", iconfile = "icons-neogeo-32.png"},
 	aof2 = {"aof2", iconfile = "icons-neogeo-32.png"},
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
-	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
+	--asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
 	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
@@ -29,6 +30,7 @@ local games = {
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
 	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
+	karnovr = {"karnovr", iconfile = "icons-neogeo-32.png"},
 	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof95 = {"kof95", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -51,6 +53,7 @@ local games = {
 	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
 	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
 	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	sf2ce = {"sf2ce", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa2 = {"sfa2", "sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -87,7 +90,7 @@ local defaultconfig = {
 	p2 = {
 		-- Health
 		refillhealthspeed = 10,
-		instantrefillhealth = false,
+		instantrefillhealth = true,
 		refillhealthenabled = true,
 		refillmeterspeed = 10,
 		instantrefillmeter = false,
@@ -157,6 +160,7 @@ local config = defaultconfig
 local rom = emu.romname()
 dirname = ""
 local interactiveguipages = {}
+local configpath = "games/other/"..rom..".lua"
 
 function fexists(s)
 	local fs = io.open(s,"r")
@@ -176,20 +180,69 @@ for i, v in pairs(games) do
 	for _, k in ipairs(v) do
 		if (rom == k) then
 			dirname = i
+			configpath = "games/"..dirname.."/config.lua"
 		end
 	end
 end
 
-if not dirname then dirname = "" end
 ----------------------------------------------
 -- CHECK IF ROM MEMORY FILE EXISTS
 ----------------------------------------------
+
+local tonum = function(a) -- works for digits and letters in the context of joypad inputs
+	if (tonumber(a)) then
+		return tonumber(a)
+	else
+		return string.byte(a)-64
+	end
+end
 
 if fexists("games/"..dirname.."/"..dirname..".lua") then
 	dofile("games/"..dirname.."/"..dirname..".lua")
 else
 	print("Memory addresses not found for "..rom)
+	print "Attempting to make a translationtable from defaults"
+	-- try to make a translation table
+	
+	-- taken from dammits script
+	local c = joypad.get()
+	local nbuttons, player, input
+	for b=6,1,-1 do
+		for _,v in ipairs({"P1 Button "..b, "P1 Button "..string.char(b+64), "P1 Fire "..b}) do -- some common buttons
+			if c[v] ~= nil then
+				nbuttons = b
+				break
+			end
+		end
+		if nbuttons then break end
+	end
+	-- maybe add something to check for capcom buttons like weak punch, medium punch, etc.
+	-- assume all games have cardinal directions
+	if nbuttons then
+		translationtable = {{"coin", "start", "select", "up", "down", "left", "right", "button1", "button2", "button3", "button4", "button5", "button6"},
+			Coin = 1,
+			Start = 2,
+			Select = 3,
+			Up = 4,
+			Down = 5,
+			Left = 6,
+			Right = 7,
+		}
+		for i,v in pairs(c) do -- check buttons
+			player = i:sub(1,2)
+			input = i:sub(4)
+			if player == "P1" and translationtable[input]==nil then -- change translation table to not work with [1]
+				translationtable[input] = 7+tonum(input:sub(#input)) -- bind JUST attack buttons
+			elseif player == "P2" then
+			else -- stuff like dipswitches
+				translationtable[i] = 7+nbuttons+1 -- we dont care about any of these but need to make sure they're bound to something
+			end
+		end
+	else
+		print "Can't make a translationtable"
+	end
 end
+
 ----------------------------------------------
 -- CHECK IF TABLEIO IS PRESENT AND TRYING TO OPEN CONFIG FILE
 ----------------------------------------------
@@ -207,12 +260,12 @@ if fexists("tableio.lua") then
 			end
 		end
 	end
-	if fexists("games/"..dirname.."/config.lua") then
-		config = table.load("games/"..dirname.."/config.lua")
+	if fexists(configpath) then
+		config = table.load(configpath)
 		if not config then
 			print("Can't read config file found for "..dirname..", using default config.")
 			config = defaultconfig
-		else -- if the file is loaded, make sure the contents are at least superifically correct
+		else -- if the file is loaded, make sure the contents are at least superficially correct
 			local check = true 
 			for i, v in pairs(defaultconfig) do
 				for j, k in pairs(v) do
@@ -228,8 +281,9 @@ if fexists("tableio.lua") then
 			end
 		end
 	end
-	if dirname ~= nil and dirname~="" then
-		assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
+	if dirname ~= nil then
+		if dirname=="" then assert(table.save(config,configpath)==nil, "Can't save config file")
+		else assert(table.save(config,configpath)==nil, "Can't save config file") end
 	end
 else
 	print("Can't read/write")
@@ -435,11 +489,11 @@ hitboxes = {
 }
 
 recording = {
-	{}, 
-	{}, 
-	{}, 
-	{}, 
-	{}, 
+	{},
+	{},
+	{},
+	{},
+	{},
 	recordingslot = 1,
 	hitslot,
 	blockslot,
@@ -454,12 +508,7 @@ recording = {
 ----------------------------------------------
 -- TRYING TO OPEN HITBOXES
 ----------------------------------------------
-if games[dirname] then
-	hitbox = games[dirname].hitboxes
-else
-	print("Game not supported")
-	return
-end
+hitbox = games[dirname].hitboxes
 
 if hitbox then
 	if fexists("hitboxes/"..hitbox..".lua") then
@@ -536,7 +585,7 @@ function changeConfig(tab, index, value, otherlocation, otherindex) -- table in 
 	if not tab then c = config
 	else c = config[tab] end
 
-	if type(value) ~=  type(c[index]) then return end -- make sure the right type is being passed
+	if type(value)~= type(c[index]) and type(c[index])~=nil then print("Tried to write a bad config value to "..index) return end -- make sure the right type is being passed
 	config.changed = true
 	c[index] = value
 	if otherlocation then
@@ -550,9 +599,9 @@ end
 
 local saveConfig = function()
 	if not availablefunctions.tablesave or not config.changed then return end
-	config.changed = nil -- only saves if the config has changed
-	print("Saving config: " ..dirname.."//config.lua")
-	assert(table.save(config,"games/"..dirname.."//config.lua")==nil, "Can't save config file")
+	config.changed = false -- only saves if the config has changed
+	print("Saving config: " .. configpath)
+	assert(table.save(config, configpath)==nil, "Can't save config file")
 end
 
 local updateModuleVars = function()
@@ -1658,7 +1707,7 @@ setRegisters = function() -- pre-calc stuff
 	local str = ""
 
 	if availablefunctions.readplayeronehealth then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1healthx", n, hud) end return hud.p1healthx end, y = function(n) if n then changeConfig("hud", "p1healthy", n, hud) end return hud.p1healthy end, enabled = function(n) if n or n==false then changeConfig("hud", "p1healthenabled", n, hud) end return hud.p1healthenabled end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health, hud.p1healthtextcolour) end})
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1healthx", n, hud) end return hud.p1healthx end, y = function(n) if n then changeConfig("hud", "p1healthy", n, hud) end return hud.p1healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p1healthenabled", n, hud) end return hud.p1healthenabled end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health, hud.p1healthtextcolour) end})
 		if availablefunctions.playeroneinhitstun then
 			table.insert(registers.guiregister, comboHandlerP1)
 		else
@@ -1669,7 +1718,7 @@ setRegisters = function() -- pre-calc stuff
 	end
 		
 	if availablefunctions.readplayertwohealth then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n or n==false then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
 		if availablefunctions.playertwoinhitstun then
 			table.insert(registers.guiregister, comboHandlerP2)
 		else
@@ -1700,7 +1749,7 @@ setRegisters = function() -- pre-calc stuff
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.readplayertwohealth and availablefunctions.writeplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, healthHandlerP2)
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n or n==false then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n~=nil then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
@@ -1745,7 +1794,7 @@ setRegisters = function() -- pre-calc stuff
 	end
 
 	if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1meterx", n, hud) end return hud.p1meterx end, y = function(n) if n then changeConfig("hud", "p1metery", n, hud) end return hud.p1metery end, enabled = function(n) if n or n==false then changeConfig("hud", "p1meterenabled", n, hud) end return hud.p1meterenabled end, drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end})
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1meterx", n, hud) end return hud.p1meterx end, y = function(n) if n then changeConfig("hud", "p1metery", n, hud) end return hud.p1metery end, enabled = function(n) if n~=nil then changeConfig("hud", "p1meterenabled", n, hud) end return hud.p1meterenabled end, drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end})
 		if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
 			table.insert(registers.registerafter, meterHandlerP1)
 		else
@@ -1763,7 +1812,7 @@ setRegisters = function() -- pre-calc stuff
 	
 	
 	if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2meterx", n, hud) end return hud.p2meterx end, y = function(n) if n then changeConfig("hud", "p2metery", n, hud) end return hud.p2metery end, enabled = function(n) if n or n==false then changeConfig("hud", "p2meterenabled", n, hud) end return hud.p2meterenabled end, drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end})	
+		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2meterx", n, hud) end return hud.p2meterx end, y = function(n) if n then changeConfig("hud", "p2metery", n, hud) end return hud.p2metery end, enabled = function(n) if n~=nil then changeConfig("hud", "p2meterenabled", n, hud) end return hud.p2meterenabled end, drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end})	
 		if availablefunctions.writeplayertwometer and availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, meterHandlerP2)
 		else

@@ -1,3 +1,10 @@
+v0.21.06.18
+
+Added basic automatic support for some games not set up.
+
+Added support for Karnov's Revenge (karnovr)
+Added support for Street Fighter II' - Champion Edition (sf2ce)
+
 v0.21.06.11
 
 Fixed some back button functionality.

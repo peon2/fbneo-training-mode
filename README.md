@@ -51,6 +51,8 @@ JoJo's Venture
 
 Kabuki Klash
 
+Karnov's Revenge
+
 The King Of Fighters '94
 
 The King Of Fighters '95
@@ -94,6 +96,8 @@ Samurai Shodown 4
 Samurai Shodown 5
 
 Samurai Shodown 5 Special
+
+Street Fighter 2 Champion Edition
 
 Street Fighter Alpha 2
 
