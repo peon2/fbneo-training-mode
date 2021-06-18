@@ -40,9 +40,13 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=140,
-		combotexty=42,
+	hud = {
+		p1healthx=18,
+		p1healthy=16,
+		p1healthenabled=true,
+		p2healthx=275,
+		p2healthy=16,
+		p2healthenabled=true,
 	},
 }
 
@@ -71,7 +75,7 @@ function writePlayerTwoHealth(health)
 end
 
 function infiniteTime()
-	memory.writebyte(0x101252,0xFF)
+	memory.writebyte(0x101252,0xFE)
 end
 
 function maxCredits()
