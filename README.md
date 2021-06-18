@@ -41,6 +41,8 @@ Fatal Fury 3 - Road to the Final Victory
 
 Fatal Fury Special
 
+Galaxy Fight
+
 Garou Mark Of The Wolves
 
 Jackie Chan in Fists of Fire
