@@ -29,17 +29,15 @@ local p2direction = 0x112f60
 local p1recovery = (0x1128ff+0x8)
 
 translationtable = {
-	{
-		"coin",
-		"start",
-		"up",
-		"down",
-		"left",
-		"right",
-		"button1",
-		"button2",
-		"button3",
-	},
+	"coin",
+	"start",
+	"up",
+	"down",
+	"left",
+	"right",
+	"button1",
+	"button2",
+	"button3",
 	["Coin"] = 1,
 	["Start"] = 2,
 	["Up"] = 3,

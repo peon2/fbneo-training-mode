@@ -46,26 +46,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how P1 health is handled",
 		},
 		func = 	function()
-					local Elements = {
-						{text = "No Health Refill", selectfunc = function() return function() changeConfig("p1", "refillhealthenabled", false, combovars.p1) end end},
-						{text = "Health Always Full", selectfunc = function() return
-							function()
-								changeConfig("p1", "refillhealthenabled", true, combovars.p1)
-								changeConfig("p1", "instantrefillhealth", true, combovars.p1)
-							end
-						end},
-						
-					}
-					if availablefunctions.playeroneinhitstun then -- won't always be available
-						Elements[3] = 	{text = "Fill Health after Combo", selectfunc = function() return
-											function()
-												changeConfig("p1", "refillhealthenabled", true, combovars.p1)
-												changeConfig("p1", "instantrefillhealth", false, combovars.p1)
-											end
-										end}
-					end
-					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 25, nil)
-					CIG("temp", inputs.properties.scrollinginput.state)
+					CIG("p1health", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillhealthenabled then
@@ -90,14 +71,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how much health P1 gains",
 		},
 		func = 		function()
-						local uf = 	function(n) 
-										if n then
-											modulevars.p1.maxhealth = modulevars.p1.maxhealth+n
-										end
-										return modulevars.p1.maxhealth
-									end
-						guipages.temp = createScrollingBar(guipages[2], 145, 40, 1, modulevars.p1.constants.maxhealth, uf, interactivegui.boxxlength/2)
-						CIG("temp")
+						CIG("p1maxhealth")
 					end,
 		autofunc = 	function(this)
 						this.text = "Max Health: "..modulevars.p1.maxhealth
@@ -114,26 +88,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how P1 meter is handled",
 		},
 		func = 	function()
-					local Elements = {
-						{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p1", "refillmeterenabled", false, combovars.p1) end end},
-						{text = "Meter Always Full", selectfunc = function() return
-							function()
-								changeConfig("p1", "refillmeterenabled", true, combovars.p1)
-								changeConfig("p1", "instantrefillmeter", true, combovars.p1)
-							end
-						end},
-						
-					}
-					if availablefunctions.playertwoinhitstun then -- won't always be available
-						Elements[3] = 	{text = "Fill Meter after Combo", selectfunc = function() return
-											function()
-												changeConfig("p1", "refillmeterenabled", true, combovars.p1)
-												changeConfig("p1", "instantrefillmeter", false, combovars.p1)
-											end
-										end}
-					end
-					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 55, nil)
-					CIG("temp", inputs.properties.scrollinginput.state)
+					CIG("p1meter", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillmeterenabled then
@@ -158,14 +113,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how much meter P1 gains",
 		},
 		func = 		function()
-						local uf = 	function(n) 
-										if n then
-											modulevars.p1.maxmeter = modulevars.p1.maxmeter+n
-										end
-										return modulevars.p1.maxmeter
-									end
-						guipages.temp = createScrollingBar(guipages[2], 144, 70, 0, modulevars.p1.constants.maxmeter, uf, interactivegui.boxxlength/2-4)
-						CIG("temp")
+						CIG("p1maxmeter")
 					end,
 		autofunc = 	function(this)
 						this.text = "Max Meter: "..modulevars.p1.maxmeter
@@ -182,26 +130,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how P2 health is handled",
 		},
 		func = 	function()
-					local Elements = {
-						{text = "No Health Refill", selectfunc = function() return function() changeConfig("p2", "refillhealthenabled", false, combovars.p2) end end},
-						{text = "Health Always Full", selectfunc = function() return
-							function()
-								changeConfig("p2", "refillhealthenabled", true, combovars.p2)
-								changeConfig("p2", "instantrefillhealth", true, combovars.p2)
-							end
-						end},
-						
-					}
-					if availablefunctions.playertwoinhitstun then -- won't always be available
-						Elements[3] = 	{text = "Fill Health after Combo", selectfunc = function() return
-											function()
-												changeConfig("p2", "refillhealthenabled", true, combovars.p2)
-												changeConfig("p2", "instantrefillhealth", false, combovars.p2)
-											end
-										end}
-					end
-					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 105, nil)
-					CIG("temp", inputs.properties.scrollinginput.state)
+					CIG("p2health", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p2.refillhealthenabled then
@@ -226,14 +155,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how much health P2 gains",
 		},
 		func = 		function()
-						local uf = 	function(n) 
-										if n then
-											modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
-										end
-										return modulevars.p2.maxhealth
-									end
-						guipages.temp = createScrollingBar(guipages[2], 145, 120, 1, modulevars.p2.constants.maxhealth, uf, interactivegui.boxxlength/2)
-						CIG("temp")
+						CIG("p2healthmax")
 					end,
 		autofunc = 	function(this)
 						this.text = "Max Health: "..modulevars.p2.maxhealth
@@ -250,26 +172,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how P2 meter is handled",
 		},
 		func = 	function()
-					local Elements = {
-						{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p2", "refillmeterenabled", false, combovars.p2) end end},
-						{text = "Meter Always Full", selectfunc = function() return
-							function()
-								changeConfig("p2", "refillmeterenabled", true, combovars.p2)
-								changeConfig("p2", "instantrefillmeter", true, combovars.p2)
-							end
-						end},
-						
-					}
-					if availablefunctions.playertwoinhitstun then -- won't always be available
-						Elements[3] = 	{text = "Fill Meter after Combo", selectfunc = function() return
-											function()
-												changeConfig("p2", "refillmeterenabled", true, combovars.p2)
-												changeConfig("p2", "instantrefillmeter", false, combovars.p2)
-											end
-										end}
-					end
-					guipages.temp = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 135, nil)
-					CIG("temp", inputs.properties.scrollinginput.state)
+					CIG("p2meter", inputs.properties.scrollinginput.state)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p2.refillmeterenabled then
@@ -294,14 +197,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how much meter P2 gains",
 		},
 		func = 		function()
-						local uf = 	function(n) 
-										if n then
-											modulevars.p2.maxmeter = modulevars.p2.maxmeter+n
-										end
-										return modulevars.p2.maxmeter
-									end
-						guipages.temp = createScrollingBar(guipages[2], 144, 150, 0, modulevars.p2.constants.maxmeter, uf, interactivegui.boxxlength/2)
-						CIG("temp")
+						CIG("p2metermax")
 					end,
 		autofunc = 	function(this)
 						this.text = "Max Meter: "..modulevars.p2.maxmeter
@@ -527,19 +423,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"but 15 might be easier for slow fingers",
 		},
 		func = 		function()
-						local Elements = {
-							{text = "10"},
-							{text = "11"},
-							{text = "12"},
-							{text = "13"},
-							{text = "14"},
-							{text = "15"},
-						}
-						CIG("coininputleniency", inputs.properties.coinleniency - 10)
-						local rf = function() return function() CIG(1, 3) end end
-						local sf = function(n) return function() changeConfig("inputs", "coinleniency", n+9, inputs.properties) end end
-						guipages.temp = createPopUpMenu(guipages[1], rf, sf, nil, Elements, 136, 30, nil)
-						CIG("temp", recording.hitplayback)
+						CIG("coininputleniency", inputs.properties.coinleniency-9)
 					end,
 		autofunc = 	function(this)
 						this.text = "Coin leniency "..(inputs.properties.coinleniency)
@@ -556,27 +440,11 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				"Plays back the respective replay slot after hit",
 			},
 			func = 		function()
-							local Elements = {
-								{},
-								{},
-								{},
-								{},
-								{},
-								{y = 75, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(3, 3) end end, autofunc = function() end}
-							}
-							local rf = function(n) return function() recording.hitslot = n CIG(3, 3) end end
-							local af = function(n) return
-								function(this)
-									if recording[n][1] then -- if something is in the slot 
-										this.textcolour = "yellow"
-									else
-										this.textcolour = "white"
-									end
-								end
+							if recording.hitslot then
+								CIG("hitslot", recording.hitslot)
+							else
+								CIG("hitslot", 6)
 							end
-							
-							guipages.temp = createPopUpMenu(guipages[3], rf, nil, af, Elements, 72, 85, nil)
-							CIG("temp", recording.hitplayback) 
 						end,
 			autofunc =	function(this)
 							if not recording.hitslot then
@@ -723,19 +591,7 @@ guipages = { -- interactiveguipages
 			y = 45,
 			olcolour = "black",
 			func = 		function()
-							local rf = function(n) return function() recording.recordingslot = n CIG(3, 3) end end
-							local af = function(n) return
-								function(this)
-									if recording[n][1] then -- if something is in the slot 
-										this.textcolour = "yellow"
-									else
-										this.textcolour = "white"
-									end
-								end
-							end
-							
-							guipages.temp = createPopUpMenu(guipages[3], rf, nil, af, nil, 72, 25, 5)
-							CIG("temp", recording.recordingslot) 
+							CIG("recordingslot", recording.recordingslot) 
 						end,
 			autofunc = 	function(this) -- calls every frame this is visible
 							this.text = "Slot "..recording.recordingslot
@@ -846,19 +702,7 @@ guipages = { -- interactiveguipages
 			},
 			olcolour = "black",
 			func = 	function()
-						local Elements = {
-							{text = "P1 inputs"},
-							{text = "P2 inputs"},
-							{text = "P1 & P2 inputs"},
-							{text = "Off"},
-						}
-						local rf = function(n) return function()
-							changeConfig("inputs","state",n,inputs.properties.scrollinginput)
-							scrollingInputReload()
-							CIG("scrollingtextsettings",2)
-						end end
-						guipages.temp = createPopUpMenu(guipages.scrollingtextsettings, rf, nil, nil, Elements, 120, 30, nil)
-						CIG("temp", inputs.properties.scrollinginput.state)
+						CIG("scrollingtextsettingsinputpopup", inputs.properties.scrollinginput.state)
 					end,
 			autofunc =	function(this)
 						local state = inputs.properties.scrollinginput.state
@@ -886,11 +730,8 @@ guipages = { -- interactiveguipages
 			},
 			fillpercent = 0,
 			olcolour = "black",
-			func = 		function() -- generate a new page and switch to it
-							local rf = function() return function() CIG("scrollingtextsettings", 2) end end
-							local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
-							guipages.temp = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)
-							CIG("temp", inputs.properties.scrollinginput.iconsize-7)
+			func = 		function()
+							CIG("scrollingtextsettingssizepopup", inputs.properties.scrollinginput.iconsize-7)
 						end,
 			autofunc = 	function(this)
 							this.text = "Scrolling input text size "..(inputs.properties.scrollinginput.iconsize-7)
@@ -916,6 +757,7 @@ guipages = { -- interactiveguipages
 		guielements.hitboxstate,
 	},
 }
+
 
 if inputDisplayReg then -- if input-display.lua is loaded
 	table.insert(guipages[1], guielements.simpledisplaytoggle)
@@ -962,4 +804,200 @@ end
 if fexists("games/"..dirname.."/guipages.lua") then
 	dofile("games/"..dirname.."/guipages.lua")
 	table.insert(guipages, guicustompage)
+end
+
+-- pop up menus and stuff that can be precomputed
+do -- p1health
+	local Elements = {
+		{text = "No Health Refill", selectfunc = function() return function() changeConfig("p1", "refillhealthenabled", false, combovars.p1) end end},
+		{text = "Health Always Full", selectfunc = function() return
+			function()
+				changeConfig("p1", "refillhealthenabled", true, combovars.p1)
+				changeConfig("p1", "instantrefillhealth", true, combovars.p1)
+			end
+		end},
+	}
+	if availablefunctions.playeroneinhitstun then -- won't always be available
+		Elements[3] = 	{text = "Fill Health after Combo", selectfunc = function() return
+			function()
+				changeConfig("p1", "refillhealthenabled", true, combovars.p1)
+				changeConfig("p1", "instantrefillhealth", false, combovars.p1)
+			end
+		end}
+	end
+	guipages.p1health = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 25, nil)
+end
+
+do -- p1maxhealth
+	local uf = 	function(n) 
+		if n then
+			modulevars.p1.maxhealth = modulevars.p1.maxhealth+n
+		end
+		return modulevars.p1.maxhealth
+	end
+	guipages.p1maxhealth = createScrollingBar(guipages[2], 145, 40, 1, modulevars.p1.constants.maxhealth, uf, interactivegui.boxxlength/2)
+end
+
+do -- p1meter
+	local Elements = {
+		{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p1", "refillmeterenabled", false, combovars.p1) end end},
+		{text = "Meter Always Full", selectfunc = function() return
+			function()
+				changeConfig("p1", "refillmeterenabled", true, combovars.p1)
+				changeConfig("p1", "instantrefillmeter", true, combovars.p1)
+			end
+		end},
+	}
+	if availablefunctions.playertwoinhitstun then -- won't always be available
+		Elements[3] = 	{text = "Fill Meter after Combo", selectfunc = function() return
+			function()
+				changeConfig("p1", "refillmeterenabled", true, combovars.p1)
+				changeConfig("p1", "instantrefillmeter", false, combovars.p1)
+			end
+		end}
+	end
+	guipages.p1meter = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 55, nil)
+end
+
+do -- p1maxmeter
+	local uf = 	function(n) 
+		if n then
+			modulevars.p1.maxmeter = modulevars.p1.maxmeter+n
+		end
+		return modulevars.p1.maxmeter
+	end
+	guipages.p1maxmeter = createScrollingBar(guipages[2], 144, 70, 0, modulevars.p1.constants.maxmeter, uf, interactivegui.boxxlength/2-4)
+end
+
+do -- p2health
+	local Elements = {
+		{text = "No Health Refill", selectfunc = function() return function() changeConfig("p2", "refillhealthenabled", false, combovars.p2) end end},
+		{text = "Health Always Full", selectfunc = function() return
+			function()
+				changeConfig("p2", "refillhealthenabled", true, combovars.p2)
+				changeConfig("p2", "instantrefillhealth", true, combovars.p2)
+			end
+		end},
+	}
+	if availablefunctions.playertwoinhitstun then -- won't always be available
+		Elements[3] = 	{text = "Fill Health after Combo", selectfunc = function() return
+			function()
+				changeConfig("p2", "refillhealthenabled", true, combovars.p2)
+				changeConfig("p2", "instantrefillhealth", false, combovars.p2)
+			end
+		end}
+	end
+	guipages.p2health = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 105, nil)
+end
+
+do -- p2healthmax
+	local uf = 	function(n) 
+		if n then
+			modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
+		end
+		return modulevars.p2.maxhealth
+	end
+	guipages.p2healthmax = createScrollingBar(guipages[2], 145, 120, 1, modulevars.p2.constants.maxhealth, uf, interactivegui.boxxlength/2)
+end
+
+do -- p2meter
+	local Elements = {
+		{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p2", "refillmeterenabled", false, combovars.p2) end end},
+		{text = "Meter Always Full", selectfunc = function() return
+			function()
+				changeConfig("p2", "refillmeterenabled", true, combovars.p2)
+				changeConfig("p2", "instantrefillmeter", true, combovars.p2)
+			end
+		end},
+	}
+	if availablefunctions.playertwoinhitstun then -- won't always be available
+		Elements[3] = 	{text = "Fill Meter after Combo", selectfunc = function() return
+			function()
+				changeConfig("p2", "refillmeterenabled", true, combovars.p2)
+				changeConfig("p2", "instantrefillmeter", false, combovars.p2)
+			end
+		end}
+	end
+	guipages.p2meter = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 135, nil)
+end
+
+do -- p2metermax
+	local uf = 	function(n) 
+		if n then
+			modulevars.p2.maxmeter = modulevars.p2.maxmeter+n
+		end
+		return modulevars.p2.maxmeter
+	end
+	guipages.p2metermax = createScrollingBar(guipages[2], 144, 150, 0, modulevars.p2.constants.maxmeter, uf, interactivegui.boxxlength/2)
+end
+
+do -- coininputleniency
+	local Elements = {
+		{text = "10"},
+		{text = "11"},
+		{text = "12"},
+		{text = "13"},
+		{text = "14"},
+		{text = "15"},
+	}
+	local sf = function(n) return function() changeConfig("inputs", "coinleniency", n+9, inputs.properties) end end
+	guipages.coininputleniency = createPopUpMenu(guipages[1], nil, sf, nil, Elements, 136, 30, nil)
+end
+
+do -- hitslot
+	local Elements = {
+		{},
+		{},
+		{},
+		{},
+		{},
+		{y = 75, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
+	}
+	local rf = function(n) return function() recording.hitslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
+	local af = function(n) return
+	function(this)
+		if recording[n][1] then -- if something is in the slot 
+			this.textcolour = "yellow"
+		else
+			this.textcolour = "white"
+		end
+	end
+	end
+	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, 85, nil)
+end
+
+do -- recordingslot
+	local rf = function(n) return function() recording.recordingslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
+	local af = function(n) return
+	function(this)
+		if recording[n][1] then -- if something is in the slot 
+			this.textcolour = "yellow"
+		else
+			this.textcolour = "white"
+		end
+	end
+	end					
+	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
+end
+
+do -- scrollingtextsettingsinputpopup
+	local Elements = {
+		{text = "P1 inputs"},
+		{text = "P2 inputs"},
+		{text = "P1 & P2 inputs"},
+		{text = "Off"},
+	}
+	local rf = function(n) return function()
+		changeConfig("inputs","state",n,inputs.properties.scrollinginput)
+		scrollingInputReload()
+		CIG("scrollingtextsettings",2)
+		end 
+	end
+	guipages.scrollingtextsettingsinputpopup = createPopUpMenu(guipages.scrollingtextsettings, rf, nil, nil, Elements, 120, 30, nil)
+end
+
+do -- scrollingtextsettingssizepopup
+	local rf = function() return function() CIG("scrollingtextsettings", 2) end end
+	local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
+	guipages.scrollingtextsettingssizepopup = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)
 end

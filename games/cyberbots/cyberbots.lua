@@ -13,18 +13,16 @@ print "Inconsistent combo counter"
 print ""
 
 translationtable = {
-	{
-		"coin",
-		"start",
-		"up",
-		"down",
-		"left",
-		"right",
-		"button1",
-		"button2",
-		"button3",
-		"button4",
-	},
+	"coin",
+	"start",
+	"up",
+	"down",
+	"left",
+	"right",
+	"button1",
+	"button2",
+	"button3",
+	"button4",
 	["Coin"] = 1,
 	["Start"] = 2,
 	["Up"] = 3,

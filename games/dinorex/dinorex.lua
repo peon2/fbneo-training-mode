@@ -20,17 +20,15 @@ local p1meter = 0x605123
 local p2meter = 0x60518f
 
 translationtable = {
-	{
-		"coin",
-		"start",
-		"up",
-		"down",
-		"left",
-		"right",
-		"button1",
-		"button2",
-		"button3",
-	},
+	"coin",
+	"start",
+	"up",
+	"down",
+	"left",
+	"right",
+	"button1",
+	"button2",
+	"button3",
 	["Coin"] = 1,
 	["Start"] = 2,
 	["Up"] = 3,

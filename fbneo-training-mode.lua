@@ -15,7 +15,7 @@ local games = {
 	aof = {"aof", iconfile = "icons-neogeo-32.png"},
 	aof2 = {"aof2", iconfile = "icons-neogeo-32.png"},
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
-	--asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
+	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
 	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
@@ -78,6 +78,7 @@ local usage = function()
 		print "Return to the previous menu with P1 Button 3"
 end
 
+-- locals
 local defaultconfig = {
 	p1 = {
 		-- Health
@@ -159,10 +160,14 @@ local defaultconfig = {
 
 local config = defaultconfig
 local rom = emu.romname()
-dirname = ""
 local interactiveguipages = {}
 local configpath = "games/other/"..rom..".lua"
+local guiinputs = {
+	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0, leftframecount = 0, rightframecount = 0, downframecount = 0, upframecount = 0,},
+	P2 = {previousinputs={}},
+}
 
+do -- file checking logic + global variables/tables
 function fexists(s)
 	local fs = io.open(s,"r")
 	local res = fs~=nil
@@ -172,11 +177,10 @@ function fexists(s)
 	return res
 end
 
-do -- file checking logic + variable tables
 ----------------------------------------------
 -- ROM NAME
 ----------------------------------------------
-
+dirname = ""
 for i, v in pairs(games) do
 	for _, k in ipairs(v) do
 		if (rom == k) then
@@ -189,15 +193,6 @@ end
 ----------------------------------------------
 -- CHECK IF ROM MEMORY FILE EXISTS
 ----------------------------------------------
-
-local tonum = function(a) -- works for digits and letters in the context of joypad inputs
-	if (tonumber(a)) then
-		return tonumber(a)
-	else
-		return string.byte(a)-64
-	end
-end
-
 if fexists("games/"..dirname.."/"..dirname..".lua") then
 	dofile("games/"..dirname.."/"..dirname..".lua")
 else
@@ -205,11 +200,27 @@ else
 	print "Attempting to make a translationtable from defaults"
 	-- try to make a translation table
 	
-	-- taken from dammits script
+	-- modified from dammits input display script
+	local a = {"Weak Punch", "Medium Punch", "Heavy Punch", "Weak Kick", "Medium Kick", "Heavy Kick", 
+		["Weak Punch"] = 1,
+		["Medium Punch"] = 2,
+		["Heavy Punch"] = 3,
+		["Weak Kick"] = 4,
+		["Medium Kick"] = 5,
+		["Heavy Kick"] = 6,
+	}
+	local a2 = {"Weak Punch", "Medium Punch", "Strong Punch", "Weak Kick", "Medium Kick", "Strong Kick", 
+		["Weak Punch"] = 1,
+		["Medium Punch"] = 2,
+		["Strong Punch"] = 3,
+		["Weak Kick"] = 4,
+		["Medium Kick"] = 5,
+		["Strong Kick"] = 6,
+	}
 	local c = joypad.get()
 	local nbuttons, player, input
 	for b=6,1,-1 do
-		for _,v in ipairs({"P1 Button "..b, "P1 Button "..string.char(b+64), "P1 Fire "..b}) do -- some common buttons
+		for _,v in ipairs({"P1 Button "..b, "P1 Button "..string.char(b+64), "P1 Fire "..b, "P1 "..a[b], "P1 "..a2[b]}) do -- some common buttons
 			if c[v] ~= nil then
 				nbuttons = b
 				break
@@ -217,10 +228,25 @@ else
 		end
 		if nbuttons then break end
 	end
-	-- maybe add something to check for capcom buttons like weak punch, medium punch, etc.
 	-- assume all games have cardinal directions
 	if nbuttons then
-		translationtable = {{"coin", "start", "select", "up", "down", "left", "right", "button1", "button2", "button3", "button4", "button5", "button6"},
+		
+		local tonum = function(val) -- works for digits and letters in the context of joypad inputs
+			if (tonumber(val:sub(#val))) then
+				return tonumber(val:sub(#val))
+			elseif string.byte(val)-64 <= 6 then -- F (6 buttons)
+				return string.byte(val)-64
+			elseif a[val] then
+				return a[val]
+			elseif a2[val] then
+				return a2[val]
+			else
+				print(val)
+				return nil
+			end
+		end
+
+		translationtable = {"coin", "start", "select", "up", "down", "left", "right", "button1", "button2", "button3", "button4", "button5", "button6",
 			Coin = 1,
 			Start = 2,
 			Select = 3,
@@ -233,12 +259,14 @@ else
 			player = i:sub(1,2)
 			input = i:sub(4)
 			if player == "P1" and translationtable[input]==nil then -- change translation table to not work with [1]
-				translationtable[input] = 7+tonum(input:sub(#input)) -- bind JUST attack buttons
+				translationtable[input] = 7+assert(tonum(input), "Can't make a translation table") -- bind JUST attack buttons
 			elseif player == "P2" then
 			else -- stuff like dipswitches
 				translationtable[i] = 7+nbuttons+1 -- we dont care about any of these but need to make sure they're bound to something
 			end
 		end
+		local d = {nil, nil, "icons-taito-32.png", "icons-neogeo-32.png", nil, "icons-capcom-32.png"} -- iconfiles, 3,4,6 buttons
+		games[""].iconfile = d[nbuttons]
 	else
 		print "Can't make a translationtable"
 	end
@@ -560,6 +588,166 @@ end
 ----------------------------------------------
 -- CHECK IF GUI PAGES EXISTS AND OPEN
 ----------------------------------------------
+createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements, startx, starty, numofelements)
+	
+	if releasefunc == nil then
+		releasefunc = function() return function() CIG(interactivegui.previouspage, interactivegui.previousselection) end end
+	end
+	
+	menu = {}
+	
+	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
+		menu["a"..i] = v
+	end
+	
+	local but
+	
+	if (Elements) then -- fallback to the default, passed elements, if needed
+		for i, v in ipairs(Elements) do
+			-- create buttons
+			but = {}
+			if (v.releasefunc) then
+				but.releasefunc = v.releasefunc(i)
+			else
+				if (releasefunc) then but.releasefunc = releasefunc(i) end
+			end
+			
+			if (v.selectfunc) then
+				but.selectfunc = v.selectfunc(i)
+			else
+				if (selectfunc) then but.selectfunc = selectfunc(i) end
+			end
+			
+			if (v.autofunc) then
+				but.autofunc = v.autofunc(i)
+			else
+				if (autofunc) then but.autofunc = autofunc(i) end
+			end
+			
+			if (v.text) then 
+				but.text = v.text
+			else
+				but.text = tostring(i)
+			end
+			
+			if (v.x) then
+				but.x = v.x
+			else 
+				but.x = startx
+			end
+			
+			if (v.y) then
+				but.y = v.y
+			else 
+				but.y = starty+(i-1)*10
+			end
+
+			table.insert(menu, but)
+		end		
+	else
+		for i = 1, numofelements do
+			-- create buttons
+			but = {}
+			if (releasefunc) then but.releasefunc = releasefunc(i) end
+			if (selectfunc) then but.selectfunc = selectfunc(i) end
+			if (autofunc) then but.autofunc = autofunc(i) end
+			but.text = tostring(i)
+			but.x = startx
+			but.y = starty+(i-1)*10
+			table.insert(menu, but)
+		end
+	end
+	
+	return menu
+	
+end
+
+createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, closingfunc, autofunc, text)
+	local menu = {}
+	if not text then text = "" end
+	
+	local barlen = max - min
+	
+	if not length then length = barlen end
+	
+	length = length/4 -- account for text size
+	
+	text = string.format("%"..(length/2 - (#text/2)).."s", text) -- centre text
+	text = string.format("%-"..(length - (#text/2)).."s", text)
+	
+	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
+		menu["a"..i] = v
+	end
+	
+	menu.min = 	{
+					x = x-(#tostring(min))*2,
+					y = y+10,
+					text = tostring(min)
+				}
+	
+	menu.max = 	{
+					x = x+(#text)*4-(#tostring(max))*2,
+					y = y+10,
+					text = tostring(max)
+				}
+	
+	local but = {}
+	but.x = x
+	but.y = y
+	but.text = text
+	but.olcolour = "black"
+	but.val = updatefunc()
+	but.fillpercent = (but.val-min)/barlen
+	
+	local workingframes = function(n) -- get faster the longer it runs
+		if (n < 60) then
+			if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+			return 0
+		elseif (n < 120) then
+			return 1
+		elseif (n < 180) then
+			return 5
+		end
+		return 10
+	end
+	
+	but.autofunc = 	function(this)
+		but.val = updatefunc()
+		local d = 0
+		if guiinputs.P1.left then
+			
+			d = workingframes(guiinputs.P1.leftframecount) 
+			
+			if but.val-d>=min then
+				updatefunc(-d)
+			else
+				updatefunc(max-but.val)
+			end
+		elseif guiinputs.P1.right then
+		
+			d = workingframes(guiinputs.P1.rightframecount) 
+		
+			if but.val+d<=max then
+				updatefunc(d)
+			else
+				updatefunc(min-but.val)
+			end
+		end
+		but.fillpercent = (but.val-min)/barlen
+		if autofunc then autofunc() end
+	end
+	
+	if closingfunc then
+		but.func = closingfunc
+	else
+		but.func = 	function() CIG(interactivegui.previouspage, interactivegui.previousselection) end
+	end
+	
+	menu[1] = but
+	
+	return menu
+end
+
 if fexists("guipages.lua") then
 	dofile("guipages.lua")
 	interactiveguipages = guipages
@@ -812,22 +1000,19 @@ local instantMeterP2 = function()
 	writePlayerTwoMeter(modulevars.p2.maxmeter)
 end
 
-local guiinputs = {
-	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0, leftframecount = 0, rightframecount = 0, downframecount = 0, upframecount = 0,},
-	P2 = {previousinputs={}},
-}
-
 local readGuiInputs = function()
 	local input
+	guiinputs.P1.previousinputs = nil
+	guiinputs.P2.previousinputs = nil
 	guiinputs.P1.previousinputs = copytable(guiinputs.P1)
 	guiinputs.P2.previousinputs = copytable(guiinputs.P2)
 	for i,v in pairs(joypad.get()) do -- check every button
 		player = i:sub(1,2)
 		input = i:sub(4)
 		if player == "P1" then
-			guiinputs.P1[modulevars.constants.translationtable[1][modulevars.constants.translationtable[input]]] = v
+			guiinputs.P1[modulevars.constants.translationtable[modulevars.constants.translationtable[input]]] = v
 		elseif player == "P2" then
-			guiinputs.P2[modulevars.constants.translationtable[1][modulevars.constants.translationtable[input]]] = v
+			guiinputs.P2[modulevars.constants.translationtable[modulevars.constants.translationtable[input]]] = v
 		end
 	end
 end
@@ -1212,166 +1397,6 @@ local drawInteractiveGui = function()
 	
 end
 
-createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements, startx, starty, numofelements)
-	
-	if releasefunc == nil then
-		releasefunc = function() return function() CIG(interactivegui.previouspage, interactivegui.previousselection) end end
-	end
-	
-	menu = {}
-	
-	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
-		menu["a"..i] = v
-	end
-	
-	local but
-	
-	if (Elements) then -- fallback to the default, passed elements, if needed
-		for i, v in ipairs(Elements) do
-			-- create buttons
-			but = {}
-			if (v.releasefunc) then
-				but.releasefunc = v.releasefunc(i)
-			else
-				if (releasefunc) then but.releasefunc = releasefunc(i) end
-			end
-			
-			if (v.selectfunc) then
-				but.selectfunc = v.selectfunc(i)
-			else
-				if (selectfunc) then but.selectfunc = selectfunc(i) end
-			end
-			
-			if (v.autofunc) then
-				but.autofunc = v.autofunc(i)
-			else
-				if (autofunc) then but.autofunc = autofunc(i) end
-			end
-			
-			if (v.text) then 
-				but.text = v.text
-			else
-				but.text = tostring(i)
-			end
-			
-			if (v.x) then
-				but.x = v.x
-			else 
-				but.x = startx
-			end
-			
-			if (v.y) then
-				but.y = v.y
-			else 
-				but.y = starty+(i-1)*10
-			end
-
-			table.insert(menu, but)
-		end		
-	else
-		for i = 1, numofelements do
-			-- create buttons
-			but = {}
-			if (releasefunc) then but.releasefunc = releasefunc(i) end
-			if (selectfunc) then but.selectfunc = selectfunc(i) end
-			if (autofunc) then but.autofunc = autofunc(i) end
-			but.text = tostring(i)
-			but.x = startx
-			but.y = starty+(i-1)*10
-			table.insert(menu, but)
-		end
-	end
-	
-	return menu
-	
-end
-
-createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, closingfunc, autofunc, text)
-	local menu = {}
-	if not text then text = "" end
-	
-	local barlen = max - min
-	
-	if not length then length = barlen end
-	
-	length = length/4 -- account for text size
-	
-	text = string.format("%"..(length/2 - (#text/2)).."s", text) -- centre text
-	text = string.format("%-"..(length - (#text/2)).."s", text)
-	
-	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
-		menu["a"..i] = v
-	end
-	
-	menu.min = 	{
-					x = x-(#tostring(min))*2,
-					y = y+10,
-					text = tostring(min)
-				}
-	
-	menu.max = 	{
-					x = x+(#text)*4-(#tostring(max))*2,
-					y = y+10,
-					text = tostring(max)
-				}
-	
-	local but = {}
-	but.x = x
-	but.y = y
-	but.text = text
-	but.olcolour = "black"
-	but.val = updatefunc()
-	but.fillpercent = (but.val-min)/barlen
-	
-	local workingframes = function(n) -- get faster the longer it runs
-		if (n < 60) then
-			if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
-			return 0
-		elseif (n < 120) then
-			return 1
-		elseif (n < 180) then
-			return 5
-		end
-		return 10
-	end
-	
-	but.autofunc = 	function(this)
-		but.val = updatefunc()
-		local d = 0
-		if guiinputs.P1.left then
-			
-			d = workingframes(guiinputs.P1.leftframecount) 
-			
-			if but.val-d>=min then
-				updatefunc(-d)
-			else
-				updatefunc(max-but.val)
-			end
-		elseif guiinputs.P1.right then
-		
-			d = workingframes(guiinputs.P1.rightframecount) 
-		
-			if but.val+d<=max then
-				updatefunc(d)
-			else
-				updatefunc(min-but.val)
-			end
-		end
-		but.fillpercent = (but.val-min)/barlen
-		if autofunc then autofunc() end
-	end
-	
-	if closingfunc then
-		but.func = closingfunc
-	else
-		but.func = 	function() CIG(interactivegui.previouspage, interactivegui.previousselection) end
-	end
-	
-	menu[1] = but
-	
-	return menu
-end
-
 changeInteractiveGuiPage = function(n)
 	if not interactivegui.enabled then return end
 	if not n then n = interactivegui.page+1 end
@@ -1685,26 +1710,26 @@ local drawcomboHUD = function()
 end
 
 setRegisters = function() -- pre-calc stuff
-	
+
 	checkAvailableFunctions()
 	setAvailableConstants()
-	
+
 	if availablefunctions.playertwofacingleft then
 		recording.autoturn = true
 	else 
-		print("Can't auto-swap directions in replays") 
+		print "Can't auto-swap directions in replays"
 	end
-	
+
 	registers.registerbefore = {updateModuleVars, readInputs, swapInputs, logRecording, applyDirection, playBack, hitPlayBack, freezePlayer, setInputs}
 	registers.guiregister = {}
 	registers.registerafter = {}
-	
+
 	if availablefunctions.run then
 		table.insert(registers.guiregister, Run)
 	else
-		print("Nothing running every frame from memory file")
+		print "Nothing running every frame from memory file"
 	end
-	
+
 	local str = ""
 
 	if availablefunctions.readplayeronehealth then
@@ -1717,7 +1742,7 @@ setRegisters = function() -- pre-calc stuff
 	else
 		print "player one health read not set, can't do combos.\n"
 	end
-		
+
 	if availablefunctions.readplayertwohealth then
 		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
 		if availablefunctions.playertwoinhitstun then
@@ -1859,24 +1884,24 @@ setRegisters = function() -- pre-calc stuff
 	else
 		print("No translation table found, can't read or process inputs from controller, use lua hotkeys")
 	end
-	
+
 	emu.registerbefore(function ()
 		fc = emu.framecount() -- update framecount
 		for _,v in pairs(registers.registerbefore) do
 			v()
 		end
 	end)
-	
+
 	gui.register(function ()
 		for _,v in ipairs(registers.guiregister) do
 			v()
 		end
 	end)
-	
-	
-	
+
+
+
 	local garbage = 	function () -- garbage collection
-							if collectgarbage("count") > 100 then -- not sure how much garbage fbneo can handle at a time
+							if collectgarbage("count") > 5000 then -- not sure how much garbage fbneo can handle at a time
 								collectgarbage("collect") -- garbage mostly comes from redoing gdimages in scrolling inputs
 							end
 						end

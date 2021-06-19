@@ -24,17 +24,15 @@ local p1direction = 0xFF840b
 local p2direction = 0xFF880b
 
 translationtable = {
-	{
-		"coin",
-		"start",
-		"up",
-		"down",
-		"left",
-		"right",
-		"button1",
-		"button2",
-		"button3",
-	},
+	"coin",
+	"start",
+	"up",
+	"down",
+	"left",
+	"right",
+	"button1",
+	"button2",
+	"button3",
 	["Coin"] = 1,
 	["Start"] = 2,
 	["Up"] = 3,

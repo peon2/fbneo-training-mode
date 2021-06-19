@@ -13,17 +13,15 @@ local p1combocounter = 0x403DBD
 local p2combocounter = 0x404A7D
 
 translationtable = {
-	{
-		"coin",
-		"start",
-		"up",
-		"down",
-		"left",
-		"right",
-		"button1",
-		"button2",
-		"button3",
-	},
+	"coin",
+	"start",
+	"up",
+	"down",
+	"left",
+	"right",
+	"button1",
+	"button2",
+	"button3",
 	["Coin"] = 1,
 	["Start"] = 2,
 	["Up"] = 3,
