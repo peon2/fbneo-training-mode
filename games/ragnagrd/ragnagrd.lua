@@ -22,7 +22,7 @@ local stallmax = 7
 
 print "Known Issues: with ragnagrd"
 print "GUI not working"
-print ""
+print "Life Bar does not accurately reflect life when not set to max"
 
 
 translationtable = {
