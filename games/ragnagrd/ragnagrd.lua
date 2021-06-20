@@ -26,19 +26,17 @@ print "Life Bar does not accurately reflect life when not set to max"
 
 
 translationtable = {
-	{
-		"coin",
-		"start",
-		"select",
-		"up",
-		"down",
-		"left",
-		"right",
-		"button1",
-		"button2",
-		"button3",
-		"button4",
-	},
+	"coin",
+	"start",
+	"select",
+	"up",
+	"down",
+	"left",
+	"right",
+	"button1",
+	"button2",
+	"button3",
+	"button4",
 	["Coin"] = 1,
 	["Start"] = 2,
 	["Select"] = 3,
@@ -54,13 +52,20 @@ translationtable = {
 
 gamedefaultconfig = {
 	combogui = {
-		combotextx=180,
-		combotexty=42,
+		combotextx=146,
+		combotexty=37,
+		comboenabled=true,
+		p1healthx=25,
+		p1healthy=21,
+		p1healthenabled=true,
+		p2healthx=50,
+		p2healthy=21,
+		p2healthenabled=true,
 	},
 }
 
 function roundStart()
-	if rb(0x109373) == 0 and rb(0x109393) == 1 then return true else return false end
+	return rb(0x109373) == 0 and rb(0x109393) == 1
 end
 
 function playerOneFacingLeft()
@@ -68,7 +73,7 @@ function playerOneFacingLeft()
 end
 	
 function playerTwoFacingLeft()
-		return rb(0x109436)==1
+	return rb(0x109436)==1
 end
 
 

@@ -806,8 +806,8 @@ if fexists("games/"..dirname.."/guipages.lua") then
 	table.insert(guipages, guicustompage)
 end
 
--- pop up menus and stuff that can be precomputed
-do -- p1health
+-- pop up menus and stuff that can be pre-computed
+if availablefunctions.writeplayeronehealth and modulevars.p1.constants.maxhealth then -- p1health
 	local Elements = {
 		{text = "No Health Refill", selectfunc = function() return function() changeConfig("p1", "refillhealthenabled", false, combovars.p1) end end},
 		{text = "Health Always Full", selectfunc = function() return
@@ -828,7 +828,7 @@ do -- p1health
 	guipages.p1health = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 25, nil)
 end
 
-do -- p1maxhealth
+if availablefunctions.writeplayeronehealth and modulevars.p1.constants.maxhealth then -- p1maxhealth
 	local uf = 	function(n) 
 		if n then
 			modulevars.p1.maxhealth = modulevars.p1.maxhealth+n
@@ -838,7 +838,7 @@ do -- p1maxhealth
 	guipages.p1maxhealth = createScrollingBar(guipages[2], 145, 40, 1, modulevars.p1.constants.maxhealth, uf, interactivegui.boxxlength/2)
 end
 
-do -- p1meter
+if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then -- p1meter
 	local Elements = {
 		{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p1", "refillmeterenabled", false, combovars.p1) end end},
 		{text = "Meter Always Full", selectfunc = function() return
@@ -859,7 +859,7 @@ do -- p1meter
 	guipages.p1meter = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 55, nil)
 end
 
-do -- p1maxmeter
+if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then-- p1maxmeter
 	local uf = 	function(n) 
 		if n then
 			modulevars.p1.maxmeter = modulevars.p1.maxmeter+n
@@ -869,7 +869,7 @@ do -- p1maxmeter
 	guipages.p1maxmeter = createScrollingBar(guipages[2], 144, 70, 0, modulevars.p1.constants.maxmeter, uf, interactivegui.boxxlength/2-4)
 end
 
-do -- p2health
+if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then-- p2health
 	local Elements = {
 		{text = "No Health Refill", selectfunc = function() return function() changeConfig("p2", "refillhealthenabled", false, combovars.p2) end end},
 		{text = "Health Always Full", selectfunc = function() return
@@ -890,7 +890,7 @@ do -- p2health
 	guipages.p2health = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 105, nil)
 end
 
-do -- p2healthmax
+if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then-- p2healthmax
 	local uf = 	function(n) 
 		if n then
 			modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
@@ -900,7 +900,7 @@ do -- p2healthmax
 	guipages.p2healthmax = createScrollingBar(guipages[2], 145, 120, 1, modulevars.p2.constants.maxhealth, uf, interactivegui.boxxlength/2)
 end
 
-do -- p2meter
+if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer and availablefunctions.writeplayertwometer then-- p2meter
 	local Elements = {
 		{text = "No Meter Refill", selectfunc = function() return function() changeConfig("p2", "refillmeterenabled", false, combovars.p2) end end},
 		{text = "Meter Always Full", selectfunc = function() return
@@ -921,7 +921,7 @@ do -- p2meter
 	guipages.p2meter = createPopUpMenu(guipages[2], nil, nil, nil, Elements, 144, 135, nil)
 end
 
-do -- p2metermax
+if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer and availablefunctions.writeplayertwometer then-- p2metermax
 	local uf = 	function(n) 
 		if n then
 			modulevars.p2.maxmeter = modulevars.p2.maxmeter+n
@@ -944,7 +944,7 @@ do -- coininputleniency
 	guipages.coininputleniency = createPopUpMenu(guipages[1], nil, sf, nil, Elements, 136, 30, nil)
 end
 
-do -- hitslot
+if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then -- hitslot
 	local Elements = {
 		{},
 		{},
@@ -980,7 +980,7 @@ do -- recordingslot
 	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
 end
 
-do -- scrollingtextsettingsinputpopup
+if scrollingInputReg then -- scrollingtextsettingsinputpopup
 	local Elements = {
 		{text = "P1 inputs"},
 		{text = "P2 inputs"},
@@ -994,9 +994,7 @@ do -- scrollingtextsettingsinputpopup
 		end 
 	end
 	guipages.scrollingtextsettingsinputpopup = createPopUpMenu(guipages.scrollingtextsettings, rf, nil, nil, Elements, 120, 30, nil)
-end
-
-do -- scrollingtextsettingssizepopup
+	-- scrollingtextsettingssizepopup
 	local rf = function() return function() CIG("scrollingtextsettings", 2) end end
 	local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
 	guipages.scrollingtextsettingssizepopup = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)

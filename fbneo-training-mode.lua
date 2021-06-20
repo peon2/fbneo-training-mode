@@ -1,4 +1,4 @@
--- macros
+-- memory macros
 wb = memory.writebyte
 ww = memory.writeword
 rb = memory.readbyte
@@ -43,11 +43,12 @@ local games = {
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
-	rotd = {"rotd", hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
+	ragnagrd = {"ragnagrd", iconfile = "icons-neogeo-32.png"},
 	rbff1 = {"rbff1", iconfile = "icons-neogeo-32.png"},
 	rbff2 = {"rbff2", "rbff2h", iconfile = "icons-neogeo-32.png"},
 	rbffspec = {"rbffspec", iconfile = "icons-neogeo-32"},
 	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	rotd = {"rotd", hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
 	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},
 	samsho2 = {"samsho2", iconfile = "icons-neogeo-32.png"},
 	samsho3 = {"samsho3", iconfile = "icons-neogeo-32.png"},
@@ -230,12 +231,12 @@ else
 	end
 	-- assume all games have cardinal directions
 	if nbuttons then
-		
+		print("Found ".. nbuttons .. " buttons")
 		local tonum = function(val) -- works for digits and letters in the context of joypad inputs
 			if (tonumber(val:sub(#val))) then
 				return tonumber(val:sub(#val))
-			elseif string.byte(val)-64 <= 6 then -- F (6 buttons)
-				return string.byte(val)-64
+			elseif string.byte(val:sub(#val))-64 <= 6 then -- F (6 buttons)
+				return string.byte(val:sub(#val))-64
 			elseif a[val] then
 				return a[val]
 			elseif a2[val] then
@@ -267,6 +268,7 @@ else
 		end
 		local d = {nil, nil, "icons-taito-32.png", "icons-neogeo-32.png", nil, "icons-capcom-32.png"} -- iconfiles, 3,4,6 buttons
 		games[""].iconfile = d[nbuttons]
+		print(translationtable)
 	else
 		print "Can't make a translationtable"
 	end
@@ -664,7 +666,7 @@ end
 
 createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, closingfunc, autofunc, text)
 	local menu = {}
-	if not text then text = "" end
+	if not text then text = "haba" end
 	
 	local barlen = max - min
 	
@@ -672,8 +674,12 @@ createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, clos
 	
 	length = length/4 -- account for text size
 	
-	text = string.format("%"..(length/2 - (#text/2)).."s", text) -- centre text
-	text = string.format("%-"..(length - (#text/2)).."s", text)
+	for _=1,(length-#text)/4 do
+		text = " "..text
+	end
+	for _=1,(length-(#text/2))/4 do
+		text = text.." "
+	end
 	
 	for i,v in pairs(BaseMenu) do -- copy over the table and make sure ipairs wont pick up the elements
 		menu["a"..i] = v
