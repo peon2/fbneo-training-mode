@@ -278,21 +278,8 @@ end
 -- hotkey functions
 
 function togglescrollinginputsplayer()
-	local togglestate = inputs.properties.scrollinginput.state
-
-	if togglestate==1 then
-		draw[1] = true
-		draw[2] = false
-	elseif togglestate==2 then
-		draw[1] = false
-		draw[2] = true
-	elseif togglestate==3 then
-		draw[1] = true
-		draw[2] = true
-	elseif togglestate==4 then
-		draw[1] = false
-		draw[2] = false
-	end
+	draw[1] = inputs.properties.scrollinginput.state[1]
+	draw[2] = inputs.properties.scrollinginput.state[2]
 end
 
 togglescrollinginputsplayer()
@@ -405,7 +392,22 @@ end)
 
 function scrollingInputReg()
 	gui.text(0,0,"")
+	
+	for i = 1, 2 do
+		if not inputs.properties.scrollinginput.scrollinginputxoffset[i] then
+			inputs.properties.scrollinginput.scrollinginputxoffset[i] = margin[i] 
+		end
+	end
+	
+	for i = 1, 2 do
+		if not inputs.properties.scrollinginput.scrollinginputyoffset[i] then
+			inputs.properties.scrollinginput.scrollinginputyoffset[i] = margin[3] 
+		end
+	end
+	
 	for player = 1, 2 do
+		local xoffset = inputs.properties.scrollinginput.scrollinginputxoffset[player]
+		local yoffset = inputs.properties.scrollinginput.scrollinginputyoffset[player]
 		if draw[player] then
 			local i = 0
 			local skip = 0
@@ -413,29 +415,29 @@ function scrollingInputReg()
 				if inputs.properties.scrollinginput.frames then
 					i = i + 1
 					if nullinputcounters[player][i] > 0 and i == 1 then
-						gui.text(margin[player] + effective_width - 10, margin[3] + (line-1)*icon_size, "" .. nullinputcounters[player][i], 0xAACCCCFF)
+						gui.text(xoffset - 10 + effective_width, (line-1)*icon_size + yoffset, "" .. nullinputcounters[player][i], 0xAACCCCFF)
 					elseif i == 1 then
 						if nullinputcounters[player][i+1] and nullinputcounters[player][i+1] > 0 then
-							gui.text(margin[player] + effective_width - 10, margin[3] + (line-1)*icon_size, "" .. nullinputcounters[player][i+1], 0xAACCCCFF)
+							gui.text(xoffset - 10 + effective_width, (line-1)*icon_size + yoffset, "" .. nullinputcounters[player][i+1], 0xAACCCCFF)
 						end
-						gui.text(margin[player] + effective_width  + 5, margin[3] + (line-1)*icon_size, "" .. activeinputcounters[player][i])
+						gui.text(xoffset + 5 + effective_width, (line-1)*icon_size + yoffset, "" .. activeinputcounters[player][i])
 					-- if it's line 2 or higher
 					elseif activeinputcounters[player][i] == 0 then
 						skip = skip + 1 -- log a skip for an empty input
 					else
 						if nullinputcounters[player][i+1] and nullinputcounters[player][i+1] > 0 then
-							gui.text(margin[player] + effective_width - 10, margin[3] + (line-1-skip)*icon_size, "" .. nullinputcounters[player][i+1], 0xAACCCCFF)
+							gui.text(xoffset - 10 + effective_width, (line-1-skip)*icon_size + yoffset, "" .. nullinputcounters[player][i+1], 0xAACCCCFF)
 						end
-						gui.text(margin[player] + effective_width  + 5, margin[3] + (line-1-skip)*icon_size, "" .. activeinputcounters[player][i], "yellow")
+						gui.text(xoffset + 5 + effective_width, (line-1-skip)*icon_size + yoffset, "" .. activeinputcounters[player][i], "yellow")
 					end
 
 					-- display inputs, skipping a line for every empty input.
 					for index,row in pairs(allinputcounters[player][line]) do
-						display(margin[player] + (index-1)*effective_width + 30, margin[3] + (line-1-skip)*icon_size, row)
+						display((index-1)*effective_width + xoffset + 30,  (line-1-skip)*icon_size + yoffset, row)
 					end
 				else
 					for index,row in pairs(allinputcounters[player][line]) do
-						display(margin[player] + (index-1)*effective_width, margin[3] + (line-1)*icon_size, row)
+						display((index-1)*effective_width + xoffset, (line-1)*icon_size + yoffset, row)
 					end
 				end
 			end

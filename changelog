@@ -1,3 +1,12 @@
+v0.21.06.25
+
+Scrolling input displays are now moveable
+Added tooltips to the interactive gui
+Fixed some replay functionality
+Updated setting dummy direction
+
+Added support for Alien Challenge (aliencha)
+
 v0.21.06.18
 
 Improved performance
@@ -18,7 +27,7 @@ Fixed meter issue properly.
 
 Added support for breakrev
 Added support for gowcaizr
-Added support for Asura Buster
+Added support for Asura Buster (thanks to Smoke)
 
 v0.21.06.04
 

@@ -205,125 +205,6 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						this.fillpercent = modulevars.p2.maxmeter/modulevars.p2.constants.maxmeter
 					end,
 	},
-	p2hold = { -- clean this up with a pop up menu
-		none = {
-			text = "None",
-			x = 200,
-			y = 70,
-			func = 	function ()
-						setDirection(2)
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3 
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		up = {
-			text = "Up",
-			x = 205,
-			y = 50,
-			func = 	function ()
-						setDirection(2, "Up")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3 
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		upright = {
-			text = "Up-Right",
-			x = 228,
-			y = 60,
-			func = 	function ()
-						setDirection(2, "Up", "Right")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3 
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		right = {
-			text = "Right",
-			x = 248,
-			y = 70,
-			func = 	function ()
-						setDirection(2, "Right")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3 
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		downright = {
-			text = "Down-Right",
-			x = 220,
-			y = 80,
-			func = 	function ()
-						setDirection(2, "Down", "Right")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3 
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		down = {
-			text = "Down",
-			x = 200,
-			y = 90,
-			func = 	function ()
-						setDirection(2, "Down")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3 
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		downleft = {
-			text = "Down-Left",
-			x = 160,
-			y = 80,
-			func = 	function ()
-						setDirection(2, "Down", "Left")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		left = {
-			text = "Left",
-			x = 152,
-			y = 70,
-			func = 	function ()
-						setDirection(2, "Left")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-		upleft = {
-			text = "Up-Left",
-			x = 160,
-			y = 60,
-			func = 	function ()
-						setDirection(2, "Up", "Left")
-						changeInteractiveGuiPage(2)
-						interactivegui.selection = 3
-					end,
-			info = {
-				"Allows you to set which of 8 directions player two holds"
-			},
-		},
-	},
 	simpledisplaytoggle = {
 		text = "Simple input display on",
 		x = 36,
@@ -534,7 +415,7 @@ guipages = { -- interactiveguipages
 			x = 12,
 			y = 70,
 			info = {
-				"Allows you to set P2 to hold an ordinal point",
+				"Allows you to set the direction P2 is holding",
 			},
 			func = function() CIG("setdirectionp2", 1) end,
 			olcolour = "black",
@@ -545,6 +426,7 @@ guipages = { -- interactiveguipages
 									str = str .. i .. " "
 								end
 							end
+							str = str:sub(1, #str-1)
 							if #str > 11 then
 								this.text = str -- 124
 								this.x = 12 + (31-#str)*4
@@ -661,22 +543,29 @@ guipages = { -- interactiveguipages
 		},
 	},
 	setdirectionp2 = {
-		guielements.p2hold.none,
-		guielements.p2hold.up,
-		guielements.p2hold.upright,
-		guielements.p2hold.right,
-		guielements.p2hold.downright,
-		guielements.p2hold.down,
-		guielements.p2hold.downleft,
-		guielements.p2hold.left,
-		guielements.p2hold.upleft,
-		
 		left = guielements.falseleftarrow,
 		right = guielements.falserightarrow,
+		title = {
+			text = "Dummy Settings",
+			x = interactivegui.boxxlength/2 - 30,
+			y = 1,
+		},
 		button = {
 			text = "Set the direction P2 is holding",
 			x = 12,
 			y = 70,
+		},
+		{
+			text = "",
+			x = -200, -- should be 'invisible'
+			y = -200,
+			func = 		function()
+							local a = function(b) if b then return 1 end return 0 end -- bool to num
+							local dir = 5+a(guiinputs.P1["up"])*3 + a(guiinputs.P1["left"])*-1 + a(guiinputs.P1["right"])*1 + a(guiinputs.P1["down"])*-3
+							setDirection(2, dir)
+							CIG(interactivegui.previouspage, interactivegui.previousselection)
+						end,
+			autofunc = 	function() displayStick(interactivegui.boxx + 140, interactivegui.boxy + 55) end,
 		},
 	},
 	scrollingtextsettings = {
@@ -692,34 +581,6 @@ guipages = { -- interactiveguipages
 				"Back",
 			},
 			func =	function() CIG(1,3) end,
-		},
-		{
-			text = "Set the state of the scrolling input",
-			x = 76,
-			y = 50,
-			info = {
-				"Controls which player inputs are displayed",
-			},
-			olcolour = "black",
-			func = 	function()
-						CIG("scrollingtextsettingsinputpopup", inputs.properties.scrollinginput.state)
-					end,
-			autofunc =	function(this)
-						local state = inputs.properties.scrollinginput.state
-						if state == 1 then
-							this.text = "P1 inputs"
-							this.x = 76
-						elseif state == 2 then
-							this.text = "P2 inputs"
-							this.x = 76
-						elseif state == 3 then
-							this.text = "P1 & P2 inputs"
-							this.x = 56
-						else
-							this.text = "Off"
-							this.x = 100
-						end
-					end,
 		},
 		{
 			text = "Scrolling input text size ",

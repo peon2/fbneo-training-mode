@@ -17,6 +17,8 @@ Video showing usage of the simple options: https://www.youtube.com/watch?v=sWxGW
 
 Currently supports:
 
+Alien Challenge
+
 Art of Fighting
 
 Art of Fighting 2
