@@ -85,7 +85,7 @@ local profile = {
 		end},
 	},
 },
-{	games = {"kof95"},
+{	games = {"kof95", "kof95sp"},
 	address = {game_phase = 0x10B088},
 	box_types = {a,g,v,v,a},
 	unthrowable = function(obj) return any_true({

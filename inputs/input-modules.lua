@@ -269,6 +269,30 @@ end
 table.insert(inp,{games,i})
 
 --------------------------------------------------------------------------------
+--IGS
+
+games = {"aliencha"}
+x,dx = 0x8,0x128
+y,dy = 0xd0,0
+i = {}
+for n=1,2 do
+	i[n.."^" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<" ] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">" ] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."LP"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x0, "P"..n.." Button 1",   "P"..n.." Button 1"}
+	i[n.."MP"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x0, "P"..n.." Button 2", "P"..n.." Button 2"}
+	i[n.."HP"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x0, "P"..n.." Button 3", "P"..n.." Button 3"}
+	i[n.."LK"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x8, "P"..n.." Button 4",    "P"..n.." Button 4"}
+	i[n.."MK"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x8, "P"..n.." Button 5",  "P"..n.." Button 5"}
+	i[n.."HK"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x8, "P"..n.." Button 6",  "P"..n.." Button 6"}
+	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",        n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",         "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+
+--------------------------------------------------------------------------------
 --PGM
 
 games = {"pgm.c","pgm"}

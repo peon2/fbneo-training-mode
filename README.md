@@ -61,9 +61,29 @@ The King Of Fighters '94
 
 The King Of Fighters '95
 
+The King Of Fighters '95 Special
+
+The King Of Fighters '96
+
+The King Of Fighters '97
+
 The King Of Fighters '98
 
+The King Of Fighters '98 Combo Hack
+
+The King Of Fighters '99
+
+The King Of Fighters '99 Anniversary Edition
+
+The King Of Fighters 2000
+
+The King Of Fighters 2001
+
 The King Of Fighters 2002
+
+The King Of Fighters 2003
+
+The King of Fighters 10th Anniversary 2005 Unique
 
 The Last Blade 2
 

@@ -6,7 +6,7 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.06.25"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.07"
 
 local fc = emu.framecount()
 
@@ -34,9 +34,16 @@ local games = {
 	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
 	karnovr = {"karnovr", iconfile = "icons-neogeo-32.png"},
 	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof95 = {"kof95", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof98 = {"kof98", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof95 = {"kof95", "kof95sp", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof96 = {"kof96", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof97 = {"kof97", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof98 = {"kof98", "kof98cb", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof99 = {"kof99", "kof99ae", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2000 = {"kof2000", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2001 = {"kof2001", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2003 = {"kof2003", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kf2k5uni = {"kf2k5uni", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	lb2 = {"lastbld2", hitboxes = "cps3-hitboxes", iconfile = "icons-neogeo-32.png"},
 	matrim = {"matrim", iconfile = "icons-neogeo-32.png"},
 	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -197,8 +204,17 @@ end
 ----------------------------------------------
 -- CHECK IF ROM MEMORY FILE EXISTS
 ----------------------------------------------
+nbuttons = 0 -- makes calcs easier to already have this
+
 if fexists("games/"..dirname.."/"..dirname..".lua") then
 	dofile("games/"..dirname.."/"..dirname..".lua")
+	local s = 1
+	local e = 1
+	for i,v in ipairs(translationtable) do
+		e = e+1
+		if v == "button1" then	s = i end
+	end
+	nbuttons = e-s
 else
 	print("Memory addresses not found for "..rom)
 	print "Attempting to make a translationtable from defaults"
@@ -222,7 +238,8 @@ else
 		["Strong Kick"] = 6,
 	}
 	local c = joypad.get()
-	local nbuttons, player, input
+	local player, input
+	nbuttons = nil
 	for b=6,1,-1 do
 		for _,v in ipairs({"P1 Button "..b, "P1 Button "..string.char(b+64), "P1 Fire "..b, "P1 "..a[b], "P1 "..a2[b]}) do -- some common buttons
 			if c[v] ~= nil then
@@ -271,9 +288,9 @@ else
 		end
 		local d = {nil, nil, "icons-taito-32.png", "icons-neogeo-32.png", nil, "icons-capcom-32.png"} -- iconfiles, 3,4,6 buttons
 		games[""].iconfile = d[nbuttons]
-		print(translationtable)
 	else
 		print "Can't make a translationtable"
+		nbuttons = 0
 	end
 end
 
@@ -671,7 +688,7 @@ end
 
 createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, closingfunc, autofunc, text)
 	local menu = {}
-	if not text then text = "haba" end
+	if not text then text = "" end
 
 	local barlen = max - min
 
@@ -1349,16 +1366,44 @@ end
 -- set up gd images
 local helpElements = {}
 local helpButtons = {}
-for i = 1,4 do
-	helpButtons[i] = gd.createFromPng("resources/info/"..i..".png")
-end
 local helpShell = gd.createFromPng("resources/info/shell.png")
-helpButtons[1] = helpButtons[1]:gdStr()
-helpButtons[2] = helpButtons[2]:gdStr()
-helpButtons[3] = helpButtons[3]:gdStr()
-helpButtons[4] = helpButtons[4]:gdStr()
 helpShell = helpShell:gdStr()
 
+if scrollingInputReg then -- if there's a scrolling input file loaded
+	local icons = gd.createFromPng("inputs/scrolling-input/"..games[dirname].iconfile) -- always assume we're using a 32x32 tileset image
+	local y = icons:sizeY()-(nbuttons+1)*32 -- y of first button, ignoring start
+	--[[
+		Left,
+		Right,
+		Up,
+		Down,
+		Up-Left,
+		Up-Right,
+		Down-Left,
+		Down-Right,
+		{
+		.
+		.
+		.
+		*Buttons*,
+		.
+		.
+		.
+		},
+		Start
+	--]]
+	for i = 1,4 do
+		helpButtons[i] = gd.create(16,16)
+		helpButtons[i]:copyResampled(icons, 0, 0, 0, y, 16, 16, 32, 32) -- needs to be resized to 16x16
+		helpButtons[i] = helpButtons[i]:gdStr()
+		y=y+32
+	end
+else -- otherwise use these defaults
+	for i = 1,4 do
+		helpButtons[i] = gd.createFromPng("resources/info/"..i..".png")
+		helpButtons[i] = helpButtons[i]:gdStr()
+	end
+end
 local drawHelp = function()
 	if not (interactivegui.movehud or interactivegui.enabled) then return end -- need some sort of state system eventually to make this sort of thing easier
 	local offset = 0
@@ -1369,7 +1414,7 @@ local drawHelp = function()
 		if helpElements[i] and type(helpElements[i])=="string" then
 			gui.gdoverlay(interactivegui.sw/2 - offset, interactivegui.sh-27, helpShell)
 			gui.gdoverlay(interactivegui.sw/2 - offset + 1, interactivegui.sh-26, helpButtons[i])
-			gui.text(interactivegui.sw/2 - offset + 1, interactivegui.sh-9, helpElements[i]:sub(1,4))
+			gui.text(interactivegui.sw/2 - offset + 9 - #helpElements[i]:sub(1,4)*2, interactivegui.sh-9, helpElements[i]:sub(1,4))
 			offset=offset-18
 		end
 	end

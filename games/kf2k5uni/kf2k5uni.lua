@@ -1,23 +1,22 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with kof95"
-print "Combos aren't tracked"
-print ""
+p1maxhealth = 0x66
+p2maxhealth = 0x66
 
-p1maxhealth = 0xCF
-p2maxhealth = 0xCF
+p1maxmeter = 0x5
+p2maxmeter = 0x5
 
-p1maxmeter = 0x7F
-p2maxmeter = 0x7F
+local p1health = 0x108239
+local p2health = 0x108439
 
-local p1health = 0x108221
-local p2health = 0x108421
+local p1meter = 0x1082E3
+local p2meter = 0x1084E3
 
-local p1meter = 0x108219
-local p2meter = 0x108419
+local p1direction = 0x108131
+local p2direction = 0x108331
 
-local p1direction = 0x100931
-local p2direction = 0x100d31
+local p1combocounter = 0x1084B0
+local p2combocounter = 0x1082B0
 
 translationtable = {
 	"coin",
@@ -46,17 +45,20 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=33,
-		p1healthy=21,
+		combotextx=138,
+		combotexty=38,
+		comboenabled=true,
+		p1healthx=36,
+		p1healthy=20,
 		p1healthenabled=true,
-		p2healthx=260,
-		p2healthy=21,
+		p2healthx=257,
+		p2healthy=20,
 		p2healthenabled=true,
-		p1meterx=97,
-		p1metery=205,
+		p1meterx=98,
+		p1metery=209,
 		p1meterenabled=true,
-		p2meterx=196,
-		p2metery=205,
+		p2meterx=203,
+		p2metery=209,
 		p2meterenabled=true,
 	},
 }
@@ -69,10 +71,12 @@ function playerTwoFacingLeft()
 	return rb(p2direction)==0
 end
 
-function _playerOneInHitstun()
+function playerOneInHitstun()
+	return rb(p2combocounter)~=0
 end
 
-function _playerTwoInHitstun()
+function playerTwoInHitstun()
+	return rb(p1combocounter)~=0
 end
 
 function readPlayerOneHealth()
@@ -108,10 +112,9 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	ww(0x10A836, 0x6000)
+	ww(0x10A7D2, 0x6000)
 end
 
 function Run() -- runs every frame
 	infiniteTime()
-	wb(0x10E79A, 0x1) -- enable hidden chars
 end

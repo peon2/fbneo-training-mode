@@ -1,7 +1,28 @@
+v0.21.07
+
+Fixed some issues with the help overlay.
+
+The King of Fighters '98:
+Added combo tracking and sideswitch tracking
+The King of Fighters 2002:
+Added combo tracking and sideswitch tracking
+
+Added support for The King Of Fighters '95 Special
+Added support for The King of Fighters '96 (kof96)
+Added support for The King of Fighters '97 (kof97)
+Added support for The King Of Fighters '98 Combo Hack (kof98cb)
+Added support for The King of Fighters '99 (kof99)
+Added support for The King Of Fighters '99 Anniversary Edition (kof99ae)
+Added support for The King of Fighters 2000 (kof2000)
+Added support for The King of Fighters 2001 (kof2001)
+Added support for The King of Fighters 2003 (kof2003)
+Added support for The King of Fighters 2003 (kof2003)
+Added support for The King of Fighters 10th Anniversary 2005 Unique (kf2k5uni)
+
 v0.21.06.25
 
 Scrolling input displays are now moveable
-Added tooltips to the interactive gui
+Added help overlay to the interactive gui
 Fixed some replay functionality
 Updated setting dummy direction
 
