@@ -122,6 +122,26 @@ end
 table.insert(inp,{games,i})
 
 --------------------------------------------------------------------------------
+--Slam Masters
+
+games = {"slammast"}
+x,dx = 0x8,0x128
+y,dy = 0xd0,0
+i = {}
+for n=1,2 do
+	i[n.."^" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<" ] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">" ] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."A"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x0, "P"..n.." Attack"}
+	i[n.."J"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x0, "P"..n.." Jump"}
+	i[n.."P"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x0, "P"..n.." Pin"}
+	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start", n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin"}
+end
+table.insert(inp,{games,i})
+
+--------------------------------------------------------------------------------
 --Capcom 6-button fighters (non-CPS systems)
 
 games = {"sf", "sftm", "sfex", "sfexp", "sfex2", "sfex2p"}
@@ -139,6 +159,25 @@ for n=1,2 do
 	i[n.."LK"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x8, "P"..n.." Button 4"}
 	i[n.."MK"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x8, "P"..n.." Button 5"}
 	i[n.."HK"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x8, "P"..n.." Button 6"}
+	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start", n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "Coin "..n}
+end
+table.insert(inp,{games,i})
+
+games = {"ringdest"}
+x,dx = 0x8,0x128
+y,dy = 0xd0,0
+i = {}
+for n=1,2 do
+	i[n.."^" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<" ] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">" ] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."H"] = {x+dx*(n-1)+0x30, y+dy*(n-1)+0x0, "P"..n.." Hold"}
+	i[n.."LP"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x0, "P"..n.." Weak punch"}
+	i[n.."HP"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x0, "P"..n.." Strong punch"}
+	i[n.."LK"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x8, "P"..n.." Weak kick"}
+	i[n.."HK"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x8, "P"..n.." Strong kick"}
 	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start", n..(n==1 and " Player" or " Players").." Start"}
 	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "Coin "..n}
 end

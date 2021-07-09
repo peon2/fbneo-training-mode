@@ -109,6 +109,8 @@ Real Bout Fatal Fury 2
 
 Real Bout Fatal Fury Special
 
+Ring of Destruction - slammasters II
+
 Samurai Shodown
 
 Samurai Shodown 2
@@ -121,9 +123,15 @@ Samurai Shodown 5
 
 Samurai Shodown 5 Special
 
+Saturday Night Slam Masters
+
 Street Fighter 2 Champion Edition
 
+Street Fighter Alpha
+
 Street Fighter Alpha 2
+
+Street Fighter Alpha 3
 
 Super Gem Fighter
 

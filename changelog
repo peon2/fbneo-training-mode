@@ -1,3 +1,12 @@
+v0.21.07.09
+
+Reduced memory footprint with replays and fixed some bugs.
+
+Added support for Street Fighter Alpha (sfa)
+Added support for Street Fighter Alpha 3 (sfa3)
+Added support for Saturday Night Slam Masters (slammast)
+Added support for Ring of Destruction - slammasters II (ringdest)
+
 v0.21.07
 
 Fixed some issues with the help overlay.
@@ -7,7 +16,7 @@ Added combo tracking and sideswitch tracking
 The King of Fighters 2002:
 Added combo tracking and sideswitch tracking
 
-Added support for The King Of Fighters '95 Special
+Added support for The King Of Fighters '95 Special (kof95sp)
 Added support for The King of Fighters '96 (kof96)
 Added support for The King of Fighters '97 (kof97)
 Added support for The King Of Fighters '98 Combo Hack (kof98cb)

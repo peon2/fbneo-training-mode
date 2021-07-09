@@ -6,7 +6,7 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.07"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.07.09"
 
 local fc = emu.framecount()
 
@@ -54,8 +54,9 @@ local games = {
 	ragnagrd = {"ragnagrd", iconfile = "icons-neogeo-32.png"},
 	rbff1 = {"rbff1", iconfile = "icons-neogeo-32.png"},
 	rbff2 = {"rbff2", "rbff2h", iconfile = "icons-neogeo-32.png"},
-	rbffspec = {"rbffspec", iconfile = "icons-neogeo-32"},
+	rbffspec = {"rbffspec", iconfile = "icons-neogeo-32.png"},
 	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	ringdest = {"ringdest", iconfile = "icons-ringdest-32.png"},
 	rotd = {"rotd", hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
 	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},
 	samsho2 = {"samsho2", iconfile = "icons-neogeo-32.png"},
@@ -63,8 +64,11 @@ local games = {
 	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
 	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
 	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	slammast = {"slammast", iconfile = "icons-slammast-32.png"},
 	sf2ce = {"sf2ce", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfa = {"sfa", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa2 = {"sfa2", "sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfa3 = {"sfa3", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhuntjr2 = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -262,7 +266,6 @@ else
 			elseif a2[val] then
 				return a2[val]
 			else
-				print(val)
 				return nil
 			end
 		end
@@ -1032,7 +1035,7 @@ local instantMeterP2 = function()
 end
 
 local readGuiInputs = function()
-	local input
+	local player, input
 	guiinputs.P1.previousinputs = nil
 	guiinputs.P2.previousinputs = nil
 	guiinputs.P1.previousinputs = copytable(guiinputs.P1)
@@ -1061,7 +1064,7 @@ function displayStick(x, y)
 end
 
 local readInputs = function() -- these inputs can be altered for replays, swapping character etc., gui inputs won't be
-	local input
+	local player, input
 	inputs.setinputs = {}
 	for i,v in pairs(joypad.get()) do -- check every button
 		player = i:sub(1,2)
@@ -1072,7 +1075,6 @@ local readInputs = function() -- these inputs can be altered for replays, swappi
 			inputs.p2[input] = v
 		else
 			inputs.other[i] = v
-			inputs.setinputs[i] = v
 		end
 	end
 end
@@ -1094,7 +1096,8 @@ local combinePlayerInputs = function(P1, P2, other)
 			t[i] = v
 		end
 	end
-
+	
+	inputs.properties.enableinputset = true
 	return t
 end
 
@@ -1116,12 +1119,12 @@ local swapInputs = function()
 end
 
 
-local swapPlayerInput = function(player)
+local swapPlayerDirection = function(player)
 
 	local tab = copytable(player) -- shallow copy
-
-	tab.Left = not tab.Left
-	tab.Right = not tab.Right
+	
+	if tab.Left==true then tab.Right=true tab.Left=false
+	elseif tab.Right==true then tab.Left=true tab.Right=false end
 
 	return tab
 
@@ -1133,6 +1136,7 @@ local freezePlayer = function(player)
 		if inputs.properties.p1freeze then
 			for i,_ in pairs(inputs.p1) do
 				inputs.setinputs["P1 "..i] = false
+				inputs.properties.enableinputset = true
 			end
 		end
 	end
@@ -1141,10 +1145,29 @@ local freezePlayer = function(player)
 		if inputs.properties.p2freeze then
 			for i,_ in pairs(inputs.p2) do
 				inputs.setinputs["P2 "..i] = false
+				inputs.properties.enableinputset = true
 			end
 		end
 	end
 end
+
+-- Const
+local SERIALISETABLE = {}
+SERIALISETABLE.p1 = {}
+SERIALISETABLE.p2 = {}
+
+for i,v in pairs(joypad.get()) do -- assemble table in proper order
+	local input
+	if i:sub(1,2) == "P1" then -- P1 and P2 should have the same inputs
+		input = i:sub(4)
+		SERIALISETABLE.p1[#SERIALISETABLE.p1+1] = input
+		SERIALISETABLE.p1[input] = #SERIALISETABLE.p1
+		SERIALISETABLE.p2[#SERIALISETABLE.p2+1] = input
+		SERIALISETABLE.p2[input] = #SERIALISETABLE.p2
+	end
+end
+SERIALISETABLE.p1.len = #SERIALISETABLE.p1 -- used for cleaning up inputs
+SERIALISETABLE.p2.len = SERIALISETABLE.p1.len
 
 local toggleRecording = function(bool)
 
@@ -1159,13 +1182,65 @@ local toggleRecording = function(bool)
 	if recording.enabled then
 		recording[recording.recordingslot] = {}
 		recording.framestart = fc
+		-- prep for serialising
+		recording[recording.recordingslot]._stable = {}
+		recording[recording.recordingslot]._stable.p1 = copytable(SERIALISETABLE.p1)
+		recording[recording.recordingslot]._stable.p2 = copytable(SERIALISETABLE.p2)
+		recording[recording.recordingslot].constants = joypad.get()
 	else
-		if not recording[recording.recordingslot].start then -- if nothing is recorded
+		local recordslot = recording[recording.recordingslot]
+		if not recordslot.start then -- if nothing is recorded
 			recording[recording.recordingslot] = {}
 		else
-			for i=#recording[recording.recordingslot],recording[recording.recordingslot].start,-1 do
-				recording[recording.recordingslot][i].p2.Coin = false -- clear coin
+			for i=#recordslot,recordslot.start,-1 do
+				recordslot[i].raw.p2.Coin = false -- clear coin
 			end
+			-- set up compression, reduce the size of _stable to make the numbers actually smaller
+			local player, input, num
+			for i,_ in pairs(recordslot.constants) do 
+				player = i:sub(1,2)
+				input = i:sub(4)
+				if player == "P1" then
+					num = recordslot._stable.p1[input]
+					for i = num+1, recordslot._stable.p1.len do
+						recordslot._stable.p1[input] = nil -- remove
+						recordslot._stable.p1[i-1] = recordslot._stable.p1[i]
+						recordslot._stable.p1[ recordslot._stable.p1[i] ] = i-1
+					end
+					recordslot._stable.p1.len = recordslot._stable.p1.len-1
+					for i = 1, #recordslot._stable.p1-recordslot._stable.p1.len do table.remove(recordslot._stable.p1) end-- remove garbage
+					for i, v in pairs(recordslot._stable.p1) do if recordslot._stable.p1[v]==nil and i~="len" then recordslot._stable.p1[i]=nil end end
+				elseif player == "P2" then
+					num = recordslot._stable.p2[input]
+					for i = num+1, recordslot._stable.p2.len do
+						recordslot._stable.p2[input] = nil -- remove
+						recordslot._stable.p2[i-1] = recordslot._stable.p2[i]
+						recordslot._stable.p2[ recordslot._stable.p2[i] ] = i-1
+					end
+					recordslot._stable.p2.len = recordslot._stable.p2.len-1
+					for i = 1, #recordslot._stable.p2-recordslot._stable.p2.len do table.remove(recordslot._stable.p2) end-- remove garbage
+					for i, v in pairs(recordslot._stable.p2) do if recordslot._stable.p2[v]==nil and i~="len" then recordslot._stable.p2[i]=nil end end -- final check
+				end
+			end
+			for i = 1, #recordslot do -- serialize
+				local num = 0
+				recordslot[i].serial={}
+				recordslot[i].serial.other={}
+				for i, v in pairs(recordslot[i].raw.p1) do
+					if v and recordslot.constants["P1 "..i]==nil then num = bit.bor(num, bit.lshift(1, recordslot._stable.p1[i]-1)) end
+				end
+				for i, v in pairs(recordslot[i].raw.p2) do
+					if v and recordslot.constants["P2 "..i]==nil then num = bit.bor(num, bit.lshift(1, recordslot._stable.p2[i]-1+recordslot._stable.p1.len)) end
+				end
+				for j, v in pairs(recordslot[i].raw.other) do -- dipswitches aren't boolean so they can't be serialised
+					if recordslot.constants[j]==nil then recordslot[i].serial.other[j] = v end -- only put in the ones we need
+				end
+				--final bit to track direction
+				if recordslot[i].p2facingleft then num = bit.bor(num, bit.lshift(1, recordslot._stable.p1.len+recordslot._stable.p2.len)) end
+				recordslot[i].serial.player = num
+				recordslot[i].raw = {} -- we can empty this now
+			end
+			
 		end
 	end
 end
@@ -1175,28 +1250,45 @@ local logRecording = function()
 	if not recording.enabled then return end
 	if not recording[recording.recordingslot] then recording[recording.recordingslot] = {} end
 
+	local recordslot = recording[recording.recordingslot]
 	local tab = {
-		p1 = copytable(inputs.p1),
-		p2 = copytable(inputs.p2),
-		other = copytable(inputs.other)
+		raw = {
+			p1 = copytable(inputs.p1),
+			p2 = copytable(inputs.p2),
+			other = copytable(inputs.other)
+		},
+		serial = {
+			player={},
+			other={},
+		},
 	}
 
-	if not recording[recording.recordingslot].start then
-		if orTable(tab.p2) and not tab.p2.Coin then
-			recording[recording.recordingslot].start = fc - recording.framestart + 1
+	for i, v in pairs(tab.raw.p1) do
+		if recordslot.constants["P1 "..i]~=v then recordslot.constants["P1 "..i]=nil end -- remove non-duping values from table
+	end
+	for i, v in pairs(tab.raw.p2) do
+		if recordslot.constants["P2 "..i]~=v then recordslot.constants["P2 "..i]=nil end -- remove non-duping values from table
+	end
+	for i, v in pairs(tab.raw.other) do
+		if recordslot.constants[i]~=v then recordslot.constants[i]=nil end -- remove non-duping values from table
+	end
+
+	if not recording[recording.recordingslot].start then -- move start forward to first frame that something happens on
+		if orTable(tab.raw.p2) and not tab.raw.p2.Coin then
+			recordslot.start = fc - recording.framestart + 1
 		end
 	end
 
-	if orTable(tab.p2) and not tab.p2.Coin then
-		recording[recording.recordingslot].finish = fc - recording.framestart - 1
+	if orTable(tab.raw.p2) and not tab.raw.p2.Coin then  -- put finish on the last frame that something happens
+		recordslot.finish = fc - recording.framestart - 1
 	end
 
 	if availablefunctions.playertwofacingleft then
 		tab.p2facingleft = modulevars.p2.facingleft
 	end
 
-	table.insert(recording[recording.recordingslot], tab)
-	gui.text(1,1,"Slot "..recording.recordingslot.." (0/"..#recording[recording.recordingslot]..")","red")
+	table.insert(recordslot, tab)
+	gui.text(1,1,"Slot "..recording.recordingslot.." (0/"..#recordslot..")","red")
 
 end
 
@@ -1214,9 +1306,9 @@ end
 
 local togglePlayBack = function(bool)
 	local temp = recording.playback
-	toggleRecording(false)
-	toggleSwapInputs(false)
-	recording.playback = temp -- toggleRecording will overwrite otherwise
+	if recording.enabled then toggleRecording(false) end
+	if inputs.properties.enableinputswap then toggleSwapInputs(false) end
+	recording.playback = temp -- make sure its not overwritten
 
 	if interactivegui.movehud then return end
 	local recordslot = recording[recording.recordingslot]
@@ -1236,11 +1328,58 @@ local togglePlayBack = function(bool)
 			local pos
 			local recordings = tableList()
 			if #recordings > 0 then
-				pos = math.random(#recordings)
+				recording.recordingslot = nil
+				while recording.recordingslot==nil do -- keep running until we get a valid slot
+					pos = math.random(#recordings)
+					if recordings[pos] ~= nil then
+						recording.recordingslot = pos
+					end
+				end
 			end
-			if recordings[pos] ~= nil then
-				recording.recordingslot = pos
-			end
+		end
+	end
+end
+
+local Unserialise = function(inputs, _stable, constants) -- takes inputs (recordslot[frame]), _stable and constants to unserialise
+	local serial = inputs.serial.player
+	inputs.raw = {} -- initialise
+	inputs.raw.p1 = {}
+	inputs.raw.p2 = {}
+	inputs.raw.other = {}
+	local t = inputs.raw.p1
+	for i = 1, #_stable.p1 do
+		if bit.band(inputs.serial.player,1)==1 then
+			t[ _stable.p1[i] ] = true
+		else
+			t[ _stable.p1[i] ] = false
+		end
+		serial = bit.rshift(serial,1)
+	end
+	t=inputs.raw.p2
+	for i = 1, #_stable.p2 do
+		if bit.band(serial,1)==1 then
+			t[ _stable.p2[i] ] = true
+		else
+			t[ _stable.p2[i] ] = false
+		end
+		serial = bit.rshift(serial,1)
+	end
+	inputs.p2facingleft = bit.band(serial,1)==1 -- set direction flag
+	t=inputs.raw.other
+	for i, v in pairs(inputs.serial.other) do
+		t[i] = v
+	end
+	
+	local player, input
+	for i, v in pairs(constants) do -- apply constants
+		player = i:sub(1,2)
+		input = i:sub(4)
+		if player == "P1" then
+			inputs.raw.p1[input] = v
+		elseif player == "P2" then
+			inputs.raw.p2[input] = v
+		else
+			t[i] = v
 		end
 	end
 end
@@ -1268,12 +1407,15 @@ local playBack = function()
 	end
 
 	gui.text(1,1,"Slot "..recording.recordingslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
-	local t = recordslot[fc - recordslot.framestart + start].p2
+	Unserialise(recordslot[fc - recordslot.framestart + start], recordslot._stable, recordslot.constants)
+	local t = recordslot[fc - recordslot.framestart + start].raw.p2
 	local orientated = modulevars.p2.facingleft == recordslot[fc - recordslot.framestart + start].p2facingleft
 	if not orientated and recording.autoturn then
-		t = swapPlayerInput(t)
+		t = swapPlayerDirection(t)
 	end
-	inputs.setinputs = combinePlayerInputs(inputs.p1, t, inputs.other)
+	inputs.setinputs = combinePlayerInputs(inputs.p1, t, recordslot[fc - recordslot.framestart + start].raw.other)
+	recordslot[fc - recordslot.framestart + start].raw = {}
+	recordslot[fc - recordslot.framestart + start].p2facingleft = nil
 end
 
 local hitPlayBack = function()
@@ -1312,20 +1454,24 @@ local hitPlayBack = function()
 			recording.hitplayback = false
 		end
 	else
-		gui.text(1,1,"Slot "..recording.hitslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
-		local t = recordslot[fc - recordslot.framestart + start].p2
+		gui.text(1,1,"Slot "..recording.recordingslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
+		Unserialise(recordslot[fc - recordslot.framestart + start], recordslot._stable, recordslot.constants)
+		local t = recordslot[fc - recordslot.framestart + start].raw.p2
 		local orientated = modulevars.p2.facingleft == recordslot[fc - recordslot.framestart + start].p2facingleft
 		if not orientated and recording.autoturn then
-			t = swapPlayerInput(t)
+			t = swapPlayerDirection(t)
 		end
-		inputs.setinputs = combinePlayerInputs(inputs.p1, t, inputs.other)
+		inputs.setinputs = combinePlayerInputs(inputs.p1, t, recordslot[fc - recordslot.framestart + start].raw.other)
+		recordslot[fc - recordslot.framestart + start].raw = {}
+		recordslot[fc - recordslot.framestart + start].p2facingleft = nil
 	end
 end
 
 local setInputs = function()
-	if inputs.properties.enableinputswap or recording.playback or recording.hitplayback or inputs.properties.enablehold or inputs.properties.p1freeze or inputs.properties.p2freeze then
+	if inputs.properties.enableinputset then
 		joypad.set(inputs.setinputs)
 	end
+	inputs.properties.enableinputset = false
 end
 
 setDirection = function(player, ...) -- getting a player to hold down/up etc.
@@ -1361,6 +1507,7 @@ local applyDirection = function() -- getting a player to hold down/up etc.
 	for i, _ in pairs(inputs.properties.p2hold) do
 		inputs.setinputs["P2 "..i] = true
 	end
+	inputs.properties.enableinputset = true
 end
 
 -- set up gd images
@@ -1438,6 +1585,7 @@ local toggleInteractiveGuiEnabled = function(bool)
 	inputs.properties.p2freeze = interactivegui.enabled
 end
 
+local garbagecount = {disp = collectgarbage("count")}
 local drawInteractiveGui = function()
 
 	if not interactivegui.enabled then return end
@@ -1508,7 +1656,18 @@ local drawInteractiveGui = function()
 	end
 	gui.box(selection.x + boxx, selection.y + boxy, selection.x + boxx + w + 4, selection.y + boxy + h, selection.bgcolour, colour)
 	gui.text(selection.x + boxx + 3, selection.y + boxy + 2, selection.text, selection.textcolour)
-
+	
+	table.insert(garbagecount, math.floor(collectgarbage("count")*100)/100) -- round to two places
+	if #garbagecount>=10 then
+		local disp = 0
+		for _, v in ipairs(garbagecount) do
+			disp = disp+v
+		end
+		disp = disp/#garbagecount
+		garbagecount={}
+		garbagecount.disp = disp
+	end
+	gui.text(boxx+1, boxy2-7, garbagecount.disp)
 end
 
 changeInteractiveGuiPage = function(n)
@@ -2022,7 +2181,7 @@ setRegisters = function() -- pre-calc stuff
 
 	local garbage = 	function () -- garbage collection
 							if collectgarbage("count") > 5000 then -- not sure how much garbage fbneo can handle at a time
-								collectgarbage("collect") -- garbage mostly comes from redoing gdimages in scrolling inputs
+								collectgarbage("collect") -- garbage mostly comes from redoing gdimages in scrolling inputs and replays
 							end
 						end
 
