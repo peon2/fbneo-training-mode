@@ -97,6 +97,8 @@ Marvel vs Capcom - Clash of Super Heroes
 
 Mighty Warriors
 
+Mobile Suit Gundam Ex Revue
+
 Ninja Masters
 
 Rage of the Dragons
