@@ -48,6 +48,13 @@ gamedefaultconfig = {
 	},
 }
 
+function playerOneFacingLeft()
+	return rb(0x203926) == 0
+end
+
+function playerTwoFacingLeft()
+	return rb(0x203F3A) == 0
+end
 
 function readPlayerOneHealth(health)
 	return rb(p1health)
