@@ -8,7 +8,7 @@ local p1health = 0x204569
 
 local p2health = 0x2045BF
 
-
+local p1combocounter = 0x2035E7
 
 
 
@@ -39,6 +39,9 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
+		combotextx=180,
+		combotexty=42,
+		comboenabled=true,
 		p1healthx=32,
 		p1healthy=16,
 		p1healthenabled=true,
@@ -54,6 +57,10 @@ end
 
 function playerTwoFacingLeft()
 	return rb(0x203F3A) == 0
+end
+
+function playerTwoInHitstun()
+	return rb(p1combocounter) ~= 0
 end
 
 function readPlayerOneHealth(health)
