@@ -34,6 +34,7 @@ local games = {
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
 	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
 	karnovr = {"karnovr", iconfile = "icons-neogeo-32.png"},
+	kizuna = {"kizuna", iconfile = "icons-neogeo-32.png"},
 	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof95 = {"kof95", "kof95sp", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof96 = {"kof96", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
