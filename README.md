@@ -57,6 +57,8 @@ Kabuki Klash
 
 Karnov's Revenge
 
+Kizuna Encounter
+
 The King Of Fighters '94
 
 The King Of Fighters '95
@@ -100,6 +102,8 @@ Mighty Warriors
 Mobile Suit Gundam Ex Revue
 
 Ninja Masters
+
+Rabbit
 
 Rage of the Dragons
 
