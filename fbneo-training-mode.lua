@@ -53,6 +53,7 @@ local games = {
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
 	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
+	rabbit = {"rabbit", iconfile = "icons-banpresto-32.png"},
 	ragnagrd = {"ragnagrd", iconfile = "icons-neogeo-32.png"},
 	rbff1 = {"rbff1", iconfile = "icons-neogeo-32.png"},
 	rbff2 = {"rbff2", "rbff2h", iconfile = "icons-neogeo-32.png"},
