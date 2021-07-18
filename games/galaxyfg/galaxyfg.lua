@@ -8,7 +8,7 @@ local p1health = 0x10103C
 
 local p2health = 0x101152
 
-
+local p1combocounter = 0x10126A
 
 
 
@@ -45,6 +45,9 @@ gamedefaultconfig = {
 		p2healthx=275,
 		p2healthy=16,
 		p2healthenabled=true,
+		comboenabled=true,
+		combotextx=136,
+		combotexty=42,
 	},
 }
 
@@ -70,6 +73,10 @@ end
 
 function writePlayerTwoHealth(health)
 	wb(p2health, health)
+end
+
+function playerTwoInHitstun()
+	return rb(p1combocounter) ~= 0
 end
 
 function infiniteTime()
