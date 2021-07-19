@@ -27,6 +27,8 @@ Art of Fighting 3
 
 Asura Buster
 
+Asura Blade
+
 Breakers Revenge
 
 Cyberbots
