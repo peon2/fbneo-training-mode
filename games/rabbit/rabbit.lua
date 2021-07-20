@@ -110,7 +110,7 @@ function infiniteTime()
 end
 
 function maxCredits()
-	memory.writebyte(0xFFFE48, 0x99)
+	memory.writebyte(0xFFFE48, 0x09)
 end
 
 function Run() -- runs every frame
