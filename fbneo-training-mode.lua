@@ -49,6 +49,7 @@ local games = {
 	kf2k5uni = {"kf2k5uni", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	lb2 = {"lastbld2", hitboxes = "cps3-hitboxes", iconfile = "icons-neogeo-32.png"},
 	matrim = {"matrim", iconfile = "icons-neogeo-32.png"},
+	martmast = {"martmast", iconfile = "icons-martmast-32.png"},
 	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 	mvc = {"mvc", "mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
