@@ -61,6 +61,10 @@ gamedefaultconfig = {
 	},
 }
 
+function playerTwoFacingLeft()
+	return rb(0xFF2025) == 0
+end
+
 function playerOneInHitstun()
 	return rb(p2combocounter) ~= 0
 end
