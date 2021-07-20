@@ -1,14 +1,14 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-p1maxhealth = 0xff
-p2maxhealth = 0xff
+p1maxhealth = 0x93
+p2maxhealth = 0x93
 
 
-local p1health = 0x10103C
+local p1health = 0x204569
 
-local p2health = 0x101152
+local p2health = 0x2045BF
 
-local p1combocounter = 0x10126A
+local p1combocounter = 0x2035E7
 
 
 
@@ -31,32 +31,36 @@ translationtable = {
 	["Down"] = 5,
 	["Left"] = 6,
 	["Right"] = 7,
-	["Button A"] = 8,
-	["Button B"] = 9,
-	["Button C"] = 10,
-	["Button D"] = 11,
+	["Button 1"] = 8,
+	["Button 2"] = 9,
+	["Button 3"] = 10,
+	["Button 4"] = 11,
 }
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=18,
+		combotextx=180,
+		combotexty=42,
+		comboenabled=true,
+		p1healthx=32,
 		p1healthy=16,
 		p1healthenabled=true,
-		p2healthx=275,
+		p2healthx=342,
 		p2healthy=16,
 		p2healthenabled=true,
-		comboenabled=true,
-		combotextx=136,
-		combotexty=42,
 	},
 }
 
 function playerOneFacingLeft()
-	return rb(0x10100D) == 0
+	return rb(0x203926) == 0
 end
 
 function playerTwoFacingLeft()
-	return rb(0x101285) == 0
+	return rb(0x203F3A) == 0
+end
+
+function playerTwoInHitstun()
+	return rb(p1combocounter) ~= 0
 end
 
 function readPlayerOneHealth(health)
@@ -75,16 +79,13 @@ function writePlayerTwoHealth(health)
 	wb(p2health, health)
 end
 
-function playerTwoInHitstun()
-	return rb(p1combocounter) ~= 0
-end
-
 function infiniteTime()
-	memory.writebyte(0x101252,0xFE)
+	memory.writebyte(0x2035A3,0x9B)
+    memory.writebyte(0x2035A2,0x0B)
 end
 
 function maxCredits()
-	memory.writebyte(0xD00034, 0x990)
+	memory.writebyte(0x2034EF, 0xFF)
 end
 
 function Run() -- runs every frame
