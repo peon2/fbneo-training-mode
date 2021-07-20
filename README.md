@@ -93,6 +93,8 @@ The Last Blade 2
 
 Matrimelee
 
+Martial Masters
+
 Marvel Super Heroes
 
 Marvel Super Heroes vs Street Fighter
