@@ -27,6 +27,8 @@ Art of Fighting 3
 
 Asura Buster
 
+Asura Blade
+
 Breakers Revenge
 
 Cyberbots
@@ -56,6 +58,8 @@ JoJo's Venture
 Kabuki Klash
 
 Karnov's Revenge
+
+Kizuna Encounter
 
 The King Of Fighters '94
 
@@ -89,6 +93,8 @@ The Last Blade 2
 
 Matrimelee
 
+Martial Masters
+
 Marvel Super Heroes
 
 Marvel Super Heroes vs Street Fighter
@@ -97,7 +103,11 @@ Marvel vs Capcom - Clash of Super Heroes
 
 Mighty Warriors
 
+Mobile Suit Gundam Ex Revue
+
 Ninja Masters
+
+Rabbit
 
 Rage of the Dragons
 
