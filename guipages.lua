@@ -46,7 +46,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Controls how P1 health is handled",
 		},
 		func = 	function()
-					CIG("p1health", inputs.properties.scrollinginput.state)
+					CIG("p1health", inputs.properties.scrollinginput.state)			-- SHOULDNT BE LIKE THIS???
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillhealthenabled then
@@ -261,7 +261,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	replayautoturn = {
 		text = "Auto-Turn",
 		x = 29,
-		y = 90,
+		y = 105,
 		olcolour = "black",
 		info = {
 			"Allows you to control whether or not a replay will reverse itself",
@@ -315,7 +315,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		main = {
 			text = "Select Hit Slot",
 			x = 5,
-			y = 105,
+			y = 120,
 			olcolour = "black",
 			info = {
 				"Plays back the respective replay slot after hit",
@@ -504,7 +504,7 @@ guipages = { -- interactiveguipages
 						end,
 		},
 		{
-			text = "Snipping Replays",
+			text = "Snipping Replays", -- clean this up in future
 			x = 5,
 			y = 75,
 			olcolour = "black",
@@ -541,6 +541,29 @@ guipages = { -- interactiveguipages
 							end
 						end,
 		},
+		{
+			text = "Player Recording",
+			x = 5,
+			y = 90,
+			olcolour = "black",
+			info = {
+				"Controls which player(s) are recorded and played back",
+			},
+			func = 	function()
+						CIG("playerrecording", 2)
+					end,
+			autofunc = 	function(this)
+							if recording.replayP1 and recording.replayP2 then
+								this.text = "Replay P1 and P2"
+							elseif recording.replayP1 then
+								this.text = "Replay P1"
+							elseif recording.replayP2 then
+								this.text = "Replay P2"
+							end
+							this.x = 65 - #this.text*4
+						end,
+		},
+		other_func = drawReplayInfo
 	},
 	setdirectionp2 = {
 		left = guielements.falseleftarrow,
@@ -618,7 +641,6 @@ guipages = { -- interactiveguipages
 		guielements.hitboxstate,
 	},
 }
-
 
 if inputDisplayReg then -- if input-display.lua is loaded
 	table.insert(guipages[1], guielements.simpledisplaytoggle)
@@ -860,3 +882,10 @@ if scrollingInputReg then -- scrollingtextsettingsinputpopup
 	local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
 	guipages.scrollingtextsettingssizepopup = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)
 end
+
+local playerrecelements = {
+					{text = "P1", selectfunc = function() return function() recording.replayP1=true recording.replayP2=false end end},
+					{text = "P2", selectfunc = function() return function() recording.replayP1=false recording.replayP2=true end end},
+					{text = "P1&P2", selectfunc = function() return function() recording.replayP1=true recording.replayP2=true end end},
+				}
+guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrecelements, 144, 55, nil)

@@ -1,3 +1,16 @@
+v0.21.07.23
+
+More general improvements to efficiency for replays.
+Added recording and playback for both players.
+Improvement to randomise system.
+Visual display added to the replay menu for the state of the replay slots.
+
+Added support for Asura Blade (asurabld) (Thanks to Bee-Chan)
+Added support for Kizuna Encounter (kizuna) (Thanks to Bee-Chan)
+Added support for Martial Masters (martmast) (Thanks to Bee-Chan)
+Added support for Mobile Suit Gundam Ex Revue (gundamex) (Thanks to Bee-Chan)
+Added support for Rabbit (rabbit) (Thanks to Bee-Chan)
+
 v0.21.07.09
 
 Reduced memory footprint with replays and fixed some bugs.

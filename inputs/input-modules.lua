@@ -433,7 +433,7 @@ table.insert(inp,{games,i})
 --------------------------------------------------------------------------------
 --Fuuki FG-3
 
-games = {"asurabus"}
+games = {"asurabld","asurabus"}
 x,dx = 0x10,0xe0
 y,dy = 0xc8,0
 i = {}
