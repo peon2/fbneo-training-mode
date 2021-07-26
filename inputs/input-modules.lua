@@ -291,7 +291,7 @@ table.insert(inp,{games,i})
 --------------------------------------------------------------------------------
 --Banpresto
 
-games = {"dbz2","gundamex"}
+games = {"dbz2","gundamex","tkdensho"}
 x,dx = 0x10,0xe0
 y,dy = 0xc8,0
 i = {}
