@@ -148,6 +148,8 @@ Super Gem Fighter
 
 Super Street Fighter 2X - Grand Master Challenge
 
+Tōkidenshō Angel Eyes
+
 Vampire Hunter
 
 Voltage Fighter Gowcaizer
