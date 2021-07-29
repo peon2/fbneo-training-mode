@@ -12,7 +12,7 @@ local p2health = 0x200534
 
 local p1combocounter = 0x2004A0
 
-
+local p2combocounter = 0x200530
 
 
 
@@ -61,8 +61,16 @@ gamedefaultconfig = {
 	},
 }
 
+function playerOneFacingLeft()
+	return rb(0x2004F4) == 0
+end
+
 function playerTwoFacingLeft()
 	return rb(0x2004F4) == 0
+end
+
+function playerOneInHitstun()
+	return rb(p2combocounter) ~= 0
 end
 
 function playerTwoInHitstun()
