@@ -115,10 +115,16 @@ function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
 end
 
+local function stunMeter()
+	P2StunMeter = rb(0x102365)
+	gui.text(147,67, "Stun: " ..P2StunMeter, "green")
+end
+
 function infiniteTime()
 	memory.writeword(0x106B11, 0x3CFF)
 end
 
 function Run() -- runs every frame
+	stunMeter()
 	infiniteTime()
 end
