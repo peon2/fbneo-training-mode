@@ -61,6 +61,10 @@ gamedefaultconfig = {
 	},
 }
 
+function playerOneFacingleft()
+	return rb(0xFF1C25) == 0
+end
+
 function playerTwoFacingLeft()
 	return rb(0xFF2025) == 0
 end
