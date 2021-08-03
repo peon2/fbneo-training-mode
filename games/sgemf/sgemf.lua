@@ -24,24 +24,24 @@ local p1direction = 0xFF840b
 local p2direction = 0xFF880b
 
 translationtable = {
-	"coin",
-	"start",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
-	["Coin"] = 1,
-	["Start"] = 2,
+	"coin",
+	"start",
+	["Left"] = 1,
+	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
-	["Punch"] = 7,
-	["Kick"] = 8,
-	["Special"] = 9,
+	["Punch"] = 5,
+	["Kick"] = 6,
+	["Special"] = 7,
+	["Coin"] = 8,
+	["Start"] = 9,
 }
 
 gamedefaultconfig = {

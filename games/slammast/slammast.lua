@@ -13,24 +13,24 @@ print "Only supports P1 and P2"
 print ""
 
 translationtable = {
-	"coin",
-	"start",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
-	["Coin"] = 1,
-	["Start"] = 2,
+	"coin",
+	"start",
+	["Left"] = 1,
+	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
-	["Attack"] = 7,
-	["Jump"] = 8,
-	["Pin"] = 9,
+	["Attack"] = 5,
+	["Jump"] = 6,
+	["Pin"] = 7,
+	["Coin"] = 8,
+	["Start"] = 9,
 }
 
 gamedefaultconfig = {

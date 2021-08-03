@@ -20,24 +20,24 @@ local p1meter = 0x605123
 local p2meter = 0x60518f
 
 translationtable = {
-	"coin",
-	"start",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
-	["Coin"] = 1,
-	["Start"] = 2,
-	["Up"] = 3,
-	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
+	"coin",
+	"start",
+	["Left"] = 3,
+	["Right"] = 4,
+	["Up"] = 5,
+	["Down"] = 6,
 	["Fire 1"] = 7,
 	["Fire 2"] = 8,
 	["Fire 3"] = 8,
+	["Coin"] = 9,
+	["Start"] = 10,
 }
 
 gamedefaultconfig = {

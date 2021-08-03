@@ -289,9 +289,9 @@ end
 table.insert(inp,{games,i})
 
 --------------------------------------------------------------------------------
---Banpresto
+--Banpresto & Rabbit
 
-games = {"dbz2","gundamex","tkdensho"}
+games = {"dbz2","gundamex","tkdensho","rabbit"}
 x,dx = 0x10,0xe0
 y,dy = 0xc8,0
 i = {}

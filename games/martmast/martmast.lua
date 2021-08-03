@@ -17,32 +17,29 @@ local p2meter = 0x80DC5D
 local p1stocks = 0x80DA99
 local p2stocks = 0x80DC55
 
-
-
-
 translationtable = {
-	"coin",
-	"start",
-	"select",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
 	"button4",
-	["Coin"] = 1,
-	["Start"] = 2,
-	["Select"] = 3,
-	["Up"] = 4,
-	["Down"] = 5,
-	["Left"] = 6,
-	["Right"] = 7,
-	["Button 1"] = 8,
-	["Button 2"] = 9,
-	["Button 3"] = 10,
-	["Button 4"] = 11,
+	"coin",
+	"start",
+	"select",
+	["Left"] = 1,
+	["Right"] = 2,
+	["Up"] = 3,
+	["Down"] = 4,
+	["Button A"] = 5,
+	["Button B"] = 6,
+	["Button C"] = 7,
+	["Button D"] = 8,
+	["Coin"] = 9,
+	["Start"] = 10,
+	["Select"] = 11,
 }
 
 gamedefaultconfig = {

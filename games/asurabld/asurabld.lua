@@ -16,24 +16,24 @@ local p1combocounter = 0x4041E7
 local p2combocounter = 0x40470B
 
 translationtable = {
-	"coin",
-	"start",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
-	["Coin"] = 1,
-	["Start"] = 2,
+	"coin",
+	"start",
+	["Left"] = 1,
+	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
-	["Button 1"] = 7,
-	["Button 2"] = 8,
-	["Button 3"] = 9,
+	["Button A"] = 5,
+	["Button B"] = 6,
+	["Button C"] = 7,
+	["Coin"] = 8,
+	["Start"] = 9,
 }
 
 gamedefaultconfig = {

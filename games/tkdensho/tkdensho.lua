@@ -12,33 +12,29 @@ local p2health = 0x200534
 
 local p1combocounter = 0x2004A0
 
-
-
-
-
 translationtable = {
-	"coin",
-	"start",
-	"select",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
 	"button4",
-	["Coin"] = 1,
-	["Start"] = 2,
-	["Select"] = 3,
-	["Up"] = 4,
-	["Down"] = 5,
-	["Left"] = 6,
-	["Right"] = 7,
-	["Button 1"] = 8,
-	["Button 2"] = 9,
-	["Button 3"] = 10,
-	["Button 4"] = 11,
+	"coin",
+	"start",
+	"select",
+	["Left"] = 1,
+	["Right"] = 2,
+	["Up"] = 3,
+	["Down"] = 4,
+	["Button 1"] = 5,
+	["Button 2"] = 6,
+	["Button 3"] = 7,
+	["Button 4"] = 8,
+	["Coin"] = 9,
+	["Start"] = 10,
+	["Select"] = 11,
 }
 
 gamedefaultconfig = {

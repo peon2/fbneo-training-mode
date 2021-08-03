@@ -13,26 +13,26 @@ print "Inconsistent combo counter"
 print ""
 
 translationtable = {
-	"coin",
-	"start",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
 	"button4",
-	["Coin"] = 1,
-	["Start"] = 2,
+	"coin",
+	"start",
+	["Left"] = 1,
+	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
-	["Low Attack"] = 7,
-	["High Attack"] = 8,
-	["Boost"] = 9,
-	["Weapon"] = 10,
+	["Low Attack"] = 5,
+	["High Attack"] = 6,
+	["Boost"] = 7,
+	["Weapon"] = 8,
+	["Coin"] = 9,
+	["Start"] = 10,
 }
 
 gamedefaultconfig = {

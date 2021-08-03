@@ -339,6 +339,16 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		
 		},
 	},
+	replayeditortoggle = {
+		text = "Replay Editor",
+		x = 13,
+		y = 135,
+		olcolour = "black",
+		info = {
+			"View and set replay inputs",
+		},
+		func = 	function() toggleReplayEditor() end,
+	},
 	hitboxsettings = {
 		text = "Change hitbox settings",
 		x = 40,
@@ -684,6 +694,11 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 	table.insert(guipages[4], guielements.hitplayback.main)
 end
 
+if modulevars.constants.translationtable then -- replay editor
+	table.insert(guipages[4], guielements.replayeditortoggle)
+end
+
+
 if fexists("games/"..dirname.."/guipages.lua") then
 	dofile("games/"..dirname.."/guipages.lua")
 	table.insert(guipages, guicustompage)
@@ -814,6 +829,7 @@ if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer an
 	guipages.p2metermax = createScrollingBar(guipages[2], 144, 150, 0, modulevars.p2.constants.maxmeter, uf, interactivegui.boxxlength/2)
 end
 
+
 do -- coininputleniency
 	local Elements = {
 		{text = "10"},
@@ -862,6 +878,7 @@ do -- recordingslot
 	end					
 	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
 end
+
 
 if scrollingInputReg then -- scrollingtextsettingsinputpopup
 	local Elements = {
