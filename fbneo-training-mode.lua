@@ -6,7 +6,7 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.08"
+FBNEO_TRAINING_MODE_VERSION = "v0.21.08.06"
 
 local fc = emu.framecount()
 
@@ -818,6 +818,16 @@ drawReplayInfo = function()
 	end
 end
 
+replaySave = function()
+	assert(table.save(recording[recording.recordingslot],"replay.lua")==nil, "Can't save replay file")
+end
+
+replayLoad = function()
+	if fexists("replay.lua") then
+		recording[recording.recordingslot]=table.load("replay.lua")
+	end
+end
+
 if fexists("guipages.lua") then
 	dofile("guipages.lua")
 	interactiveguipages = guipages
@@ -1137,9 +1147,11 @@ local combinePlayerInputs = function(P1, P2, other)
 	return t
 end
 
-local toggleSwapInputs = function(bool)
+local toggleSwapInputs = function(bool, vargs)
 	if bool==nil then inputs.properties.enableinputswap = not inputs.properties.enableinputswap
 	else inputs.properties.enableinputswap = bool end
+	if vargs then vargs.swapinputs = false end
+	toggleStates(vargs)
 end
 
 local swapInputs = function()
@@ -1300,21 +1312,25 @@ local Unserialise = function(inputs, _stable, constants) -- takes inputs (record
 	end
 end
 
-local toggleRecording = function(bool)
+local toggleRecording = function(bool, vargs)
 
 	if interactivegui.movehud then return end
-	recording.playback = false
-	interactivegui.replayeditorenabled = false
+
+	if vargs then vargs.recording = false end
+	toggleStates(vargs)
+
+	--recording.playback = false
+	--interactivegui.replayeditorenabled = false
 
 	if bool==nil then recording.enabled = not recording.enabled
 	else recording.enabled = bool end
-	
+
 	recording.swapplayers = not recording.replayP1
-	
+
 	if recording.swapplayers then
-		toggleSwapInputs(recording.enabled)
+		toggleSwapInputs(recording.enabled, vargs)
 	else
-		toggleSwapInputs(false)
+		toggleSwapInputs(false, vargs)
 	end
 
 	if recording.enabled then
@@ -1327,6 +1343,7 @@ local toggleRecording = function(bool)
 		recording[recording.recordingslot].constants = joypad.get()
 	else
 		local recordslot = recording[recording.recordingslot]
+		if not recordslot[1].raw.p1 and not recordslot[1].raw.p2 then return end -- nothing to do past here
 		if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
 			recording[recording.recordingslot] = {}
 		else
@@ -1417,14 +1434,11 @@ local tableList = function()
 	return tab
 end
 
-local togglePlayBack = function(bool)
-	local temp = recording.playback
-	if recording.enabled then toggleRecording(false) end
-	if inputs.properties.enableinputswap then toggleSwapInputs(false) end
-	interactivegui.replayeditorenabled = false
-	recording.playback = temp -- make sure its not overwritten
-
+local togglePlayBack = function(bool, vargs)
 	if interactivegui.movehud then return end
+	
+	if vargs then vargs.playback = false end
+	toggleStates(vargs)
 	
 	local recordslot = recording[recording.recordingslot]
 	if not recordslot then return end
@@ -1647,14 +1661,11 @@ local drawHelp = function()
 end
 
 local toggleInteractiveGuiEnabled = function(bool)
-	interactivegui.replayeditorenabled = false
-	recording.playback = false
-	recording.hitplayback = false
-	recording.enabled = false
-	interactivegui.movehud = false
+	
+	if vargs then vargs.interactiveguienabled = false end
+	toggleStates(vargs)
 	if not recording[recording.recordingslot] then recording[recording.recordingslot] = {} end
 	recording[recording.recordingslot].framestart = nil
-	inputs.properties.enableinputswap = false
 
 	if bool==nil then interactivegui.enabled = not interactivegui.enabled
 	else interactivegui.enabled = bool end
@@ -1862,13 +1873,13 @@ local parseGUIInputs = function()
 			guiinputs.P1.coinpresscount = 0
 		end
 		if guiinputs.P1.coinpresscount == 1 then
-			togglePlayBack()
+			togglePlayBack(nil, {})
 		elseif guiinputs.P1.coinpresscount == 2 then
-			toggleRecording()
+			toggleRecording(nil, {})
 		elseif guiinputs.P1.coinpresscount == 3 then
-			toggleSwapInputs()
+			toggleSwapInputs(nil, {})
 		else
-			toggleInteractiveGuiEnabled()
+			toggleInteractiveGuiEnabled(nil, {})
 		end
 		guiinputs.P1.coinframestart = 0
 		guiinputs.P1.coinpresscount = 0
@@ -1929,12 +1940,13 @@ local HUDElements = {}
 
 toggleMoveHUD = function(bool)
 	if #HUDElements==0 then return end
-	toggleInteractiveGuiEnabled(false)
-	interactivegui.movehud = bool
-	interactivegui.movehudselected = false
+	
+	if vargs then vargs.movehud = false end
+	toggleStates(vargs)
 	if bool then interactivegui.movehud = true guiinputs.P1.previousinputs.button1 = true -- stop double pressing
 	elseif bool == false then interactivegui.movehud = false
 	else interactivegui.movehud = not interactivegui.movehud end
+	interactivegui.movehudselected = false
 
 	inputs.properties.p1freeze = interactivegui.movehud
 	inputs.properties.p2freeze = interactivegui.movehud
@@ -2067,15 +2079,13 @@ end
 
 toggleReplayEditor = function(bool)
 	-- need state switching
-	recording.playback = false
-	recording.hitplayback = false
-	recording.enabled = false
-	interactivegui.enabled = false
-	interactivegui.movehud = false
-	recording.autoturn = false
-	inputs.properties.enableinputswap = false
+	
 	if bool==nil then interactivegui.replayeditor.enabled = not interactivegui.replayeditor.enabled 
 	else interactivegui.replayeditor.enabled=bool end
+	
+	if vargs then vargs.replayeditor = false end
+	toggleStates(vargs)
+	
 	inputs.properties.p1freeze = interactivegui.replayeditor.enabled
 	inputs.properties.p2freeze = interactivegui.replayeditor.enabled
 	
@@ -2090,6 +2100,7 @@ toggleReplayEditor = function(bool)
 			Unserialise(interactivegui.replayeditor.inputs[i], recordslot._stable, recordslot.constants) -- should be able to do these in one and buffer it
 		end
 	else
+		if not interactivegui.replayeditor.inputs then return end
 		if not interactivegui.replayeditor.inputs[1] then return end
 		if not interactivegui.replayeditor.changed then return end
 		recordslot.constants = joypad.get()
@@ -2149,8 +2160,8 @@ local drawReplayEditor = function()
 	helpElements = {"SET", "COPY", "EXIT"}
 	
 	if not interactivegui.replayeditor.framestart then -- if we're not taking input
-		if guiinputs.P1.upframecount == 1 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe-1 end
-		if guiinputs.P1.downframecount == 1 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+1 end
+		if guiinputs.P1.upframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe-hudworkingframes(guiinputs.P1.upframecount) end
+		if guiinputs.P1.downframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+hudworkingframes(guiinputs.P1.upframecount) end
 		if guiinputs.P1.button1 and not guiinputs.P1.previousinputs.button1 then interactivegui.replayeditor.framestart = fc end -- starts the timer
 		if guiinputs.P1.button2 and not guiinputs.P1.previousinputs.button2 and reinputs[interactivegui.replayeditor.editframe] then -- something to copy
 			reinputs[interactivegui.replayeditor.editframe+1] = {raw={p1={}, p2={}}}
@@ -2214,6 +2225,16 @@ local drawReplayEditor = function()
 			end
 		end
 	end
+end
+
+toggleStates = function(vargs) -- nil = false, true = true, false = skip
+	if vargs == nil then return end -- bad argument
+	if vargs["swapinputs"]==nil then toggleSwapInputs(false, vargs) elseif vargs["swapinputs"] then toggleSwapInputs(true, vargs) end
+	if vargs["recording"]==nil then toggleRecording(false, vargs) elseif vargs["recording"] then toggleRecording(true, vargs) end
+	if vargs["playback"]==nil then togglePlayBack(false, vargs) elseif vargs["playback"] then togglePlayBack(true, vargs) end
+	if vargs["interactiveguienabled"]==nil then toggleInteractiveGuiEnabled(false, vargs) elseif vargs["interactiveguienabled"] then toggleInteractiveGuiEnabled(true, vargs) end
+	if vargs["movehud"]==nil then toggleMoveHUD(false, vargs) elseif vargs["movehud"] then toggleMoveHUD(true, vargs) end
+	if vargs["replayeditor"]==nil then toggleReplayEditor(false, vargs) elseif vargs["replayeditor"] then toggleReplayEditor(true, vargs) end
 end
 
 setRegisters = function() -- pre-calc stuff

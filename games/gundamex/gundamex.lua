@@ -10,6 +10,8 @@ local p2health = 0x2045BF
 
 local p1combocounter = 0x2035E7
 
+local p2combocounter = 0x2035E9
+
 translationtable = {
 	"left",
 	"right",
@@ -55,6 +57,10 @@ function playerTwoFacingLeft()
 	return rb(0x203F3A) == 0
 end
 
+function playerOneInHitstun()
+	return rb(p2combocounter) ~= 0
+end
+
 function playerTwoInHitstun()
 	return rb(p1combocounter) ~= 0
 end
@@ -77,7 +83,7 @@ end
 
 function infiniteTime()
 	memory.writebyte(0x2035A3,0x9B)
-    memory.writebyte(0x2035A2,0x0B)
+	memory.writebyte(0x2035A2,0x0B)
 end
 
 function maxCredits()

@@ -339,10 +339,20 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		
 		},
 	},
+	replaysaveload = {
+		text = "Save/Load",
+		x = 29,
+		y = 135,
+		olcolour = "black",
+		info = {
+			"Save and Load replays (current slot)"
+		},
+		func = function() CIG("replaysaveload", 1) end,
+	},
 	replayeditortoggle = {
 		text = "Replay Editor",
 		x = 13,
-		y = 135,
+		y = 150,
 		olcolour = "black",
 		info = {
 			"View and set replay inputs",
@@ -694,6 +704,10 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 	table.insert(guipages[4], guielements.hitplayback.main)
 end
 
+if availablefunctions.tablesave and availablefunctions.tableload then
+	table.insert(guipages[4], guielements.replaysaveload)
+end
+
 if modulevars.constants.translationtable then -- replay editor
 	table.insert(guipages[4], guielements.replayeditortoggle)
 end
@@ -829,7 +843,6 @@ if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer an
 	guipages.p2metermax = createScrollingBar(guipages[2], 144, 150, 0, modulevars.p2.constants.maxmeter, uf, interactivegui.boxxlength/2)
 end
 
-
 do -- coininputleniency
 	local Elements = {
 		{text = "10"},
@@ -850,7 +863,7 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 		{},
 		{},
 		{},
-		{y = 75, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
+		{y = 90, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
 	}
 	local rf = function(n) return function() recording.hitslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
 	local af = function(n) return
@@ -862,23 +875,30 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 		end
 	end
 	end
-	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, 85, nil)
+	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, 100, nil)
+end
+
+do -- replaysaveload
+	local Elements = {
+		{text = "Save", releasefunc = function() return function() replaySave() CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
+		{text = "Load", releasefunc = function() return function() replayLoad() CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
+	}
+	guipages.replaysaveload = createPopUpMenu(guipages[4], nil, nil, nil, Elements, 72, 135)
 end
 
 do -- recordingslot
 	local rf = function(n) return function() recording.recordingslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
 	local af = function(n) return
-	function(this)
-		if recording[n][1] then -- if something is in the slot 
-			this.textcolour = "yellow"
-		else
-			this.textcolour = "white"
+		function(this)
+			if recording[n][1] then -- if something is in the slot 
+				this.textcolour = "yellow"
+			else
+				this.textcolour = "white"
+			end
 		end
-	end
 	end					
 	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
 end
-
 
 if scrollingInputReg then -- scrollingtextsettingsinputpopup
 	local Elements = {

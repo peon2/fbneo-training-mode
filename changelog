@@ -1,3 +1,10 @@
+v0.21.08.06
+
+Small replay fixes and inner tune-ups.
+Added a new proof of concept Save and Load system for replays: 
+	Save outputs whichever slot is selected to "replay.lua" in your training mode folder. 
+	Load will copy in "replay.lua" to your selected slot.
+
 v0.21.08
 
 Added a replay editor.

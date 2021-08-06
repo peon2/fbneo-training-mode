@@ -12,6 +12,8 @@ local p2health = 0x200534
 
 local p1combocounter = 0x2004A0
 
+local p2combocounter = 0x200530
+
 translationtable = {
 	"left",
 	"right",
@@ -42,13 +44,13 @@ gamedefaultconfig = {
 		combotextx=145,
 		combotexty=39,
 		comboenabled=true,
-        p1healthx=18,
+		p1healthx=18,
 		p1healthy=20,
 		p1healthenabled=true,
 		p2healthx=290,
 		p2healthy=20,
 		p2healthenabled=true,
-        p1meterx=100,
+		p1meterx=100,
 		p1metery=208,
 		p1meterenabled=true,
 		p2meterx=214,
@@ -57,8 +59,16 @@ gamedefaultconfig = {
 	},
 }
 
+function playerOneFacingLeft()
+	return rb(0x20065E) == 0xFF
+end
+
 function playerTwoFacingLeft()
 	return rb(0x2004F4) == 0
+end
+
+function playerOneInHitstun()
+	return rb(p2combocounter) ~= 0
 end
 
 function playerTwoInHitstun()
