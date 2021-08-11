@@ -1343,17 +1343,17 @@ local toggleRecording = function(bool, vargs)
 		recording[recording.recordingslot].constants = joypad.get()
 	else
 		local recordslot = recording[recording.recordingslot]
-		if not recordslot[1].raw.p1 and not recordslot[1].raw.p2 then return end -- nothing to do past here
+		if not recordslot[1] or not recordslot[1].raw or not recordslot[1].raw.p1 or not recordslot[1].raw.p2 then return end -- nothing to do past here
 		if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
 			recording[recording.recordingslot] = {}
 		else
 			if not recordslot.p1start then recordslot.p1start = #recordslot	end
 			if not recordslot.p2start then recordslot.p2start = #recordslot	end
 			for i=#recordslot,recordslot.p1start,-1 do
-				recordslot[i].raw.p1.Coin = false -- clear coin
+				if recordslot[i].raw.p1 then recordslot[i].raw.p1.Coin = false end-- clear coin
 			end
 			for i=#recordslot,recordslot.p2start,-1 do
-				recordslot[i].raw.p2.Coin = false -- clear coin
+				if recordslot[i].raw.p2 then recordslot[i].raw.p2.Coin = false end -- clear coin
 			end
 			serialiseInit(recordslot)
 			serialise(recordslot)
