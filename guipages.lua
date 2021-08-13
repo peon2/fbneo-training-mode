@@ -289,7 +289,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			"Move and hide parts of the HUD",
 		},
 		func = 	function()
-					toggleMoveHUD(true)
+					toggleMoveHUD(true, {})
 				end,
 	},
 	coininputleniency = {
@@ -357,7 +357,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		info = {
 			"View and set replay inputs",
 		},
-		func = 	function() toggleReplayEditor() end,
+		func = 	function() toggleReplayEditor(nil, {}) end,
 	},
 	hitboxsettings = {
 		text = "Change hitbox settings",
