@@ -6,53 +6,73 @@ p2maxhealth = 0x78
 p1maxmeter = 0x80
 p2maxmeter = 0x80
 
+local p1direction = 0x100458
+local p2direction = 0x100558
+
 print "Known Issues: with garou"
-print "Combo counter doesn't work"
-print "Total just adds every hits damage whether it combos or not"
 print "hitboxes don't currently work"
 print ""
 
 translationtable = {
-	"left",
-	"right",
+	"coin",
+	"start",
+	"select",
 	"up",
 	"down",
+	"left",
+	"right",
 	"button1",
 	"button2",
 	"button3",
 	"button4",
-	"coin",
-	"start",
-	"select",
-	["Left"] = 1,
-	["Right"] = 2,
-	["Up"] = 3,
-	["Down"] = 4,
-	["Button A"] = 5,
-	["Button B"] = 6,
-	["Button C"] = 7,
-	["Button D"] = 8,
-	["Coin"] = 9,
-	["Start"] = 10,
-	["Select"] = 11,
+	["Coin"] = 1,
+	["Start"] = 2,
+	["Select"] = 3,
+	["Up"] = 4,
+	["Down"] = 5,
+	["Left"] = 6,
+	["Right"] = 7,
+	["Button A"] = 8,
+	["Button B"] = 9,
+	["Button C"] = 10,
+	["Button D"] = 11,
 }
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=22,
+		combotextx=145,
+		combotexty=40,
+		comboenabled=true,
+		p1healthx=6,
 		p1healthy=16,
 		p1healthenabled=true,
-		p2healthx=288,
+		p2healthx=303,
 		p2healthy=16,
 		p2healthenabled=true,
-		p1meterx=77,
+		p1meterx=90,
 		p1metery=208,
 		p1meterenabled=true,
-		p2meterx=232,
+		p2meterx=222,
 		p2metery=208,
 		p2meterenabled=true,
 	},
 }
+
+function playerOneFacingLeft()
+	return rb(p1direction)==0
+end
+
+function playerTwoFacingLeft()
+	return rb(p2direction)==0
+end
+
+function playerOneInHitstun()
+	return rb(0x10a39D)~=0
+end
+
+function playerTwoInHitstun()
+	return rb(0x10a39C)~=0 
+end
 
 function readPlayerOneHealth()
 	return rb(0x10048E)
