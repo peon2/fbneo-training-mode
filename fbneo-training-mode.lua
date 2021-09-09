@@ -18,6 +18,7 @@ local games = {
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
 	asurabld = {"asurabld", iconfile = "icons-asurabus-32.png"},
 	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
+	avengrgs = {"avengrgs", iconfile = "icons-banpresto-32.png"},
 	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
