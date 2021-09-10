@@ -15,7 +15,6 @@ print("Press " .. (input.registerhotkey and "Lua hotkey 5" or recordkey) .. " to
 print()
 ]]--
 
-require "gd"
 local minimum_tile_size, maximum_tile_size = 4, 16
 local icon_size, image_icon_size = inputs.properties.scrollinginput.iconsize
 local thisframe, lastframe, module, keyset, changed = {}, {}
@@ -119,7 +118,6 @@ local function readimages()
 	effective_width = scaled_width
 end
 readimages()
-
 ----------------------------------------------------------------------------------------------------
 -- update functions
 
