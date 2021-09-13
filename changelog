@@ -4,6 +4,9 @@ Many bug fixes/crash fixes.
 More features added to the replay editor.
 Fixes to garou.
 
+Looping recordings will now properly randomise.
+Fixed bug not setting input properly in the replay editor.
+
 v0.21.08.13
 
 Many bug fixes.
