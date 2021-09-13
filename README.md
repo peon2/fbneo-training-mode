@@ -34,6 +34,8 @@ Breakers Revenge
 
 Cyberbots
 
+Dan-Ku-Ga
+
 Daraku Tenshi
 
 Dino Rex
