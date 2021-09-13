@@ -69,6 +69,7 @@ gamedefaultconfig = {
 	},
 }
 
+
 function playerOneFacingLeft()
 	return rb(0x412AE0) == 2
 end
@@ -126,6 +127,7 @@ end
 function maxCredits()
 	memory.writebyte(0x40E175, 0x09)
 end
+
 
 function Run() -- runs every frame
 	infiniteTime()
