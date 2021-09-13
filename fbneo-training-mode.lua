@@ -6,7 +6,9 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
-FBNEO_TRAINING_MODE_VERSION = "v0.21.08.13"
+require "gd"
+
+FBNEO_TRAINING_MODE_VERSION = "v0.21.09"
 
 local fc = emu.framecount()
 
@@ -220,15 +222,14 @@ nbuttons = 0 -- makes calcs easier to already have this
 
 if fexists("games/"..dirname.."/"..dirname..".lua") then
 	dofile("games/"..dirname.."/"..dirname..".lua")
-	local s = 1
-	local e = 1
-	for i,v in ipairs(translationtable) do
-		e = e+1
-		if v == "button1" then	s = i end
-	end
-	nbuttons = e-s
+	local i = 5
+	while (translationtable[i]:sub(1,6)=="button") do nbuttons = nbuttons+1 i=i+1 end
 else
 	print("Memory addresses not found for "..rom)
+end
+
+if nbuttons == 0 then
+	print("No buttons found for "..rom)
 	print "Attempting to make a translationtable from defaults"
 	-- try to make a translation table
 
@@ -412,7 +413,7 @@ interactivegui = {
 	movehud = false,
 	movehudselected = false,
 	movehudselection = 1,
-	replayeditor = {},
+	replayeditor = {inputs = {}},
 }
 
 modulevars = {
@@ -1633,12 +1634,12 @@ if scrollingInputReg then -- if there's a scrolling input file loaded
 		icons[16][i-4] = icons[16][i-4]:gdStr()
 	end
 	
-	for i = 1,4 do
+	for i = 1,nbuttons do
 		helpButtons[i] = icons[16][i+4]
 		y=y+32
 	end
 else -- otherwise use these defaults
-	for i = 1,4 do
+	for i = 1,nbuttons do
 		helpButtons[i] = gd.createFromPng("resources/info/"..i..".png")
 		helpButtons[i] = helpButtons[i]:gdStr()
 	end
@@ -1657,6 +1658,28 @@ local buttonHandlerInputs = {
 	["button10"] = 10,
 }
 
+local moreButtonsButtonHandler = 
+{	name="MORE",
+	button="button"..(nbuttons-1),
+	func = function(but)
+		if not (guiinputs.P1[but] and not guiinputs.P1.previousinputs[but]) then return end
+		if nbuttons+helpElements.block*(nbuttons-2) >= #helpElements then helpElements.block = 0 end
+		for i = 1, nbuttons-2 do -- space for more and back
+			local temp = helpElements[i]
+			local offset = helpElements.block*(nbuttons-2) + i + nbuttons
+			helpElements[i] = {} -- clear
+			if not (offset > #helpElements) and next(helpElements[offset]) then
+				helpElements[i] = helpElements[offset]
+				helpElements[i].button = i -- make sure the buttons are set up right
+				helpElements[i].buttonnum = "button"..i
+				helpElements.len = i+2
+			end
+			helpElements[offset] = temp
+		end
+		helpElements.block = helpElements.block+1
+	end
+}
+
 local buttonHandler = function(t)
 	--[[
 		t={
@@ -1666,24 +1689,59 @@ local buttonHandler = function(t)
 			.
 			.
 			.
-			func
+			funcs = {... = (), other = ()}
 			len
 		}
 	--]]
 
-	if not t.len then t.len = #t end
-	
-	if t.func then t.func(t) end
-
-	helpElements.len = t.len
-	for i = 1, t.len do
-		helpElements[i]={name=t[i].name, button=buttonHandlerInputs[t[i].button]}
+	if not t[1].button then t[1].button = "button1" end -- just in case
+		
+	for i = 1, #t.funcs do
+		if not t[i] then t[i] = {name = " "} end
+		if not t[i].button then t[i].button = "button"..(tonumber(t[i-1].button:sub(7))+1) end
 	end
+	
+	t.len = #t
+
+	if not helpElements.more then helpElements.more = 0 end
+	
+	if t.funcs ~= helpElements.funcs then -- new set of buttons
+		helpElements = {}
+
+		t.len=t.len+1 -- space for back
+
+		t[t.len] = {name="BACK", button="button"..nbuttons} -- insert back as the last button
+
+		for i,v in ipairs(t.funcs) do t[i].func=v end -- copy across funcs
+
+		helpElements.more = 0
+		helpElements.block = 0
+		if t.len > nbuttons or #t.funcs > t.len then -- not enough buttons for functions, set up the MORE button
+			local back = t[t.len] -- back button
+			for i = t.len+1, nbuttons, -1 do t[i] = t[i-2] end -- shunt along
+			t[nbuttons] = back -- put back in place
+			t[nbuttons-1] = moreButtonsButtonHandler -- put more in place
+			helpElements.more = 1 -- mark more as being added
+			t.len=t.len+1 -- space for more
+		end
+		helpElements.funcs = t.funcs
+		helpElements.len = t.len
+		for i = 1, helpElements.len do
+			helpElements[i]={name=t[i].name, button=buttonHandlerInputs[t[i].button], buttonnum=t[i].button, func=t[i].func}
+		end
+		if t.funcs.back then
+			helpElements[math.min(nbuttons,helpElements.len)].func = t.funcs.back
+		else
+			helpElements[math.min(nbuttons,helpElements.len)].func = function() toggleStates({}) end -- default for back
+		end
+		if helpElements.len>nbuttons then helpElements.len = nbuttons end
+	end
+	for i=1,nbuttons do if helpElements[i] and helpElements[i].func then helpElements[i].func(helpElements[i].buttonnum) end end -- run all the functions
+	if helpElements.funcs.other then helpElements.funcs.other() end
 end
 
 local drawHelp = function()
 	if not (interactivegui.movehud or interactivegui.enabled or interactivegui.replayeditor.enabled) then return end -- need some sort of state system eventually to make this sort of thing easier
-	if not helpElements.len then helpElements.len = #helpElements end
 	local offset = helpElements.len*9
 	local i,l = 1, helpElements.len
 	while i<=l do
@@ -1698,8 +1756,6 @@ local drawHelp = function()
 		end
 	i=i+1
 	end
-
-	helpElements = {}
 end
 
 local toggleInteractiveGuiEnabled = function(bool)
@@ -1755,36 +1811,42 @@ local interactiveGuiSelectionBack = function()
 	CIG(interactivegui.previouspage, interactivegui.previousselection)
 end
 
-local drawInteractiveGuiFunctions = function(t)
-	if guiinputs.P1[t[1].button] and not guiinputs.P1.previousinputs[t[1].button] then
-		callGuiSelectionFunc()
-	end
+local drawInteractiveGuiFuncs = {
+	function(but)
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			callGuiSelectionFunc()
+		end
+		if not guiinputs.P1[but] and guiinputs.P1.previousinputs[but] then
+			callGuiSelectionReleaseFunc()
+		end
+	end,
 
-	if not guiinputs.P1[t[1].button] and guiinputs.P1.previousinputs[t[1].button] then
-		callGuiSelectionReleaseFunc()
-	end
+	function(but)
+		if guiinputs.P1[but] then
+			interactiveGuiSelectionInfo()
+		end
+	end,
+	
+	back = function(but) 
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- back button
+			interactiveGuiSelectionBack()
+		end
+	end,
 
-	if guiinputs.P1[t[2].button] then
-		interactiveGuiSelectionInfo()
+	other = function() -- runs every frame regardless
+		if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then
+			changeInteractiveGuiSelection(interactivegui.selection-1)
+		elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
+			changeInteractiveGuiSelection(interactivegui.selection+1)
+		end
 	end
-
-	if guiinputs.P1[t[3].button] and not guiinputs.P1.previousinputs[t[3].button] then -- back button
-		interactiveGuiSelectionBack()
-	end
-
-	if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then
-		changeInteractiveGuiSelection(interactivegui.selection-1)
-	elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
-		changeInteractiveGuiSelection(interactivegui.selection+1)
-	end
-
-end
+}
 
 local drawInteractiveGui = function()
 
 	if not interactivegui.enabled then return end
 	
-	local t = {{name="SLCT", button="button1"}, {}, {name="BACK", button="button3"}, func=drawInteractiveGuiFunctions, len=2}
+	local t = {{name="SLCT", button="button1"}, {}, funcs=drawInteractiveGuiFuncs}
 
 	local boxx, boxy, boxx2, boxy2, bgcolour, olcolour, page, selection
 
@@ -1834,7 +1896,7 @@ local drawInteractiveGui = function()
 	end
 
 	-- draws the selected box but with a red outline instead
-	if selection.info then t[2] = {name="INFO", button="button2"} t.len=3 end
+	if selection.info then t[2] = {name="INFO", button="button2"} end
 	if selection.selectfunc then selection.selectfunc() end
 
 	if not selection.x then selection.x = 0 end
@@ -2017,63 +2079,64 @@ local hudworkingframes = function(n) -- get faster the longer it runs
 	return 10
 end
 
-local moveHUDFunctions = function(t)
+local moveHUDFuncs = {
 	
-	local x = HUDElements[interactivegui.movehudselection].x()
-	local y = HUDElements[interactivegui.movehudselection].y()
+	function(but)
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- slct
+			interactivegui.movehudselected = not interactivegui.movehudselected
+		end
+	end,
 	
-	if interactivegui.movehudselected then
-		if guiinputs.P1[t[1].button] and not guiinputs.P1.previousinputs[t[1].button] then -- off
-			interactivegui.movehudselected = false
+	function(but)
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- hide
+			local enabled = HUDElements[interactivegui.movehudselection].enabled()
+			if enabled==nil then enabled=false end
+			HUDElements[interactivegui.movehudselection].enabled(not enabled)
 		end
-
-		local d = 0
-		local pos
-		if guiinputs.P1.left then
-			d = hudworkingframes(guiinputs.P1.leftframecount)*-1
-			pos = HUDElements[interactivegui.movehudselection].x(x+d)
-			if (pos < 0) then HUDElements[interactivegui.movehudselection].x(interactivegui.sw) end -- stay in bounds
-		elseif guiinputs.P1.right then
-			d = hudworkingframes(guiinputs.P1.rightframecount) 
-			pos = HUDElements[interactivegui.movehudselection].x(x+d)
-			if (pos > interactivegui.sw) then HUDElements[interactivegui.movehudselection].x(0) end -- stay in bounds
-		end
-
-		if guiinputs.P1.up then
-			d = hudworkingframes(guiinputs.P1.upframecount)*-1
-			pos = HUDElements[interactivegui.movehudselection].y(y+d)
-			if (pos < 0) then HUDElements[interactivegui.movehudselection].y(interactivegui.sh) end -- stay in bounds
-		elseif guiinputs.P1.down then
-			d = hudworkingframes(guiinputs.P1.downframecount) 
-			pos = HUDElements[interactivegui.movehudselection].y(y+d)
-			if (pos > interactivegui.sh) then HUDElements[interactivegui.movehudselection].y(0) end -- stay in bounds
-		end
-	else
-		if guiinputs.P1[t[1].button] and not guiinputs.P1.previousinputs[t[1].button] then -- on
-			interactivegui.movehudselected = true
-			return
-		end
-
-		if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then -- switch through different elements
-			interactivegui.movehudselection = interactivegui.movehudselection-1
-			if interactivegui.movehudselection < 1 then interactivegui.movehudselection = #HUDElements end
-		elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
-			interactivegui.movehudselection = interactivegui.movehudselection+1
-			if interactivegui.movehudselection > #HUDElements then interactivegui.movehudselection = 1 end
-		end
-	end
+	end,
 	
-	if guiinputs.P1[t[2].button] and not guiinputs.P1.previousinputs[t[2].button] then -- hide
-		local enabled = HUDElements[interactivegui.movehudselection].enabled()
-		if enabled==nil then enabled=false end
-		HUDElements[interactivegui.movehudselection].enabled(not enabled)
-	end
+	back = function(but)
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- back
+			toggleMoveHUD(false)
+		end
+	end,
+	
+	other = function()
+		local x = HUDElements[interactivegui.movehudselection].x()
+		local y = HUDElements[interactivegui.movehudselection].y()
+		if interactivegui.movehudselected then 
+			local d = 0
+			local pos
+			if guiinputs.P1.left then
+				d = hudworkingframes(guiinputs.P1.leftframecount)*-1
+				pos = HUDElements[interactivegui.movehudselection].x(x+d)
+				if (pos < 0) then HUDElements[interactivegui.movehudselection].x(interactivegui.sw) end -- stay in bounds
+			elseif guiinputs.P1.right then
+				d = hudworkingframes(guiinputs.P1.rightframecount) 
+				pos = HUDElements[interactivegui.movehudselection].x(x+d)
+				if (pos > interactivegui.sw) then HUDElements[interactivegui.movehudselection].x(0) end -- stay in bounds
+			end
 
-	if guiinputs.P1[t[3].button] and not guiinputs.P1.previousinputs[t[3].button] then -- back
-		toggleMoveHUD(false)
-		return
-	end
-end
+			if guiinputs.P1.up then
+				d = hudworkingframes(guiinputs.P1.upframecount)*-1
+				pos = HUDElements[interactivegui.movehudselection].y(y+d)
+				if (pos < 0) then HUDElements[interactivegui.movehudselection].y(interactivegui.sh) end -- stay in bounds
+			elseif guiinputs.P1.down then
+				d = hudworkingframes(guiinputs.P1.downframecount) 
+				pos = HUDElements[interactivegui.movehudselection].y(y+d)
+				if (pos > interactivegui.sh) then HUDElements[interactivegui.movehudselection].y(0) end -- stay in bounds
+			end
+		else
+			if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then -- switch through different elements
+				interactivegui.movehudselection = interactivegui.movehudselection-1
+				if interactivegui.movehudselection < 1 then interactivegui.movehudselection = #HUDElements end
+			elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
+				interactivegui.movehudselection = interactivegui.movehudselection+1
+				if interactivegui.movehudselection > #HUDElements then interactivegui.movehudselection = 1 end
+			end
+		end
+	end,
+}
 
 local moveHUD = function()
 
@@ -2081,7 +2144,7 @@ local moveHUD = function()
 
 	-- pick different hud elements, hook them up to changeconfig
 
-	t = {len=3, func = moveHUDFunctions, {name="SLCT", button="button1"}, {name="HIDE", button="button2"}, {name="EXIT", button="button3"}}
+	t = {{name="SLCT", button="button1"}, {name="HIDE", button="button2"}, funcs=moveHUDFuncs}
 
 	local col = 0xff8000ff -- orange
 	if interactivegui.movehudselected then
@@ -2139,95 +2202,132 @@ toggleReplayEditor = function(bool, vargs)
 	inputs.properties.p1freeze = interactivegui.replayeditor.enabled
 	inputs.properties.p2freeze = interactivegui.replayeditor.enabled
 	
-	local recordslot = recording[recording.recordingslot]
-	
 	if interactivegui.replayeditor.enabled then
-		interactivegui.replayeditor.inputs = {}
-		for i = 1, #recordslot do -- unserialise them all
-			interactivegui.replayeditor.inputs[i] = {serial={}}
-			interactivegui.replayeditor.inputs[i].serial.player = recordslot[i].serial.player -- copy across necessary values
-			interactivegui.replayeditor.inputs[i].serial.other = recordslot[i].serial.other
-			Unserialise(interactivegui.replayeditor.inputs[i], recordslot._stable, recordslot.constants) -- should be able to do these in one and buffer it
+		interactivegui.replayeditor.inputs = {[1]={},[2]={},[3]={},[4]={},[5]={}}
+		for j = 1, 5 do
+			local recordslot = recording[j]
+			for i = 1, #recordslot do -- unserialise them all so they can be seen
+				interactivegui.replayeditor.inputs[j][i] = {serial={}}
+				interactivegui.replayeditor.inputs[j][i].serial.player = recordslot[i].serial.player -- copy across necessary values
+				interactivegui.replayeditor.inputs[j][i].serial.other = recordslot[i].serial.other
+				Unserialise(interactivegui.replayeditor.inputs[j][i], recordslot._stable, recordslot.constants) -- should be able to do these in one and buffer it
+			end
 		end
 	else
-		if not interactivegui.replayeditor.inputs then return end
-		if not interactivegui.replayeditor.inputs[1] then return end
+		--if not interactivegui.replayeditor.inputs then return end
+		--if not interactivegui.replayeditor.inputs[recording.recordingslot] then return end
+		--if not interactivegui.replayeditor.inputs[recording.recordingslot][1] then return end
 		if not interactivegui.replayeditor.changed then return end
-		recordslot.constants = joypad.get()
-		recording.framestart = fc-1
-		for i = 1, #interactivegui.replayeditor.inputs do
-			recordslot[i] = {raw = {}}
-			recordslot[i].raw.p1 = copytable(interactivegui.replayeditor.inputs[i].raw.p1)
-			recordslot[i].raw.p2 = copytable(interactivegui.replayeditor.inputs[i].raw.p2)
-			recordslot[i].raw.other = copytable(inputs.other) -- fallback
 
-			for i, v in pairs(recordslot[i].raw.p1) do
-				if recordslot.constants["P1 "..i]~=v then recordslot.constants["P1 "..i]=nil end -- remove non-duping values from table
-			end
-			for i, v in pairs(recordslot[i].raw.p2) do
-				if recordslot.constants["P2 "..i]~=v then recordslot.constants["P2 "..i]=nil end -- remove non-duping values from table
-			end
-			for i, v in pairs(recordslot[i].raw.other) do
-				if recordslot.constants[i]~=v then recordslot.constants[i]=nil end -- remove non-duping values from table
-			end
+		for j,_ in pairs(interactivegui.replayeditor.changed) do
+			local recordslot = recording[j]
+			recordslot.constants = joypad.get()
+			recording.framestart = fc-1
+			for i = 1, #interactivegui.replayeditor.inputs[j] do
+				recordslot[i] = {raw = {}}
+				recordslot[i].raw.p1 = copytable(interactivegui.replayeditor.inputs[j][i].raw.p1)
+				recordslot[i].raw.p2 = copytable(interactivegui.replayeditor.inputs[j][i].raw.p2)
+				recordslot[i].raw.other = copytable(inputs.other) -- fallback
 
-			if not recordslot.p1start then -- move start forward to first frame that something happens on
-				if orTable(recordslot[i].raw.p1) and not recordslot[i].raw.p1.Coin then
-					recordslot.p1start = fc - recording.framestart + 1
+				for i, v in pairs(recordslot[i].raw.p1) do
+					if recordslot.constants["P1 "..i]~=v then recordslot.constants["P1 "..i]=nil end -- remove non-duping values from table
 				end
-			end
-
-			if not recordslot.p2start then -- move start forward to first frame that something happens on
-				if orTable(recordslot[i].raw.p2) and not recordslot[i].raw.p2.Coin then
-					recordslot.p2start = fc - recording.framestart + 1
+				for i, v in pairs(recordslot[i].raw.p2) do
+					if recordslot.constants["P2 "..i]~=v then recordslot.constants["P2 "..i]=nil end -- remove non-duping values from table
 				end
-			end
+				for i, v in pairs(recordslot[i].raw.other) do
+					if recordslot.constants[i]~=v then recordslot.constants[i]=nil end -- remove non-duping values from table
+				end
 
-			if orTable(recordslot[i].raw.p1) and not recordslot[i].raw.p1.Coin then  -- put finish on the last frame that something happens
-				recordslot.p1finish = fc - recording.framestart - 1
-			end
+				if not recordslot.p1start then -- move start forward to first frame that something happens on
+					if orTable(recordslot[i].raw.p1) and not recordslot[i].raw.p1.Coin then
+						recordslot.p1start = fc - recording.framestart + 1
+					end
+				end
 
-			if orTable(recordslot[i].raw.p2) and not recordslot[i].raw.p2.Coin then  -- put finish on the last frame that something happens
-				recordslot.p2finish = fc - recording.framestart - 1
+				if not recordslot.p2start then -- move start forward to first frame that something happens on
+					if orTable(recordslot[i].raw.p2) and not recordslot[i].raw.p2.Coin then
+						recordslot.p2start = fc - recording.framestart + 1
+					end
+				end
+
+				if orTable(recordslot[i].raw.p1) and not recordslot[i].raw.p1.Coin then  -- put finish on the last frame that something happens
+					recordslot.p1finish = fc - recording.framestart - 1
+				end
+
+				if orTable(recordslot[i].raw.p2) and not recordslot[i].raw.p2.Coin then  -- put finish on the last frame that something happens
+					recordslot.p2finish = fc - recording.framestart - 1
+				end
 			end
 		end
-		interactivegui.replayeditor.changed = nil
+		interactivegui.replayeditor.changed = {}
 		toggleRecording(false) -- sets up serialising stuff
 	end
 end
 
-local drawReplayEditorFunctions = function(t)
-	local recordslot = recording[recording.recordingslot]
-	local reinputs = interactivegui.replayeditor.inputs
-
-	if not interactivegui.replayeditor.framestart then -- if we're not currently taking input
-		if guiinputs.P1.upframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe-hudworkingframes(guiinputs.P1.upframecount) end
-		if guiinputs.P1.downframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+hudworkingframes(guiinputs.P1.downframecount) end
-		if guiinputs.P1[t[1].button] and not guiinputs.P1.previousinputs[t[1].button] then interactivegui.replayeditor.framestart = fc end -- starts the timer
-		if guiinputs.P1[t[2].button] and not guiinputs.P1.previousinputs[t[2].button] and reinputs[interactivegui.replayeditor.editframe] then -- something to copy
+local drawReplayEditorFuncs = {
+	function(but) -- set
+		if interactivegui.replayeditor.framestart then return end
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- starts the timer
+			interactivegui.replayeditor.framestart = fc 
+		end
+	end,
+	function(but) -- copy
+		if interactivegui.replayeditor.framestart or not interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] then return end
+		local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- something to copy
+			local recordslot = recording[recording.recordingslot]
 			reinputs[interactivegui.replayeditor.editframe+1] = {raw={p1={}, p2={}}}
 			reinputs[interactivegui.replayeditor.editframe+1].raw.p2=copytable(reinputs[interactivegui.replayeditor.editframe].raw.p2)
 			recordslot._stable = {}
 			recordslot._stable.p1 = copytable(SERIALISETABLE.p1)
 			recordslot._stable.p2 = copytable(SERIALISETABLE.p2)
-			interactivegui.replayeditor.changed = true
+			if not interactivegui.replayeditor.changed then interactivegui.replayeditor.changed = {} end
+			interactivegui.replayeditor.changed[recording.recordingslot] = true
+			interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+1
 		end
-		if guiinputs.P1[t[3].button] and not guiinputs.P1.previousinputs[t[3].button] then toggleReplayEditor(false) end
-	end
-end
+	end,
+	function(but) -- delete
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={p1={}, p2={}}}
+		end
+	end,
+	function(but) -- dec slot
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			recording.recordingslot = recording.recordingslot-1
+			if recording.recordingslot <=0 then recording.recordingslot = 5 end
+		end
+	end,
+	function(but) -- inc slot
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			recording.recordingslot = recording.recordingslot+1
+			if recording.recordingslot >=6 then recording.recordingslot = 1 end
+		end
+	end,
+	back = function(but)
+		if not interactivegui.replayeditor.framestart and guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then 
+			toggleReplayEditor(false) 
+		end
+	end,
+	other = function()
+		if interactivegui.replayeditor.framestart then return end
+		if guiinputs.P1.upframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe-hudworkingframes(guiinputs.P1.upframecount) end
+		if guiinputs.P1.downframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+hudworkingframes(guiinputs.P1.downframecount) end
+	end,
+}
 
 local drawReplayEditor = function()
 	if not interactivegui.replayeditor.enabled then return end
 	local length = SERIALISETABLE.p1.len-1 -- don't want to include start or coin
 	local recordslot = recording[recording.recordingslot]
-	local reinputs = interactivegui.replayeditor.inputs
+	local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
 	
 	local sw, sh = interactivegui.sw, interactivegui.sh
 	
 	--use these to control how a grid is drawn
 	local x,y,frames = 100,10,12
 	
-	t = {len=3, func=drawReplayEditorFunctions, {name="SET", button="button1"}, {name="COPY", button="button2"}, {name="EXIT", button="button3"}}
+	t = {{name="SET"}, {name="COPY"}, {name="DEL"}, {name="<SLT"}, {name="SLT>"}, funcs = drawReplayEditorFuncs}
 	buttonHandler(t)
 	
 	if interactivegui.replayeditor.framestart then -- countdown to taking input
@@ -2239,7 +2339,8 @@ local drawReplayEditor = function()
 			recordslot._stable = {}
 			recordslot._stable.p1 = copytable(SERIALISETABLE.p1)
 			recordslot._stable.p2 = copytable(SERIALISETABLE.p2)
-			interactivegui.replayeditor.changed = true
+			if not interactivegui.replayeditor.changed then interactivegui.replayeditor.changed = {} end
+			interactivegui.replayeditor.changed[recording.recordingslot] = true
 		end
 	end
 	
@@ -2258,11 +2359,13 @@ local drawReplayEditor = function()
 	end
 	
 	-- draw grid
-	gui.box(x+16,y,x+length*16,y+16, "blue") -- blue background
-	gui.line(x+16,y,x+length*16,y) -- top line of top
+	gui.box(x,y,x+length*16,y+16, "blue") -- blue background
+	gui.line(x,y,x+length*16,y) -- top line of top
 	gui.line(x,y+16,x+length*16,y+16) -- underline of top
-	gui.line(x,y+16,x,y+16+16*frames) -- first vertical line
+	gui.line(x,y,x,y+16+16*frames) -- first vertical line
 	gui.line(x+length*16,y,x+length*16,y+16+16*frames) -- last vertical line
+	gui.text(x+1,y+1,"SLOT")
+	gui.text(x+7,y+8,recording.recordingslot)
 	for i = 1,length-1 do
 		gui.line(x+i*16,y,x+i*16,y+16+16*frames) -- vertical lines
 		gui.gdoverlay(x+i*16, y, icons[16][i])
@@ -2273,6 +2376,7 @@ local drawReplayEditor = function()
 	
 	--deserialise and images
 	--make sure that it does need to display images
+	if not reinputs or not reinputs[1] then return end
 	if not recordslot or not recordslot._stable or not reinputs[1].raw.p2 then return end
 	
 	for i = 1, frames do
@@ -2468,14 +2572,14 @@ setRegisters = function() -- pre-calc stuff
 
 	table.insert(registers.guiregister, drawHUD)
 	table.insert(registers.guiregister, drawInteractiveGui)
-	table.insert(registers.guiregister, drawHelp)
 
 	if modulevars.constants.translationtable then
+		table.insert(registers.guiregister, drawHelp)
 		table.insert(registers.registerbefore, readGuiInputs)
 		table.insert(registers.guiregister, readGUIInputs)
 		table.insert(registers.guiregister, moveHUD)
 	else
-		print("No translation table found, can't read or process inputs from controller, use lua hotkeys")
+		print("No translation table found, can't read or process inputs from controller, or show input help, use lua hotkeys")
 	end
 
 	if scrollingInputReg then -- if scrolling-input-display.lua is loaded
