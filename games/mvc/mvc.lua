@@ -6,7 +6,7 @@ p1maxmeter = 0x03
 p2maxmeter = 0x03
 
 local p1healthchar1 = 0xFF3271
-local p1healthchar1 = 0xFF3A71
+local p1healthchar2 = 0xFF3A71
 local p2healthchar1 = 0xFF3671
 local p2healthchar2 = 0xFF3E71
 
