@@ -26,6 +26,7 @@ local games = {
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
 	doubledr = {"doubledr", iconfile = "icons-neogeo-32.png"},
+	fatfury1 = {"fatfury1", iconfile = "icons-neogeo-32.png"},
 	fatfury3 = {"fatfury3", iconfile = "icons-neogeo-32.png"},
 	fatfursp = {"fatfursp", iconfile = "icons-neogeo-32.png"},
 	galaxyfg = {"galaxyfg", iconfile = "icons-neogeo-32.png"},
@@ -72,7 +73,9 @@ local games = {
 	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
 	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
 	slammast = {"slammast", iconfile = "icons-slammast-32.png"},
-	sf2ce = {"sf2ce", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sf = {"sf", iconfile = "icons-capcom-32.png"},
+	sf2 = {"sf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sf2ce = {"sf2ce", "sf2hf", "sf2rb", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa = {"sfa", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa2 = {"sfa2", "sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa3 = {"sfa3", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -745,7 +748,7 @@ createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, clos
 
 	local workingframes = function(n) -- get faster the longer it runs
 		if (n < 60) then
-			if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+			if n%10==1 then return 1 end -- maybe tie this to coin input leniency?
 			return 0
 		elseif (n < 120) then
 			return 1
@@ -2054,7 +2057,7 @@ end
 
 local hudworkingframes = function(n) -- get faster the longer it runs
 	if (n < 60) then
-		if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+		if n%10==1 then return 1 end -- maybe tie this to coin input leniency?
 		return 0
 	elseif (n < 120) then
 		return 1

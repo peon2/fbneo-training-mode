@@ -42,6 +42,8 @@ Dragonball Z 2 - Super Battle
 
 Double Dragon (Neo-Geo)
 
+Fatal Fury
+
 Fatal Fury 3 - Road to the Final Victory
 
 Fatal Fury Special
@@ -136,7 +138,15 @@ Samurai Shodown 5 Special
 
 Saturday Night Slam Masters
 
+Street Fighter
+
+Street Fighter 2 World Warrior
+
 Street Fighter 2 Champion Edition
+
+Street Fighter 2 Champion Edition (Rainbow)
+
+Street Fighter 2 Hyper Fighting
 
 Street Fighter Alpha
 
