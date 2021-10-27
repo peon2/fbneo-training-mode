@@ -1,7 +1,6 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
 print "Known Issues: with samsho"
-print "Issues with reading/writing health and meter"
 print ""
 
 p1maxhealth = 0x80
@@ -10,11 +9,11 @@ p2maxhealth = 0x80
 p1maxmeter = 0x20
 p2maxmeter = 0x20
 
-local p1health = 0x104c9b
-local p2health = 0x1036e7
+local p1health = rdw(0x100a46) + 0xbb
+local p2health = rdw(0x100a4a) + 0xbb
 
-local p1meter = 0x104cd0
-local p2meter = 0x104f10
+local p1meter = rdw(0x100a46) + 0xf0
+local p2meter = rdw(0x100a4a) + 0xf0
 
 local p1direction = 0x10105c
 local p2direction = 0x100ad0
