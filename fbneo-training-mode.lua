@@ -28,6 +28,7 @@ local games = {
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
 	doubledr = {"doubledr", iconfile = "icons-neogeo-32.png"},
+	fatfury1 = {"fatfury1", iconfile = "icons-neogeo-32.png"},
 	fatfury3 = {"fatfury3", iconfile = "icons-neogeo-32.png"},
 	fatfursp = {"fatfursp", iconfile = "icons-neogeo-32.png"},
 	galaxyfg = {"galaxyfg", iconfile = "icons-neogeo-32.png"},
@@ -74,7 +75,9 @@ local games = {
 	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
 	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
 	slammast = {"slammast", iconfile = "icons-slammast-32.png"},
-	sf2ce = {"sf2ce", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sf = {"sf", iconfile = "icons-capcom-32.png"},
+	sf2 = {"sf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sf2ce = {"sf2ce", "sf2hf", "sf2rb", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa = {"sfa", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa2 = {"sfa2", "sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa3 = {"sfa3", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -747,7 +750,7 @@ createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, clos
 
 	local workingframes = function(n) -- get faster the longer it runs
 		if (n < 60) then
-			if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+			if n%10==1 then return 1 end -- maybe tie this to coin input leniency?
 			return 0
 		elseif (n < 120) then
 			return 1
@@ -840,7 +843,7 @@ end
 ----------------------------------------------
 end
 
-function orTable(tab) -- or a table (check if not empty)
+function orTable(tab) -- or a table (check if not empty), this should be replaced with next()
 
 	for _,v in pairs(tab) do
 		if v then
@@ -1322,9 +1325,6 @@ local toggleRecording = function(bool, vargs)
 	if vargs then vargs.recording = false end
 	toggleStates(vargs)
 
-	--recording.playback = false
-	--interactivegui.replayeditorenabled = false
-
 	if bool==nil then recording.enabled = not recording.enabled
 	else recording.enabled = bool end
 
@@ -1425,23 +1425,25 @@ local logRecording = function()
 
 end
 
-local tableList = function()
-	local tab = {}
-	local count = 0
-	for _,v in ipairs(recording) do
-		if orTable(v) then
-			count = count+1
-			tab[count] = v
-		end
-	end
-	return tab
-end
-
 local togglePlayBack = function(bool, vargs)
 	if interactivegui.movehud then return end
 	
 	if vargs then vargs.playback = false end
 	toggleStates(vargs)
+	
+	if recording.randomise then
+		local b = false
+		for i = 1, 5 do if recording[i][1] then b = true end end
+		if not b then return end
+		local pos
+		recording.recordingslot = nil
+		while recording.recordingslot==nil do -- keep running until we get a valid slot
+			pos = math.random(5)
+			if recording[pos][1] then -- check if there's something in here
+				recording.recordingslot = pos
+			end
+		end
+	end
 	
 	local recordslot = recording[recording.recordingslot]
 	if not recordslot then return end
@@ -1471,19 +1473,6 @@ local togglePlayBack = function(bool, vargs)
 			recordslot.start = recordslot.p2start
 		end
 		if recordslot.start==recordslot.finish then toggleSwapInputs(false) return end -- nothing recorded
-		if recording.randomise then
-			local pos
-			local recordings = tableList()
-			if #recordings > 0 then
-				recording.recordingslot = nil
-				while recording.recordingslot==nil do -- keep running until we get a valid slot
-					pos = math.random(5)
-					if recordings[pos] ~= nil then
-						recording.recordingslot = pos
-					end
-				end
-			end
-		end
 	end
 end
 
@@ -1505,10 +1494,11 @@ local playBack = function()
 			recording.playback = false
 			recording.hitplayback = false
 			toggleSwapInputs(false)
-			return
-		else
-			recordslot.framestart = fc - 1
+		else -- loop
+			recordslot.framestart = nil
+			togglePlayBack(true)
 		end
+		return
 	end
 
 	gui.text(1,1,"Slot "..recording.recordingslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
@@ -2069,7 +2059,7 @@ end
 
 local hudworkingframes = function(n) -- get faster the longer it runs
 	if (n < 60) then
-		if n%10==0 then return 1 end -- maybe tie this to coin input leniency?
+		if n%10==1 then return 1 end -- maybe tie this to coin input leniency?
 		return 0
 	elseif (n < 120) then
 		return 1
@@ -2288,23 +2278,27 @@ local drawReplayEditorFuncs = {
 		end
 	end,
 	function(but) -- delete
+		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={p1={}, p2={}}}
 		end
 	end,
 	function(but) -- dec slot
+		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			recording.recordingslot = recording.recordingslot-1
 			if recording.recordingslot <=0 then recording.recordingslot = 5 end
 		end
 	end,
 	function(but) -- inc slot
+		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			recording.recordingslot = recording.recordingslot+1
 			if recording.recordingslot >=6 then recording.recordingslot = 1 end
 		end
 	end,
 	back = function(but)
+		if interactivegui.replayeditor.framestart then return end
 		if not interactivegui.replayeditor.framestart and guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then 
 			toggleReplayEditor(false) 
 		end

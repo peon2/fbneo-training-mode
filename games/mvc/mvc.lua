@@ -5,8 +5,11 @@ p2maxhealth = 0x90
 p1maxmeter = 0x03
 p2maxmeter = 0x03
 
-local p1health = 0xFF3271
-local p2health = 0xFF3671
+local p1healthchar1 = 0xFF3271
+local p1healthchar2 = 0xFF3A71
+local p2healthchar1 = 0xFF3671
+local p2healthchar2 = 0xFF3E71
+
 
 local p1meter = 0xFF3274
 local p2meter = 0xFF3674
@@ -75,19 +78,21 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	return rb(p1healthchar1)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health)
+	return rb(p2healthchar1)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	wb(p1healthchar1, health)
+	wb(p1healthchar2, health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	wb(p2healthchar1, health)
+	wb(p2healthchar2, health)
 end
 
 function readPlayerOneMeter()
