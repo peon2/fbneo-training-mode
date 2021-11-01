@@ -69,6 +69,10 @@ gamedefaultconfig = {
 	},
 }
 
+function Hitboxes()
+	memory.writebyte(0x412B4A,0x3B)
+	memory.writebyte(0x412B4B,0xE4)
+end
 
 function playerOneFacingLeft()
 	return rb(0x412AE0) == 2
@@ -132,4 +136,5 @@ end
 function Run() -- runs every frame
 	infiniteTime()
 	maxCredits()
+	Hitboxes()
 end
