@@ -12,15 +12,8 @@ local p2health = 0x1039B7
 local p2redhealth = 0x1039B9
 
 print "Known issues with karnovr:"
-print "Combos not tracked"
 print "Note karnovr has no meter"
 print ""
-
-local p1direction = 0x10102c -- direction is a flag
-local p2direction = 0x10101c
-
-local p1combocounter = 0x100f5c
-local p2combocounter = 0x100e5c
 
 translationtable = {
 	"left",
@@ -49,21 +42,32 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
+		combotextx=139,
+		combotexty=42,
+		comboenabled=true,
 		p1healthx=18,
 		p1healthy=21,
 		p1healthenabled=true,
 		p2healthx=275,
 		p2healthy=21,
 		p2healthenabled=true,
-	},
+	}
 }
 
 function playerOneFacingLeft()
-	return bit.band(rb(p1direction),1)==0
+	return rb(0x103691)==0 or rb(0x103691)==0x40
 end
 
 function playerTwoFacingLeft()
-	return bit.band(rb(p2direction))==0
+	return rb(0x103891)==0 or rb(0x103891)==0x40
+end
+
+function playerOneInHitstun()
+	return rb(0x10372C)~=0
+end
+
+function playerTwoInHitstun()
+	return rb(0x10392C)~=0
 end
 
 function readPlayerOneHealth()
