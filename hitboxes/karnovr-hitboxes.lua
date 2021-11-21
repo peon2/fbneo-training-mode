@@ -1,5 +1,6 @@
 --FHD Hitbox Viewer
 --By jedpossum
+--https://github.com/jedpossum/EmuLuaScripts/blob/master/FHD%20Hitbox%20Viewer.lua
 
 local rb, rbs, rw, rws, rd = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword
 local wb, ww, wd = memory.writebyte, memory.writeword, memory.writedword
@@ -31,7 +32,7 @@ for pl = 0,1,1 do
 
 	local life = rb(plife)--Some bug prevents just using rb(plife)	
 	
-	gui.text(26+pl*236,30,"Life: " .. life)
+	--gui.text(26+pl*236,30,"Life: " .. life)
 
 --Health Cheat
 if rb(plife) <= 32 then

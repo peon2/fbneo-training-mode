@@ -1,51 +1,51 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+print "Known issues with dankuga:"
+print "Combos are inconsistent"
+print ""
+
+
 p1maxhealth = 0x64
 p2maxhealth = 0x64
 
 p1maxmeter = 0xc8
 p2maxmeter = 0xc8
 
+
 local p1health = 0x412B35
 local p2health = 0x412D35
-
 
 local p1meter = 0x412BC1
 local p2meter = 0x412DC1
 
-
 local p1combocounter = 0x40cb1f
 local p2combocounter = 0x40C91F
 
-
-
-
-
 translationtable = {
-	"coin",
-	"start",
-	"up",
-	"down",
 	"left",
 	"right",
+	"up",
+	"down",
 	"button1",
 	"button2",
 	"button3",
 	"button4",
 	"button5",
 	"button6",
-	["Coin"] = 1,
-	["Start"] = 2,
+	"coin",
+	"start",
+	["Left"] = 1,
+	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Left"] = 5,
-	["Right"] = 6,
-	["Weak Punch"] = 7,
-	["Medium Punch"] = 8,
-	["Strong Punch"] = 9,
-	["Weak Kick"] = 10,
-	["Medium Kick"] = 11,
-	["Strong Kick"] = 12
+	["Weak Punch"] = 5,
+	["Medium Punch"] = 6,
+	["Strong Punch"] = 7,
+	["Weak Kick"] = 8,
+	["Medium Kick"] = 9,
+	["Strong Kick"] = 10,
+	["Coin"] = 11,
+	["Start"] = 12,
 }
 
 
@@ -78,7 +78,6 @@ function playerOneFacingLeft()
 	return rb(0x412AE0) == 2
 end
 
-
 function playerTwoFacingLeft()
 	return rb(0x412CE0) == 2
 end
@@ -108,7 +107,7 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(0x412BC1)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
@@ -116,7 +115,7 @@ function writePlayerOneMeter(meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(0x412DC1)
+	return rb(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
