@@ -30,9 +30,13 @@ Asura Buster
 
 Asura Blade
 
+Avengers in Galactic Storm
+
 Breakers Revenge
 
 Cyberbots
+
+Dan-Ku-Ga
 
 Daraku Tenshi
 
