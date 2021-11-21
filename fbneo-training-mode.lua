@@ -229,6 +229,22 @@ else
 	print("Memory addresses not found for "..rom)
 end
 
+-- check if the translationtable is valid, failsafe
+do 
+local player, input
+for i,v in pairs(joypad.get()) do -- check every button
+	player = i:sub(1,2)
+	input = i:sub(4)
+	if player == "P1" then -- assume the same inputs for each player
+		if not translationtable[input] or not translationtable[translationtable[input]] then -- bad button found
+			print "Translation table malformed"
+			nbuttons = 0
+			break
+		end
+	end
+end
+end
+
 if nbuttons == 0 then
 	print("No buttons found for "..rom)
 	print "Attempting to make a translationtable from defaults"
