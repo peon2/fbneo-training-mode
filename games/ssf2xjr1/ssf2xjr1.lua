@@ -1,16 +1,13 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
+-- ssf2x training mode by @pof
 
 p1maxhealth = 144
 p2maxhealth = 144
 p1maxmeter = 0x30
 p2maxmeter = 0x30
 
-p1stuned=0
-p2stuned=0
-
-print "Known issues: "
-print "Hitstun isn't accurate"
-print ""
+local p1_need_health_refill = false
+local p2_need_health_refill = false
 
 local p1health = 0xFF8478
 local p1redhealth = 0xff847A
@@ -78,31 +75,25 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	ADD=21
-
-	if rb(0xff8495) == 0 and p1stuned <= ADD then
-		p1stuned=p1stuned-1
-	elseif rb(0xff8495) == 0 and p1stuned == 1 then
-		p1stuned = 0
-	else
-		p1stuned=rb(0xff8495)+ADD
+	if rb(0xFF863E) > 0 then
+		-- false when dizzy
+		return false
 	end
-
-	return p1stuned > 0
+        if rb(0xFF8451) == 14 then
+		return true
+	end
+	return false
 end
 
 function playerTwoInHitstun()
-	ADD=21
-
-	if rb(0xff8895) == 0 and p2stuned <= ADD then
-		p2stuned=p2stuned-1
-	elseif rb(0xff8895) == 0 and p2stuned == 1 then
-		p2stuned = 0
-	else
-		p2stuned=rb(0xff8895)+ADD
+	if rb(0xFF8A3E) > 0 then
+		-- false when dizzy
+		return false
 	end
-
-	return p2stuned > 0
+        if rb(0xFF8851) == 14 then
+		return true
+	end
+	return false
 end
 
 function readPlayerOneHealth()
@@ -110,11 +101,11 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	p1action = rb(0xff8451)
-	p2action = rb(0xff8851)
-	refill = false
-	if readPlayerOneHealth() < 10 then
-		-- if health < 10 we refill regardless of the state
+	local p1action = rb(0xff8451)
+	local p2action = rb(0xff8851)
+	local refill = false
+	if readPlayerOneHealth() < 33 then
+		-- if health < 33 we refill regardless of the state
 		refill = true
 	elseif ((p1action ~= 0x14 and p1action ~=0xe and p1action ~= 8) and (p2action==2 or p2action==0)) then
 		-- this only refills when p2 is idle or crouching and p1 is not blocking or after being hit/thrown
@@ -127,6 +118,7 @@ function writePlayerOneHealth(health)
 		ww(p1health, health)
 		ww(p1redhealth, health)
 		ww(p1disphealth, health)
+		p1_need_health_refill=false
 	end
 end
 
@@ -135,11 +127,11 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	p1action = rb(0xff8451)
-	p2action = rb(0xff8851)
-	refill = false
-	if readPlayerTwoHealth() < 10 then
-		-- if health < 10 we refill regardless of the state
+	local p1action = rb(0xff8451)
+	local p2action = rb(0xff8851)
+	local refill = false
+	if readPlayerTwoHealth() < 33 then
+		-- if health < 33 we refill regardless of the state
 		refill = true
 	elseif ((p2action ~= 0x14 and p2action ~=0xe and p2action ~= 8) and (p1action==2 or p1action==0)) then
 		-- this only refills when p1 is idle or crouching and p2 is not blocking or after being hit/thrown
@@ -152,6 +144,7 @@ function writePlayerTwoHealth(health)
 		ww(p2health, health)
 		ww(p2redhealth, health)
 		ww(p2disphealth, health)
+		p2_need_health_refill=false
 	end
 end
 
@@ -192,13 +185,30 @@ end
 
 local neverEnd = function()
 
-	-- try to refill when health < 10 to avoid round ending
-	p2h = readPlayerTwoHealth()
-	if p2h < 10 then
+	if p2_need_health_refill then
 		writePlayerTwoHealth(p2maxhealth)
 	end
-	p1h = readPlayerOneHealth()
-	if p1h < 10 then
+	if p1_need_health_refill then
+		writePlayerOneHealth(p1maxhealth)
+	end
+
+	-- try to refill after being thrown, hold or knocked down
+	if rb(0xff8853) == 10 or rb(0xff89cf) == 255 then
+		p2_need_health_refill=true
+		writePlayerTwoHealth(p2maxhealth)
+	end
+	if rb(0xff8453) == 10 or rb(0xff85cf) == 255 then
+		p1_need_health_refill=true
+		writePlayerOneHealth(p1maxhealth)
+	end
+
+	-- try to refill when health < 33 to avoid round ending
+	if readPlayerTwoHealth() < 33 then
+		p2_need_health_refill=true
+		writePlayerTwoHealth(p2maxhealth)
+	end
+	if readPlayerOneHealth() < 33 then
+		p1_need_health_refill=true
 		writePlayerOneHealth(p1maxhealth)
 	end
 end
