@@ -78,31 +78,25 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	ADD=21
-
-	if rb(0xFF8383) == 0 and p1stuned <= ADD then
-		p1stuned=p1stuned-1
-	elseif rb(0xFF8383) == 0 and p1stuned == 1 then
-		p1stuned = 0
-	else
-		p1stuned=rb(0xFF8383)+ADD
+	if rb(0xFF852C) > 0 then
+		-- false when dizzy
+		return false
 	end
-
-	return p1stuned > 0
+        if rb(0xFF833F) == 14 then
+		return true
+	end
+	return false
 end
 
 function playerTwoInHitstun()
-	ADD=21
-
-	if rb(0xFF8783) == 0 and p2stuned <= ADD then
-		p2stuned=p2stuned-1
-	elseif rb(0xFF8783) == 0 and p2stuned == 1 then
-		p2stuned = 0
-	else
-		p2stuned=rb(0xFF8895)+ADD
+	if rb(0xFF892C) > 0 then
+		-- false when dizzy
+		return false
 	end
-
-	return p2stuned > 0
+        if rb(0xFF873F) == 14 then
+		return true
+	end
+	return false
 end
 
 function readPlayerOneHealth()
