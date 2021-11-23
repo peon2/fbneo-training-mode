@@ -35,6 +35,7 @@ local games = {
 	garou = {"garou", iconfile = "icons-neogeo-32.png"},
 	gundamex = {"gundamex", iconfile = "icons-banpresto-32.png"},
 	gowcaizr = {"gowcaizr", iconfile = "icons-neogeo-32.png"},
+	hsf2 = {"hsf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
