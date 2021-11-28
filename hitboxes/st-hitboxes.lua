@@ -408,7 +408,7 @@ local function whatgame()
 	for n, module in ipairs(profile) do
 		for m, shortname in ipairs(module.games) do
 			if emu.romname() == shortname or emu.parentname() == shortname then
-				print("drawing " .. shortname .. " hitboxes")
+				--print("drawing " .. shortname .. " hitboxes")
 				game = module
 				for p = 1, NUMBER_OF_PLAYERS do
 					player[p] = {}
