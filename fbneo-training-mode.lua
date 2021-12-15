@@ -20,8 +20,10 @@ local games = {
 	aof3 = {"aof3", iconfile = "icons-neogeo-32.png"},
 	asurabld = {"asurabld", iconfile = "icons-asurabus-32.png"},
 	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
+	avengrgs = {"avengrgs", iconfile = "icons-banpresto-32.png"},
 	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
 	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
+	dankuga = {"dankuga", iconfile= "icons-capcom-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
@@ -33,11 +35,12 @@ local games = {
 	garou = {"garou", iconfile = "icons-neogeo-32.png"},
 	gundamex = {"gundamex", iconfile = "icons-banpresto-32.png"},
 	gowcaizr = {"gowcaizr", iconfile = "icons-neogeo-32.png"},
+	hsf2 = {"hsf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
 	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
 	jojos = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
 	jojov = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
 	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
-	karnovr = {"karnovr", iconfile = "icons-neogeo-32.png"},
+	karnovr = {"karnovr", hitboxes = "karnovr-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kizuna = {"kizuna", iconfile = "icons-neogeo-32.png"},
 	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof95 = {"kof95", "kof95sp", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -80,7 +83,7 @@ local games = {
 	sfa2 = {"sfa2", "sfa2u", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfa3 = {"sfa3", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	ssf2xjr1 = {"ssf2xjr1", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	ssf2xjr1 = {"ssf2xjr1", hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
 	tkdensho = {"tkdensho", iconfile = "icons-banpresto-32.png"},
 	vhuntjr2 = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	wakuwak7 = {"wakuwak7", "wakuwak7bh", iconfile = "icons-neogeo-32.png"},
@@ -227,6 +230,22 @@ if fexists("games/"..dirname.."/"..dirname..".lua") then
 	while (translationtable[i]:sub(1,6)=="button") do nbuttons = nbuttons+1 i=i+1 end
 else
 	print("Memory addresses not found for "..rom)
+end
+
+-- check if the translationtable is valid, failsafe
+do 
+local player, input
+for i,v in pairs(joypad.get()) do -- check every button
+	player = i:sub(1,2)
+	input = i:sub(4)
+	if player == "P1" then -- assume the same inputs for each player
+		if not translationtable[input] or not translationtable[translationtable[input]] then -- bad button found
+			print "Translation table malformed"
+			nbuttons = 0
+			break
+		end
+	end
+end
 end
 
 if nbuttons == 0 then
