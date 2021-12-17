@@ -19,6 +19,12 @@ local p2disphealth = 0xFF8A0A
 local p1meter = 0xFF8702
 local p2meter = 0xFF8B02
 
+local p1action = 0
+local p2action = 0
+
+local p2inputs = 0
+local p1inputs = 0
+
 translationtable = {
 	"left",
 	"right",
@@ -101,8 +107,6 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	local p1action = rb(0xff8451)
-	local p2action = rb(0xff8851)
 	local refill = false
 	if readPlayerOneHealth() < 33 then
 		-- if health < 33 we refill regardless of the state
@@ -127,8 +131,6 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	local p1action = rb(0xff8451)
-	local p2action = rb(0xff8851)
 	local refill = false
 	if readPlayerTwoHealth() < 33 then
 		-- if health < 33 we refill regardless of the state
@@ -213,7 +215,132 @@ local neverEnd = function()
 	end
 end
 
+local stageSelect = function()
+	local stage_selector = 0x0c -- cammy
+	if rb(0xff8008) == 0x04 then
+		wb(0xff8c4f,stage_selector)
+	end
+	wb(0xFF8C51,0)
+	ww(0xFFE18A,stage_selector)
+end
+
+local player1Crouching = function()
+	if p1action == 2 then
+		return true
+	end
+	if p1action == 4 or p1action == 6 then
+		return false
+	end
+	if (p1action == 10 or p1action == 12) then
+		local ypos = rw(0xFF8458)
+		if (ypos <= 40) then
+			return bit.band(p1inputs, 0x4) == 0x4
+		end
+	end
+	return false
+end
+
+local getDistanceBetweenPlayers = function()
+	if playerOneFacingLeft() then
+		distance = rw(0xFF8454) - rw(0xFF8854)
+	else
+		distance = rw(0xFF8854) - rw(0xFF8454)
+	end
+	return distance
+end
+
+local forceblock = false
+local prev_p1action = 0
+local inputs_at_jumpstart = 0
+local autoBlock = function()
+
+	local DEBUG=false
+
+	-- neutral when opponent is neutral, crouching or landing
+	if (p1action == 0 or p1action == 2 or p1action==6) then
+		setDirection(2,5)
+		forceblock = false
+		return
+	end
+
+	local distance = getDistanceBetweenPlayers()
+
+	-- if opponent is ground attacking, ground block
+	if (p1action == 10 or p1action == 12) and distance < 265 then
+
+		local p1crouching = player1Crouching()
+		if playerOneFacingLeft() and p1crouching then
+			setDirection(2,1)
+		end
+		if playerTwoFacingLeft() and p1crouching then
+			setDirection(2,3)
+		end
+		if playerOneFacingLeft() and not p1crouching then
+			setDirection(2,4)
+		end
+		if playerTwoFacingLeft() and not p1crouching then
+			setDirection(2,6)
+		end
+		if DEBUG then print("ground block @ p1action=" .. p1action .. " | inputs=" .. p1inputs .. " | distance=" .. distance) end
+		return
+	end
+
+	-- block jump attacks
+	local p1attacking = false
+	if p1action == 4 and distance < 265 then
+		local p1buttons = bit.band(p1inputs, 0x000F)
+		if prev_p1action ~= 4 then
+			inputs_at_jumpstart = p1inputs-p1buttons
+			p1attacking = false
+		end
+		if p1inputs-p1buttons ~= inputs_at_jumpstart and p1inputs-p1buttons > 10 then
+			-- buttons pressed changed during jump, Player one is attacking
+			p1attacking = true
+			forceblock = true
+		end
+		if (p2action ~= 6 and p2action ~= 8 and p2action ~= 14) then
+			forceblock = false
+		end
+
+		if (p1attacking or forceblock) then
+			if playerOneFacingLeft() then
+				setDirection(2,4)
+			else
+				setDirection(2,6)
+			end
+			if DEBUG then print("block high @ p1action=" .. p1action .. " | p2action=" .. p2action .. " | inputs=" .. p1inputs .. "/" .. p1buttons .. " | distance=" .. distance .. " | p1attacking=" .. tostring(p1attacking) .. " | forceblock=" .. tostring(forceblock)) end
+			return
+		end
+		setDirection(2,5)
+		if DEBUG then print("neutral @ p1action=" .. p1action .. " | p2action=" .. p2action .. " | inputs=" .. p1inputs .. "/" .. p1buttons .. " | distance=" .. distance .. " | p1attacking=" .. tostring(p1attacking) .. " | forceblock=" .. tostring(forceblock)) end
+		forceblock = false
+		return
+	end
+
+	-- stop blocking
+	if (distance >= 265 or p1action == 2) then
+		setDirection(2,5)
+		if DEBUG then print("neutral-4 @ p1action=" .. p1action .. " | inputs=" .. p1inputs .. " | distance=" .. distance) end
+		forceblock = false
+		return
+	end
+	if DEBUG then print("FINAL @ p1action=" .. p1action .. " | inputs=" .. p1inputs .. " | distance=" .. distance) end
+
+end
+
 function Run() -- runs every frame
+
+	-- attacker state (ff8451 or +0x400 for p2): 0 idle, 2 crouching, 4 jumping, 10 doing a normal attack or throw, 12 on hitstun (doing an special attack)
+	-- attacked state (ff8451 or +0x400 for p2): 6 waking up meaty, 8 blocking, 14 hit (receiving an attack), 20 thrown
+	p1action = rb(0xff8451)
+	p2action = rb(0xff8851)
+
+	-- p2inputs = rw(0xFF8BE0)
+	p1inputs = rw(0xFF87E0)
+
 	infiniteTime()
 	neverEnd()
+	stageSelect()
+	autoBlock()
+	prev_p1action = p1action
 end
