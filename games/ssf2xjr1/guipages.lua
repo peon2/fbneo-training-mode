@@ -9,7 +9,7 @@ guicustompage = {
 	guielements.leftarrow,
 	guielements.rightarrow,
 	{
-		text = "Stage selector",
+		text = "Select stage",
 		x = 8,
 		y = 40,
 		olcolour = "black",
@@ -18,19 +18,14 @@ guicustompage = {
 			"Must be changed on player select screen, before selecting character."
 		},
 		func =	function()
-				-- CIG("guicustompage", stage_selector)
-				-- changeConfig("ssf2xjr1","stage_selector", stage_selector, ssf2xjr1)
-				-- modulevars.constants.stage_selector = stage_selector+1
 				stage_selector = stage_selector + 1
-				if stage_selector >= 0xf then
+				if stage_selector > 0xf then
 					stage_selector=-1
 				end
-				changeConfig("custom","stage_selector", stage_selector, custom)
-				
 			end,
 		autofunc = 	function(this)
 						if stage_selector == -1 then
-							this.text = "Select stage"
+							this.text = "Select stage: Disabled"
 							this.x = 8
 						elseif stage_selector == 0 then
 							this.text = "Stage: Japan (Ryu)"
@@ -82,5 +77,34 @@ guicustompage = {
 							this.x = 8
 						end
 					end
+	},
+	{
+		text = "AutoBlock",
+		x = 8,
+		y = 60,
+		olcolour = "black",
+		info = {
+			"Control auto-block on P2",
+			"Can be Disabled, block everything, block only ground attacks, block auto or block random."
+		},
+		func =	function()
+				autoblock_selector = autoblock_selector + 1
+				if autoblock_selector > 3 then
+					autoblock_selector = -1
+				end
+			end,
+		autofunc = function(this)
+				if autoblock_selector == -1 then
+					this.text = "AutoBlock (P2): Disabled"
+				elseif autoblock_selector == 0 then
+					this.text = "AutoBlock (P2): Block everything"
+				elseif autoblock_selector == 1 then
+					this.text = "AutoBlock (P2): Block ground attacks"
+				elseif autoblock_selector == 2 then
+					this.text = "AutoBlock (P2): Block auto"
+				elseif autoblock_selector == 3 then
+					this.text = "AutoBlock (P2): Block random"
+				end
+			end,
 	},
 }

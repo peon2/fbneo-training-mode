@@ -252,10 +252,16 @@ local getDistanceBetweenPlayers = function()
 	return distance
 end
 
+autoblock_selector = -1
 local forceblock = false
 local prev_p1action = 0
 local inputs_at_jumpstart = 0
+local autoblock_skip_counter = 60
 local autoBlock = function()
+
+	if autoblock_selector == -1 then
+		return
+	end
 
 	local DEBUG=false
 
@@ -270,6 +276,16 @@ local autoBlock = function()
 
 	-- if opponent is ground attacking, ground block
 	if (p1action == 10 or p1action == 12) and distance < 265 then
+
+		if autoblock_selector == 2 or autoblock_selector == 3 then
+			autoblock_skip_counter = autoblock_skip_counter -1
+			if autoblock_skip_counter == 0 then
+				autoblock_skip_counter = 60
+			end
+			if autoblock_skip_counter > 40 then
+				return
+			end
+		end
 
 		local p1crouching = player1Crouching()
 		if playerOneFacingLeft() and p1crouching then
@@ -290,7 +306,18 @@ local autoBlock = function()
 
 	-- block jump attacks
 	local p1attacking = false
-	if p1action == 4 and distance < 265 then
+	if autoblock_selector ~= 1 and autoblock_selector ~= 2 and p1action == 4 and distance < 265 then
+
+		if autoblock_selector == 3 then
+			autoblock_skip_counter = autoblock_skip_counter -1
+			if autoblock_skip_counter == 0 then
+				autoblock_skip_counter = 60
+			end
+			if autoblock_skip_counter > 30 then
+				return
+			end
+		end
+
 		local p1buttons = bit.band(p1inputs, 0x000F)
 		if prev_p1action ~= 4 then
 			inputs_at_jumpstart = p1inputs-p1buttons
