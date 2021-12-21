@@ -215,8 +215,11 @@ local neverEnd = function()
 	end
 end
 
+stage_selector = -1
 local stageSelect = function()
-	local stage_selector = 0x0c -- cammy
+	if stage_selector == -1 then
+		return
+	end
 	if rb(0xff8008) == 0x04 then
 		wb(0xff8c4f,stage_selector)
 	end

@@ -185,6 +185,9 @@ local defaultconfig = {
 	hitbox = {
 		enabled = true,
 	},
+	custom = {
+		stage_selector = -1,
+	},
 }
 
 local config = defaultconfig
@@ -589,6 +592,11 @@ recording = {
 	swapplayers = true,
 	replayP1 = false,
 	replayP2 = true,
+}
+
+custom = {
+	stage_selector = config.custom.stage_selector,
+
 }
 
 ----------------------------------------------
