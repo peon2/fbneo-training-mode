@@ -4,12 +4,8 @@ p1maxhealth = 0x6800 -- word
 p2maxhealth = 0x6800
 -- health tends towards 0x6800 from 0 as damage is taken
 
-print "Known Issues: with doubledr"
-print "Flipping the replay when characters swap sides"
-print ""
-
-p1maxmeter = 0x40
-p2maxmeter = 0x40
+p1maxmeter = 0x6800 - rw(0x100450)
+p2maxmeter = 0x6800 - rw(0x100550)
 
 local p1health = 0x100450
 local p2health = 0x100550
@@ -65,12 +61,12 @@ gamedefaultconfig = {
 	},
 }
 
-function _playerOneFacingLeft()
-
+function playerOneFacingLeft()
+	return rb(0x10042B)==0x00 or rb(0x10042B)==0x04 or rb(0x10042B)==0x81 or rb(0x10042B)==0x89
 end
 
-function _playerTwoFacingLeft()
-
+function playerTwoFacingLeft()
+	return rb(0x10052B)==0x00 or rb(0x10052B)==0x04 or rb(0x10052B)==0x81 or rb(0x10052B)==0x89
 end
 
 function playerOneInHitstun()
@@ -82,35 +78,35 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return p1maxhealth-rb(p1health)
+	return p1maxhealth-rw(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, p1maxhealth-health)
+	ww(p1health, p1maxhealth-health)
 end
 
 function readPlayerTwoHealth()
-	return p2maxhealth-rb(p2health)
+	return p2maxhealth-rw(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, p1maxhealth-health)
+	ww(p2health, p1maxhealth-health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter)
+	return rw(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+	ww(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rw(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	ww(p2meter, meter)
 end
 
 function infiniteTime()
