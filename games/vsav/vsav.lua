@@ -16,6 +16,9 @@ local p2meter = 0xFF890A
 local p1stocks = 0xFF8509
 local p2stocks = 0xFF8909
 
+local p1direction = 0xFF8520
+local p2direction = 0xFF8920
+
 translationtable = {
 	"left",
 	"right",
@@ -53,16 +56,31 @@ gamedefaultconfig = {
 		instantrefillmeter = true,
 	},
 	hud = {
+		combotextx=178,
+		combotexty=52,
+		comboenabled=true,
 		p1healthx=18,
 		p1healthy=16,
 		p1healthenabled=true,
 		p2healthx=355,
 		p2healthy=16,
 		p2healthenabled=true,
-		p1meterenabled=false,
-		p2meterenabled=false,
+		p1meterx=164,
+		p1metery=206,
+		p1meterenabled=true,
+		p2meterx=209,
+		p2metery=206,
+		p2meterenabled=true,
 	},
 }
+
+function playerOneFacingLeft()
+	return rb(p1direction) == 1
+end
+
+function playerTwoFacingLeft()
+	return rb(p2direction) == 1
+end
 
 function playerOneInHitstun()
 	return ((rb(0xFF8544)~=0) or (rb(0xFF8545)~=0))
