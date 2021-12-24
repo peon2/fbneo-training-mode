@@ -358,6 +358,23 @@ local autoBlock = function()
 
 end
 
+dizzy_selector = -1
+local p2DizzyControl = function()
+
+	local dizzy = 0
+	if dizzy_selector == -1 then
+		return
+	end
+
+	if dizzy_selector == 1 then
+		dizzy = 0x40
+	end
+
+	ww(0xFF88AA, dizzy) -- timeout
+	ww(0xFF88AC, dizzy) -- damage
+
+end
+
 function Run() -- runs every frame
 
 	-- attacker state (ff8451 or +0x400 for p2): 0 idle, 2 crouching, 4 jumping, 10 doing a normal attack or throw, 12 on hitstun (doing an special attack)
@@ -369,8 +386,9 @@ function Run() -- runs every frame
 	p1inputs = rw(0xFF87E0)
 
 	infiniteTime()
+	autoBlock()
 	neverEnd()
 	stageSelect()
-	autoBlock()
+	p2DizzyControl()
 	prev_p1action = p1action
 end
