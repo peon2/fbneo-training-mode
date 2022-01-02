@@ -5,8 +5,8 @@ print "Doesn't activate MAX properly"
 print "Only partial support for advance with refilling max meter"
 print ""
 
-p1maxhealth = 0x67
-p2maxhealth = 0x67
+p1maxhealth = 0x68
+p2maxhealth = 0x68
 
 p1maxmeter = 0x80
 p2maxmeter = 0x80
@@ -89,7 +89,7 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	wb(p1health, health-1)
 end
 
 function readPlayerTwoHealth()
@@ -97,7 +97,7 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	wb(p2health, health-1)
 end
 
 function readPlayerOneMeter()

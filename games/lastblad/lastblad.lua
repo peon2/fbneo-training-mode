@@ -1,26 +1,26 @@
-assert(rb,"Run fbneo-training-mode.lua")
+assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
-print "Known issues with kof96:"
-print "Doesn't activate MAX properly"
-print ""
+print "Note that you may have to restart the script if you switch characters"
 
-p1maxhealth = 0x68
-p2maxhealth = 0x68
+p1maxhealth = 0x100
+p2maxhealth = 0x100
+p1maxmeter = 0x40
+p2maxmeter = 0x40
 
-p1maxmeter = 0x80
-p2maxmeter = 0x80
+local p1uid = rdw(0x10AC98)
+local p2uid = rdw(0x10AC9C)
 
-local p1health = 0x108239
-local p2health = 0x108439
+local p1health = p1uid+0x180 -- word
+local p2health = p2uid+0x180
 
-local p1meter = 0x1081e8
-local p2meter = 0x1083e8
+local p1meter = p1uid+0x18D -- byte
+local p2meter = p2uid+0x18D
 
-local p1direction = 0x108131
-local p2direction = 0x108331
+local p1direction = p1uid+0xE3 -- bit
+local p2direction = p2uid+0xE3
 
-local p1combocounter = 0x1084b0
-local p2combocounter = 0x1082b0
+local p1combocounter = 0x10E294 -- byte
+local p2combocounter = 0x10E295
 
 translationtable = {
 	"left",
@@ -49,26 +49,26 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=138,
-		combotexty=42,
+		combotextx=147,
+		combotexty=48,
 		comboenabled=true,
-		p1healthx=33,
-		p1healthy=21,
+		p1healthx=17,
+		p1healthy=16,
 		p1healthenabled=true,
-		p2healthx=260,
-		p2healthy=21,
+		p2healthx=292,
+		p2healthy=16,
 		p2healthenabled=true,
-		p1meterx=91,
-		p1metery=205,
+		p1meterx=105,
+		p1metery=209,
 		p1meterenabled=true,
-		p2meterx=202,
-		p2metery=205,
+		p2meterx=210,
+		p2metery=209,
 		p2meterenabled=true,
 	},
 }
 
 function playerOneFacingLeft()
-	return rb(p1direction)==0
+	return rb(p1direction)==1
 end
 
 function playerTwoFacingLeft()
@@ -84,19 +84,19 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	return rw(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health-1)
+	ww(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health)
+	return rw(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health-1)
+	ww(p2health, health)
 end
 
 function readPlayerOneMeter()
@@ -105,10 +105,6 @@ end
 
 function writePlayerOneMeter(meter)
 	wb(p1meter, meter)
-	if meter==p1maxmeter then
-		ww(p1meter+4, 0x4000) -- set up the timer
-		ww(p1meter+8, 0x0010) -- activate
-	end
 end
 
 function readPlayerTwoMeter()
@@ -117,16 +113,12 @@ end
 
 function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
-	if meter==p2maxmeter then
-		ww(p2meter+4, 0x4000)
-		ww(p2meter+8, 0x0010)
-	end
 end
 
-function infiniteTime()
-	ww(0x10A836, 0x6000)
+local infiniteTime = function()
+	wb(0x10E32B,0x61)
 end
 
-function Run() -- runs every frame
+function Run()
 	infiniteTime()
 end

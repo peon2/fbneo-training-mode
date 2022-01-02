@@ -56,6 +56,8 @@ Galaxy Fight
 
 Garou Mark Of The Wolves
 
+Hyper Street Fighter II - The Anniversary Edition
+
 Jackie Chan in Fists of Fire
 
 JoJo's Bizarre Adventure: Heritage for the Future
@@ -96,6 +98,8 @@ The King Of Fighters 2003
 
 The King of Fighters 10th Anniversary 2005 Unique
 
+The Last Blade
+
 The Last Blade 2
 
 Matrimelee
@@ -126,7 +130,7 @@ Real Bout Fatal Fury 2
 
 Real Bout Fatal Fury Special
 
-Ring of Destruction - slammasters II
+Ring of Destruction - Slam Masters II
 
 Samurai Shodown
 
@@ -165,6 +169,8 @@ Super Street Fighter 2X - Grand Master Challenge
 Tōkidenshō Angel Eyes
 
 Vampire Hunter
+
+Vampire Savior
 
 Voltage Fighter Gowcaizer
 

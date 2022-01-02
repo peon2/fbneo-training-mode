@@ -276,8 +276,8 @@ end
 -- hotkey functions
 
 function togglescrollinginputsplayer()
-	draw[1] = inputs.properties.scrollinginput.state[1]
-	draw[2] = inputs.properties.scrollinginput.state[2]
+	draw[1] = inputs.properties.scrollinginput.scrollingstate[1]
+	draw[2] = inputs.properties.scrollinginput.scrollingstate[2]
 end
 
 togglescrollinginputsplayer()
@@ -389,8 +389,7 @@ end)
 --]]
 
 function scrollingInputReg()
-	gui.text(0,0,"")
-	
+
 	for i = 1, 2 do
 		if not inputs.properties.scrollinginput.scrollinginputxoffset[i] then
 			inputs.properties.scrollinginput.scrollinginputxoffset[i] = margin[i] 

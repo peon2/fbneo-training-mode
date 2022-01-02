@@ -1,12 +1,32 @@
+v0.22
+
+Simple Input display is now controllable through the HUD Settings.
+Added KB display that can be controlled through HUD settings.
+Added Hotkeys.
+Adjustments to the GUI to stop some things clipping so much.
+GUI can now be controlled using Left/Right/Up/Down.
+Help is now drawn in the GUI in-bounds dynamically.
+
+Fixed issue with swapping inputs (3 coin inputs) not working correctly.
+
+Adjusted the kof series (94,95,95sp,96,97,98,kof98cb,99,99ae,2000,2001,2002,2003,kf2k5uni) to range between 0 health to max health (magic pixel).
+Myriad of fixes to Last Blade 2 (lastbld2)
+Added support for Last Blade (lastblad)
+
+Myriad of fixes to ssfxjr1, new hitboxes handling added and adjustments to button icons (Thanks to poliva)
+Myriad of fixes to doubledr (Thanks to Ivy-IV)
+Added support for Hyper Street Fighter 2 (hsf2) (Thanks to PopovMark)
+Added support for Vampire Savior (vsav) (Thanks to DatGrey)
+
 v0.21.10.29
 
 Fixed crash issues related to inputs with daraku, dbz2 and martmast.
 
-Added support for fatfury1
-Added support for sf
-Added support for sf2
-Added support for sf2hf
-Added support for sf2ce (rainbow)
+Added support for Fatal Fury (fatfury1)
+Added support for Street Fighter (sf)
+Added support for Street Fighter 2: The World Warrior (sf2)
+Added support for Street Fighter 2: Champion Edition (sf2ce rainbow)
+Added support for Street Fighter 2 Turbo: Hyper Fighting (sf2hf)
 
 v0.21.09
 

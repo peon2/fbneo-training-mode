@@ -4,8 +4,8 @@ print "Known Issues: with kof95"
 print "Combos aren't tracked"
 print ""
 
-p1maxhealth = 0xCF
-p2maxhealth = 0xCF
+p1maxhealth = 0xD0
+p2maxhealth = 0xD0
 
 p1maxmeter = 0x7F
 p2maxmeter = 0x7F
@@ -80,7 +80,7 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	wb(p1health, health-1)
 end
 
 function readPlayerTwoHealth()
@@ -88,7 +88,7 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	wb(p2health, health-1)
 end
 
 function readPlayerOneMeter()

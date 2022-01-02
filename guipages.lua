@@ -9,9 +9,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		func = 	function()
 					changeInteractiveGuiPage(interactivegui.page-1)
 				end,
-		info = {
-			"Moves back one page"
-		},
+		info = "Moves back one page",
 	},
 	rightarrow = {
 		text = ">>",
@@ -21,9 +19,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		func = 	function()
 					changeInteractiveGuiPage(interactivegui.page+1)
 				end,
-		info = {
-			"Moves forward one page"
-		},
+		info = "Moves forward one page",
 	},
 	falseleftarrow = {
 		text = "<<",
@@ -42,9 +38,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 40,
 		y = 25,
 		olcolour = "black",
-		info = {
-			"Controls how P1 health is handled",
-		},
+		info = "Controls how P1 health is handled",
 		func = 	function()
 					CIG("p1health", inputs.properties.scrollinginput.state)			-- SHOULDNT BE LIKE THIS???
 				end,
@@ -67,9 +61,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 40,
 		fillpercent = 0,
 		olcolour = "black",
-		info = {
-			"Controls how much health P1 gains",
-		},
+		info = "Controls how much health P1 gains",
 		func = 		function()
 						CIG("p1maxhealth")
 					end,
@@ -84,9 +76,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 40,
 		y = 55,
 		olcolour = "black",
-		info = {
-			"Controls how P1 meter is handled",
-		},
+		info = "Controls how P1 meter is handled",
 		func = 	function()
 					CIG("p1meter", inputs.properties.scrollinginput.state)
 				end,
@@ -109,9 +99,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 70,
 		fillpercent = 0,
 		olcolour = "black",
-		info = {
-			"Controls how much meter P1 gains",
-		},
+		info = "Controls how much meter P1 gains",
 		func = 		function()
 						CIG("p1maxmeter")
 					end,
@@ -126,9 +114,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 40,
 		y = 105,
 		olcolour = "black",
-		info = {
-			"Controls how P2 health is handled",
-		},
+		info = "Controls how P2 health is handled",
 		func = 	function()
 					CIG("p2health", inputs.properties.scrollinginput.state)
 				end,
@@ -151,9 +137,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 120,
 		fillpercent = 0,
 		olcolour = "black",
-		info = {
-			"Controls how much health P2 gains",
-		},
+		info = "Controls how much health P2 gains",
 		func = 		function()
 						CIG("p2healthmax")
 					end,
@@ -168,9 +152,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 40,
 		y = 135,
 		olcolour = "black",
-		info = {
-			"Controls how P2 meter is handled",
-		},
+		info = "Controls how P2 meter is handled",
 		func = 	function()
 					CIG("p2meter", inputs.properties.scrollinginput.state)
 				end,
@@ -193,9 +175,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 150,
 		fillpercent = 0,
 		olcolour = "black",
-		info = {
-			"Controls how much meter P2 gains",
-		},
+		info = "Controls how much meter P2 gains",
 		func = 		function()
 						CIG("p2metermax")
 					end,
@@ -205,43 +185,19 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						this.fillpercent = modulevars.p2.maxmeter/modulevars.p2.constants.maxmeter
 					end,
 	},
-	simpledisplaytoggle = {
-		text = "Simple input display on",
-		x = 36,
-		y = 45,
-		info = {
-			"toggles simple display down the bottom of the screen",
-		},
-		olcolour = "black",
-		func = function() changeConfig("inputs","simpleinputenabled", not inputs.properties.simpleinput.enabled, inputs.properties.simpleinput, "enabled") end,
-							
-		autofunc =	function(this)
-						if inputs.properties.simpleinput.enabled then
-							this.text = "Simple input display on"
-							this.x = 36
-						else
-							this.text = "Simple input display off"
-							this.x = 32
-						end
-					end,
-	},
 	scrollinginputsettings = {
 		text = "Change scrolling input settings",
 		x = 4,
-		y = 60,
+		y = 45,
 		olcolour = "black",
-		info = {
-			"Change scrolling input settings",
-		},
+		info = "Change scrolling input settings",
 		func = 	function() CIG("scrollingtextsettings", 2) end,
 	},
 	scrollinginputframestoggle = {
 		text = "Display scrolling input frame numbers",
 		x = 76,
 		y = 90,
-		info = {
-			"Toggles frame numbers displayed along with scrolling inputs",
-		},
+		info = "Toggles frame numbers displayed along with scrolling inputs",
 		olcolour = "black",
 		func = function()
 					inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
@@ -263,10 +219,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 29,
 		y = 105,
 		olcolour = "black",
-		info = {
-			"Allows you to control whether or not a replay will reverse itself",
-			"while playing if they're on a different side to how it was recorded",
-		},
+		info = "Allows you to control whether or not a replay will reverse directions while playing",
 		func =	function()
 					recording.autoturn = not recording.autoturn
 				end,
@@ -285,9 +238,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 80,
 		y = 15,
 		olcolour = "black",
-		info = {
-			"Move and hide parts of the HUD",
-		},
+		info = "Move and hide parts of the HUD",
 		func = 	function()
 					toggleMoveHUD(true, {})
 				end,
@@ -298,11 +249,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 30,
 		fillpercent = 0,
 		olcolour = "black",
-		info = {
-			"This controls how many frames you have between each coin input",
-			"10 frames allows for faster usage",
-			"but 15 might be easier for slow fingers",
-		},
+		info = "This controls how many frames you have between each coin input.10 frames allows for faster usage but 15 might be easier.",
 		func = 		function()
 						CIG("coininputleniency", inputs.properties.coinleniency-9)
 					end,
@@ -317,9 +264,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			x = 5,
 			y = 120,
 			olcolour = "black",
-			info = {
-				"Plays back the respective replay slot after hit",
-			},
+			info = "Plays back the respective replay slot after hit",
 			func = 		function()
 							if recording.hitslot then
 								CIG("hitslot", recording.hitslot)
@@ -344,9 +289,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 29,
 		y = 135,
 		olcolour = "black",
-		info = {
-			"Save and Load replays (current slot)"
-		},
+		info = "Save and Load replays (current slot)",
 		func = function() CIG("replaysaveload", 1) end,
 	},
 	replayeditortoggle = {
@@ -354,20 +297,16 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 13,
 		y = 150,
 		olcolour = "black",
-		info = {
-			"View and set replay inputs",
-		},
+		info = "View and set replay inputs",
 		func = 	function() toggleReplayEditor(nil, {}) end,
 	},
 	hitboxsettings = {
 		text = "Change hitbox settings",
 		x = 40,
-		y = 75,
+		y = 60,
 		olcolour = "black",
 		func = 	function() CIG("hitboxsettings", 2) end,
-		info = {
-			"Change hitbox settings",
-		},
+		info = "Change hitbox settings",
 	},
 	hitboxstate = {
 		text = "Hitboxes On",
@@ -376,9 +315,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		func = 	function()
 			changeConfig("hitbox", "enabled", not hitboxes.enabled, hitboxes)
 		end,
-		info = {
-			"Toggles hitboxes on and off",
-		},
+		info = "Toggles hitboxes on and off",
 		autofunc = 	function(this)
 			if hitboxes.enabled then
 				this.text = "Hitboxes On"
@@ -391,6 +328,8 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	},
 }
 
+guipagesformatted = {}
+
 guipages = { -- interactiveguipages
 	{ -- Main
 		title = {
@@ -401,6 +340,7 @@ guipages = { -- interactiveguipages
 		guielements.leftarrow,
 		guielements.rightarrow,
 		guielements.hudsettings,
+		--guielements.hotkeys,
 		guielements.coininputleniency,
 	},
 	{ -- Players
@@ -434,9 +374,7 @@ guipages = { -- interactiveguipages
 			text = "Set the direction P2 is holding",
 			x = 12,
 			y = 70,
-			info = {
-				"Allows you to set the direction P2 is holding",
-			},
+			info = "Allows you to set the direction P2 is holding",
 			func = function() CIG("setdirectionp2", 1) end,
 			olcolour = "black",
 			autofunc = 	function(this)
@@ -470,9 +408,7 @@ guipages = { -- interactiveguipages
 			text = "Don't Loop",
 			x = 25,
 			y = 30,
-			info = {
-				"Controls whether or not playback loops until you press play again",
-			},
+			info = "Controls whether or not playback loops until you press play again",
 			olcolour = "black",
 			func =	function()
 						recording.loop = not recording.loop
@@ -498,17 +434,13 @@ guipages = { -- interactiveguipages
 			autofunc = 	function(this) -- calls every frame this is visible
 							this.text = "Slot "..recording.recordingslot
 						end,
-			info = {
-				"Set the current recording slot",
-			},
+			info = "Set the current recording slot",
 		},
 		{
 			text = "Don't Randomise",
 			x = 5,
 			y = 60,
-			info = {
-				"Random playback between all slots that have been recorded into",
-			},
+			info = "Random playback between all slots that have been recorded into",
 			olcolour = "black",
 			func =	function()
 						recording.randomise = not recording.randomise
@@ -528,9 +460,7 @@ guipages = { -- interactiveguipages
 			x = 5,
 			y = 75,
 			olcolour = "black",
-			info = {
-				"Controls whether there's a space at the start or end of replays",
-			},
+			info = "Controls whether there's a space at the start or end of replays",
 			func = 	function()
 						if recording.skiptostart and recording.skiptofinish then
 							changeConfig("recording","skiptostart", false, recording) -- turn both off
@@ -566,9 +496,7 @@ guipages = { -- interactiveguipages
 			x = 5,
 			y = 90,
 			olcolour = "black",
-			info = {
-				"Controls which player(s) are recorded and played back",
-			},
+			info = "Controls which player(s) are recorded and played back",
 			func = 	function()
 						CIG("playerrecording", 2)
 					end,
@@ -620,18 +548,14 @@ guipages = { -- interactiveguipages
 		{
 			text = "<",
 			olcolour = "black",
-			info = {
-				"Back",
-			},
+			info = "Back",
 			func =	function() CIG(1,3) end,
 		},
 		{
 			text = "Scrolling input text size ",
 			x = 4,
 			y = 70,
-			info = {
-				"Sets the size of the scrolling input text images",
-			},
+			info = "Sets the size of the scrolling input text images",
 			fillpercent = 0,
 			olcolour = "black",
 			func = 		function()
@@ -653,18 +577,12 @@ guipages = { -- interactiveguipages
 		{
 			text = "<",
 			olcolour = "black",
-			info = {
-				"Back",
-			},
+			info = "Back",
 			func =	function() CIG(1,3) end,
 		},
 		guielements.hitboxstate,
 	},
 }
-
-if inputDisplayReg then -- if input-display.lua is loaded
-	table.insert(guipages[1], guielements.simpledisplaytoggle)
-end
 
 if scrollingInputReg then -- if scrolling-input-display.lua is loaded
 	table.insert(guipages[1], guielements.scrollinginputsettings)
@@ -896,7 +814,7 @@ do -- recordingslot
 				this.textcolour = "white"
 			end
 		end
-	end					
+	end
 	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
 end
 
@@ -926,3 +844,46 @@ local playerrecelements = {
 					{text = "P1&P2", selectfunc = function() return function() recording.replayP1=true recording.replayP2=true end end},
 				}
 guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrecelements, 144, 55, nil)
+
+--[[
+	guipagesformatted[1] = {guiTableFormatting}
+	guipagesformatted[2] = {guiTableFormatting}
+	guipagesformatted[hitboxsettings] = {guiTableFormatting}
+	.
+	.
+	.
+--]]
+-- format the tables for better navigation and format the info to fit the screen better
+do 
+	local tab, str, str2, r, b
+	local infomax = interactivegui.boxxlength/4
+	for i,v in pairs(guipages) do
+		tab = {}
+		for j,k in ipairs(v) do
+			local t = {id=j,x=k.x,y=k.y}
+			if not t.x then t.x=0 end -- failsafe
+			if not t.y then t.y=0 end
+			table.insert(tab, t)
+			
+			if k.info and type(k.info)=="string" then -- if its not in a string format assume its already formatted
+				str = k.info
+				k.info = {}
+				while (#str>infomax) do
+					str2 = str:sub(1,infomax-1):reverse()
+					str = str:sub(infomax)
+					b = false
+					r=str2:find("\n")
+					if r then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r-1)) b=true end
+					r=str2:find("%.")
+					if r and not b then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r)) b=true end
+					r=str2:find(" ")
+					if r and not b then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r-1)) b=true end
+					
+					if not b then table.insert(k.info,str2:reverse()) end -- couldn't find a delimiter
+				end
+				table.insert(k.info,str)
+			end
+		end
+		guipagesformatted[i] = guiTableFormatting(tab)
+	end
+end

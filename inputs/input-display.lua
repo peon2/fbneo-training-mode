@@ -65,21 +65,40 @@ local function generic() --try to detect controls and make a generic module
 end
 
 local function displayfunc()
-
-	if not inputs.properties.simpleinput.enabled then return end
 	
 	for k,v in pairs(module) do
 		local color1,color2 = col.on1,col.on2
 		if v[5] and v[6] then --analog control
-			gui.text(v[1]+v[5], v[2]+v[6], tostring(joypad.get()[v[3]]), color1, color2) --simpleinputdisplayenabled analog value
+			gui.text(v[1]+v[5], v[2]+v[6], tostring(joypad.get()[v[3]]), color1, color2) --simpleinputdisplayenabled analog value (unused)
 		elseif joypad.get()[v[3]] == false then --digital control, unpressed
 			color1,color2 = col.off1,col.off2
 		end --(otherwise digital control, pressed)
-		gui.text(v[1], v[2], string.sub(k, 2), color1, color2)
+		if string.sub(k, 1, 1)=="2" then -- only working for two players
+			if inputs.properties.simpleinput.simplestate[2] then
+				gui.text(inputs.properties.simpleinput.simpleinputxoffset[2]+(v[1]-module["2c"][1]), inputs.properties.simpleinput.simpleinputyoffset[2]+(v[2]-module["2^"][2]), string.sub(k, 2), color1, color2)
+			end
+		else
+			if inputs.properties.simpleinput.simplestate[1] then
+				gui.text(inputs.properties.simpleinput.simpleinputxoffset[1]+(v[1]-module["1c"][1]), inputs.properties.simpleinput.simpleinputyoffset[1]+(v[2]-module["1^"][2]), string.sub(k, 2), color1, color2)
+			end
+		end
 	end
 end
 
 function inputDisplayReg()
+
+	for i = 1, 2 do
+		if not inputs.properties.simpleinput.simpleinputxoffset[i] then
+			inputs.properties.simpleinput.simpleinputxoffset[i] = module[i.."c"][1]
+		end
+	end
+	
+	for i = 1, 2 do
+		if not inputs.properties.simpleinput.simpleinputyoffset[i] then
+			inputs.properties.simpleinput.simpleinputyoffset[i] = module[i.."^"][2]
+		end
+	end
+
 	displayfunc()
 end
 

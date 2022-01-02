@@ -29,9 +29,9 @@ translationtable = {
 	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Button A"] = 5,
-	["Button B"] = 6,
-	["Button C"] = 7,
+	["Button 1"] = 5,
+	["Button 2"] = 6,
+	["Button 3"] = 7,
 	["Coin"] = 8,
 	["Start"] = 9,
 }

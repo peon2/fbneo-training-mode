@@ -87,7 +87,7 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	wb(p1health, health-1)
 end
 
 function readPlayerTwoHealth()
@@ -95,7 +95,7 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	wb(p2health, health-1)
 end
 
 function readPlayerOneMeter()

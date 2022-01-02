@@ -1,7 +1,7 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-p1maxhealth = 0x70
-p2maxhealth = 0x70
+p1maxhealth = 0x71
+p2maxhealth = 0x71
 
 p1maxmeter = 0x168
 p2maxmeter = 0x168
@@ -90,7 +90,7 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health[p1char], health)
+	wb(p1health[p1char], health-1)
 end
 
 function readPlayerTwoHealth()
@@ -98,7 +98,7 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health[p2char], health)
+	wb(p2health[p2char], health-1)
 end
 
 function readPlayerOneMeter()

@@ -1,11 +1,26 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
-p1maxhealth = 256
-p2maxhealth = 256
+print "Note that you may have to restart the script if you switch characters"
 
-print "Known Issues: with lb2"
-print "Can't write health or meter"
-print ""
+p1maxhealth = 0x100
+p2maxhealth = 0x100
+p1maxmeter = 0x40
+p2maxmeter = 0x40
+
+local p1uid = rdw(0x10E344)
+local p2uid = rdw(0x10E348)
+
+local p1health = p1uid+0x17E -- word
+local p2health = p2uid+0x17E
+
+local p1meter = p1uid+0x17D -- byte
+local p2meter = p2uid+0x17D
+
+local p1direction = p1uid+0x41 -- bit
+local p2direction = p2uid+0x41
+
+local p1combocounter = 0x100912 -- byte
+local p2combocounter = 0x100913
 
 translationtable = {
 	"left",
@@ -33,64 +48,77 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=144,
-		combotexty=49,
+	hud = {
+		combotextx=147,
+		combotexty=36,
+		comboenabled=true,
+		p1healthx=17,
+		p1healthy=17,
+		p1healthenabled=true,
+		p2healthx=292,
+		p2healthy=17,
+		p2healthenabled=true,
+		p1meterx=106,
+		p1metery=209,
+		p1meterenabled=true,
+		p2meterx=208,
+		p2metery=209,
+		p2meterenabled=true,
 	},
 }
 
 function playerOneFacingLeft()
-	return rb(0x10872f)==1
+	return rb(p1direction)==1
 end
 
-function playerOneFacingLeft()
-	return rb(0x10872f)==0
+function playerTwoFacingLeft()
+	return rb(p2direction)==0
 end
 
 function playerOneInHitstun()
-	return rb(0x10e483)~=0
+	return rb(p2combocounter)~=0
 end
 
 function playerTwoInHitstun()
-	return rb(0x10e482)~=0
+	return rb(p1combocounter)~=0
 end
 
 function readPlayerOneHealth()
-	return rw(0x10e592)
+	return rw(p1health)
 end
 
-function _writePlayerOneHealth(health) -- writing health issue
-	return rb(0x10537E, health)
+function writePlayerOneHealth(health)
+	ww(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rw(0x10e590)
+	return rw(p2health)
 end
 
-function _writePlayerTwoHealth(health) -- writing health issue
-	wb(0x10197f, health)
+function writePlayerTwoHealth(health)
+	ww(p2health, health)
 end
 
-function _readPlayerOneMeter() -- reading meter issue
-	return rb(0x10537d)--0x205BB63)
+function readPlayerOneMeter()
+	return rb(p1meter)
 end
 
-function _writePlayerOneMeter(meter)  -- writing meter issue
-	wb(0x2034863, meter)
+function writePlayerOneMeter(meter)
+	wb(p1meter, meter)
 end
 
-function _readPlayerTwoMeter() -- reading meter issue
-	return rb(0x10537d)--0x205BB63)
+function readPlayerTwoMeter()
+	return rb(p2meter)
 end
 
-function _writePlayerTwoMeter(meter)  -- writing meter issue
-	wb(0x2034863, meter)
+function writePlayerTwoMeter(meter)
+	wb(p2meter, meter)
 end
 
-local infiniteCredit = function()
-	wb(0x10e595, 0x99)
+local function infiniteTime()
+	wb(0x10E595, 0x60)
 end
 
 function Run()
-	infiniteCredit()
+	infiniteTime()
 end

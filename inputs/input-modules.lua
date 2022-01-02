@@ -23,7 +23,6 @@ table.insert(inp,{games,i}) = command to add the module
 --[[	TO BE DONE
 	
 	COLOURS AS A CONFIG OPTION
-	COMMENT OUT MAME STUFF FOR GOOD PRACTICE?
 
 --]]
 
