@@ -19,8 +19,8 @@ local p2meter = p2uid+0x17D
 local p1direction = p1uid+0x41 -- bit
 local p2direction = p2uid+0x41
 
-local p1combocounter = 0x100912 -- byte
-local p2combocounter = 0x100913
+local p1combocounter = 0x10E486 -- byte
+local p2combocounter = 0x10E487
 
 translationtable = {
 	"left",
@@ -76,11 +76,11 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	return rb(p2combocounter)~=0
+	return rb(p2combocounter)>0
 end
 
 function playerTwoInHitstun()
-	return rb(p1combocounter)~=0
+	return rb(p1combocounter)>0
 end
 
 function readPlayerOneHealth()
