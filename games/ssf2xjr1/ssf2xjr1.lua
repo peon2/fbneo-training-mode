@@ -257,6 +257,7 @@ local forceblock = false
 local prev_p1action = 0
 local inputs_at_jumpstart = 0
 local autoblock_skip_counter = 60
+local canblock = false
 local autoBlock = function()
 
 	if autoblock_selector == -1 then
@@ -269,6 +270,9 @@ local autoBlock = function()
 	if (p1action == 0 or p1action == 2 or p1action==6) then
 		setDirection(2,5)
 		forceblock = false
+		if autoblock_selector == 2 and canblock == true then
+			canblock = false
+		end
 		return
 	end
 
@@ -277,7 +281,17 @@ local autoBlock = function()
 	-- if opponent is ground attacking, ground block
 	if (p1action == 10 or p1action == 12) and distance < 265 then
 
-		if autoblock_selector == 2 or autoblock_selector == 3 then
+		-- block: auto
+		if autoblock_selector == 2 and canblock == false then
+			if p2action == 14 then
+				setDirection(2,5)
+				canblock = true
+			end
+			return
+		end
+
+		-- block: random
+		if autoblock_selector == 3 then
 			autoblock_skip_counter = autoblock_skip_counter -1
 			if autoblock_skip_counter == 0 then
 				autoblock_skip_counter = 60
