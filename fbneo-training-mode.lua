@@ -86,8 +86,11 @@ local games = {
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
 	tkdensho = {"tkdensho", iconfile = "icons-banpresto-32.png"},
+	vamp = {"vamp", "vampjr1", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	vhunt2 = {"vhunt2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhuntjr2 = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vsav = {"vsav", "vsavj", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	vsav2 = {"vsav2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	wakuwak7 = {"wakuwak7", "wakuwak7bh", iconfile = "icons-neogeo-32.png"},
 	whp = {"whp", iconfile = "icons-neogeo-32.png"},
 	xmvsf = {"xmvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -1420,17 +1423,16 @@ local toggleRecording = function(bool, vargs)
 	if interactivegui.movehud then return end
 	
 	local swp = vargs and vargs.swapinputs
+	
 	if vargs then vargs.recording = false end
 	toggleStates(vargs)
-	
-	if not vargs then vargs = {} end
 
 	if bool==nil then recording.enabled = not recording.enabled
 	else recording.enabled = bool end
 
 	recording.swapplayers = not recording.replayP1
 	
-	if swp~=false then -- we only want to toggle the inputs when toggleSwapInputs is not originally called
+	if swp~=false then -- we only want to toggle the inputs when toggleSwapInputs is not originally called		
 		if recording.swapplayers then
 			toggleSwapInputs(recording.enabled, vargs)
 		else
@@ -1470,7 +1472,7 @@ local logRecording = function()
 
 	if not recording.enabled then return end
 	if not recording[recording.recordingslot] then recording[recording.recordingslot] = {} end
-
+	
 	local recordslot = recording[recording.recordingslot]
 	local tab = {
 		raw = {
@@ -2588,7 +2590,7 @@ toggleReplayEditor = function(bool, vargs)
 			end
 		end
 		interactivegui.replayeditor.changed = {}
-		toggleRecording(false) -- sets up serialising stuff
+		toggleRecording(false, vargs) -- sets up serialising stuff
 	end
 end
 
@@ -2636,8 +2638,8 @@ local drawReplayEditorFuncs = {
 	end,
 	back = function(but)
 		if interactivegui.replayeditor.framestart then return end
-		if not interactivegui.replayeditor.framestart and guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then 
-			toggleReplayEditor(false) 
+		if not interactivegui.replayeditor.framestart and guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			toggleReplayEditor(false)
 		end
 	end,
 	other = function()
@@ -2723,7 +2725,6 @@ end
 local readHotkeyInFuncs = {
 	back = function(but)
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-			print(but)
 			inputs.hotkeys.hotkeyin = false
 		end
 	end,
@@ -2978,6 +2979,7 @@ setRegisters = function() -- pre-calc stuff
 
 	emu.registerbefore(function ()
 		fc = emu.framecount() -- update framecount
+		gui.clearuncommitted() -- just in case
 		for _,v in pairs(registers.registerbefore) do
 			v()
 		end

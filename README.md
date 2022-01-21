@@ -168,9 +168,15 @@ Super Street Fighter 2X - Grand Master Challenge
 
 Tōkidenshō Angel Eyes
 
-Vampire Hunter
+Darkstalkers: The Night Warriors
 
-Vampire Savior
+Vampire Hunter: Darkstalkers' Revenge
+
+Vampire Hunter 2: Darkstalkers' Revenge
+
+Vampire Savior: The Lord of Vampire
+
+Vampire Savior 2: The Lord of Vampire
 
 Voltage Fighter Gowcaizer
 

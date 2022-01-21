@@ -365,7 +365,6 @@ end
 
 
 local function render_sf2_hitboxes()
-	gui.clearuncommitted()
 	if not game or not frame_buffer[1].status or not draw_hitboxes then
 		return
 	end
