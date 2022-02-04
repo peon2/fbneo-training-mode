@@ -62,13 +62,39 @@ guicustompage = {
 					end
 	},
 	{
-		text = "AutoBlock",
+		text = "AutoReversal",
 		x = 8,
 		y = 60,
 		olcolour = "black",
 		info = {
+			"Control reversal on P2",
+			"Use the Replay Editor in the Recording menu to program the desired reversal action."
+		},
+		func =	function()
+				autoreversal_selector = autoreversal_selector + 1
+				if autoreversal_selector > 0 then
+					autoreversal_selector = -1
+				end
+			end,
+		autofunc = function(this)
+				if autoreversal_selector == -1 then
+					this.text = "AutoReversal (P2): Disabled"
+				elseif autoreversal_selector == 0 then
+					this.text = "AutoReversal (P2): Enabled"
+				end
+			end,
+	},
+	{
+		text = "AutoBlock",
+		x = 8,
+		y = 80,
+		olcolour = "black",
+		info = {
 			"Control guard / auto-block on P2",
-			"Can be Disabled, block everything, block only ground attacks, block auto or block random."
+			"Block everything: will guard any ground or jump attack",
+			"Block ground attacks: useful to practice combos that start with a jump-in",
+			"Block auto: Allow the first hit, block if you drop the combo",
+			"Block random: useful to practice hit-confirms"
 		},
 		func =	function()
 				autoblock_selector = autoblock_selector + 1
@@ -93,7 +119,7 @@ guicustompage = {
 	{
 		text = "Stun/Dizzy",
 		x = 8,
-		y = 80,
+		y = 100,
 		olcolour = "black",
 		info = {
 			"Control Stun/Dizzy",

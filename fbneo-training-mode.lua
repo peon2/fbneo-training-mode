@@ -1529,7 +1529,7 @@ local logRecording = function()
 
 end
 
-local togglePlayBack = function(bool, vargs)
+togglePlayBack = function(bool, vargs)
 	if interactivegui.movehud then return end
 	
 	if vargs then vargs.playback = false end

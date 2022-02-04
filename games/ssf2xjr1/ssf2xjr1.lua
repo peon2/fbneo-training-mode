@@ -25,6 +25,10 @@ local p2action = 0
 local p2inputs = 0
 local p1inputs = 0
 
+local prev_p1action = 0
+local prev_p2action = 0
+
+
 translationtable = {
 	"left",
 	"right",
@@ -252,9 +256,162 @@ local getDistanceBetweenPlayers = function()
 	return distance
 end
 
+local frameskip_currval = 0
+local frameskip_prevval = 0
+local was_frameskip = false
+
+local function checkFrameskip()
+	frameskip_address = 0xFF801D
+	frameskip_prevval = frameskip_currval
+	frameskip_currval = rb(frameskip_address)
+	local x = frameskip_currval - frameskip_prevval
+	if x % 2 == 0 then
+		was_frameskip = true
+	else
+		was_frameskip = false
+	end
+end
+
+local numframes = 0
+local function setFrameskip(status)
+	if status then
+		local speed = rb(0xFF83A9)
+		if speed == 0 then frameskip_value = 0x80
+		elseif speed == 1 then frameskip_value = 0x70
+		elseif speed == 2 then frameskip_value = 0x60
+		elseif speed == 3 then frameskip_value = 0x50
+		end
+		--print ("FRAMESKIP ENABLED @ " .. numframes.. " - speed: ".. frameskip_value)
+		wb(0xFF8CD3, frameskip_value) -- frameskip enabled
+	else
+		--print ("FRAMESKIP DISABLED @ " .. numframes)
+		wb(0xFF8CD3, 0xff) -- frameskip disabled
+	end
+end
+
+autoreversal_selector = -1
+local frame_for_reversal = 0
+local idle_frameanim = 122
+local grounded = {}
+local counter_for_wakeup_reversal = 38
+local wakeup_reversal = 35
+local iswakeup = false
+local autoReversal = function()
+	if autoreversal_selector == -1 then
+		return
+	end
+
+	local DEBUG=true
+
+	local framesrecorded = #recording[recording.recordingslot]
+	if (framesrecorded < 1) then
+		gui.text(220,50,"Use the Replay Editor in the ")
+		gui.text(220,60,"Recording menu (hold coin) to")
+		gui.text(220,70,"program the desired reversal action.")
+		return
+	end
+
+	local frameanimation = rb(0xff896b)
+	local groundval = rb(0xff89e1)
+	if (p2action == 14 and prev_p2action ~= 14) or (p2action == 20 and prev_p2action ~= 20) then
+		numframes = 1
+	end
+	if (p2action == 14 and prev_p2action == 14) or (p2action == 20 and prev_p2action == 20) then
+		numframes = numframes + 1
+		if was_frameskip then
+			--print("FRAMESKIP MID! @ " .. numframes)
+			numframes=numframes+1
+		end
+
+		if (numframes > 38) then
+			grounded[0]=grounded[1]
+			grounded[1]=grounded[2]
+			grounded[2]=groundval
+			if (grounded[0] == 0 and grounded[1] == 0 and grounded[2] ~=0) then
+				counter_for_wakeup_reversal = 1
+				iswakeup = true
+			else
+				local diff = grounded[1] - grounded[2]
+				if (diff > 2 or diff < 0) then diff = 1 end
+				counter_for_wakeup_reversal = counter_for_wakeup_reversal + diff
+			end
+		else
+			grounded[0]=0
+			grounded[1]=0
+			grounded[2]=0
+		end
+	end
+	-- local reversal_flag = rb(0xFF89B7)
+	-- local lastspecial = rb(0xFF89B8)
+	--if (p2action ~= 0) then print("p2action=" .. p2action .. " | numframes=" .. numframes .. " | groundval=".. groundval .." | cfw="..counter_for_wakeup_reversal .. " | sp="..lastspecial .. " | rv="..reversal_flag ) end
+	if (p2action ~= 14 and prev_p2action == 14) or (p2action ~= 20 and prev_p2action == 20) then
+		-- learn the value of frameanimation after last hit frame
+		idle_frameanim = frameanimation
+		setFrameskip(true)
+		if (numframes - frame_for_reversal == framesrecorded) then
+			if (p2action ~= 12) then
+				if (DEBUG) then print("=> FAILED FRAME-PERFECT REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+			else
+				if (DEBUG) then print("=> SUCCESSFUL REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+			end
+		elseif (numframes - frame_for_reversal < framesrecorded) then
+			if (p2action ~= 12) then
+				if (DEBUG) then print("=> MISSED REVERSAL PERFORMED TOO LATE AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+				if iswakeup then counter_for_wakeup_reversal = counter_for_wakeup_reversal + 1 end
+			else
+				if (DEBUG) then print("=> SUCCESSFUL LATE REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+			end
+		elseif (numframes - frame_for_reversal > framesrecorded) then
+			if (p2action ~= 12) then
+				if (DEBUG) then print("=> MISSED REVERSAL PERFORMED TOO EARLY AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+			else
+				if (DEBUG) then print("=> SUCCESSFUL EARLY REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+				if iswakeup and framesrecorded < 4 then counter_for_wakeup_reversal = counter_for_wakeup_reversal - 1 end
+			end
+
+		end
+		wakeup_reversal = counter_for_wakeup_reversal - framesrecorded
+		if (DEBUG) then
+			print("=> FRAME FOR NEXT REVERSAL: [count:" .. frame_for_reversal .. " / "..numframes.."] [wakeup: "..wakeup_reversal.." / " ..counter_for_wakeup_reversal.."]")
+			print(" ")
+		end
+	end
+
+	if (p2action == 14 or p2action == 20) then
+		local safeguard=2
+		if (frameanimation == 105 - framesrecorded - safeguard) or (frameanimation == 105 - framesrecorded - safeguard + 1) or (frameanimation == 122 - framesrecorded - safeguard) or (frameanimation == 122 - framesrecorded - safeguard + 1) or (frameanimation == 144 - framesrecorded - safeguard) or (frameanimation == 144 - framesrecorded - safeguard + 1) then
+			if (groundval ~= 0) then
+				iswakeup = false
+				setFrameskip(false)
+			else
+				iswakeup = true
+			end
+		end
+		if iswakeup then safeguard = framesrecorded+1 end
+		if (counter_for_wakeup_reversal == wakeup_reversal - safeguard) or (counter_for_wakeup_reversal == wakeup_reversal - safeguard + 1) then
+			iswakeup = true
+			setFrameskip(false)
+		end
+	end
+
+	if (( p2action == 14 or p2action == 20 ) and not iswakeup and ( ( frameanimation == idle_frameanim - framesrecorded) or (frameanimation == idle_frameanim - framesrecorded + 1) or (frameanimation == 105 - framesrecorded) or (frameanimation == 122 - framesrecorded) or (frameanimation == 144 - framesrecorded) ) ) then
+		if not recording.playback then
+			togglePlayBack(nil, {})
+			frame_for_reversal = numframes
+			if (DEBUG) then print("GROUND REVERSAL! numframes=[" .. numframes .. "]") end
+		end
+	end
+	if (( p2action == 14 or p2action == 20 ) and iswakeup and (counter_for_wakeup_reversal == wakeup_reversal) ) then
+		if not recording.playback then
+			togglePlayBack(nil, {})
+			frame_for_reversal = numframes
+			if (DEBUG) then print("WAKEUP REVERSAL! numframes=[" .. numframes .. "]") end
+		end
+	end
+end
+
 autoblock_selector = -1
 local forceblock = false
-local prev_p1action = 0
 local inputs_at_jumpstart = 0
 local autoblock_skip_counter = 60
 local canblock = false
@@ -399,10 +556,13 @@ function Run() -- runs every frame
 	-- p2inputs = rw(0xFF8BE0)
 	p1inputs = rw(0xFF87E0)
 
-	infiniteTime()
+	checkFrameskip()
 	autoBlock()
+	autoReversal()
 	neverEnd()
 	stageSelect()
 	p2DizzyControl()
+	infiniteTime()
 	prev_p1action = p1action
+	prev_p2action = p2action
 end
