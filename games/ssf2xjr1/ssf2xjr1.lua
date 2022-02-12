@@ -28,6 +28,22 @@ local p1inputs = 0
 local prev_p1action = 0
 local prev_p2action = 0
 
+local Ryu = 0x00
+local Honda = 0x01
+local Blanka = 0x02
+local Guile = 0x03
+local Ken = 0x04
+local Chun = 0x05
+local Zangief = 0x06
+local Dhalsim = 0x07
+local Dictator = 0x08
+local Sagat = 0x09
+local Boxer = 0x0A
+local Claw = 0x0B
+local Cammy = 0x0C
+local Hawk = 0x0D
+local Fei = 0x0E
+local Deejay = 0x0F
 
 translationtable = {
 	"left",
@@ -272,7 +288,6 @@ local function checkFrameskip()
 	end
 end
 
-local numframes = 0
 local function setFrameskip(status)
 	if status then
 		local speed = rb(0xFF83A9)
@@ -281,22 +296,59 @@ local function setFrameskip(status)
 		elseif speed == 2 then frameskip_value = 0x60
 		elseif speed == 3 then frameskip_value = 0x50
 		end
-		--print ("FRAMESKIP ENABLED @ " .. numframes.. " - speed: ".. frameskip_value)
 		wb(0xFF8CD3, frameskip_value) -- frameskip enabled
 	else
-		--print ("FRAMESKIP DISABLED @ " .. numframes)
 		wb(0xFF8CD3, 0xff) -- frameskip disabled
 	end
 end
 
 autoreversal_selector = -1
+local autoreversal_patched = false
+local numframes = 0
 local frame_for_reversal = 0
-local idle_frameanim = 122
-local grounded = {}
-local counter_for_wakeup_reversal = 38
-local wakeup_reversal = 35
 local iswakeup = false
+local wakeup_reversal = 35
+local counter_for_wakeup_reversal = 0
+local frame_for_wakeup_reversal = 35
+local framesleft_for_wakeup_reversal = {}
+framesleft_for_wakeup_reversal[0] = -1
+framesleft_for_wakeup_reversal[1] = -1
+local doreversal = false
+local reversal_executed = false
+local reversal_executed_at = -1
+local framesleft = -1
+local reversal_guessed = 0
 local autoReversal = function()
+
+	-- check to see if we are running an IPS patched rom with the reversal flag overwrite NOP'd
+	-- unpatched: PATCH1: BE770F0C PATCH2: 0EEBF23E
+	--   patched: PATCH1: 734AABE4 PATCH2: 9BF781C3
+	local patch1 = memory.readdword(0x782a2)
+	if (patch1 == 0x734AABE4) then
+		patch2 = memory.readdword(0x8e94e)
+		if (patch2 == 0x9BF781C3) then
+			autoreversal_patched = true
+		end
+	end
+	if autoreversal_patched then
+		if autoreversal_selector == -1 then
+			wb(0xff85bb,0)
+			wb(0xff85b7,0)
+			wb(0xff89b7,0)
+			wb(0xff89bb,0)
+		else
+			wb(0xff85bb,0)
+			wb(0xff85b7,0)
+			if (p2action == 14 and prev_p2action == 14) or (p2action == 20 and prev_p2action == 20) then
+				wb(0xff89b7,1)
+				wb(0xff89bb,1)
+			else
+				wb(0xff89b7,0)
+				wb(0xff89bb,0)
+			end
+		end
+	end
+
 	if autoreversal_selector == -1 then
 		return
 	end
@@ -305,110 +357,195 @@ local autoReversal = function()
 
 	local framesrecorded = #recording[recording.recordingslot]
 	if (framesrecorded < 1) then
-		gui.text(220,50,"Use the Replay Editor in the ")
+		gui.text(220,50,"Use the Replay Editor in the")
 		gui.text(220,60,"Recording menu (hold coin) to")
 		gui.text(220,70,"program the desired reversal action.")
+		if not autoreversal_patched then
+			gui.text(35,80,"To improve auto-reversal select Game -> Load Game -> Apply IPS patches -> Play")
+		end
+		return
+	end
+	if (framesrecorded > 8) then
+		gui.text(220,50,"The recorded reversal action")
+		gui.text(220,60,"is too long. Please record a")
+		gui.text(220,70,"new action shorter than 9 frames.")
 		return
 	end
 
+	local reversal_flag = rb(0xFF89B7)
+	local boxer_reversal_flag = rb(0xFF89BB)
 	local frameanimation = rb(0xff896b)
-	local groundval = rb(0xff89e1)
+	local onair = rb(0xff89cf)
+	local prev_framesleft = framesleft
+	framesleft = rb(0xff8867)
 	if (p2action == 14 and prev_p2action ~= 14) or (p2action == 20 and prev_p2action ~= 20) then
 		numframes = 1
+		reversal_executed_at = -1
+		reversal_executed = false
+		counter_for_wakeup_reversal = 0
+		if (p2action == 20) then
+			iswakeup = true
+		end
 	end
 	if (p2action == 14 and prev_p2action == 14) or (p2action == 20 and prev_p2action == 20) then
 		numframes = numframes + 1
 		if was_frameskip then
-			--print("FRAMESKIP MID! @ " .. numframes)
+			if DEBUG then print ("FRAMESKIP @ "..numframes) end
 			numframes=numframes+1
+			if prev_framesleft - 1 == framesleft and framesleft > 1 then
+				framesleft = framesleft - 1
+			end
+		end
+		if onair == 255 then
+			if not iswakeup then
+				setFrameskip(true)
+			end
+			iswakeup = true
+		end
+		if (onair == 0) then
+			if was_frameskip then
+				counter_for_wakeup_reversal = counter_for_wakeup_reversal + 2
+			else
+				counter_for_wakeup_reversal = counter_for_wakeup_reversal + 1
+			end
+			wakeup_reversal = counter_for_wakeup_reversal - framesrecorded - 1
+		else
+			counter_for_wakeup_reversal = 0
 		end
 
-		if (numframes > 38) then
-			grounded[0]=grounded[1]
-			grounded[1]=grounded[2]
-			grounded[2]=groundval
-			if (grounded[0] == 0 and grounded[1] == 0 and grounded[2] ~=0) then
-				counter_for_wakeup_reversal = 1
-				iswakeup = true
-			else
-				local diff = grounded[1] - grounded[2]
-				if (diff > 2 or diff < 0) then diff = 1 end
-				counter_for_wakeup_reversal = counter_for_wakeup_reversal + diff
-			end
-		else
-			grounded[0]=0
-			grounded[1]=0
-			grounded[2]=0
+		if iswakeup and reversal_executed_at > 0 and reversal_executed_at + framesrecorded + 1 < numframes and framesrecorded < 5 then
+			if DEBUG then print ("!!! Previous reversal attempt failed, trying again...") end
+			framesleft_for_wakeup_reversal[0] = framesrecorded + 2
+			framesleft_for_wakeup_reversal[1] = framesrecorded + 1
+			frame_for_wakeup_reversal = counter_for_wakeup_reversal
+			reversal_executed = false
+			reversal_executed_at = -1
+		end
+
+		if iswakeup and reversal_guessed==1 and reversal_flag==0 then
+			framesleft_for_wakeup_reversal[2]=framesleft
+			reversal_guessed=2
+		end
+
+
+		if iswakeup and reversal_guessed==2 and reversal_flag==1 and framesleft_for_wakeup_reversal[1] ~= framesleft_for_wakeup_reversal[2] then
+			if DEBUG then print("Adjusting wrong reversal guess from: "..framesleft_for_wakeup_reversal[0].."/"..framesleft_for_wakeup_reversal[1].." to "..framesleft_for_wakeup_reversal[1].."/"..framesleft_for_wakeup_reversal[2]) end
+			framesleft_for_wakeup_reversal[0] = framesleft_for_wakeup_reversal[1]
+			framesleft_for_wakeup_reversal[1] = framesleft_for_wakeup_reversal[2]
+			reversal_guessed=0
 		end
 	end
-	-- local reversal_flag = rb(0xFF89B7)
-	-- local lastspecial = rb(0xFF89B8)
-	--if (p2action ~= 0) then print("p2action=" .. p2action .. " | numframes=" .. numframes .. " | groundval=".. groundval .." | cfw="..counter_for_wakeup_reversal .. " | sp="..lastspecial .. " | rv="..reversal_flag ) end
-	if (p2action ~= 14 and prev_p2action == 14) or (p2action ~= 20 and prev_p2action == 20) then
-		-- learn the value of frameanimation after last hit frame
-		idle_frameanim = frameanimation
-		setFrameskip(true)
-		if (numframes - frame_for_reversal == framesrecorded) then
-			if (p2action ~= 12) then
-				if (DEBUG) then print("=> FAILED FRAME-PERFECT REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
-			else
-				if (DEBUG) then print("=> SUCCESSFUL REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
-			end
-		elseif (numframes - frame_for_reversal < framesrecorded) then
-			if (p2action ~= 12) then
-				if (DEBUG) then print("=> MISSED REVERSAL PERFORMED TOO LATE AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
-				if iswakeup then counter_for_wakeup_reversal = counter_for_wakeup_reversal + 1 end
-			else
-				if (DEBUG) then print("=> SUCCESSFUL LATE REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
-			end
-		elseif (numframes - frame_for_reversal > framesrecorded) then
-			if (p2action ~= 12) then
-				if (DEBUG) then print("=> MISSED REVERSAL PERFORMED TOO EARLY AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
-			else
-				if (DEBUG) then print("=> SUCCESSFUL EARLY REVERSAL PERFORMED AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
-				if iswakeup and framesrecorded < 4 then counter_for_wakeup_reversal = counter_for_wakeup_reversal - 1 end
-			end
 
+	-- if (DEBUG) and (p2action==14 or prev_p2action==14 or p2action==20 or prev_p2action==20) then print("p2action=" .. p2action .. " | numframes=" .. numframes .. " | onair="..onair.." | fa="..frameanimation.." | cfw="..counter_for_wakeup_reversal .. " | fl="..framesleft .. " | rf="..reversal_flag.." | brf="..boxer_reversal_flag) end
+
+	if not iswakeup and (p2action ~= 14 and prev_p2action == 14) then
+		setFrameskip(true)
+		if (reversal_flag==1) and (p2action == 12) then
+			if (DEBUG) then print("=> SUCCESSFUL GROUND REVERSAL AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
+		else
+			if (DEBUG) then print("=> MISSED GROUND REVERSAL AT FRAME: [" .. frame_for_reversal .. "] / " ..numframes) end
 		end
-		wakeup_reversal = counter_for_wakeup_reversal - framesrecorded
+	elseif iswakeup and ( (p2action ~= 14 and prev_p2action == 14) or (p2action ~= 20 and prev_p2action == 20) ) then
+		setFrameskip(true)
+		if (reversal_flag==1) and (p2action == 12) then
+			if (DEBUG) then print("=> SUCCESSFUL WAKEUP REVERSAL PERFORMED AT FRAME: [" .. frame_for_wakeup_reversal .. " / " ..counter_for_wakeup_reversal.. "] | [" .. frame_for_reversal .. " / " ..numframes.."] | rf="..reversal_flag.." framesleft="..framesleft) end
+		elseif (counter_for_wakeup_reversal - frame_for_wakeup_reversal == framesrecorded) then
+			if (DEBUG) then print("=> MISSED FRAME-PERFECT WAKEUP REVERSAL PERFORMED AT FRAME: [" .. frame_for_wakeup_reversal .. " / " ..counter_for_wakeup_reversal.. "] | [" .. frame_for_reversal .. " / " ..numframes.."] | rf="..reversal_flag.." framesleft="..framesleft) end
+			wakeup_reversal = wakeup_reversal + 1
+			framesleft_for_wakeup_reversal[0] = -1
+			framesleft_for_wakeup_reversal[1] = -1
+		elseif (counter_for_wakeup_reversal - frame_for_wakeup_reversal < framesrecorded) then
+			if (DEBUG) then print("=> MISSED WAKEUP REVERSAL PERFORMED TOO LATE AT FRAME: [" .. frame_for_wakeup_reversal .. " / " ..counter_for_wakeup_reversal.. "] | [" .. frame_for_reversal .. " / " ..numframes.."] | rf="..reversal_flag.." framesleft="..framesleft) end
+			framesleft_for_wakeup_reversal[0] = -1
+			framesleft_for_wakeup_reversal[1] = -1
+		elseif (counter_for_wakeup_reversal - frame_for_wakeup_reversal > framesrecorded) then
+			if (DEBUG) then print("=> MISSED WAKEUP REVERSAL PERFORMED TOO EARLY AT FRAME: [" .. frame_for_wakeup_reversal .. " / " ..counter_for_wakeup_reversal.. "] | [" .. frame_for_reversal .. " / " ..numframes.."] | rf="..reversal_flag.." framesleft="..framesleft) end
+			framesleft_for_wakeup_reversal[0] = -1
+			framesleft_for_wakeup_reversal[1] = -1
+		end
+		frame_for_wakeup_reversal = wakeup_reversal
+		iswakeup = false
 		if (DEBUG) then
-			print("=> FRAME FOR NEXT REVERSAL: [count:" .. frame_for_reversal .. " / "..numframes.."] [wakeup: "..wakeup_reversal.." / " ..counter_for_wakeup_reversal.."]")
+			print("=> FRAME FOR NEXT WAKEUP REVERSAL: ["..wakeup_reversal.." / "..counter_for_wakeup_reversal.."] @ framesleft == " .. framesleft_for_wakeup_reversal[0].."/"..framesleft_for_wakeup_reversal[1])
 			print(" ")
 		end
 	end
 
-	if (p2action == 14 or p2action == 20) then
-		local safeguard=2
-		if (frameanimation == 105 - framesrecorded - safeguard) or (frameanimation == 105 - framesrecorded - safeguard + 1) or (frameanimation == 122 - framesrecorded - safeguard) or (frameanimation == 122 - framesrecorded - safeguard + 1) or (frameanimation == 144 - framesrecorded - safeguard) or (frameanimation == 144 - framesrecorded - safeguard + 1) then
-			if (groundval ~= 0) then
-				iswakeup = false
+	if not iswakeup and (p2action == 14) then
+		if (frameanimation == 105 - framesrecorded) or (frameanimation == 104 - framesrecorded) or (frameanimation == 122 - framesrecorded) or (frameanimation == 121 - framesrecorded) or (frameanimation == 144 - framesrecorded) or (frameanimation == 143 - framesrecorded) then
+			if not recording.playback then
 				setFrameskip(false)
-			else
-				iswakeup = true
+				togglePlayBack(nil, {})
+				frame_for_reversal = numframes
+				if (DEBUG) then print("GROUND REVERSAL! numframes=[" .. numframes .. "]") end
 			end
 		end
-		if iswakeup then safeguard = framesrecorded+1 end
-		if (counter_for_wakeup_reversal == wakeup_reversal - safeguard) or (counter_for_wakeup_reversal == wakeup_reversal - safeguard + 1) then
-			iswakeup = true
+	end
+	if iswakeup and (p2action == 14 or p2action == 20) and not reversal_executed then
+
+		if counter_for_wakeup_reversal == frame_for_wakeup_reversal-4 or (counter_for_wakeup_reversal == frame_for_wakeup_reversal-3 and was_frameskip) then
 			setFrameskip(false)
 		end
-	end
 
-	if (( p2action == 14 or p2action == 20 ) and not iswakeup and ( ( frameanimation == idle_frameanim - framesrecorded) or (frameanimation == idle_frameanim - framesrecorded + 1) or (frameanimation == 105 - framesrecorded) or (frameanimation == 122 - framesrecorded) or (frameanimation == 144 - framesrecorded) ) ) then
-		if not recording.playback then
-			togglePlayBack(nil, {})
-			frame_for_reversal = numframes
-			if (DEBUG) then print("GROUND REVERSAL! numframes=[" .. numframes .. "]") end
+		if (framesleft_for_wakeup_reversal[0] == -1 and counter_for_wakeup_reversal == frame_for_wakeup_reversal) then
+			if (DEBUG) then print (">>> numframes="..numframes.." - performing reversal wakeup: cfwr["..counter_for_wakeup_reversal.."]==ffwr["..frame_for_wakeup_reversal.."]") end
+			doreversal = true
 		end
-	end
-	if (( p2action == 14 or p2action == 20 ) and iswakeup and (counter_for_wakeup_reversal == wakeup_reversal) ) then
-		if not recording.playback then
+		if (framesleft_for_wakeup_reversal[0] ~= -1 and ( prev_framesleft ~= framesleft_for_wakeup_reversal[0] and framesleft == framesleft_for_wakeup_reversal[0]) and counter_for_wakeup_reversal > frame_for_wakeup_reversal - 1) then
+			if (DEBUG) then print (">>> numframes="..numframes.." - performing EARLY reversal wakeup: prev_framesleft("..prev_framesleft..")!=framesleft_fwr[0]("..framesleft_for_wakeup_reversal[0]..") AND framesleft("..framesleft..")==framesleft_fwr[0]("..framesleft_for_wakeup_reversal[0]..")") end
+			doreversal = true
+		end
+		if (framesleft_for_wakeup_reversal[0] ~= -1 and ( prev_framesleft == framesleft_for_wakeup_reversal[0] and framesleft == framesleft_for_wakeup_reversal[1]) and counter_for_wakeup_reversal > frame_for_wakeup_reversal - 2) then
+			if (DEBUG) then print (">>> numframes="..numframes.." - performing LATE reversal wakeup: prev_framesleft("..prev_framesleft..")==framesleft_fwr[0]("..framesleft_for_wakeup_reversal[0]..") AND framesleft("..framesleft..")==framesleft_fwr[1]("..framesleft_for_wakeup_reversal[1]..")") end
+			doreversal = true
+		end
+
+		local p2character = rb(0xFF8BDF)
+		if p2character == Honda or p2character == Blanka or p2character == Guile or p2character == Chun or p2character == Dictator or p2character == Boxer or p2character == Claw or p2character == Deejay then
+			local p2charge = true
+		else
+			local p2charge = false
+		end
+
+		if p2charge == false and (framesleft_for_wakeup_reversal[0] ~= -1 and ( framesleft == framesrecorded+2 or framesleft == framesrecorded+1) and counter_for_wakeup_reversal >= frame_for_wakeup_reversal) then
+			if (DEBUG) then print (">>> numframes="..numframes.." - performing DESPERATE reversal wakeup: framesleft("..framesleft..")==framesrecorded("..framesrecorded..")+1or+2 AND cfwr("..counter_for_wakeup_reversal..")>="..frame_for_wakeup_reversal) end
+			doreversal = true
+		end
+		if p2charge == false and counter_for_wakeup_reversal > 30 and framesrecorded < 5 and not doreversal and not recording.playback and (framesleft_for_wakeup_reversal[0] ~= -1 and ( framesleft == framesrecorded+2 or framesleft == framesrecorded+1) and counter_for_wakeup_reversal <= frame_for_wakeup_reversal) then
+			if (DEBUG) then print (">>> numframes="..numframes.." - performing EARLY BLIND reversal wakeup: framesleft("..framesleft..")==framesrecorded("..framesrecorded..")+1or+2 AND cfwr("..counter_for_wakeup_reversal..")<="..frame_for_wakeup_reversal) end
+			setFrameskip(false)
+			togglePlayBack(nil, {})
+		end
+
+		if doreversal and not recording.playback then
+			setFrameskip(false)
 			togglePlayBack(nil, {})
 			frame_for_reversal = numframes
-			if (DEBUG) then print("WAKEUP REVERSAL! numframes=[" .. numframes .. "]") end
+			framesleft = rb(0xff8867)
+			if framesleft == framesrecorded + 1 then
+				framesleft_for_wakeup_reversal[0] = prev_framesleft
+				framesleft_for_wakeup_reversal[1] = framesleft
+				if (DEBUG) then print ("PERFECT 1 flfwr="..framesleft_for_wakeup_reversal[0].."/"..framesleft_for_wakeup_reversal[1]) end
+				reversal_guessed=0
+			elseif framesleft > framesrecorded + 1 then
+				framesleft_for_wakeup_reversal[0] = framesrecorded + 2
+				framesleft_for_wakeup_reversal[1] = framesrecorded + 1
+				if (DEBUG) then print ("PERFECT 2 flfwr="..framesleft_for_wakeup_reversal[0].."/"..framesleft_for_wakeup_reversal[1]) end
+				reversal_guessed=0
+			elseif framesleft_for_wakeup_reversal[0] == -1 then
+				framesleft_for_wakeup_reversal[0] = prev_framesleft
+				framesleft_for_wakeup_reversal[1] = framesleft
+				if (DEBUG) then print ("GUESSED flfwr="..framesleft_for_wakeup_reversal[0].."/"..framesleft_for_wakeup_reversal[1]) end
+				reversal_guessed=1
+			end
+			if (DEBUG) then print("WAKEUP REVERSAL! cfwr="..counter_for_wakeup_reversal.." frame_for_wakeup_reversal=[" .. frame_for_wakeup_reversal .. "] numframes="..numframes.." framesleft="..framesleft) end
+			doreversal = false
+			reversal_executed = true
+			reversal_executed_at = numframes
 		end
 	end
 end
+
 
 autoblock_selector = -1
 local forceblock = false
@@ -421,7 +558,7 @@ local autoBlock = function()
 		return
 	end
 
-	local DEBUG=false
+	local DEBUG=true
 
 	-- neutral when opponent is neutral, crouching or landing
 	if (p1action == 0 or p1action == 2 or p1action==6) then
