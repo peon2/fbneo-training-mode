@@ -69,6 +69,7 @@ guicustompage = {
 		info = {
 			"Control reversal on P2",
 			"Use the Replay Editor in the Recording menu to program the desired reversal action."
+			"To improve auto-reversal select Game -> Load Game -> Apply IPS patches -> Play"
 		},
 		func =	function()
 				autoreversal_selector = autoreversal_selector + 1

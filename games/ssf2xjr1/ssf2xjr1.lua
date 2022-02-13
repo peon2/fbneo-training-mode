@@ -318,7 +318,10 @@ local reversal_executed = false
 local reversal_executed_at = -1
 local framesleft = -1
 local reversal_guessed = 0
+local infotimeout = 900
 local autoReversal = function()
+
+	local DEBUG=false
 
 	-- check to see if we are running an IPS patched rom with the reversal flag overwrite NOP'd
 	-- unpatched: PATCH1: BE770F0C PATCH2: 0EEBF23E
@@ -350,19 +353,28 @@ local autoReversal = function()
 	end
 
 	if autoreversal_selector == -1 then
+		infotimeout = 900
 		return
 	end
 
-	local DEBUG=false
-
 	local framesrecorded = #recording[recording.recordingslot]
-	if (framesrecorded < 1) then
+	if infotimeout > 0 then infotimeout = infotimeout - 1 end
+	if (autoreversal_patched and framesrecorded < 1 and infotimeout > 0) then
+		gui.text(220,50,"Reversal action: last special")
+		gui.text(220,60,"performed by P2. Switch controls")
+		gui.text(220,70,"with 3 coin presses.")
+	end
+	if (autoreversal_patched and framesrecorded < 1) then
+		return
+	end
+	if (framesrecorded > 1 and framesrecorded <= 8 and infotimeout > 0) then
+		gui.text(220,50,"Reversal action: Recorded slot")
+	end
+	if (framesrecorded < 1 and not autoreversal_patched) then
 		gui.text(220,50,"Use the Replay Editor in the")
 		gui.text(220,60,"Recording menu (hold coin) to")
 		gui.text(220,70,"program the desired reversal action.")
-		if not autoreversal_patched then
-			gui.text(35,80,"To improve auto-reversal select Game -> Load Game -> Apply IPS patches -> Play")
-		end
+		gui.text(35,80,"To improve auto-reversal select Game -> Load Game -> Apply IPS patches -> Play")
 		return
 	end
 	if (framesrecorded > 8) then
