@@ -339,7 +339,7 @@ local autoReversal = function()
 		else
 			wb(0xff85bb,0)
 			wb(0xff85b7,0)
-			if (p2action == 14 and prev_p2action == 14) or (p2action == 20 and prev_p2action == 20) then
+			if (p2action == 14 or prev_p2action == 14) or (p2action == 20 or prev_p2action == 20) then
 				wb(0xff89b7,1)
 				wb(0xff89bb,1)
 			else
@@ -353,7 +353,7 @@ local autoReversal = function()
 		return
 	end
 
-	local DEBUG=true
+	local DEBUG=false
 
 	local framesrecorded = #recording[recording.recordingslot]
 	if (framesrecorded < 1) then
@@ -373,7 +373,6 @@ local autoReversal = function()
 	end
 
 	local reversal_flag = rb(0xFF89B7)
-	local boxer_reversal_flag = rb(0xFF89BB)
 	local frameanimation = rb(0xff896b)
 	local onair = rb(0xff89cf)
 	local prev_framesleft = framesleft
@@ -390,7 +389,7 @@ local autoReversal = function()
 	if (p2action == 14 and prev_p2action == 14) or (p2action == 20 and prev_p2action == 20) then
 		numframes = numframes + 1
 		if was_frameskip then
-			if DEBUG then print ("FRAMESKIP @ "..numframes) end
+			-- if DEBUG then print ("FRAMESKIP @ "..numframes) end
 			numframes=numframes+1
 			if prev_framesleft - 1 == framesleft and framesleft > 1 then
 				framesleft = framesleft - 1
@@ -413,7 +412,7 @@ local autoReversal = function()
 			counter_for_wakeup_reversal = 0
 		end
 
-		if iswakeup and reversal_executed_at > 0 and reversal_executed_at + framesrecorded + 1 < numframes and framesrecorded < 5 then
+		if not autoreversal_patched and iswakeup and reversal_executed_at > 0 and reversal_executed_at + framesrecorded + 1 < numframes and framesrecorded < 5 then
 			if DEBUG then print ("!!! Previous reversal attempt failed, trying again...") end
 			framesleft_for_wakeup_reversal[0] = framesrecorded + 2
 			framesleft_for_wakeup_reversal[1] = framesrecorded + 1
@@ -436,6 +435,7 @@ local autoReversal = function()
 		end
 	end
 
+	-- local boxer_reversal_flag = rb(0xFF89BB)
 	-- if (DEBUG) and (p2action==14 or prev_p2action==14 or p2action==20 or prev_p2action==20) then print("p2action=" .. p2action .. " | numframes=" .. numframes .. " | onair="..onair.." | fa="..frameanimation.." | cfw="..counter_for_wakeup_reversal .. " | fl="..framesleft .. " | rf="..reversal_flag.." | brf="..boxer_reversal_flag) end
 
 	if not iswakeup and (p2action ~= 14 and prev_p2action == 14) then
@@ -558,7 +558,7 @@ local autoBlock = function()
 		return
 	end
 
-	local DEBUG=true
+	local DEBUG=false
 
 	-- neutral when opponent is neutral, crouching or landing
 	if (p1action == 0 or p1action == 2 or p1action==6) then
