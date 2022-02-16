@@ -75,20 +75,26 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotextx=178,
-		combotexty=49,
+		combotexty=48,
 		comboenabled=true,
-		p1healthx=34,
-		p1healthy=23,
+		p1healthx=17,
+		p1healthy=22,
 		p1healthenabled=true,
-		p2healthx=339,
-		p2healthy=23,
+		p2healthx=355,
+		p2healthy=22,
 		p2healthenabled=true,
 		p1meterx=82,
 		p1metery=207,
-		p1meterenabled=true,
+		p1meterenabled=false,
 		p2meterx=294,
 		p2metery=207,
-		p2meterenabled=true,
+		p2meterenabled=false,
+	},
+	inputs = {
+		iconsize=8,
+		framenumbersenabled=true,
+		scrollinginputxoffset={2,335},
+		scrollinginputyoffset={74,74},
 	},
 }
 
