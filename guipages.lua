@@ -582,6 +582,24 @@ guipages = { -- interactiveguipages
 		},
 		guielements.hitboxstate,
 	},
+	------------------------------------------------
+	-- Asunaro : Not sure if i can put "reversalsettings" somewhere else
+	------------------------------------------------
+	reversalsettings = {
+		title = {
+			text = "Reversal Settings",
+			x = interactivegui.boxxlength/2 - 48,
+			y = 1,
+		},
+		{
+			text = "<",
+			olcolour = "black",
+			info = "Back",
+			func =	function() CIG(interactivegui.previouspage,1) end,
+		},
+	},
+	------------------------------------------------
+	------------------------------------------------
 }
 
 if scrollingInputReg then -- if scrolling-input-display.lua is loaded
@@ -854,6 +872,7 @@ guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrec
 	.
 --]]
 -- format the tables for better navigation and format the info to fit the screen better
+function formatGuiTables() -- Asunaro : Made a function out of this "do" to format "reversalsettings" and "guicustompage" (in games/ssf2xjr1/guipages.lua). Maybe there's a cleaner way ?
 do 
 	local tab, str, str2, r, b
 	local infomax = interactivegui.boxxlength/4
@@ -887,3 +906,6 @@ do
 		guipagesformatted[i] = guiTableFormatting(tab)
 	end
 end
+end
+
+formatGuiTables()

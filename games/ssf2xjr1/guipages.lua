@@ -62,30 +62,6 @@ guicustompage = {
 					end
 	},
 	{
-		text = "AutoReversal",
-		x = 8,
-		y = 60,
-		olcolour = "black",
-		info = {
-			"Control reversal on P2",
-			"Use the Replay Editor in the Recording menu to program the desired reversal action.",
-			"To improve auto-reversal select Game -> Load Game -> Apply IPS patches -> Play"
-		},
-		func =	function()
-				autoreversal_selector = autoreversal_selector + 1
-				if autoreversal_selector > 0 then
-					autoreversal_selector = -1
-				end
-			end,
-		autofunc = function(this)
-				if autoreversal_selector == -1 then
-					this.text = "AutoReversal (P2): Disabled"
-				elseif autoreversal_selector == 0 then
-					this.text = "AutoReversal (P2): Enabled"
-				end
-			end,
-	},
-	{
 		text = "AutoBlock",
 		x = 8,
 		y = 80,
@@ -144,3 +120,289 @@ guicustompage = {
 	},
 
 }
+
+-----------------------------------------------------------------------------------
+-- Added by Asunaro - Create a Reversal Settings Menu if the game has been patched
+-----------------------------------------------------------------------------------
+n = 0 -- count the number of reversal options
+reversal_options = {} -- Contains the buttons with the relevant informations from character_specific.lua
+
+function makeReversalSettingsButtons()
+	local character = readPlayerTwoCharacter()
+	n = 0
+	for i = 1, #character_specific[character].specials do
+		for k = 1, #character_specific[character].specials[i].input_variations do
+		 if (character_specific[character].specials[i].strength_set ~= 0) or (character_specific[character].specials[i].strength_set == 0 and k < 2) then -- Don't display variations for super moves or moves that don't have variations
+			n = n + 1
+			if k == 1 then
+				special_name = character_specific[character].specials[i].name
+				horizontal_length = 4
+			else
+				special_name = ""
+				if character_specific[character].specials[i].strength_set ~= -1 then -- Not Dhalsim TP
+					horizontal_length = 85 + 20*k
+				else -- Dhalsim TP
+					horizontal_length = 65 + 30*k
+				end
+			end
+			if character_specific[character].specials[i].strength_set == 0 then -- no variations
+				special_variation = ""
+			else
+				special_variation = character_specific[character].specials[i].input_variations[k][1]
+			end
+		reversal_options[n] = {
+				text = special_name.." "..special_variation,
+				x = horizontal_length,
+				y = 15 + 15*i,
+				--info = tostring(character_specific[character].specials[i].input) -- Maybe add move description
+				olcolour = "black",
+				fillpercent = 0,
+				checked = false,
+				special_id = {character_specific[character].specials[i].id, determineStrengthValue(character_specific[character].specials[i].input_variations[k][1], character_specific[character].specials[i].strength_set)},
+				func = function() end,
+				autofunc = function(this)
+						if this.checked then
+							this.fillpercent = 1
+						elseif not this.checked then
+							this.fillpercent = 0
+						end
+					end,
+			}
+		table.insert(guipages.reversalsettings, reversal_options[n])
+		end
+		end
+	end
+end
+
+function insertReversalSettingsFunctions() -- Maybe there's a cleaner way ?
+	local newfunction = nil
+	for i = 1, #reversal_options do
+		if i == 1 then
+		newfunction = function()
+				reversal_options[1].checked = not reversal_options[1].checked
+				end
+		elseif i == 2 then
+			newfunction = function()
+				reversal_options[2].checked = not reversal_options[2].checked
+				end
+		elseif i == 3 then
+			newfunction = function()
+				reversal_options[3].checked = not reversal_options[3].checked
+				end
+		elseif i == 4 then
+			newfunction = function()
+				reversal_options[4].checked = not reversal_options[4].checked
+				end
+		elseif i == 5 then
+			newfunction = function()
+				reversal_options[5].checked = not reversal_options[5].checked
+				end
+		elseif i == 6 then
+			newfunction = function()
+				reversal_options[6].checked = not reversal_options[6].checked
+				end
+		elseif i == 7 then
+			newfunction = function()
+				reversal_options[7].checked = not reversal_options[7].checked
+				end
+		elseif i == 8 then
+			newfunction = function()
+				reversal_options[8].checked = not reversal_options[8].checked
+				end
+		elseif i == 9 then
+			newfunction = function()
+				reversal_options[9].checked = not reversal_options[9].checked
+				end
+		elseif i == 10 then
+			newfunction = function()
+				reversal_options[10].checked = not reversal_options[10].checked
+				end
+		elseif i == 11 then
+			newfunction = function()
+				reversal_options[11].checked = not reversal_options[11].checked
+				end
+		elseif i == 12 then
+			newfunction = function()
+				reversal_options[12].checked = not reversal_options[12].checked
+				end
+		elseif i == 13 then
+			newfunction = function()
+				reversal_options[13].checked = not reversal_options[13].checked
+				end
+		elseif i == 14 then
+			newfunction = function()
+				reversal_options[14].checked = not reversal_options[14].checked
+				end
+		elseif i == 15 then
+			newfunction = function()
+				reversal_options[15].checked = not reversal_options[15].checked
+				end
+		elseif i == 16 then
+			newfunction = function()
+				reversal_options[16].checked = not reversal_options[16].checked
+				end
+		elseif i == 17 then
+			newfunction = function()
+				reversal_options[17].checked = not reversal_options[17].checked
+				end
+		elseif i == 18 then
+			newfunction = function()
+				reversal_options[18].checked = not reversal_options[18].checked
+				end
+		elseif i == 19 then
+			newfunction = function()
+				reversal_options[19].checked = not reversal_options[19].checked
+				end
+		elseif i == 20 then
+			newfunction = function()
+				reversal_options[20].checked = not reversal_options[20].checked
+				end
+		elseif i == 21 then
+			newfunction = function()
+				reversal_options[21].checked = not reversal_options[21].checked
+				end
+		elseif i == 22 then
+			newfunction = function()
+				reversal_options[22].checked = not reversal_options[22].checked
+				end
+		elseif i == 23 then
+			newfunction = function()
+				reversal_options[23].checked = not reversal_options[23].checked
+				end
+		elseif i == 24 then
+			newfunction = function()
+				reversal_options[24].checked = not reversal_options[24].checked
+				end
+		elseif i == 25 then
+			newfunction = function()
+				reversal_options[25].checked = not reversal_options[25].checked
+				end
+		end
+		reversal_options[i].func = newfunction
+	end
+end
+
+do_not_reversal = { -- If checked the dummy won't reversal, randomly
+				text = "Don't reversal",
+				x = 4, -- To be modified when custom_sequence will be fixed. Now the two buttons would overlap
+				y = 150,
+				olcolour = "black",
+				fillpercent = 0,
+				checked = false,
+				func =	function()
+						do_not_reversal.checked = not do_not_reversal.checked
+				end,
+			autofunc = function(this)
+					if this.checked then
+						this.fillpercent = 1
+					elseif not this.checked then
+						this.fillpercent = 0
+					end
+				end,
+			}
+table.insert(guipages.reversalsettings, do_not_reversal)
+
+custom_sequence = { -- to be added : would play a sequence define in the Replay Editor when the dummy goes out of blockstun/hitsun or lands on his feet
+				text = "Custom Sequence",
+				x = 4,
+				y = 150,
+				olcolour = "black",
+				fillpercent = 0,
+				checked = false,
+				func =	function()
+					custom_sequence.checked = not custom_sequence.checked
+					autoreversal_selector = autoreversal_selector + 1
+					if autoreversal_selector > 0 then
+						autoreversal_selector = -1
+					end
+				end,
+			autofunc = function(this)
+					if this.checked then
+						this.fillpercent = 1
+					elseif not this.checked then
+						this.fillpercent = 0
+					end
+				end,
+			}
+-- table.insert(guipages.reversalsettings, custom_sequence) -- to be added
+
+customPageConfiguration = { -- Two different buttons depending if the game has been patched or not
+	{
+		text = "AutoReversal",
+		x = 8,
+		y = 60,
+		olcolour = "black",
+		info = {
+			"Control reversal on P2",
+			"Use the Replay Editor in the Recording menu to program the desired reversal action.",
+			"To improve auto-reversal select Game -> Load Game -> Apply IPS patches -> Play"
+		},
+		func =	function()
+				autoreversal_selector = autoreversal_selector + 1
+				if autoreversal_selector > 0 then
+					autoreversal_selector = -1
+				end
+			end,
+		autofunc = function(this)
+				if autoreversal_selector == -1 then
+					this.text = "AutoReversal (P2): Disabled"
+				elseif autoreversal_selector == 0 then
+					this.text = "AutoReversal (P2): Enabled"
+				end
+			end,
+	},
+	{
+			text = "Select Reversal",
+			x = 8,
+			y = 60,
+			olcolour = "black",
+			info = {
+				"Control reversal on P2",
+			},
+			func = 	function() CIG("reversalsettings", 1) end, -- "reversalsettings" has been placed in "fbneo-training-mode/guipages.lua(l.588)", maybe there's a way to place it here ?
+	}
+}
+
+deleteReversalSettings = function()
+	for i = 1, #reversal_options do
+		table.remove(guipages.reversalsettings)
+		reversal_options[i] = nil
+	end
+end
+
+local patched = false
+local custom_page_setting = 0 -- custompage : 0 = not loaded yet, 1 = not patched configuration, 2 = patched configuration
+
+makeReversalSettings = function(_patched) -- Display "Select Reversal" if the game has been patched, else use the default "Autoreversal" option
+	patched = _patched
+	if not patched then
+		if custom_page_setting == 2 then
+			interactivegui.page = 1
+			interactivegui.selection = 1
+			deleteReversalSettings()
+			table.remove(guicustompage)
+		end
+		table.insert(guicustompage, customPageConfiguration[1])
+		custom_page_setting = 1
+	else
+		if custom_page_setting == 1 then
+			autoreversal_selector = -1
+			table.remove(guicustompage)
+		end
+		if custom_page_setting ~= 2 then
+		table.insert(guicustompage, customPageConfiguration[2])
+		end
+		makeReversalSettingsButtons()
+		insertReversalSettingsFunctions()
+		custom_page_setting = 2
+	end
+	formatGuiTables()
+end
+
+reloadReversalSettings = function()
+	interactivegui.page = 1
+	interactivegui.selection = 1
+	deleteReversalSettings()
+	makeReversalSettings(true)
+	formatGuiTables()
+end

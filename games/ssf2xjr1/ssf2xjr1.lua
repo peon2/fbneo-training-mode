@@ -1,5 +1,6 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 -- ssf2x training mode by @pof
+require("games/ssf2xjr1/character_specific")
 
 p1maxhealth = 144
 p2maxhealth = 144
@@ -44,6 +45,257 @@ local Cammy = 0x0C
 local Hawk = 0x0D
 local Fei = 0x0E
 local Deejay = 0x0F
+
+-------------------------------------------------------------
+-- Added by Asunaro
+-------------------------------------------------------------
+----------------------------
+-- General
+----------------------------
+
+local base_p1 = 0xFF844E
+local base_p2 = 0xFF884E
+
+local p1_reversal_address 		= 	base_p1 + 0x169
+local p1_boxer_reversal_address		=	base_p1 + 0x16D
+local p1_character_address		=	base_p1 + 0x391
+
+local p2_reversal_address 		= 	base_p2 + 0x169
+local p2_special_id_address		=	base_p2 + 0x16A
+local p2_special_strength_address 	=	base_p2 + 0x16B
+local p2_boxer_reversal_address		=	base_p2 + 0x16D
+local p2_character_address		=	base_p2 + 0x391
+
+function readPlayerTwoCharacter()
+	local p2_character = rb(p2_character_address)
+	if p2_character == Ryu then
+		return "ryu"
+	elseif p2_character == Honda then
+		return "ehonda"
+	elseif p2_character == Blanka then
+		return "blanka"
+	elseif p2_character == Guile then
+		return "guile"
+	elseif p2_character == Ken then
+		return "ken"
+	elseif p2_character == Chun then
+		return "chunli"
+	elseif p2_character == Zangief then
+		return "zangief"
+	elseif p2_character == Dhalsim then
+		return "dhalsim"
+	elseif p2_character == Dictator then
+		return "dictator"
+	elseif p2_character == Sagat then
+		return "sagat"
+	elseif p2_character == Boxer then
+		return "boxer"
+	elseif p2_character == Claw then
+		return "claw"
+	elseif p2_character == Cammy then
+		return "cammy"
+	elseif p2_character == Hawk then
+		return "thawk"
+	elseif p2_character == Fei then
+		return "feilong"
+	elseif p2_character == Deejay then
+		return "deejay"
+	end
+end
+
+---------------------------
+-- Reversal (patch method)
+---------------------------
+local currently_patched = false
+local previously_patched = false
+local patch_changed = true
+local first_load = true
+
+function readPatch()
+	-- check to see if we are running an IPS patched rom with the reversal flag overwrite NOP'd
+	-- unpatched: PATCH1: BE770F0C PATCH2: 0EEBF23E
+	--   patched: PATCH1: 734AABE4 PATCH2: 9BF781C3
+
+	previously_patched = currently_patched
+	local patch1 = memory.readdword(0x782a2)
+	if (patch1 == 0x734AABE4) then
+		patch2 = memory.readdword(0x8e94e)
+		if (patch2 == 0x9BF781C3) then
+			currently_patched = true
+		else
+			currently_patched = false
+		end
+	else
+		currently_patched = false
+	end
+	if first_load then
+		previously_patched = currently_patched
+	end
+	if previously_patched ~= currently_patched then
+		patch_changed = true
+	else
+		patch_changed = false
+	end
+end
+
+local reversal_options_checked = {}
+function stockReversalOptionsChecked()
+	if interactivegui.enabled and not listenReversalSettingsModfications then -- If the menu has been opened clean the table (maybe there's a cleaner way)
+		for k in pairs(reversal_options_checked) do
+			reversal_options_checked[k] = nil
+		end
+		patched_autoreversal_selector = 0
+		listenReversalSettingsModfications = true
+	end
+	if not interactivegui.enabled and listenReversalSettingsModfications then -- if the menu has been closed, check the options selected
+		for i = 1, #reversal_options do
+			if reversal_options[i].checked then
+				table.insert(reversal_options_checked, reversal_options[i].special_id)
+			end
+		end
+		if do_not_reversal.checked then
+			table.insert(reversal_options_checked, "do_not_reversal")
+		end
+		if custom_sequence.checked then
+			table.insert(reversal_options_checked, "custom_sequence")
+		end
+		if #reversal_options_checked == 0 then
+			patched_autoreversal_selector = 0
+		elseif #reversal_options_checked == 1 then
+			if do_not_reversal.checked then
+				patched_autoreversal_selector = 0
+			else
+				patched_autoreversal_selector = 1
+			end
+		elseif #reversal_options_checked > 1 then
+			patched_autoreversal_selector = 2
+		end
+		listenReversalSettingsModfications = false
+	end
+end
+
+function p1ClearReversal()
+	if rb(p1_boxer_reversal_address) == 0x01 and rb(p1_character_address) == Boxer then
+		wb(p1_boxer_reversal_address,0x00)
+	elseif rb(p1_reversal_address) == 0x01 then
+		wb(p1_reversal_address,0x00)
+	end
+end
+
+function p2ClearReversal()
+	if rb(p2_boxer_reversal_address) == 0x01 and rb(p2_character_address) == Boxer then
+		wb(p2_boxer_reversal_address,0x00)
+	elseif rb(p2_reversal_address) == 0x01 then
+		wb(p2_reversal_address,0x00)
+	end
+end
+
+function p1SetReversal(_special_id)
+	if rb(p1_boxer_reversal_address) == 0x00 and rb(p1_character_address) == Boxer then
+		wb(p1_boxer_reversal_address,0x01)
+		wb(p1_special_id_address, _special_id[1])
+		wb(p1_special_strength_address, _special_id[2])
+	elseif rb(p1_reversal_address) == 0x00 then
+		wb(p1_reversal_address,0x01)
+		wb(p1_special_id_address, _special_id[1])
+		wb(p1_special_strength_address, _special_id[2])
+	end
+end
+
+function p2SetReversal(_special_id)
+	if rb(p2_character_address) == Boxer then
+		if rb(p2_boxer_reversal_address) == 0x00 then
+			wb(p2_boxer_reversal_address,0x01)
+		end
+	elseif rb(p2_reversal_address) == 0x00 then
+		wb(p2_reversal_address,0x01)
+	end
+	wb(p2_special_id_address, _special_id[1])
+	wb(p2_special_strength_address, _special_id[2])
+end
+
+math.randomseed(os.time())
+math.random(); math.random(); math.random()
+
+local reversal_reroll = true -- Determine if a new reversal has to be selected
+local p2_previous_hitstun_state = false
+local p2_current_hitstun_state = false
+local p2_has_been_hit = false
+
+function patchedReversalLogic()
+	if patched_autoreversal_selector == 1 then -- One option has been checked
+		if reversal_options_checked[1] == "custom_sequence" then -- to be added : would play a sequence define in the Replay Editor
+			p2ClearReversal()
+			autoreversal_selector = 1
+		else
+			if reversal_reroll then
+				p2SetReversal(reversal_options_checked[1])
+				reversal_reroll = false
+			end
+		end
+	elseif patched_autoreversal_selector == 2 then -- Multiple options checked
+		if reversal_reroll then
+			random_reversal = math.random(1,#reversal_options_checked)
+		end
+		if reversal_options_checked[random_reversal] == "custom_sequence" then -- to be added
+			p2ClearReversal()
+			autoreversal_selector = 1
+		elseif reversal_options_checked[random_reversal] == "do_not_reversal" then
+			p2ClearReversal()
+			p2_previous_hitstun_state = current_p2_histstun_state
+			p2_current_histstun_state = playerTwoInHitstun()
+			if p2_previous_hitstun_state and not p2_current_histstun_state then
+				p2_has_been_hit = true
+			else
+				p2_has_been_hit = false
+			end
+		else
+			if reversal_reroll then
+				p2SetReversal(reversal_options_checked[random_reversal])
+			end
+		end
+		reversal_reroll = false
+		if (not reversal_reroll and p2action ~= 0x0C) or (reversal_options_checked[random_reversal] == "do_not_reversal" and p2_has_been_hit)  then -- if p2 finished a special attack or if p2 has been hit when "don't reversal" is selected, reroll a special to be played
+			reversal_reroll = true
+		end
+	else
+		p2ClearReversal()
+		reversal_reroll = true -- Set to true when you enter the gui
+	end
+end
+
+function patchedAutoReversal()
+	p1ClearReversal()
+	stockReversalOptionsChecked()
+	patchedReversalLogic()
+end
+
+
+--------------------------------------
+--Display relevant reversal options
+--------------------------------------
+local curr_p2character = readPlayerTwoCharacter()
+local prev_p2character = readPlayerTwoCharacter()
+
+function displayReversalSettings()
+	if patch_changed or first_load then
+		makeReversalSettings(currently_patched)
+		patch_changed = false
+	end
+	if currently_patched then
+		prev_p2character = curr_p2character
+		curr_p2character = readPlayerTwoCharacter()
+		if prev_p2character ~= curr_p2character then
+			reloadReversalSettings()
+		end
+	end
+	if first_load then
+		first_load = false
+	end
+end
+
+-----------------------------------------------
+-----------------------------------------------
 
 translationtable = {
 	"left",
@@ -94,7 +346,7 @@ gamedefaultconfig = {
 		iconsize=8,
 		framenumbersenabled=true,
 		scrollinginputxoffset={2,335},
-		scrollinginputyoffset={74,74},
+		scrollinginputyoffset={90,90},
 	},
 }
 
@@ -322,7 +574,6 @@ local function setFrameskip(status)
 end
 
 autoreversal_selector = -1
-local autoreversal_patched = false
 local numframes = 0
 local frame_for_reversal = 0
 local iswakeup = false
@@ -337,59 +588,20 @@ local reversal_executed = false
 local reversal_executed_at = -1
 local framesleft = -1
 local reversal_guessed = 0
-local infotimeout = 900
 local autoReversal = function()
 
 	local DEBUG=false
 
-	-- check to see if we are running an IPS patched rom with the reversal flag overwrite NOP'd
-	-- unpatched: PATCH1: BE770F0C PATCH2: 0EEBF23E
-	--   patched: PATCH1: 734AABE4 PATCH2: 9BF781C3
-	local patch1 = memory.readdword(0x782a2)
-	if (patch1 == 0x734AABE4) then
-		patch2 = memory.readdword(0x8e94e)
-		if (patch2 == 0x9BF781C3) then
-			autoreversal_patched = true
-		end
-	end
-	if autoreversal_patched then
-		if autoreversal_selector == -1 then
-			wb(0xff85bb,0)
-			wb(0xff85b7,0)
-			wb(0xff89b7,0)
-			wb(0xff89bb,0)
-		else
-			wb(0xff85bb,0)
-			wb(0xff85b7,0)
-			if (p2action == 14 or prev_p2action == 14) or (p2action == 20 or prev_p2action == 20) then
-				wb(0xff89b7,1)
-				wb(0xff89bb,1)
-			else
-				wb(0xff89b7,0)
-				wb(0xff89bb,0)
-			end
-		end
+	if currently_patched then
+		patchedAutoReversal()
 	end
 
 	if autoreversal_selector == -1 then
-		infotimeout = 900
 		return
 	end
 
 	local framesrecorded = #recording[recording.recordingslot]
-	if infotimeout > 0 then infotimeout = infotimeout - 1 end
-	if (autoreversal_patched and framesrecorded < 1 and infotimeout > 0) then
-		gui.text(220,50,"Reversal action: last special")
-		gui.text(220,60,"performed by P2. Switch controls")
-		gui.text(220,70,"with 3 coin presses.")
-	end
-	if (autoreversal_patched and framesrecorded < 1) then
-		return
-	end
-	if (framesrecorded > 1 and framesrecorded <= 8 and infotimeout > 0) then
-		gui.text(220,50,"Reversal action: Recorded slot")
-	end
-	if (framesrecorded < 1 and not autoreversal_patched) then
+	if (framesrecorded < 1) then
 		gui.text(220,50,"Use the Replay Editor in the")
 		gui.text(220,60,"Recording menu (hold coin) to")
 		gui.text(220,70,"program the desired reversal action.")
@@ -443,7 +655,7 @@ local autoReversal = function()
 			counter_for_wakeup_reversal = 0
 		end
 
-		if not autoreversal_patched and iswakeup and reversal_executed_at > 0 and reversal_executed_at + framesrecorded + 1 < numframes and framesrecorded < 5 then
+		if iswakeup and reversal_executed_at > 0 and reversal_executed_at + framesrecorded + 1 < numframes and framesrecorded < 5 then
 			if DEBUG then print ("!!! Previous reversal attempt failed, trying again...") end
 			framesleft_for_wakeup_reversal[0] = framesrecorded + 2
 			framesleft_for_wakeup_reversal[1] = framesrecorded + 1
@@ -714,6 +926,8 @@ local p2DizzyControl = function()
 
 end
 
+emu.registerstart(readPatch)
+
 function Run() -- runs every frame
 
 	-- attacker state (ff8451 or +0x400 for p2): 0 idle, 2 crouching, 4 jumping, 10 doing a normal attack or throw, 12 on hitstun (doing an special attack)
@@ -726,6 +940,7 @@ function Run() -- runs every frame
 
 	checkFrameskip()
 	autoBlock()
+	displayReversalSettings()
 	autoReversal()
 	neverEnd()
 	stageSelect()
