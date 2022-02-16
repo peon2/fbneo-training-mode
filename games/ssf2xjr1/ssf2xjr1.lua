@@ -133,6 +133,9 @@ function readPlayerOneHealth()
 end
 
 function writePlayerOneHealth(health)
+	if not combovars.p1.refillhealthenabled then
+		return
+	end
 	local refill = false
 	if readPlayerOneHealth() < 33 then
 		-- if health < 33 we refill regardless of the state
@@ -157,6 +160,9 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerTwoHealth(health)
+	if not combovars.p2.refillhealthenabled then
+		return
+	end
 	local refill = false
 	if readPlayerTwoHealth() < 33 then
 		-- if health < 33 we refill regardless of the state
@@ -212,6 +218,13 @@ local infiniteTime = function()
 end
 
 local neverEnd = function()
+
+	if combovars.p2.refillhealthenabled and combovars.p2.instantrefillhealth then
+		p2_need_health_refill = true
+	end
+	if combovars.p1.refillhealthenabled and combovars.p1.instantrefillhealth then
+		p1_need_health_refill = true
+	end
 
 	if p2_need_health_refill then
 		writePlayerTwoHealth(p2maxhealth)
