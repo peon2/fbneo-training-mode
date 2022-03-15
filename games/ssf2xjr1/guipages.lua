@@ -118,47 +118,92 @@ guicustompage = {
 				end
 			end,
 	},
-
 }
 
 -----------------------------------------------------------------------------------
 -- Added by Asunaro - Create a Reversal Settings Menu if the game has been patched
 -----------------------------------------------------------------------------------
-n = 0 -- count the number of reversal options
+-------------
+-- General
+-------------
+local n = 0 -- count the number of reversal options
+local s = 0 -- count the number of unique special moves a character can reversal
 reversal_options = {} -- Contains the buttons with the relevant informations from character_specific.lua
-
 function makeReversalSettingsButtons()
 	local character = readPlayerTwoCharacter()
 	n = 0
+	s = 0
+	-- Specials
 	for i = 1, #character_specific[character].specials do
-		for k = 1, #character_specific[character].specials[i].input_variations do
-		 if (character_specific[character].specials[i].strength_set ~= 0) or (character_specific[character].specials[i].strength_set == 0 and k < 2) then -- Don't display variations for super moves or moves that don't have variations
-			n = n + 1
-			if k == 1 then
-				special_name = character_specific[character].specials[i].name
-				horizontal_length = 4
-			else
-				special_name = ""
-				if character_specific[character].specials[i].strength_set ~= -1 then -- Not Dhalsim TP
-					horizontal_length = 85 + 20*k
-				else -- Dhalsim TP
-					horizontal_length = 65 + 30*k
+		if character_specific[character].specials[i].reversal then
+			s = s + 1
+			for k = 1, #character_specific[character].specials[i].input_variations do
+			 if (character_specific[character].specials[i].strength_set ~= 0) or (character_specific[character].specials[i].strength_set == 0 and k == 1) then -- Don't display variations for super moves or moves that don't have variations
+				n = n + 1
+				if k == 1 then
+					special_name = character_specific[character].specials[i].name
+					horizontal_length = 4
+				else
+					special_name = ""
+					if character_specific[character].specials[i].strength_set ~= -1 then -- Not Dhalsim TP not Boxer TAP
+						horizontal_length = 85 + 20*k
+					elseif character == "dhalsim" then -- Dhalsim TP
+						horizontal_length = 65 + 30*k
+					elseif character == "boxer" then   -- Boxer TAP
+						horizontal_length = 95 + 15*k
+					end
+				end
+				if character_specific[character].specials[i].strength_set == 0 then -- no variations
+					special_variation = ""
+				else
+					special_variation = character_specific[character].specials[i].input_variations[k][1]
+				end
+				vertical_length = 15 + 15*s
+				reversal_options[n] = {
+					text = special_name.." "..special_variation,
+					x = horizontal_length,
+					y = vertical_length,
+					--info = tostring(character_specific[character].specials[i].input) -- Maybe add move description
+					olcolour = "black",
+					fillpercent = 0,
+					checked = false,
+					reversal_id = {character_specific[character].specials[i].id, determineStrengthValue(character_specific[character].specials[i].input_variations[k][1], character_specific[character].specials[i].strength_set)},
+					func = function() end,
+					autofunc = function(this)
+							if this.checked then
+								this.fillpercent = 1
+							elseif not this.checked then
+								this.fillpercent = 0
+							end
+						end,
+				}
+				table.insert(guipages.reversalsettings, reversal_options[n])
 				end
 			end
-			if character_specific[character].specials[i].strength_set == 0 then -- no variations
-				special_variation = ""
+		end
+	end
+	-- Throws
+	for i = 1, #character_specific[character].throw do
+		n = n + 1
+			if i == 1 then
+				throw_name = "Throw "..character_specific[character].throw[i]
 			else
-				special_variation = character_specific[character].specials[i].input_variations[k][1]
+				throw_name = character_specific[character].throw[i]
+			end
+			if i > 1 then
+				horizontal_length = 11 + 17*i
+			else
+				horizontal_length = 4
 			end
 		reversal_options[n] = {
-				text = special_name.." "..special_variation,
+				text = throw_name,
 				x = horizontal_length,
-				y = 15 + 15*i,
+				y = vertical_length + 15,
 				--info = tostring(character_specific[character].specials[i].input) -- Maybe add move description
 				olcolour = "black",
 				fillpercent = 0,
 				checked = false,
-				special_id = {character_specific[character].specials[i].id, determineStrengthValue(character_specific[character].specials[i].input_variations[k][1], character_specific[character].specials[i].strength_set)},
+				reversal_id = {"throw",character_specific[character].throw[i]},
 				func = function() end,
 				autofunc = function(this)
 						if this.checked then
@@ -169,8 +214,6 @@ function makeReversalSettingsButtons()
 					end,
 			}
 		table.insert(guipages.reversalsettings, reversal_options[n])
-		end
-		end
 	end
 end
 
@@ -277,14 +320,26 @@ function insertReversalSettingsFunctions() -- Maybe there's a cleaner way ?
 			newfunction = function()
 				reversal_options[25].checked = not reversal_options[25].checked
 				end
+		elseif i == 26 then
+			newfunction = function()
+				reversal_options[26].checked = not reversal_options[26].checked
+				end
+		elseif i == 27 then
+			newfunction = function()
+				reversal_options[27].checked = not reversal_options[27].checked
+				end
+		elseif i == 28 then
+			newfunction = function()
+				reversal_options[28].checked = not reversal_options[28].checked
+				end
 		end
 		reversal_options[i].func = newfunction
 	end
 end
 
-do_not_reversal = { -- If checked the dummy won't reversal, randomly
+do_not_reversal = { -- If checked, the dummy won't reversal, randomly
 				text = "Don't reversal",
-				x = 4, -- To be modified when custom_sequence will be fixed. Now the two buttons would overlap
+				x = 4,
 				y = 150,
 				olcolour = "black",
 				fillpercent = 0,
@@ -302,21 +357,17 @@ do_not_reversal = { -- If checked the dummy won't reversal, randomly
 			}
 table.insert(guipages.reversalsettings, do_not_reversal)
 
-custom_sequence = { -- to be added : would play a sequence define in the Replay Editor when the dummy goes out of blockstun/hitsun or lands on his feet
+custom_sequence = { -- When the dummy goes out of blockstun/hitsun or lands on his feet,plays a sequence defined in the Replay Editor
 				text = "Custom Sequence",
-				x = 4,
+				x = 75,
 				y = 150,
 				olcolour = "black",
 				fillpercent = 0,
 				checked = false,
 				func =	function()
 					custom_sequence.checked = not custom_sequence.checked
-					autoreversal_selector = autoreversal_selector + 1
-					if autoreversal_selector > 0 then
-						autoreversal_selector = -1
-					end
-				end,
-			autofunc = function(this)
+					end,
+				autofunc = function(this)
 					if this.checked then
 						this.fillpercent = 1
 					elseif not this.checked then
@@ -324,9 +375,9 @@ custom_sequence = { -- to be added : would play a sequence define in the Replay 
 					end
 				end,
 			}
--- table.insert(guipages.reversalsettings, custom_sequence) -- to be added
+table.insert(guipages.reversalsettings, custom_sequence)
 
-customPageConfiguration = { -- Two different buttons depending if the game has been patched or not
+customPageConfiguration = { -- Two different buttons depending on whether the game has been patched or not
 	{
 		text = "AutoReversal",
 		x = 8,
@@ -359,15 +410,20 @@ customPageConfiguration = { -- Two different buttons depending if the game has b
 			info = {
 				"Control reversal on P2",
 			},
-			func = 	function() CIG("reversalsettings", 1) end, -- "reversalsettings" has been placed in "fbneo-training-mode/guipages.lua(l.588)", maybe there's a way to place it here ?
+			func = 	function() CIG("reversalsettings", 1) end, -- "reversalsettings" has been placed in "fbneo-training-mode/guipages.lua(l.588)", maybe there's a way to place it in this file ?
 	}
 }
 
+--------------------------
+-- Displaying the options
+--------------------------
 deleteReversalSettings = function()
 	for i = 1, #reversal_options do
 		table.remove(guipages.reversalsettings)
 		reversal_options[i] = nil
 	end
+	do_not_reversal.checked = false
+	custom_sequence.checked = false
 end
 
 local patched = false
@@ -376,7 +432,7 @@ local custom_page_setting = 0 -- custompage : 0 = not loaded yet, 1 = not patche
 makeReversalSettings = function(_patched) -- Display "Select Reversal" if the game has been patched, else use the default "Autoreversal" option
 	patched = _patched
 	if not patched then
-		if custom_page_setting == 2 then
+		if custom_page_setting == 2 then -- The game was previously patched : reinitialize the GUI
 			interactivegui.page = 1
 			interactivegui.selection = 1
 			deleteReversalSettings()
@@ -385,18 +441,18 @@ makeReversalSettings = function(_patched) -- Display "Select Reversal" if the ga
 		table.insert(guicustompage, customPageConfiguration[1])
 		custom_page_setting = 1
 	else
-		if custom_page_setting == 1 then
+		if custom_page_setting == 1 then -- The game wasn't patched previously : reinitialize the GUI
 			autoreversal_selector = -1
 			table.remove(guicustompage)
 		end
 		if custom_page_setting ~= 2 then
 		table.insert(guicustompage, customPageConfiguration[2])
 		end
+		custom_page_setting = 2
 		makeReversalSettingsButtons()
 		insertReversalSettingsFunctions()
-		custom_page_setting = 2
 	end
-	formatGuiTables()
+	formatGuiTables() -- Function defined in fbneo-training-mode/guipages.lua (l.875). Maybe there's a cleaner way to reload the tables ?
 end
 
 reloadReversalSettings = function()
