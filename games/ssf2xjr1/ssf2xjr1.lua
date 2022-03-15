@@ -117,14 +117,8 @@ function readPatch()
 	--   patched: PATCH1: 734AABE4 PATCH2: 9BF781C3
 
 	previously_patched = currently_patched
-	local patch1 = memory.readdword(0x782a2)
-	if (patch1 == 0x734AABE4) then
-		patch2 = memory.readdword(0x8e94e)
-		if (patch2 == 0x9BF781C3) then
-			currently_patched = true
-		else
-			currently_patched = false
-		end
+	if memory.readdword(0x782a2) == 0x734AABE4 and memory.readdword(0x8e94e) == 0x9BF781C3 then
+		currently_patched = true
 	else
 		currently_patched = false
 	end
@@ -346,7 +340,19 @@ gamedefaultconfig = {
 		iconsize=8,
 		framenumbersenabled=true,
 		scrollinginputxoffset={2,335},
-		scrollinginputyoffset={90,90},
+		scrollinginputyoffset={95,95},
+	},
+	p1 = {
+		instantrefillhealth=false,
+		refillhealthenabled=true,
+		instantrefillmeter=true,
+		refillmeterenabled=true,
+	},
+	p2 = {
+		instantrefillhealth=false,
+		refillhealthenabled=true,
+		instantrefillmeter=true,
+		refillmeterenabled=true,
 	},
 }
 
