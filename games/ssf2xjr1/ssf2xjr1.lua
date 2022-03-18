@@ -283,6 +283,8 @@ local function reversalThrow(_throw)
 			reversal_throw_ready = true
 		elseif counter >= 0x90-0x03 and counter <= 0x90 then -- Strong
 			reversal_throw_ready = true
+		elseif iswakeup and counter == 0x6A then -- Red Hadouken
+			reversal_throw_ready = true
 		else
 			reversal_throw_ready = false
 		end
@@ -343,9 +345,10 @@ local function customSequence() -- Would need to be improved
 	local onair = rb(0xff89cf)
 		if onair == 255 then
 			iswakeup = true
+			recording.playback = false
 		end
 	end
-	if not iswakeup and p2_custom_sequence_ready then
+	if not iswakeup and p2_custom_sequence_ready and prev_p2action ~= 0x00 and p2action ~= 0x00 then
 		local counter = rb(p2_blockstun_hitstun_counter)
 		--print("prev_p2action : "..prev_p2action)
 		--print("curr_p2action : "..p2action)
@@ -369,6 +372,9 @@ local function customSequence() -- Would need to be improved
 		--print(" Reversal on Wakeup")
 		togglePlayBack(nil, {})
 		iswakeup = false
+	end
+	if recording.playback then
+		p2_custom_sequence_ready = false
 	end
 end
 -------------------
