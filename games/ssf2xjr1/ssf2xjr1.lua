@@ -570,10 +570,18 @@ function playerOneInHitstun()
 	return false
 end
 
+local p2dizzy=false
 function playerTwoInHitstun()
 	if rb(0xFF8A3E) > 0 then
 		-- false when dizzy
-		return false
+		if p2dizzy==false then
+			p2dizzy=true
+			return true
+		else
+			return false
+		end
+	else
+		p2dizzy=false
 	end
 	if rb(0xFF8851) == 14 then
 		return true
