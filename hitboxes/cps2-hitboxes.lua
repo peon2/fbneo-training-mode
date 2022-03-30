@@ -325,26 +325,26 @@ local profile = {
 		{["dstlk"] = 0x033CBE, func = function() --attempt ground throws from any range
 			memory.setregister("m68000.d3", 0)
 		end},
-		{["dstlk"] = 0x033D22, func = function() --ground throws
-			local base = memory.getregister("m68000.a6")
-			local range = rws(rd(base + 0x1EA) + rb(base + 0x27))
-			insert_throw({range_x = range})
-		end},
-		{["dstlk"] = 0x033BEC, func = function() --air throws
-			local base = memory.getregister("m68000.a6")
-			local curr = rw(base + game.offset.player_space - 0x7A)
-			local prev = rw(base + game.offset.player_space - 0x78)
-			local range = bit.band(memory.getregister("m68000.d0"), 0xFF)
-			range = rws(rd(base + 0x1EA) + range)
-			if any_true({
-				bit.band(curr, 0x07) == 0, 
-				bit.band(bit.band(bit.bnot(prev), curr), 0x60) == 0, 
-				range == 0, 
-			}) then
-				return --input check @ 0451D6
-			end
-			insert_throw({range_x = range, height = 0xC}) --vertical range @ 033BE0
-		end},
+--		{["dstlk"] = 0x033D22, func = function() --ground throws
+--			local base = memory.getregister("m68000.a6")
+--			local range = rws(rd(base + 0x1EA) + rb(base + 0x27))
+--			insert_throw({range_x = range})
+--		end},
+--		{["dstlk"] = 0x033BEC, func = function() --air throws
+--			local base = memory.getregister("m68000.a6")
+--			local curr = rw(base + game.offset.player_space - 0x7A)
+--			local prev = rw(base + game.offset.player_space - 0x78)
+--			local range = bit.band(memory.getregister("m68000.d0"), 0xFF)
+--			range = rws(rd(base + 0x1EA) + range)
+--			if any_true({
+--				bit.band(curr, 0x07) == 0, 
+--				bit.band(bit.band(bit.bnot(prev), curr), 0x60) == 0, 
+--				range == 0, 
+--			}) then
+--				return --input check @ 0451D6
+--			end
+--			insert_throw({range_x = range, height = 0xC}) --vertical range @ 033BE0
+--		end},
 		{["dstlk"] = 0x03B8F4, ["dstlku"] = 0x03BBCE, ["dstlkh"] = 0x03BBCE, 
 			["vampjr1"] = 0x03DDA4, ["vampj"] = 0x03DDB8, ["vampja"] = 0x03DDB8, 
 			func = function() --midnight pleasure
