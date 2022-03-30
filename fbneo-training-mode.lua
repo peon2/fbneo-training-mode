@@ -1102,6 +1102,10 @@ local comboHandlerP2 = function()
 		if combovars.p2.combo == 1 then
 			combovars.p2.comboDamage=0
 		end
+		if combovars.p2.combo == 0 and combovars.p2.displaycombo > 0  then -- throws and holds
+			combovars.p2.comboDamage=0
+			combovars.p2.displaycombo=0
+		end
 		combovars.p2.comboDamage = combovars.p2.comboDamage + combovars.p2.healthdiff
 	end
 end

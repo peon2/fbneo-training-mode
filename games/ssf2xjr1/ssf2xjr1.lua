@@ -570,10 +570,18 @@ function playerOneInHitstun()
 	return false
 end
 
+local p2dizzy=false
 function playerTwoInHitstun()
 	if rb(0xFF8A3E) > 0 then
 		-- false when dizzy
-		return false
+		if p2dizzy==false then
+			p2dizzy=true
+			return true
+		else
+			return false
+		end
+	else
+		p2dizzy=false
 	end
 	if rb(0xFF8851) == 14 then
 		return true
@@ -593,10 +601,10 @@ function writePlayerOneHealth(health)
 	if readPlayerOneHealth() < 33 then
 		-- if health < 33 we refill regardless of the state
 		refill = true
-	elseif ((p1action ~= 0x14 and p1action ~=0xe and p1action ~= 8) and (p2action==2 or p2action==0)) then
+	elseif ((p1action ~= 20 and p1action ~= 14 and p1action ~= 8) and (p2action==2 or p2action==0)) then
 		-- this only refills when p2 is idle or crouching and p1 is not blocking or after being hit/thrown
 		refill = true
-	elseif (p1action ~= 8) and readPlayerOneHealth() < 50 then
+	elseif p1action ~= 8 and p1action ~= 14 and readPlayerOneHealth() < 50 then
 		-- when health is depleting try to refill even if it will cause some small glitches
 		refill = true
 	end
@@ -620,10 +628,10 @@ function writePlayerTwoHealth(health)
 	if readPlayerTwoHealth() < 33 then
 		-- if health < 33 we refill regardless of the state
 		refill = true
-	elseif ((p2action ~= 0x14 and p2action ~=0xe and p2action ~= 8) and (p1action==2 or p1action==0)) then
+	elseif ((p2action ~= 20 and p2action ~= 14 and p2action ~= 8) and (p1action==2 or p1action==0)) then
 		-- this only refills when p1 is idle or crouching and p2 is not blocking or after being hit/thrown
 		refill = true
-	elseif (p2action ~= 8) and readPlayerTwoHealth() < 50 then
+	elseif p2action ~= 8 and p2action ~= 14 and readPlayerTwoHealth() < 50 then
 		-- when health is depleting try to refill even if it will cause some small glitches
 		refill = true
 	end
@@ -672,11 +680,28 @@ end
 
 local neverEnd = function()
 
+	-- always try to refill if instant refill is enabled
 	if combovars.p2.refillhealthenabled and combovars.p2.instantrefillhealth then
 		p2_need_health_refill = true
 	end
 	if combovars.p1.refillhealthenabled and combovars.p1.instantrefillhealth then
 		p1_need_health_refill = true
+	end
+
+	-- refill after being thrown or hold
+	if (p2action==6 and prev_p2action==20) or (p2action==0 and prev_p2action==20) or (p2action==4 and prev_p2action==14) or (p2action==6 and prev_p2action==14) then
+		p2_need_health_refill=true
+	end
+	if (p1action==6 and prev_p1action==20) or (p1action==0 and prev_p1action==20) or (p1action==4 and prev_p1action==14) or (p1action==6 and prev_p1action==14) then
+		p1_need_health_refill=true
+	end
+
+	-- try to refill when health < 23 to avoid round ending
+	if readPlayerTwoHealth() < 23 then
+		p2_need_health_refill=true
+	end
+	if readPlayerOneHealth() < 23 then
+		p1_need_health_refill=true
 	end
 
 	if p2_need_health_refill then
@@ -686,25 +711,6 @@ local neverEnd = function()
 		writePlayerOneHealth(p1maxhealth)
 	end
 
-	-- try to refill after being thrown, hold or knocked down
-	if rb(0xff8853) == 10 or rb(0xff89cf) == 255 then
-		p2_need_health_refill=true
-		writePlayerTwoHealth(p2maxhealth)
-	end
-	if rb(0xff8453) == 10 or rb(0xff85cf) == 255 then
-		p1_need_health_refill=true
-		writePlayerOneHealth(p1maxhealth)
-	end
-
-	-- try to refill when health < 33 to avoid round ending
-	if readPlayerTwoHealth() < 33 then
-		p2_need_health_refill=true
-		writePlayerTwoHealth(p2maxhealth)
-	end
-	if readPlayerOneHealth() < 33 then
-		p1_need_health_refill=true
-		writePlayerOneHealth(p1maxhealth)
-	end
 end
 
 stage_selector = -1

@@ -1,7 +1,7 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-p1maxhealth = 0xB4
-p2maxhealth = 0xB4
+p1maxhealth = 0xC8
+p2maxhealth = 0xC8
 
 p1maxmeter = 0xD8
 p2maxmeter = 0xD8
