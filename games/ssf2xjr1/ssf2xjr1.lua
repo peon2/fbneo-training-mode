@@ -1129,9 +1129,9 @@ local p2DizzyControl = function()
 end
 
 local statecount=0
-local skipcount=0
 local round_state=-1
-local fight_anim = 164
+local fight_anim = 123
+local roundstart_played=false
 local roundStart = function()
 
 	local DEBUG=false
@@ -1150,31 +1150,29 @@ local roundStart = function()
 	if (round_state == 10 and prev_round_state == 10) or (round_state ~= 8 and round_state ~= 10) then
 		return
 	end
-	if was_frameskip then
-		statecount=statecount+1
-		skipcount=skipcount+1
-	end
 	if round_state~=prev_round_state then
-		if DEBUG then print("prev_round_state="..prev_round_state.." => round_state="..round_state.." (at "..prev_round_state.." during "..statecount.." frames with "..skipcount.." frameskips)") end
+		if DEBUG then print("prev_round_state="..prev_round_state.." => round_state="..round_state.." (at "..prev_round_state.." during "..statecount.." frames)") end
 		if (round_state == 10) and (prev_round_state ==8) then
-			print("fight_anim: "..fight_anim.." => "..statecount)
+			if DEBUG then print("fight_anim: "..fight_anim.." => "..statecount) end
 			fight_anim = statecount
 		end
 		statecount=0
-		skipcount=0
+		roundstart_played = false
 	end
 	statecount=statecount+1
 	if (round_state==8) then
-		framesleft = rb(0xff8867)
-		if DEBUG then print("FRAME: "..statecount.." animation frames left="..framesleft) end
+		if DEBUG then print("FRAME: "..statecount) end
 	end
 
-	if (round_state == 8) and (statecount >= fight_anim - framesrecorded - 1) and framesleft < framesrecorded and not recording.playback then
-		if DEBUG then print("PLAYBACK pre-start @ frame "..statecount.."/"..fight_anim) end
-		togglePlayBack(nil, {})
+	if (round_state == 8) and (statecount >= fight_anim - framesrecorded ) and not recording.playback then
+		if not roundstart_played then
+			if DEBUG then print("PLAYBACK pre-start @ frame "..statecount.."/"..fight_anim.." (framesrecorded="..framesrecorded..")") end
+			togglePlayBack(nil, {})
+			roundstart_played = true
+		end
 	end
 
-	if (round_state == 10) and (prev_round_state == 8) and not recording.playback then
+	if (round_state == 10) and (prev_round_state == 8) and not recording.playback and p2action==0 then
 		if DEBUG then print("PLAYBACK post-start :(") end
 		togglePlayBack(nil, {})
 	end
