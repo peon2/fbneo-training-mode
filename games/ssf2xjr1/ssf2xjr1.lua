@@ -1128,6 +1128,59 @@ local p2DizzyControl = function()
 
 end
 
+local statecount=0
+local skipcount=0
+local round_state=-1
+local fight_anim = 164
+local roundStart = function()
+
+	local DEBUG=false
+
+	local framesrecorded = #recording[recording.recordingslot]
+	prev_round_state = round_state
+	round_state = rw(0xFF8008) -- 4 -> 6 -> 8 -> 10
+	if (framesrecorded < 1) then
+		if (round_state >= 4 and round_state < 10) then
+			gui.text(220,50,"Use the Replay Editor in the")
+			gui.text(220,60,"Recording menu (hold coin) to")
+			gui.text(220,70,"program the desired round start action.")
+		end
+		return
+	end
+	if (round_state == 10 and prev_round_state == 10) or (round_state ~= 8 and round_state ~= 10) then
+		return
+	end
+	if was_frameskip then
+		statecount=statecount+1
+		skipcount=skipcount+1
+	end
+	if round_state~=prev_round_state then
+		if DEBUG then print("prev_round_state="..prev_round_state.." => round_state="..round_state.." (at "..prev_round_state.." during "..statecount.." frames with "..skipcount.." frameskips)") end
+		if (round_state == 10) and (prev_round_state ==8) then
+			print("fight_anim: "..fight_anim.." => "..statecount)
+			fight_anim = statecount
+		end
+		statecount=0
+		skipcount=0
+	end
+	statecount=statecount+1
+	if (round_state==8) then
+		framesleft = rb(0xff8867)
+		if DEBUG then print("FRAME: "..statecount.." animation frames left="..framesleft) end
+	end
+
+	if (round_state == 8) and (statecount >= fight_anim - framesrecorded - 1) and framesleft < framesrecorded and not recording.playback then
+		if DEBUG then print("PLAYBACK pre-start @ frame "..statecount.."/"..fight_anim) end
+		togglePlayBack(nil, {})
+	end
+
+	if (round_state == 10) and (prev_round_state == 8) and not recording.playback then
+		if DEBUG then print("PLAYBACK post-start :(") end
+		togglePlayBack(nil, {})
+	end
+
+end
+
 function Run() -- runs every frame
 	-- attacker state (ff8451 or +0x400 for p2): 0 idle, 2 crouching, 4 jumping, 10 doing a normal attack or throw, 12 on hitstun (doing an special attack)
 	-- attacked state (ff8451 or +0x400 for p2): 6 waking up meaty, 8 blocking, 14 hit (receiving an attack), 20 thrown
@@ -1136,6 +1189,7 @@ function Run() -- runs every frame
 	p1inputs = rw(0xFF87E0)
 
 	checkFrameskip()
+	roundStart()
 	displayReversalSettings()
 	autoBlock()
 	autoReversal()
