@@ -1128,6 +1128,7 @@ local p2DizzyControl = function()
 
 end
 
+roundstart_selector = -1
 local statecount=0
 local round_state=-1
 local fight_anim = 123
@@ -1135,6 +1136,10 @@ local roundstart_played=false
 local roundStart = function()
 
 	local DEBUG=false
+
+	if roundstart_selector == -1 then
+		return
+	end
 
 	local framesrecorded = #recording[recording.recordingslot]
 	prev_round_state = round_state
@@ -1164,7 +1169,7 @@ local roundStart = function()
 		if DEBUG then print("FRAME: "..statecount) end
 	end
 
-	if (round_state == 8) and (statecount >= fight_anim - framesrecorded ) and not recording.playback then
+	if roundstart_selector == 0 and (round_state == 8) and (statecount >= fight_anim - framesrecorded ) and not recording.playback then
 		if not roundstart_played then
 			if DEBUG then print("PLAYBACK pre-start @ frame "..statecount.."/"..fight_anim.." (framesrecorded="..framesrecorded..")") end
 			togglePlayBack(nil, {})
@@ -1172,8 +1177,8 @@ local roundStart = function()
 		end
 	end
 
-	if (round_state == 10) and (prev_round_state == 8) and not recording.playback and p2action==0 then
-		if DEBUG then print("PLAYBACK post-start :(") end
+	if roundstart_selector == 1 and (round_state == 10) and (prev_round_state == 8) and not recording.playback then
+		if DEBUG then print("PLAYBACK post-start") end
 		togglePlayBack(nil, {})
 	end
 

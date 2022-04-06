@@ -118,6 +118,34 @@ guicustompage = {
 				end
 			end,
 	},
+	{
+		text = "Round start action",
+		x = 8,
+		y = 120,
+		olcolour = "black",
+		info = {
+			"Control round start action on P2",
+			"Disabled: don't replay anything when round starts.",
+			"Pre-start: buffer special before round start to trigger at earliest possible frame.",
+			"Post-start: replay action right when the round starts",
+			"Use the Replay Editor in the Recording menu to program the desired round start action."
+		},
+		func =	function()
+				roundstart_selector = roundstart_selector + 1
+				if roundstart_selector > 2 then
+					roundstart_selector = -1
+				end
+			end,
+		autofunc = function(this)
+				if roundstart_selector == -1 then
+					this.text = "Round start action (P2): Disabled"
+				elseif roundstart_selector == 0 then
+					this.text = "Round start action (P2): Pre-start"
+				elseif roundstart_selector == 1 then
+					this.text = "Round start action (P2): Post-start"
+				end
+			end,
+	},
 }
 
 -----------------------------------------------------------------------------------
