@@ -10,6 +10,11 @@ require "gd"
 
 FBNEO_TRAINING_MODE_VERSION = "v0.22"
 
+--- wait 3 frames to allow for emu.screenwidth() and emu.screenheight() to be obtained properly
+emu.frameadvance()
+emu.frameadvance()
+emu.frameadvance()
+
 local fc = emu.framecount()
 
 local games = {
