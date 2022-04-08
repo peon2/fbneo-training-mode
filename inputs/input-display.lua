@@ -30,7 +30,7 @@ local function generic() --try to detect controls and make a generic module
 		if nbuttons > 0 then break end
 	end
 	for n=4,1,-1 do if c["P"..n.." Button 1"] ~= nil or c["P"..n.." Fire 1"] ~= nil then nplayers = n break end end
-	if stick+nbuttons == 0 then return end --found neither stick nor buttons
+	if stick+nbuttons == 0 then inputDisplayReg=false return end -- found neither stick nor buttons, can't use this
 	
 	print("Generic input simpleinputdisplayenabled: "..nplayers.."-player, "..nbuttons.."-button"..(stick > 0 and "" or ", no joystick")) print()
 	module = {}
@@ -57,7 +57,7 @@ local function generic() --try to detect controls and make a generic module
 		end
 		for k,v in ipairs({"Coin "..n, "P"..n.." Coin"}) do
 			if c[v] ~= nil then
-				module[n.."C"] = {(n-1)/n*width, height-0x08, v}
+				module[n.."c"] = {(n-1)/n*width, height-0x08, v}
 				break
 			end
 		end
@@ -86,7 +86,7 @@ local function displayfunc()
 end
 
 function inputDisplayReg()
-
+	
 	for i = 1, 2 do
 		if not inputs.properties.simpleinput.simpleinputxoffset[i] then
 			inputs.properties.simpleinput.simpleinputxoffset[i] = module[i.."c"][1]

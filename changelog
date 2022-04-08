@@ -1,3 +1,38 @@
+v0.22.04.08
+
+Added replay on savestate load
+Fixed some bugs with replay on hit
+Fixed a small bug in input-display.lua for unsupported games
+More generic icons added for unsupported 6 button games
+
+Replay Editor changes:
+Aligned better
+Set (SET) now moves down after copying
+Copy (COPY) now moves every other input down before copying the input
+Blank Input (BLNK) is a new command that inserts a blank input after the cursor
+Delete (DEL) is a new command that deletes the input at the cursor
+Decrement Slot (<NUM) changed from (<SLT) to (<NUM)
+Increment Slot (>NUM) changed from (>SLT) to (>NUM)
+A red line is now drawn to mark where the replay ends
+
+ssfxjr1:
+Many new features/fixes added by poliva and Asunaro such as:
+stage select, auto reversal, auto block, dizzy control, round start action, crash fixes, combo counter adjusting
+
+hsf2:
+Many new features adapted from by ssfxjr1 by PopovMark such as:
+stage select, auto reversal, auto block, dizzy control
+
+Myriad of fixes to lb2 (Thanks to Ivy-IV)
+
+Added support for Darkstalkers: The Night Warriors (dstlk)
+Added support for Vampire Hunter 2: Darkstalkers' Revenge (vhunt2)
+Added support for Vampire Savior 2: The Lord of Vampire (vsav2)
+
+Added support for Street Fighter III: New Generation (sfiii)
+Added support for Street Fighter III: 2nd Impact (sfiii2) (Thanks to Ivy-IV) 
+Added support for Street Fighter III: 3rd Strike (sfiii3)
+
 v0.22
 
 Simple Input display is now controllable through the HUD Settings.
@@ -16,7 +51,7 @@ Added support for Last Blade (lastblad)
 Myriad of fixes to ssfxjr1, new hitboxes handling added and adjustments to button icons (Thanks to poliva)
 Myriad of fixes to doubledr (Thanks to Ivy-IV)
 Added support for Hyper Street Fighter 2 (hsf2) (Thanks to PopovMark)
-Added support for Vampire Savior (vsav) (Thanks to DatGrey)
+Added support for Vampire Savior: The Lord of Vampire (vsav) (Thanks to DatGrey)
 
 v0.21.10.29
 

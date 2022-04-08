@@ -185,10 +185,18 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						this.fillpercent = modulevars.p2.maxmeter/modulevars.p2.constants.maxmeter
 					end,
 	},
+	savestate = {
+		text = "Savestate",
+		x = 92,
+		y = 45,
+		olcolour = "black",
+		info = "Make or load a savestate",
+		func = 	function() CIG("savestate", 1) end,
+	},
 	scrollinginputsettings = {
 		text = "Change scrolling input settings",
 		x = 4,
-		y = 45,
+		y = 75,
 		olcolour = "black",
 		info = "Change scrolling input settings",
 		func = 	function() CIG("scrollingtextsettings", 2) end,
@@ -217,7 +225,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	replayautoturn = {
 		text = "Auto-Turn",
 		x = 29,
-		y = 105,
+		y = 120,
 		olcolour = "black",
 		info = "Allows you to control whether or not a replay will reverse directions while playing",
 		func =	function()
@@ -262,7 +270,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		main = {
 			text = "Select Hit Slot",
 			x = 5,
-			y = 120,
+			y = 45,
 			olcolour = "black",
 			info = "Plays back the respective replay slot after hit",
 			func = 		function()
@@ -281,8 +289,30 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 								this.x = 25
 							end
 						end,
-		
 		},
+	},
+	savestateplayback = {
+		text = "Savestate Slot",
+		x = 5,
+		y = 60,
+		olcolour = "black",
+		info = "Plays back the respective replay slot after loading a savestate",
+		func = 		function()
+						if recording.savestateslot then
+							CIG("savestateslot", recording.savestateslot)
+						else
+							CIG("savestateslot", 6)
+						end
+					end,
+		autofunc =	function(this)
+						if not recording.savestateslot then
+							this.text = "Savestate Slot"
+							this.x = 9
+						else
+							this.text = "Savestate Slot "..recording.savestateslot
+							this.x = 1
+						end
+					end,
 	},
 	replaysaveload = {
 		text = "Save/Load",
@@ -340,8 +370,8 @@ guipages = { -- interactiveguipages
 		guielements.leftarrow,
 		guielements.rightarrow,
 		guielements.hudsettings,
-		--guielements.hotkeys,
 		guielements.coininputleniency,
+		guielements.savestate
 	},
 	{ -- Players
 		title = {
@@ -407,7 +437,7 @@ guipages = { -- interactiveguipages
 		{
 			text = "Don't Loop",
 			x = 25,
-			y = 30,
+			y = 15,
 			info = "Controls whether or not playback loops until you press play again",
 			olcolour = "black",
 			func =	function()
@@ -426,7 +456,7 @@ guipages = { -- interactiveguipages
 		{
 			text = "Slot ",
 			x = 41,
-			y = 45,
+			y = 30,
 			olcolour = "black",
 			func = 		function()
 							CIG("recordingslot", recording.recordingslot) 
@@ -436,10 +466,11 @@ guipages = { -- interactiveguipages
 						end,
 			info = "Set the current recording slot",
 		},
+		guielements.savestateplayback,
 		{
 			text = "Don't Randomise",
 			x = 5,
-			y = 60,
+			y = 75,
 			info = "Random playback between all slots that have been recorded into",
 			olcolour = "black",
 			func =	function()
@@ -458,7 +489,7 @@ guipages = { -- interactiveguipages
 		{
 			text = "Snipping Replays", -- clean this up in future
 			x = 5,
-			y = 75,
+			y = 90,
 			olcolour = "black",
 			info = "Controls whether there's a space at the start or end of replays",
 			func = 	function()
@@ -494,7 +525,7 @@ guipages = { -- interactiveguipages
 		{
 			text = "Player Recording",
 			x = 5,
-			y = 90,
+			y = 105,
 			olcolour = "black",
 			info = "Controls which player(s) are recorded and played back",
 			func = 	function()
@@ -654,6 +685,16 @@ if fexists("games/"..dirname.."/guipages.lua") then
 	table.insert(guipages, guicustompage)
 end
 
+local ss = savestate.create(1) -- savestate
+
+do -- savestate
+	local Elements = {
+		{text = "Save", releasefunc = function() return function() savestate.save(ss) CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
+		{text = "Load", releasefunc = function() return function() if ss then savestate.load(ss) savestatePlayBack() end CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
+	}
+	guipages.savestate = createPopUpMenu(guipages[1], nil, nil, nil, Elements, 140, 45)
+end
+
 -- pop up menus and stuff that can be pre-computed
 if availablefunctions.writeplayeronehealth and modulevars.p1.constants.maxhealth then -- p1health
 	local Elements = {
@@ -799,19 +840,41 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 		{},
 		{},
 		{},
-		{y = 90, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
+		{y = guielements.hitplayback.main.y, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
 	}
 	local rf = function(n) return function() recording.hitslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
 	local af = function(n) return
-	function(this)
-		if recording[n][1] then -- if something is in the slot 
-			this.textcolour = "yellow"
-		else
-			this.textcolour = "white"
+		function(this)
+			if recording[n][1] then -- if something is in the slot 
+				this.textcolour = "yellow"
+			else
+				this.textcolour = "white"
+			end
 		end
 	end
+	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, guielements.hitplayback.main.y+10, nil)
+end
+
+do -- savestateslot
+	local Elements = {
+		{},
+		{},
+		{},
+		{},
+		{},
+		{y = guielements.savestateplayback.y, text = "None", releasefunc = function() return function() recording.savestateslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
+	}
+	local rf = function(n) return function() recording.savestateslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
+	local af = function(n) return
+		function(this)
+			if recording[n][1] then -- if something is in the slot 
+				this.textcolour = "yellow"
+			else
+				this.textcolour = "white"
+			end
+		end
 	end
-	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, 100, nil)
+	guipages.savestateslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, guielements.savestateplayback.y+10, nil)
 end
 
 do -- replaysaveload
@@ -833,7 +896,7 @@ do -- recordingslot
 			end
 		end
 	end
-	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
+	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, guipages[4][4].y, 5)
 end
 
 if scrollingInputReg then -- scrollingtextsettingsinputpopup
@@ -873,7 +936,6 @@ guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrec
 --]]
 -- format the tables for better navigation and format the info to fit the screen better
 function formatGuiTables() -- Asunaro : Made a function out of this "do" to format "reversalsettings" and "guicustompage" (in games/ssf2xjr1/guipages.lua). Maybe there's a cleaner way ?
-do 
 	local tab, str, str2, r, b
 	local infomax = interactivegui.boxxlength/4
 	for i,v in pairs(guipages) do
@@ -905,7 +967,6 @@ do
 		end
 		guipagesformatted[i] = guiTableFormatting(tab)
 	end
-end
 end
 
 formatGuiTables()
