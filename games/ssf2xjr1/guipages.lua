@@ -147,6 +147,24 @@ guicustompage = {
 			end,
 	},
 }
+-----------------------------------------------------------------------------------
+-- Added by peon2 - guipages is a global table so any 'main' pages can be added in game guipages freely
+-----------------------------------------------------------------------------------
+local reversalsettings = {
+	title = {
+		text = "Reversal Settings",
+		x = interactivegui.boxxlength/2 - 48,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =	function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+
+guipages.reversalsettings = reversalsettings
 
 -----------------------------------------------------------------------------------
 -- Added by Asunaro - Create a Reversal Settings Menu if the game has been patched
