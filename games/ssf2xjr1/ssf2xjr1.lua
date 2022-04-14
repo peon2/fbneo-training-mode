@@ -590,7 +590,8 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rw(p1health)
+	-- this must be redhealth (health at previous frame, otherwise breaks the combo counter)
+	return rw(p1redhealth)
 end
 
 function writePlayerOneHealth(health)
@@ -615,7 +616,8 @@ function writePlayerOneHealth(health)
 end
 
 function readPlayerTwoHealth()
-	return rw(p2health)
+	-- this must be redhealth (health at previous frame, otherwise breaks the combo counter)
+	return rw(p2redhealth)
 end
 
 function writePlayerTwoHealth(health)
@@ -623,7 +625,7 @@ function writePlayerTwoHealth(health)
 		return
 	end
 	local refill = false
-	local p2healthval = readPlayerTwoHealth()
+	local p2healthval = rw(p2health)
 	if p2healthval < 33 then
 		-- if health < 33 we refill regardless of the state
 		refill = true
@@ -684,8 +686,8 @@ local neverEnd = function()
 		p1_need_health_refill = true
 	end
 
-	local p2healthval = readPlayerTwoHealth()
-	local p1healthval = readPlayerOneHealth()
+	local p2healthval = rw(p2health)
+	local p1healthval = rw(p1health)
 
 	-- refill after being thrown or hold
 	if (p2action == 0 and prev_p2action==0 and p2healthval < 144) or (p2action==6 and prev_p2action==20) or (p2action==0 and prev_p2action==20) or (p2action==4 and prev_p2action==14) or (p2action==6 and prev_p2action==14) then
