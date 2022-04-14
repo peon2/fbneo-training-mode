@@ -590,7 +590,7 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rw(p1redhealth)
+	return rw(p1health)
 end
 
 function writePlayerOneHealth(health)
@@ -607,15 +607,15 @@ function writePlayerOneHealth(health)
 		refill = true
 	end
 	if refill then
-		ww(p1health, health)
-		ww(p1redhealth, health)
-		ww(p1disphealth, health)
+		ww(p1health, p1maxhealth)
+		ww(p1redhealth, p1maxhealth)
+		ww(p1disphealth, p1maxhealth)
 		p1_need_health_refill=false
 	end
 end
 
 function readPlayerTwoHealth()
-	return rw(p2redhealth)
+	return rw(p2health)
 end
 
 function writePlayerTwoHealth(health)
@@ -632,9 +632,9 @@ function writePlayerTwoHealth(health)
 		refill = true
 	end
 	if refill then
-		ww(p2health, health)
-		ww(p2redhealth, health)
-		ww(p2disphealth, health)
+		ww(p2health, p2maxhealth)
+		ww(p2redhealth, p2maxhealth)
+		ww(p2disphealth, p2maxhealth)
 		p2_need_health_refill=false
 	end
 end
@@ -684,19 +684,22 @@ local neverEnd = function()
 		p1_need_health_refill = true
 	end
 
+	local p2healthval = readPlayerTwoHealth()
+	local p1healthval = readPlayerOneHealth()
+
 	-- refill after being thrown or hold
-	if (p2action==6 and prev_p2action==20) or (p2action==0 and prev_p2action==20) or (p2action==4 and prev_p2action==14) or (p2action==6 and prev_p2action==14) then
+	if (p2action == 0 and prev_p2action==0 and p2healthval < 144) or (p2action==6 and prev_p2action==20) or (p2action==0 and prev_p2action==20) or (p2action==4 and prev_p2action==14) or (p2action==6 and prev_p2action==14) then
 		p2_need_health_refill=true
 	end
-	if (p1action==6 and prev_p1action==20) or (p1action==0 and prev_p1action==20) or (p1action==4 and prev_p1action==14) or (p1action==6 and prev_p1action==14) then
+	if (p1action == 0 and prev_p1action==0 and p1healthval < 144) or (p1action==6 and prev_p1action==20) or (p1action==0 and prev_p1action==20) or (p1action==4 and prev_p1action==14) or (p1action==6 and prev_p1action==14) then
 		p1_need_health_refill=true
 	end
 
 	-- try to refill when health < 23 to avoid round ending
-	if readPlayerTwoHealth() < 23 then
+	if p2healthval < 23 then
 		p2_need_health_refill=true
 	end
-	if readPlayerOneHealth() < 23 then
+	if p1healthval < 23 then
 		p1_need_health_refill=true
 	end
 
