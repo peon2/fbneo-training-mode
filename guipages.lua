@@ -21,6 +21,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 				end,
 		info = "Moves forward one page",
 	},
+		
 	falseleftarrow = {
 		text = "<<",
 		x = 0,
@@ -32,6 +33,90 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = interactivegui.boxx2 - interactivegui.boxx - 12,
 		y = 0,
 		olcolour = "black",
+	},
+	hudsettings = {
+		text = "HUD Settings",
+		x = 80,
+		y = 15,
+		olcolour = "black",
+		info = "Move and hide parts of the HUD",
+		func = 	function()
+					toggleMoveHUD(true, {})
+				end,
+	},
+	coininputleniency = {
+		text = "Coin leniency",
+		x = 64,
+		fillpercent = 0,
+		olcolour = "black",
+		info = "This controls how many frames you have between each coin input.10 frames allows for faster usage but 15 might be easier.",
+		func = 		function()
+						CIG("coininputleniency", inputs.properties.coinleniency-9)
+					end,
+		autofunc = 	function(this)
+						this.text = "Coin leniency "..(inputs.properties.coinleniency)
+						this.fillpercent = (inputs.properties.coinleniency-10)/5
+					end,
+	},
+	savestate = {
+		text = "Savestate",
+		x = 92,
+		olcolour = "black",
+		info = "Make or load a savestate",
+		func = 	function() CIG("savestate", 1) end,
+	},
+	hitboxsettings = {
+		text = "Change hitbox settings",
+		x = 40,
+		olcolour = "black",
+		func = 	function() CIG("hitboxsettings", 2) end,
+		info = "Change hitbox settings",
+	},
+	hitboxstate = {
+		text = "Hitboxes On",
+		x = 76,
+		y = 50,
+		func = 	function()
+			changeConfig("hitbox", "enabled", not hitboxes.enabled, hitboxes)
+		end,
+		info = "Toggles hitboxes on and off",
+		autofunc = 	function(this)
+			if hitboxes.enabled then
+				this.text = "Hitboxes On"
+				this.x = 76
+			else
+				this.text = "Hitboxes Off"
+				this.x = 72
+			end
+		end
+	},
+	scrollinginputsettings = {
+		text = "Change scrolling input settings",
+		x = 4,
+		olcolour = "black",
+		info = "Change scrolling input settings",
+		func = 	function() CIG("scrollingtextsettings", 2) end,
+	},
+	scrollinginputframestoggle = {
+		text = "Display scrolling input frame numbers",
+		x = 76,
+		y = 90,
+		info = "Toggles frame numbers displayed along with scrolling inputs",
+		olcolour = "black",
+		func = function()
+					inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
+					changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
+					scrollingInputReload()
+				end,
+		autofunc =	function(this)
+					if inputs.properties.scrollinginput.frames then
+						this.text = "Frame number display on"
+						this.x = 20
+					else
+						this.text = "Frame number display off"
+						this.x = 16
+					end
+				end,
 	},
 	p1health = {
 		text = "Health settings",
@@ -185,84 +270,10 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						this.fillpercent = modulevars.p2.maxmeter/modulevars.p2.constants.maxmeter
 					end,
 	},
-	scrollinginputsettings = {
-		text = "Change scrolling input settings",
-		x = 4,
-		y = 45,
-		olcolour = "black",
-		info = "Change scrolling input settings",
-		func = 	function() CIG("scrollingtextsettings", 2) end,
-	},
-	scrollinginputframestoggle = {
-		text = "Display scrolling input frame numbers",
-		x = 76,
-		y = 90,
-		info = "Toggles frame numbers displayed along with scrolling inputs",
-		olcolour = "black",
-		func = function()
-					inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
-					changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
-					scrollingInputReload()
-				end,
-		autofunc =	function(this)
-					if inputs.properties.scrollinginput.frames then
-						this.text = "Frame number display on"
-						this.x = 20
-					else
-						this.text = "Frame number display off"
-						this.x = 16
-					end
-				end,
-	},
-	replayautoturn = {
-		text = "Auto-Turn",
-		x = 29,
-		y = 105,
-		olcolour = "black",
-		info = "Allows you to control whether or not a replay will reverse directions while playing",
-		func =	function()
-					recording.autoturn = not recording.autoturn
-				end,
-		autofunc = 	function(this)
-						if recording.autoturn then
-							this.text = "Auto-Turn"
-							this.x = 29
-						else
-							this.text = "Don't Auto-Turn"
-							this.x = 5
-						end
-					end,
-	},
-	hudsettings = {
-		text = "HUD Settings",
-		x = 80,
-		y = 15,
-		olcolour = "black",
-		info = "Move and hide parts of the HUD",
-		func = 	function()
-					toggleMoveHUD(true, {})
-				end,
-	},
-	coininputleniency = {
-		text = "Coin leniency",
-		x = 64,
-		y = 30,
-		fillpercent = 0,
-		olcolour = "black",
-		info = "This controls how many frames you have between each coin input.10 frames allows for faster usage but 15 might be easier.",
-		func = 		function()
-						CIG("coininputleniency", inputs.properties.coinleniency-9)
-					end,
-		autofunc = 	function(this)
-						this.text = "Coin leniency "..(inputs.properties.coinleniency)
-						this.fillpercent = (inputs.properties.coinleniency-10)/5
-					end,
-	},
 	hitplayback = {
 		main = {
 			text = "Select Hit Slot",
 			x = 5,
-			y = 120,
 			olcolour = "black",
 			info = "Plays back the respective replay slot after hit",
 			func = 		function()
@@ -281,13 +292,51 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 								this.x = 25
 							end
 						end,
-		
 		},
+	},
+	savestateplayback = {
+		text = "Savestate Slot",
+		x = 5,
+		olcolour = "black",
+		info = "Plays back the respective replay slot after loading a savestate",
+		func = 		function()
+						if recording.savestateslot then
+							CIG("savestateslot", recording.savestateslot)
+						else
+							CIG("savestateslot", 6)
+						end
+					end,
+		autofunc =	function(this)
+						if not recording.savestateslot then
+							this.text = "Savestate Slot"
+							this.x = 9
+						else
+							this.text = "Savestate Slot "..recording.savestateslot
+							this.x = 1
+						end
+					end,
+	},
+	replayautoturn = {
+		text = "Auto-Turn",
+		x = 29,
+		olcolour = "black",
+		info = "Allows you to control whether or not a replay will reverse directions while playing",
+		func =	function()
+					recording.autoturn = not recording.autoturn
+				end,
+		autofunc = 	function(this)
+						if recording.autoturn then
+							this.text = "Auto-Turn"
+							this.x = 29
+						else
+							this.text = "Don't Auto-Turn"
+							this.x = 5
+						end
+					end,
 	},
 	replaysaveload = {
 		text = "Save/Load",
 		x = 29,
-		y = 135,
 		olcolour = "black",
 		info = "Save and Load replays (current slot)",
 		func = function() CIG("replaysaveload", 1) end,
@@ -295,36 +344,9 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	replayeditortoggle = {
 		text = "Replay Editor",
 		x = 13,
-		y = 150,
 		olcolour = "black",
 		info = "View and set replay inputs",
 		func = 	function() toggleReplayEditor(nil, {}) end,
-	},
-	hitboxsettings = {
-		text = "Change hitbox settings",
-		x = 40,
-		y = 60,
-		olcolour = "black",
-		func = 	function() CIG("hitboxsettings", 2) end,
-		info = "Change hitbox settings",
-	},
-	hitboxstate = {
-		text = "Hitboxes On",
-		x = 76,
-		y = 50,
-		func = 	function()
-			changeConfig("hitbox", "enabled", not hitboxes.enabled, hitboxes)
-		end,
-		info = "Toggles hitboxes on and off",
-		autofunc = 	function(this)
-			if hitboxes.enabled then
-				this.text = "Hitboxes On"
-				this.x = 76
-			else
-				this.text = "Hitboxes Off"
-				this.x = 72
-			end
-		end
 	},
 }
 
@@ -340,8 +362,8 @@ guipages = { -- interactiveguipages
 		guielements.leftarrow,
 		guielements.rightarrow,
 		guielements.hudsettings,
-		--guielements.hotkeys,
 		guielements.coininputleniency,
+		guielements.savestate
 	},
 	{ -- Players
 		title = {
@@ -398,7 +420,6 @@ guipages = { -- interactiveguipages
 	{ -- Recording
 		guielements.leftarrow,
 		guielements.rightarrow,
-		
 		title = {
 			text = "Recording Menu",
 			x = interactivegui.boxxlength/2 - 28,
@@ -407,7 +428,7 @@ guipages = { -- interactiveguipages
 		{
 			text = "Don't Loop",
 			x = 25,
-			y = 30,
+			y = 15,
 			info = "Controls whether or not playback loops until you press play again",
 			olcolour = "black",
 			func =	function()
@@ -426,7 +447,6 @@ guipages = { -- interactiveguipages
 		{
 			text = "Slot ",
 			x = 41,
-			y = 45,
 			olcolour = "black",
 			func = 		function()
 							CIG("recordingslot", recording.recordingslot) 
@@ -436,10 +456,10 @@ guipages = { -- interactiveguipages
 						end,
 			info = "Set the current recording slot",
 		},
+		guielements.savestateplayback,
 		{
 			text = "Don't Randomise",
 			x = 5,
-			y = 60,
 			info = "Random playback between all slots that have been recorded into",
 			olcolour = "black",
 			func =	function()
@@ -458,7 +478,6 @@ guipages = { -- interactiveguipages
 		{
 			text = "Snipping Replays", -- clean this up in future
 			x = 5,
-			y = 75,
 			olcolour = "black",
 			info = "Controls whether there's a space at the start or end of replays",
 			func = 	function()
@@ -494,7 +513,6 @@ guipages = { -- interactiveguipages
 		{
 			text = "Player Recording",
 			x = 5,
-			y = 90,
 			olcolour = "black",
 			info = "Controls which player(s) are recorded and played back",
 			func = 	function()
@@ -582,24 +600,6 @@ guipages = { -- interactiveguipages
 		},
 		guielements.hitboxstate,
 	},
-	------------------------------------------------
-	-- Asunaro : Not sure if i can put "reversalsettings" somewhere else
-	------------------------------------------------
-	reversalsettings = {
-		title = {
-			text = "Reversal Settings",
-			x = interactivegui.boxxlength/2 - 48,
-			y = 1,
-		},
-		{
-			text = "<",
-			olcolour = "black",
-			info = "Back",
-			func =	function() CIG(interactivegui.previouspage,1) end,
-		},
-	},
-	------------------------------------------------
-	------------------------------------------------
 }
 
 if scrollingInputReg then -- if scrolling-input-display.lua is loaded
@@ -654,7 +654,66 @@ if fexists("games/"..dirname.."/guipages.lua") then
 	table.insert(guipages, guicustompage)
 end
 
+
+--[[
+	guipagesformatted[1] = {guiTableFormatting}
+	guipagesformatted[2] = {guiTableFormatting}
+	guipagesformatted[hitboxsettings] = {guiTableFormatting}
+	.
+	.
+	.
+--]]
+-- format the tables for better navigation and format the info to fit the screen better
+function formatGuiTables()
+	local tab, str, str2, r, b
+	local infomax = interactivegui.boxxlength/4
+	for i,v in pairs(guipages) do
+		tab = {}
+		v[0] = {y=0}
+		for j,k in ipairs(v) do
+			v[j].x = k.x or 0 -- autospacing/failsafe
+			v[j].y = k.y or (v[j-1].y+15) or 0
+			
+			local t = {id=j,x=v[j].x,y=v[j].y}
+			table.insert(tab, t)
+			
+			if k.info and type(k.info)=="string" then -- if its not in a string format assume its already formatted
+				str = k.info
+				k.info = {}
+				while (#str>infomax) do
+					str2 = str:sub(1,infomax-1):reverse()
+					str = str:sub(infomax)
+					b = false
+					r=str2:find("\n")
+					if r then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r-1)) b=true end
+					r=str2:find("%.")
+					if r and not b then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r)) b=true end
+					r=str2:find(" ")
+					if r and not b then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r-1)) b=true end
+					
+					if not b then table.insert(k.info,str2:reverse()) end -- couldn't find a delimiter
+				end
+				table.insert(k.info,str)
+			end
+		end
+		guipagesformatted[i] = guiTableFormatting(tab)
+	end
+end
+
+formatGuiTables()
+
 -- pop up menus and stuff that can be pre-computed
+
+local ss = savestate.create(1) -- savestate
+
+do -- savestate
+	local Elements = {
+		{text = "Save", releasefunc = function() return function() savestate.save(ss) CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
+		{text = "Load", releasefunc = function() return function() if ss then savestate.load(ss) savestatePlayBack() end CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
+	}
+	guipages.savestate = createPopUpMenu(guipages[1], nil, nil, nil, Elements, 140, 45)
+end
+
 if availablefunctions.writeplayeronehealth and modulevars.p1.constants.maxhealth then -- p1health
 	local Elements = {
 		{text = "No Health Refill", selectfunc = function() return function() changeConfig("p1", "refillhealthenabled", false, combovars.p1) end end},
@@ -799,19 +858,41 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 		{},
 		{},
 		{},
-		{y = 90, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
+		{y = guielements.hitplayback.main.y, text = "None", releasefunc = function() return function() recording.hitslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
 	}
 	local rf = function(n) return function() recording.hitslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
 	local af = function(n) return
-	function(this)
-		if recording[n][1] then -- if something is in the slot 
-			this.textcolour = "yellow"
-		else
-			this.textcolour = "white"
+		function(this)
+			if recording[n][1] then -- if something is in the slot 
+				this.textcolour = "yellow"
+			else
+				this.textcolour = "white"
+			end
 		end
 	end
+	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, guielements.hitplayback.main.y+10, nil)
+end
+
+do -- savestateslot
+	local Elements = {
+		{},
+		{},
+		{},
+		{},
+		{},
+		{y = guielements.savestateplayback.y, text = "None", releasefunc = function() return function() recording.savestateslot = nil CIG(interactivegui.previouspage, interactivegui.previousselection) end end, autofunc = function() end}
+	}
+	local rf = function(n) return function() recording.savestateslot = n CIG(interactivegui.previouspage, interactivegui.previousselection) end end
+	local af = function(n) return
+		function(this)
+			if recording[n][1] then -- if something is in the slot 
+				this.textcolour = "yellow"
+			else
+				this.textcolour = "white"
+			end
+		end
 	end
-	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, 100, nil)
+	guipages.savestateslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, guielements.savestateplayback.y+10, nil)
 end
 
 do -- replaysaveload
@@ -833,7 +914,7 @@ do -- recordingslot
 			end
 		end
 	end
-	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, 25, 5)
+	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, guipages[4][4].y, 5)
 end
 
 if scrollingInputReg then -- scrollingtextsettingsinputpopup
@@ -850,7 +931,6 @@ if scrollingInputReg then -- scrollingtextsettingsinputpopup
 		end 
 	end
 	guipages.scrollingtextsettingsinputpopup = createPopUpMenu(guipages.scrollingtextsettings, rf, nil, nil, Elements, 120, 30, nil)
-	-- scrollingtextsettingssizepopup
 	local rf = function() return function() CIG("scrollingtextsettings", 2) end end
 	local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
 	guipages.scrollingtextsettingssizepopup = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)
@@ -862,50 +942,3 @@ local playerrecelements = {
 					{text = "P1&P2", selectfunc = function() return function() recording.replayP1=true recording.replayP2=true end end},
 				}
 guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrecelements, 144, 55, nil)
-
---[[
-	guipagesformatted[1] = {guiTableFormatting}
-	guipagesformatted[2] = {guiTableFormatting}
-	guipagesformatted[hitboxsettings] = {guiTableFormatting}
-	.
-	.
-	.
---]]
--- format the tables for better navigation and format the info to fit the screen better
-function formatGuiTables() -- Asunaro : Made a function out of this "do" to format "reversalsettings" and "guicustompage" (in games/ssf2xjr1/guipages.lua). Maybe there's a cleaner way ?
-do 
-	local tab, str, str2, r, b
-	local infomax = interactivegui.boxxlength/4
-	for i,v in pairs(guipages) do
-		tab = {}
-		for j,k in ipairs(v) do
-			local t = {id=j,x=k.x,y=k.y}
-			if not t.x then t.x=0 end -- failsafe
-			if not t.y then t.y=0 end
-			table.insert(tab, t)
-			
-			if k.info and type(k.info)=="string" then -- if its not in a string format assume its already formatted
-				str = k.info
-				k.info = {}
-				while (#str>infomax) do
-					str2 = str:sub(1,infomax-1):reverse()
-					str = str:sub(infomax)
-					b = false
-					r=str2:find("\n")
-					if r then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r-1)) b=true end
-					r=str2:find("%.")
-					if r and not b then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r)) b=true end
-					r=str2:find(" ")
-					if r and not b then str = str2:reverse():sub(infomax-r+1) .. str table.insert(k.info,str2:reverse():sub(1,infomax-r-1)) b=true end
-					
-					if not b then table.insert(k.info,str2:reverse()) end -- couldn't find a delimiter
-				end
-				table.insert(k.info,str)
-			end
-		end
-		guipagesformatted[i] = guiTableFormatting(tab)
-	end
-end
-end
-
-formatGuiTables()

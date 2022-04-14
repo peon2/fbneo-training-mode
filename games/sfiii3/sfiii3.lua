@@ -2,21 +2,21 @@ assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being r
 
 p1maxhealth = 0xA0
 p2maxhealth = 0xA0
-p1maxmeter = rb(0x200ED3D)
-p2maxmeter = rb(0x200ED69)
+p1maxmeter = rb(0x20286AD)
+p2maxmeter = rb(0x20286e1)
 
 
-local p1health = 0x200E5A3
-local p2health = 0x200E9AF
+local p1health = 0x2068D0B
+local p2health = 0x20691A3
 
-local p1meter = 0x200ED3F
-local p2meter = 0x200ED6B
+local p1meter = 0x20695BE
+local p2meter = 0x20695EB
 
-local p1direction = 0x200E50E 
-local p2direction = 0x200E91A
+local p1direction = 0x2068C76 
+local p2direction = 0x2068C77
 
-local p1combocounter = 0x200EE45
-local p2combocounter = 0x200EEED
+local p1combocounter = 0x2028861 
+local p2combocounter = 0x206961D
 
 translationtable = {
 	"left",
@@ -47,13 +47,13 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=175,
+		combotextx=179,
 		combotexty=42,
 		comboenabled=true,
-		p1healthx=10,
+		p1healthx=9,
 		p1healthy=17,
 		p1healthenabled=true,
-		p2healthx=363,
+		p2healthx=364,
 		p2healthy=17,
 		p2healthenabled=true,
 	},
@@ -64,7 +64,7 @@ function playerOneFacingLeft()
 end
 
 function playerTwoFacingLeft()
-	return rb(p2direction)==0
+	return rb(p2direction)==1
 end
 
 function playerOneInHitstun()
@@ -108,7 +108,7 @@ function writePlayerTwoMeter(meter)
 end
 
 local infiniteTime = function()
-	wb(0x2010167, 0x64)
+	wb(0x2011377, 0x63)
 end
 
 function Run() -- runs every frame
