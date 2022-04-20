@@ -599,9 +599,12 @@ function writePlayerOneHealth(health)
 		return
 	end
 	local refill = false
-	local p1healthval = readPlayerOneHealth()
-	if p1healthval < 33 then
-		-- if health < 33 we refill regardless of the state
+	local p1healthval = rw(p1health)
+	if p1healthval < 16 then
+		-- if health < 16 we refill regardless of the state to avoid round ending
+		refill = true
+	elseif p1healthval < 33 and prev_p2action ~= 12 and p1action ~= 14 then
+		-- if health < 33 we refill even if it will cause some small glitches
 		refill = true
 	elseif ((p1healthval < 144) and (p1action ~= 20 and p1action ~= 14 and p1action ~= 8) and (p2action==2 or p2action==0)) then
 		-- this only refills when p2 is idle or crouching and p1 is not blocking or after being hit/thrown
@@ -626,8 +629,11 @@ function writePlayerTwoHealth(health)
 	end
 	local refill = false
 	local p2healthval = rw(p2health)
-	if p2healthval < 33 then
-		-- if health < 33 we refill regardless of the state
+	if p2healthval < 16  then
+		-- if health < 16 we refill regardless of the state to avoid round ending
+		refill = true
+	elseif p2healthval < 33 and prev_p1action ~= 12 and p2action ~= 14 then
+		-- if health < 33 we refill even if it will cause some small glitches
 		refill = true
 	elseif ((p2healthval < 144) and (p2action ~= 20 and p2action ~= 14 and p2action ~= 8) and (p1action==2 or p1action==0)) then
 		-- this only refills when p1 is idle or crouching and p2 is not blocking or after being hit/thrown
