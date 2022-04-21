@@ -2,8 +2,9 @@ assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being r
 -- ssf2x training mode by @pof
 require("games/ssf2xjr1/character_specific")
 
-p1maxhealth = 144
-p2maxhealth = 144
+trainingmaxhealth = 0x7fff
+p1maxhealth = trainingmaxhealth
+p2maxhealth = trainingmaxhealth
 p1maxmeter = 0x30
 p2maxmeter = 0x30
 
@@ -606,7 +607,7 @@ function writePlayerOneHealth(health)
 	elseif p1healthval < 33 and prev_p2action ~= 12 and p1action ~= 14 then
 		-- if health < 33 we refill even if it will cause some small glitches
 		refill = true
-	elseif ((p1healthval < 144) and (p1action ~= 20 and p1action ~= 14 and p1action ~= 8) and (p2action==2 or p2action==0)) then
+	elseif ((p1healthval < p1maxhealth) and (p1action ~= 20 and p1action ~= 14 and p1action ~= 8) and (p2action==2 or p2action==0)) then
 		-- this only refills when p2 is idle or crouching and p1 is not blocking or after being hit/thrown
 		refill = true
 	end
@@ -635,7 +636,7 @@ function writePlayerTwoHealth(health)
 	elseif p2healthval < 33 and prev_p1action ~= 12 and p2action ~= 14 then
 		-- if health < 33 we refill even if it will cause some small glitches
 		refill = true
-	elseif ((p2healthval < 144) and (p2action ~= 20 and p2action ~= 14 and p2action ~= 8) and (p1action==2 or p1action==0)) then
+	elseif ((p2healthval < p2maxhealth) and (p2action ~= 20 and p2action ~= 14 and p2action ~= 8) and (p1action==2 or p1action==0)) then
 		-- this only refills when p1 is idle or crouching and p2 is not blocking or after being hit/thrown
 		refill = true
 	end
@@ -684,38 +685,113 @@ end
 
 local neverEnd = function()
 
-	-- always try to refill if instant refill is enabled
-	if combovars.p2.refillhealthenabled and combovars.p2.instantrefillhealth then
-		p2_need_health_refill = true
-	end
-	if combovars.p1.refillhealthenabled and combovars.p1.instantrefillhealth then
-		p1_need_health_refill = true
+	local DEBUG=false
+
+	round_state = rw(0xFF8008)
+	if round_state ~= 10 then
+		return
 	end
 
 	local p2healthval = rw(p2health)
 	local p1healthval = rw(p1health)
 
+	local p1scaledhealth = p1maxhealth
+	local p2scaledhealth = p2maxhealth
+
+	-- no health refill
+	if not combovars.p1.refillhealthenabled then
+		if p1healthval > 144 and p1healthval <= trainingmaxhealth then
+			p1maxhealth = 144
+			ww(p1health, p1maxhealth)
+			ww(p1redhealth, p1maxhealth)
+			ww(p1disphealth, p1maxhealth)
+		end
+		return
+	end
+	if not combovars.p2.refillhealthenabled then
+		if p2healthval > 144 and p2healthval <= trainingmaxhealth then
+			p2maxhealth = 144
+			ww(p2health, p2maxhealth)
+			ww(p2redhealth, p2maxhealth)
+			ww(p2disphealth, p2maxhealth)
+		end
+		return
+	end
+
+	if p1healthval <= 144 then
+		p1maxhealth = trainingmaxhealth
+		p1_need_health_refill = true
+	end
+	if p2healthval <= 144 then
+		p2maxhealth = trainingmaxhealth
+		p2_need_health_refill = true
+	end
+
+	-- health always full
+	if combovars.p1.instantrefillhealth then
+		p1scaledhealth = p1healthval
+		ww(p1disphealth, p1scaledhealth)
+	end
+	if combovars.p2.instantrefillhealth then
+		p2scaledhealth = p2healthval
+		ww(p2disphealth, p2scaledhealth)
+	end
+
+	-- refill after combo, compute the scaled health value to display
+	if not combovars.p1.instantrefillhealth then
+		p1scaledhealth = 144-(p1maxhealth-p1healthval)
+		p1limit = p1scaledhealth
+		p1disphealthval = rw(p1disphealth)
+		if p1scaledhealth >= 144 then
+			p1scaledhealth = p1maxhealth
+		end
+		if (p1disphealthval > p1scaledhealth) and p1disphealthval < 144 then
+			p1scaledhealth = p1disphealthval
+		end
+		if (p1disphealthval > p1scaledhealth) and p1disphealthval >= p1maxhealth-1 then
+			p1scaledhealth = 144
+			if DEBUG then print("[P1] >>>>>> 144") end
+		end
+		if p1disphealthval <= p1limit +1 then
+			p1scaledhealth = p1limit + 1
+		end
+		if DEBUG and p1scaledhealth ~= p1maxhealth then print("[P1] SCALED: "..p1scaledhealth.." / "..p1disphealthval.." ["..p1limit.."]") end
+		ww(p1disphealth, p1scaledhealth)
+	end
+	if not combovars.p2.instantrefillhealth then
+		p2scaledhealth = 144-(p2maxhealth-p2healthval)
+		p2limit = p2scaledhealth
+		p2disphealthval = rw(p2disphealth)
+		if p2scaledhealth >= 144 then
+			p2scaledhealth = p2maxhealth
+		end
+		if (p2disphealthval > p2scaledhealth) and p2disphealthval < 144 then
+			p2scaledhealth = p2disphealthval
+		end
+		if (p2disphealthval > p2scaledhealth) and p2disphealthval >= p2maxhealth-1 then
+			p2scaledhealth = 144
+			if DEBUG then print("[P2] >>>>>> 144") end
+		end
+		if p2disphealthval <= p2limit +1 then
+			p2scaledhealth = p2limit + 1
+		end
+		if DEBUG and p2scaledhealth ~= p2maxhealth then print("[P2] SCALED: "..p2scaledhealth.." / "..p2disphealthval.." ["..p2limit.."]") end
+		ww(p2disphealth, p2scaledhealth)
+	end
+
 	-- refill after being thrown or hold
-	if (p2action == 0 and prev_p2action==0 and p2healthval < 144) or (p2action==6 and prev_p2action==20) or (p2action==0 and prev_p2action==20) or (p2action==4 and prev_p2action==14) or (p2action==6 and prev_p2action==14) then
-		p2_need_health_refill=true
-	end
-	if (p1action == 0 and prev_p1action==0 and p1healthval < 144) or (p1action==6 and prev_p1action==20) or (p1action==0 and prev_p1action==20) or (p1action==4 and prev_p1action==14) or (p1action==6 and prev_p1action==14) then
+	if (p1action == 0 and prev_p1action==0 and p1healthval < p1maxhealth) or (p1action==6 and prev_p1action==20) or (p1action==0 and prev_p1action==20) or (p1action==4 and prev_p1action==14) or (p1action==6 and prev_p1action==14) then
 		p1_need_health_refill=true
 	end
-
-	-- try to refill when health < 23 to avoid round ending
-	if p2healthval < 23 then
+	if (p2action == 0 and prev_p2action==0 and p2healthval < p2maxhealth) or (p2action==6 and prev_p2action==20) or (p2action==0 and prev_p2action==20) or (p2action==4 and prev_p2action==14) or (p2action==6 and prev_p2action==14) then
 		p2_need_health_refill=true
 	end
-	if p1healthval < 23 then
-		p1_need_health_refill=true
-	end
 
-	if p2_need_health_refill then
-		writePlayerTwoHealth(p2maxhealth)
-	end
 	if p1_need_health_refill then
 		writePlayerOneHealth(p1maxhealth)
+	end
+	if p2_need_health_refill then
+		writePlayerTwoHealth(p2maxhealth)
 	end
 
 end
