@@ -161,7 +161,7 @@ local specificsettings = {
 		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
-guipages.specificsettings = reversalsettings
+guipages.specificsettings = specificsettings
 
 local advancedsettings = {
 	title = {
