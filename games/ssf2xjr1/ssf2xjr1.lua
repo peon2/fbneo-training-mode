@@ -87,9 +87,9 @@ gamestate.prev	  = gamestate.stock_game_vars()
 gamestate.P1.prev = gamestate.stock_player_vars(gamestate.P1)
 gamestate.P2.prev = gamestate.stock_player_vars(gamestate.P2)
 
-local previous_patch	   = gamestate.patched
-local current_patch		   = gamestate.patched
-local patch_changed 	   = false
+local previous_patch  = gamestate.patched
+local current_patch   = gamestate.patched
+local patch_changed   = false
 
 local function updatePatch()
 	previous_patch = current_patch
@@ -413,18 +413,10 @@ local infiniteTime = function()
 	end
 end
 
-local neverEnd = function()
+local neverEnd_p1 = function()
 
 	local DEBUG=false
-
-	if not gamestate.is_in_match then
-		return
-	end
-
-	infiniteTime()
-
 	local p1scaledhealth = p1maxhealth
-	local p2scaledhealth = p2maxhealth
 
 	-- no health refill
 	if not combovars.p1.refillhealthenabled then
@@ -436,33 +428,16 @@ local neverEnd = function()
 		end
 		return
 	end
-	if not combovars.p2.refillhealthenabled then
-		if gamestate.P2.life > 144 and gamestate.P2.life <= trainingmaxhealth then
-			p2maxhealth = 144
-			ww(gamestate.P2.addresses.life, p2maxhealth)
-			ww(gamestate.P2.addresses.life_backup, p2maxhealth)
-			ww(gamestate.P2.addresses.life_hud, p2maxhealth)
-		end
-		return
-	end
 
 	if gamestate.P1.life <= 144 then
 		p1maxhealth = trainingmaxhealth
 		p1_need_health_refill = true
-	end
-	if gamestate.P2.life <= 144 then
-		p2maxhealth = trainingmaxhealth
-		p2_need_health_refill = true
 	end
 
 	-- health always full
 	if combovars.p1.instantrefillhealth then
 		p1scaledhealth = gamestate.P1.life
 		ww(gamestate.P1.addresses.life_hud, p1scaledhealth)
-	end
-	if combovars.p2.instantrefillhealth then
-		p2scaledhealth = gamestate.P2.life
-		ww(gamestate.P2.addresses.life_hud, p2scaledhealth)
 	end
 
 	-- refill after combo, compute the scaled health value to display
@@ -485,6 +460,45 @@ local neverEnd = function()
 		if DEBUG and p1scaledhealth ~= p1maxhealth then print("[P1] SCALED: "..p1scaledhealth.." / "..gamestate.P1.life_hud.." ["..p1limit.."]") end
 		ww(gamestate.P1.addresses.life_hud, p1scaledhealth)
 	end
+
+	-- refill after being thrown or hold
+	if (gamestate.P1.state == standing and gamestate.P1.prev.state==standing and gamestate.P1.life < p1maxhealth) or (gamestate.P1.state == landing and gamestate.P1.prev.state == being_thrown) or (gamestate.P1.state == standing and gamestate.P1.prev.state == being_thrown) or (gamestate.P1.state == jumping and gamestate.P1.prev.state == being_hit) or (gamestate.P1.state == landing and gamestate.P1.prev.state == being_hit) then
+		p1_need_health_refill=true
+	end
+
+	if p1_need_health_refill then
+		writePlayerOneHealth(p1maxhealth)
+	end
+end
+
+local neverEnd_p2 = function()
+
+	local DEBUG=false
+	local p2scaledhealth = p2maxhealth
+
+	-- no health refill
+	if not combovars.p2.refillhealthenabled then
+		if gamestate.P2.life > 144 and gamestate.P2.life <= trainingmaxhealth then
+			p2maxhealth = 144
+			ww(gamestate.P2.addresses.life, p2maxhealth)
+			ww(gamestate.P2.addresses.life_backup, p2maxhealth)
+			ww(gamestate.P2.addresses.life_hud, p2maxhealth)
+		end
+		return
+	end
+
+	if gamestate.P2.life <= 144 then
+		p2maxhealth = trainingmaxhealth
+		p2_need_health_refill = true
+	end
+
+	-- health always full
+	if combovars.p2.instantrefillhealth then
+		p2scaledhealth = gamestate.P2.life
+		ww(gamestate.P2.addresses.life_hud, p2scaledhealth)
+	end
+
+	-- refill after combo, compute the scaled health value to display
 	if not combovars.p2.instantrefillhealth then
 		p2scaledhealth = 144-(p2maxhealth-gamestate.P2.life)
 		p2limit = p2scaledhealth
@@ -506,20 +520,21 @@ local neverEnd = function()
 	end
 
 	-- refill after being thrown or hold
-	if (gamestate.P1.state == standing and gamestate.P1.prev.state==standing and gamestate.P1.life < p1maxhealth) or (gamestate.P1.state == landing and gamestate.P1.prev.state == being_thrown) or (gamestate.P1.state == standing and gamestate.P1.prev.state == being_thrown) or (gamestate.P1.state == jumping and gamestate.P1.prev.state == being_hit) or (gamestate.P1.state == landing and gamestate.P1.prev.state == being_hit) then
-		p1_need_health_refill=true
-	end
 	if (gamestate.P2.state == standing and gamestate.P2.prev.state==standing and gamestate.P2.life < p2maxhealth) or (gamestate.P2.state == landing and gamestate.P2.prev.state == being_thrown) or (gamestate.P2.state == standing and gamestate.P2.prev.state == being_thrown) or (gamestate.P2.state == jumping and gamestate.P2.prev.state == being_hit) or (gamestate.P2.state == landing and gamestate.P2.prev.state == being_hit) then
 		p2_need_health_refill=true
-	end
-
-	if p1_need_health_refill then
-		writePlayerOneHealth(p1maxhealth)
 	end
 	if p2_need_health_refill then
 		writePlayerTwoHealth(p2maxhealth)
 	end
+end
 
+local neverEnd = function()
+	if not gamestate.is_in_match then
+		return
+	end
+	infiniteTime()
+	neverEnd_p1()
+	neverEnd_p2()
 end
 
 ----------------------------------------------
@@ -2956,7 +2971,7 @@ local function throwProjectilesLogic()
 		end
 		throwProjectile(projectiles_checked[random_projectile])
 		projectile_reroll = false
-		if (gamestate.P2.prev.state ~= 0x0C and gamestate.P2.state == 0x0C) then -- if p2 finished a special attack -> reroll a special to be played
+		if (gamestate.P2.prev.state ~= doing_special_move and gamestate.P2.state == doing_special_move) then -- if p2 finished a special attack -> reroll a special to be played
 			projectile_reroll = true
 		end
 	else
