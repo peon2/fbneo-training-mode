@@ -38,10 +38,10 @@ gamedefaultconfig = {
 		comboenabled=true,
 		p1healthx=17,
 		p1healthy=22,
-		p1healthenabled=true,
+		p1healthenabled=false,
 		p2healthx=355,
 		p2healthy=22,
-		p2healthenabled=true,
+		p2healthenabled=false,
 		p1meterx=82,
 		p1metery=207,
 		p1meterenabled=false,
@@ -450,12 +450,15 @@ local neverEnd_p1 = function()
 		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud < 144 then
 			p1scaledhealth = gamestate.P1.life_hud
 		end
-		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud >= p1maxhealth-1 then
+		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud >= p1maxhealth - 1 and p1limit > 0 then
 			p1scaledhealth = 144
 			if DEBUG then print("[P1] >>>>>> 144") end
 		end
 		if gamestate.P1.life_hud <= p1limit + 1 then
 			p1scaledhealth = p1limit + 1
+		end
+		if p1scaledhealth <= 0 then
+			p1scaledhealth = 0
 		end
 		if DEBUG and p1scaledhealth ~= p1maxhealth then print("[P1] SCALED: "..p1scaledhealth.." / "..gamestate.P1.life_hud.." ["..p1limit.."]") end
 		ww(gamestate.P1.addresses.life_hud, p1scaledhealth)
@@ -508,12 +511,15 @@ local neverEnd_p2 = function()
 		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud < 144 then
 			p2scaledhealth = gamestate.P2.life_hud
 		end
-		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud >= p2maxhealth-1 then
+		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud >= p2maxhealth - 1 and p2limit > 0 then
 			p2scaledhealth = 144
 			if DEBUG then print("[P2] >>>>>> 144") end
 		end
 		if gamestate.P2.life_hud <= p2limit + 1 then
 			p2scaledhealth = p2limit + 1
+		end
+		if p2scaledhealth <= 0 then
+			p2scaledhealth = 0
 		end
 		if DEBUG and p2scaledhealth ~= p2maxhealth then print("[P2] SCALED: "..p2scaledhealth.." / "..gamestate.P2.life_hud.." ["..p2limit.."]") end
 		ww(gamestate.P2.addresses.life_hud, p2scaledhealth)
