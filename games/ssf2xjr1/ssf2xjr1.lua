@@ -304,14 +304,23 @@ function playerOneInHitstun()
 	if gamestate.P1.dizzy then
 		return false
 	end
-    if gamestate.P1.state == being_hit then
+	if gamestate.P1.state == being_hit then
 		return true
 	end
 	return false
 end
 
+local p2dizzy=false -- this is needed for the combo counter to work properly
 function playerTwoInHitstun()
 	if gamestate.P2.dizzy then
+		if p2dizzy == false then
+			p2dizzy = true
+			return true
+		else
+			return false
+		end
+	else
+		p2dizzy = false
 	end
 	if gamestate.P2.state == being_hit then
 		return true
