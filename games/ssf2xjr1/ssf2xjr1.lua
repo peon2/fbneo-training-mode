@@ -9,6 +9,7 @@ if fexists("games/ssf2xjr1/customconfig.lua") then
 	dofile("games/ssf2xjr1/customconfig.lua")
 else
 	customconfig = {
+		draw_hud = 0,
 		autoblock_selector = -1,
 		autoreversal_selector = -1,
 		dizzy_selector = -1,
@@ -582,7 +583,7 @@ end
 -- Variables
 -------------------------
 local p2 = 0x000400
-draw_hud = 0
+draw_hud = customconfig.draw_hud
 ---------------------------
 --Miscellaneous functions
 ---------------------------
@@ -613,6 +614,43 @@ local function projectile_onscreen(_player_obj)
 	else
 		text = "Not Ready"
 	end
+	return text
+end
+
+--Displays TAP level for boxer (by pof)
+local function display_taplevel(player_side)
+	local text
+	local punch = 0
+	local kick = 0
+	local p_level = 0
+	local k_level = 0
+	if player_side == 1 then
+		punch = rw(0xFF8504)
+		kick = rw(0xFF8506)
+	elseif player_side == 2 then
+		punch = rw(0xFF8904)
+		kick = rw(0xFF8906)
+	end
+	--print("p:"..punch.." / k:"..kick)
+	if punch == 0000 then p_level = "0" end
+	if punch >= 0031 then p_level = "1" end
+	if punch >= 0121 then p_level = "2" end
+	if punch >= 0241 then p_level = "3" end
+	if punch >= 0481 then p_level = "4" end
+	if punch >= 0961 then p_level = "5" end
+	if punch >= 1441 then p_level = "6" end
+	if punch >= 1921 then p_level = "7" end
+	if punch >= 2401 then p_level = "Final" end
+	if kick == 0000 then k_level = "0" end
+	if kick >= 0031 then k_level = "1" end
+	if kick >= 0121 then k_level = "2" end
+	if kick >= 0241 then k_level = "3" end
+	if kick >= 0481 then k_level = "4" end
+	if kick >= 0961 then k_level = "5" end
+	if kick >= 1441 then k_level = "6" end
+	if kick >= 1921 then k_level = "7" end
+	if kick >= 2401 then k_level = "Final" end
+	text="P("..tostring(p_level)..") / K("..tostring(k_level)..")"
 	return text
 end
 
@@ -1378,6 +1416,12 @@ local function render_st_hud()
 		gui.text(310,216,"Cancel: " .. check_cancel(gamestate.P2))
 
 		-- Character specific HUD
+		if gamestate.P1.character == Boxer then
+			gui.text(34,56,"TAP: " .. display_taplevel(1))
+		end
+		if gamestate.P2.character == Boxer then
+			gui.text(266,56,"TAP: " .. display_taplevel(2))
+		end
 		if character_specific[readCharacterName(gamestate.P1)].infos.has_projectile then
 			gui.text(34,56,"Projectile: " .. projectile_onscreen(gamestate.P1))
 		end
