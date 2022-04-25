@@ -4,6 +4,27 @@ require("games/ssf2xjr1/character_specific")
 require("games/ssf2xjr1/gamestate")
 require("games/ssf2xjr1/constants")
 
+-- use a custom config file if one exists, otherwise load defaults
+if fexists("games/ssf2xjr1/customconfig.lua") then
+	dofile("games/ssf2xjr1/customconfig.lua")
+else
+	customconfig = {
+		autoblock_selector = -1,
+		autoreversal_selector = -1,
+		dizzy_selector = -1,
+		easy_charge_moves_selector = -1,
+		frame_advantage_selector = -1,
+		frame_trap_selector = -1,
+		frameskip_selector = -1,
+		projectile_frequence_selector = 0,
+		reversal_trigger_selector = -1,
+		roundstart_selector = -1,
+		slowdown_selector = - 1,
+		stage_selector = -1,
+		tech_throw_selector = -1,
+	}
+end
+
 translationtable = {
 	"left",
 	"right",
@@ -1617,7 +1638,7 @@ end
 -------------------
 local reversal_reroll = true -- Determine if a new reversal has to be selected
 local current_recording_state = false
-reversal_trigger_selector = -1
+reversal_trigger_selector = customconfig.reversal_trigger_selector
 
 function patchedReversalLogic()
 	if custom_sequence.checked then
@@ -1737,7 +1758,7 @@ end
 -- AutoReversal (Machine learning method) made by pof
 --------------------------------------------------------
 --------------------------------------------------------
-autoreversal_selector = -1
+autoreversal_selector = customconfig.autoreversal_selector
 local numframes = 0
 local frame_for_reversal = 0
 local iswakeup = false
@@ -1952,7 +1973,7 @@ end
 -- AutoBlock (made by pof)
 ---------------------------------
 ---------------------------------
-autoblock_selector = -1
+autoblock_selector = customconfig.autoblock_selector
 local forceblock = false
 local inputs_at_jumpstart = 0
 local autoblock_skip_counter = 60
@@ -2074,7 +2095,7 @@ end
 --------------------------
 -- Choosing a stage
 --------------------------
-stage_selector = -1
+stage_selector = customconfig.stage_selector
 local stageSelect = function()
 	if stage_selector == -1 then
 		return
@@ -2088,7 +2109,7 @@ end
 ---------------------------
 -- Dizzy settings
 ---------------------------
-dizzy_selector = -1
+dizzy_selector = customconfig.dizzy_selector
 local p2DizzyControl = function()
 	local dizzy = 0
 	if dizzy_selector == -1 then
@@ -2105,7 +2126,7 @@ end
 -- Round Start Training made by pof
 -------------------------------------
 
-roundstart_selector = -1
+roundstart_selector = customconfig.roundstart_selector
 local statecount=0
 local round_state=-1
 local fight_anim = 123
@@ -2246,7 +2267,7 @@ end
 ------------------------------------
 -- Enable/Disable Auto Tech Throws
 ------------------------------------
-tech_throw_selector = -1
+tech_throw_selector = customconfig.tech_throw_selector
 
 local function techThrowControl()
 	if tech_throw_selector == 0 then
@@ -2258,7 +2279,7 @@ end
 -----------------------------
 -- Enable/Disable frameskip
 -----------------------------
-frameskip_selector = -1
+frameskip_selector = customconfig.frameskip_selector
 
 local frameskipControl = function()
 	if frameskip_selector == -1 then
@@ -2272,7 +2293,7 @@ end
 -- Enable/Disable projectile
 -- impact slowdown
 -----------------------------
-slowdown_selector = - 1
+slowdown_selector = customconfig.slowdown_selector
 
 local slowdownControl = function()
 	if slowdown_selector == -1 then
@@ -2382,7 +2403,7 @@ local easyCharge = function(_player_obj)
     end
 end
 -------------------------------
-easy_charge_moves_selector = -1
+easy_charge_moves_selector = customconfig.easy_charge_moves_selector
 
 local easyChargeControl = function ()
 	if easy_charge_moves_selector == 0 or easy_charge_moves_selector == 2 then
@@ -2431,7 +2452,7 @@ local function readInHitstun(_player_obj) -- Tells if the player_object is in hi
 	end
 end
 
-frame_advantage_selector = -1
+frame_advantage_selector = customconfig.frame_advantage_selector
 
 local step = 0
 local calculation_end = false
@@ -2736,7 +2757,7 @@ end
 -- counts how many frames
 -- are left before a new hit happens)
 ---------------------------------------
-frame_trap_selector = -1
+frame_trap_selector = customconfig.frame_trap_selector
 
 local frame_trap_step = 0
 local frame_trap_timer = 0
@@ -2869,7 +2890,7 @@ end
 -- Character Specific
 -------------------------
 -------------------------
-projectile_frequence_selector = 0
+projectile_frequence_selector = customconfig.projectile_frequence_selector
 local projectile_delay = math.random(-150,0)
 
 local function throwProjectile(_projectile_id)
