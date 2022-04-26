@@ -1782,27 +1782,23 @@ local buttonHandlerInputs = {
 	["button10"] = 10,
 }
 
-local moreButtonsButtonHandler = {	
-	name="MORE",
-	button="button"..(nbuttons-1),
-	func = function(but)
-		if not (guiinputs.P1[but] and not guiinputs.P1.previousinputs[but]) then return end
-		if nbuttons+helpElements.block*(nbuttons-2) >= #helpElements then helpElements.block = 0 end
-		for i = 1, nbuttons-2 do -- space for more and back
-			local temp = helpElements[i]
-			local offset = helpElements.block*(nbuttons-2) + i + nbuttons
-			helpElements[i] = {} -- clear
-			if not (offset > #helpElements) and next(helpElements[offset]) then
-				helpElements[i] = helpElements[offset]
-				helpElements[i].button = i -- make sure the buttons are set up right
-				helpElements[i].buttonnum = "button"..i
-				helpElements.len = i+2
-			end
-			helpElements[offset] = temp
+local moreButtonsFunc = function(but)
+	if not (guiinputs.P1[but] and not guiinputs.P1.previousinputs[but]) then return end
+	if nbuttons+helpElements.block*(nbuttons-2) >= #helpElements then helpElements.block = 0 end
+	for i = 1, nbuttons-2 do -- space for more and back
+		local temp = helpElements[i]
+		local offset = helpElements.block*(nbuttons-2) + i + nbuttons
+		helpElements[i] = {} -- clear
+		if not (offset > #helpElements) and next(helpElements[offset]) then
+			helpElements[i] = helpElements[offset]
+			helpElements[i].button = i -- make sure the buttons are set up right
+			helpElements[i].buttonnum = "button"..i
+			helpElements.len = i+2
 		end
-		helpElements.block = helpElements.block+1
+		helpElements[offset] = temp
 	end
-}
+	helpElements.block = helpElements.block+1
+end
 
 local buttonHandler = function(t)
 	--[[
@@ -1842,9 +1838,11 @@ local buttonHandler = function(t)
 		helpElements.block = 0
 		if t.len > nbuttons or #t.funcs > t.len then -- not enough buttons for functions, set up the MORE button
 			local back = t[t.len] -- back button
-			for i = t.len+1, nbuttons, -1 do t[i] = t[i-2] end -- shunt along
+			for i = t.len+1, nbuttons+1, -1 do t[i] = t[i-2] t[i-2] = {} end -- shunt along
 			t[nbuttons] = back -- put back in place
-			t[nbuttons-1] = moreButtonsButtonHandler -- put more in place
+			t[nbuttons-1].name = "MORE" -- set attributes for more button
+			t[nbuttons-1].button="button"..(nbuttons-1)
+			t[nbuttons-1].func = moreButtonsFunc -- t.funcs.more or  put more in place, use default if there isn't a specific one
 			helpElements.more = 1 -- mark more as being added
 			t.len=t.len+1 -- space for more
 		end
@@ -2649,6 +2647,7 @@ local drawReplayEditorFuncs = {
 		end
 	end,
 	function(but) -- copy
+		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			if interactivegui.replayeditor.framestart or not interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] then return end -- something to copy
 			local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
@@ -2664,25 +2663,6 @@ local drawReplayEditorFuncs = {
 			interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+1
 		end
 	end,
-	function(but) -- blank
-		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-			if (interactivegui.replayeditor.editframe==#interactivegui.replayeditor.inputs[recording.recordingslot]+1) then
-				interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={p1={}, p2={}}}				
-			else
-				local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
-				for i=#reinputs,interactivegui.replayeditor.editframe,-1 do
-					-- move everything down one
-					reinputs[i+1] = {raw={p1={}, p2={}}}
-					reinputs[i+1].raw.p2=copytable(reinputs[i].raw.p2)
-				end
-				reinputs[interactivegui.replayeditor.editframe+1] = {raw={p1={}, p2={}}}
-			end
-			
-			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
-			
-			interactivegui.replayeditor.changed[recording.recordingslot] = true
-		end
-	end,
 	function(but) -- clear
 		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
@@ -2690,6 +2670,7 @@ local drawReplayEditorFuncs = {
 		end
 	end,
 	function(but) -- delete
+		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
 			if #reinputs==0 then return end -- nothing to delete
@@ -2711,6 +2692,26 @@ local drawReplayEditorFuncs = {
 			interactivegui.replayeditor.changed[recording.recordingslot] = true
 		end
 	end,
+	function(but) -- blank
+		if interactivegui.replayeditor.framestart then return end
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			if (interactivegui.replayeditor.editframe==#interactivegui.replayeditor.inputs[recording.recordingslot]+1) then
+				interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={p1={}, p2={}}}				
+			else
+				local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
+				for i=#reinputs,interactivegui.replayeditor.editframe,-1 do
+					-- move everything down one
+					reinputs[i+1] = {raw={p1={}, p2={}}}
+					reinputs[i+1].raw.p2=copytable(reinputs[i].raw.p2)
+				end
+				reinputs[interactivegui.replayeditor.editframe+1] = {raw={p1={}, p2={}}}
+			end
+			
+			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
+			
+			interactivegui.replayeditor.changed[recording.recordingslot] = true
+		end
+	end,
 	function(but) -- dec slot
 		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
@@ -2727,9 +2728,27 @@ local drawReplayEditorFuncs = {
 	end,
 	back = function(but)
 		if interactivegui.replayeditor.framestart then return end
-		if not interactivegui.replayeditor.framestart and guiinputs.P1.previousinputs[but] and not guiinputs.P1[but] then
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			toggleReplayEditor(false)
 		end
+	end,
+	more = function(but)
+		if interactivegui.replayeditor.framestart then return end
+		if not (guiinputs.P1[but] and not guiinputs.P1.previousinputs[but]) then return end
+		if nbuttons+helpElements.block*(nbuttons-2) >= #helpElements then helpElements.block = 0 end
+		for i = 1, nbuttons-2 do -- space for more and back
+			local temp = helpElements[i]
+			local offset = helpElements.block*(nbuttons-2) + i + nbuttons
+			helpElements[i] = {} -- clear
+			if not (offset > #helpElements) and next(helpElements[offset]) then
+				helpElements[i] = helpElements[offset]
+				helpElements[i].button = i -- make sure the buttons are set up right
+				helpElements[i].buttonnum = "button"..i
+				helpElements.len = i+2
+			end
+			helpElements[offset] = temp
+		end
+		helpElements.block = helpElements.block+1
 	end,
 	other = function()
 		if interactivegui.replayeditor.framestart then return end
@@ -2749,7 +2768,7 @@ local drawReplayEditor = function()
 	--use these to control how a grid is drawn
 	local x,y,frames = sw/2 - (length)*8,1,12
 	
-	t = {{name="SET"}, {name="COPY"}, {name="BLNK"}, {name="CLR"}, {name="DEL"}, {name="<NUM"}, {name="NUM>"}, funcs = drawReplayEditorFuncs}
+	t = {{name="SET"}, {name="COPY"}, {name="CLR"}, {name="DEL"}, {name="BLNK"}, {name="<NUM"}, {name="NUM>"}, funcs = drawReplayEditorFuncs}
 	buttonHandler(t)
 	
 	-- draw in frame numbers
