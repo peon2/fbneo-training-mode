@@ -23,7 +23,7 @@ characters =
     }
 
 for i = 1, #characters do
-  character_specific[characters[i]] = { specials = {}, throw = {}}
+  character_specific[characters[i]] = { specials = {}, throw = {}, infos = {}}
 end
 ------------------------------------------------------------------------------
 character_specific.blanka.specials = {
@@ -33,7 +33,9 @@ character_specific.blanka.specials = {
       {0xB9, 0x06}
     },
 	id = 0x00,
+	charge_address = 0x81,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -44,7 +46,9 @@ character_specific.blanka.specials = {
       {0xB0, 0x06}
     },
 	id = 0x04,
+	charge_address = 0xB4,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -55,7 +59,9 @@ character_specific.blanka.specials = {
       {0xB9, 0x06}
     },
 	id = 0x06,
+	charge_address = 0xBA,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -70,6 +76,7 @@ character_specific.blanka.specials = {
     },
 	id = 0x02,
 	strength_set = 1,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -80,6 +87,7 @@ character_specific.blanka.specials = {
     },
 	id = 0x0A,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"} },
     input_variations = {{"LK", "MK", "HK"}},
@@ -90,6 +98,7 @@ character_specific.blanka.specials = {
     },
 	id = 0x0C,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"back"} },
     input_variations = {{"LK", "MK", "HK"}},
@@ -100,13 +109,19 @@ character_specific.blanka.specials = {
       {0xC1, 0x0A}
     },
 	id = 0x08,
+	charge_address = 0xC2,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.blanka.throw = {"HP"}
+character_specific.blanka.infos = {
+charge_character = true,
+has_projectile	 = false
+}
 ----------------------------------------------------------------------------
 character_specific.boxer.specials = {
 	{
@@ -118,7 +133,9 @@ character_specific.boxer.specials = {
       {0xD6, 0x08}
     },
 	id = 0x00,
+	charge_address = 0x81,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -132,7 +149,9 @@ character_specific.boxer.specials = {
       {0xD6, 0x08}
     },
 	id = 0x02,
+	charge_address = 0x89,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -143,7 +162,9 @@ character_specific.boxer.specials = {
       {0xC0, 0x06}
     },
 	id = 0x06,
+	charge_address = 0xC1,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "v_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -157,7 +178,9 @@ character_specific.boxer.specials = {
       {0xD6, 0x06}
     },
 	id = 0x0A,
+	charge_address = 0xD7,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward", "down"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -171,7 +194,9 @@ character_specific.boxer.specials = {
       {0xD6, 0x06}
     },
 	id = 0x0C,
+	charge_address = 0xDE,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward", "down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -183,6 +208,7 @@ character_specific.boxer.specials = {
     },
 	id = 0x04,
 	strength_set = -1,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"1"},{"2"},{"3"},{"4"},{"5"},{"6"},{"7"},{"Final"}},
@@ -195,6 +221,7 @@ character_specific.boxer.specials = {
 	id = 0x04,
 	strength_set = -1,
 	reversal = false,
+	charge_move = false,
     input = {{}},
     input_variations = {{"LP", "MP", "HP"}},
    },
@@ -205,6 +232,7 @@ character_specific.boxer.specials = {
       },
 	id = 0x04,
 	strength_set = -1,
+	charge_move = false,
 	reversal = false,
     input = {{}},
     input_variations = {{"LK", "MK", "HK"}},
@@ -224,13 +252,19 @@ character_specific.boxer.specials = {
       {0xD4, 0x0A}
     },
 	id = 0x08,
+	charge_address = 0xD5,
 	strength_set = 0,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}, {"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.boxer.throw = {"MP","HP"}
+character_specific.boxer.infos = {
+charge_character = true,
+has_projectile	 = false
+}
 ----------------------------------------------------------------------------
 character_specific.cammy.specials = {
 	{
@@ -240,6 +274,7 @@ character_specific.cammy.specials = {
     },
 	id = 0x00,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -251,6 +286,7 @@ character_specific.cammy.specials = {
     },
 	id = 0x02,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"forward", "down"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -262,6 +298,7 @@ character_specific.cammy.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"back"}, {"back", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -273,6 +310,7 @@ character_specific.cammy.specials = {
     },
 	id = 0x08,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"back"}, {"down"}, {"forward", "down"}, {"up", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -284,12 +322,17 @@ character_specific.cammy.specials = {
     },
 	id = 0x06,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"forward", "down"}, {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.cammy.throw = {"MP", "HP", "MK", "HK"}
+character_specific.cammy.infos = {
+charge_character = false,
+has_projectile	 = false
+}
 ------------------------------------------------------------------------------
 character_specific.chunli.specials = {
 	{
@@ -298,7 +341,9 @@ character_specific.chunli.specials = {
       {0xB0, 0x06}
     },
 	id = 0x00,
+	charge_address = 0xC0,
 	strength_set = 1,
+	charge_move = false,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -313,6 +358,7 @@ character_specific.chunli.specials = {
     },
 	id = 0x02,
 	strength_set = 1,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -326,7 +372,9 @@ character_specific.chunli.specials = {
       {0x83, 0x01}
     },
 	id = 0x04,
+	charge_address = 0x81,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -337,7 +385,9 @@ character_specific.chunli.specials = {
       {0xBA, 0x06}
     },
 	id = 0x06,
+	charge_address = 0xBB,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -348,13 +398,19 @@ character_specific.chunli.specials = {
       {0xBF, 0x0A}
     },
 	id = 0x08,
+	charge_address = 0xB1,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.chunli.throw = {"MP","HP"}
+character_specific.chunli.infos = {
+charge_character = true,
+has_projectile	 = true
+}
 ----------------------------------------------------------------------------------
 character_specific.claw.specials = {
 	{
@@ -363,7 +419,9 @@ character_specific.claw.specials = {
       {0x88, 0x06}
     },
 	id = 0x00,
+	charge_address = 0x89,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -374,7 +432,9 @@ character_specific.claw.specials = {
       {0x8C, 0x06} -- broken
     },
 	id = 0x02,
+	charge_address = 0x8D,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -385,7 +445,9 @@ character_specific.claw.specials = {
       {0x90, 0x06}
     },
 	id = 0x06,
+	charge_address = 0x91,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -396,7 +458,9 @@ character_specific.claw.specials = {
       {0x9D, 0x06}
     },
 	id = 0x0C,
+	charge_address = 0x9E,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -407,6 +471,7 @@ character_specific.claw.specials = {
     input = {{}},
 	id = 0x04,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input_variations = {{"LP", "MP", "HP"}},
   },
@@ -416,6 +481,7 @@ character_specific.claw.specials = {
     input = {{}},
 	id = 0x08,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input_variations = {{"LK", "MK", "HK"}},
   },
@@ -425,13 +491,19 @@ character_specific.claw.specials = {
       {0x99, 0x0A}
     },
 	id = 0x0A,
+	charge_address = 0x9A,
 	strength_set = 0,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"forward"}, {"back"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.claw.throw = {"MP","HP"}
+character_specific.claw.infos = {
+charge_character = true,
+has_projectile	 = false
+}
 ---------------------------------------------------------------------------------
 character_specific.deejay.specials = {
   {
@@ -440,7 +512,9 @@ character_specific.deejay.specials = {
       {0xA6, 0x06}
     },
 	id = 0x00,
+	charge_address = 0x93,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -451,7 +525,9 @@ character_specific.deejay.specials = {
       {0xAB, 0x06}
     },
 	id = 0x02,
+	charge_address = 0x97,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -459,10 +535,12 @@ character_specific.deejay.specials = {
   {
     name = "Air Slasher",
     memory_map = {
-      {0x92, 0x06}
+      {0xA7, 0x01}
     },
 	id = 0x04,
+	charge_address = 0xA7,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -473,7 +551,9 @@ character_specific.deejay.specials = {
       {0x96, 0x06}
     },
 	id = 0x06,
+	charge_address = 0xAC,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -484,22 +564,29 @@ character_specific.deejay.specials = {
       {0xAF, 0x0A}
     },
 	id = 0x08,
+	charge_address = 0xB0,
 	strength_set = 0,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.deejay.throw = {"MP","HP","MK","HK"}
+character_specific.deejay.infos = {
+charge_character = true,
+has_projectile	 = true
+}
 --------------------------------------------------------------------------------
 character_specific.dhalsim.specials = {
   {
     name = "Yoga Fire",
     memory_map = {
-      {0x80, 0x08}
+      {0x80, 0x04}
     },
 	id = 0x00,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"forward", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -512,6 +599,7 @@ character_specific.dhalsim.specials = {
 	id = 0x02,
 	strength_set = 2,
 	reversal = true,
+	charge_move = false,
     input = { {"back"}, {"back", "down"}, {"down"}, {"forward", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -522,6 +610,7 @@ character_specific.dhalsim.specials = {
     },
 	id = 0x08,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"back"}, {"forward", "down"}, {"down"}, { "forward", "down"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -533,6 +622,7 @@ character_specific.dhalsim.specials = {
     },
 	id = 0x04,
 	strength_set = -1,
+	charge_move = false,
 	reversal = true,
     input_variations = {{"F+P"},{"F+K"},{"B+P"},{"B+K"}},
   },
@@ -543,6 +633,7 @@ character_specific.dhalsim.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = false,
     input = { {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LP", "MP", "HP"},{"LK", "MK", "HK"}},
@@ -554,6 +645,7 @@ character_specific.dhalsim.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = false,
     input = { {"back"}, {"down"}, {"back", "down"} },
     input_variations = {{"LP", "MP", "HP"},{"LK", "MK", "HK"}},
@@ -565,12 +657,17 @@ character_specific.dhalsim.specials = {
     },
     id = 0x06,
     strength_set = 0,
+	charge_move = false,
 	reversal = false,
     input = { {"back"},{"back", "down"},{"down"},{"forward", "down"},{"back"},{"back", "down"},{"down"},{"forward", "down"},{"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.dhalsim.throw = {"MP","HP"}
+character_specific.dhalsim.infos = {
+charge_character = false,
+has_projectile	 = true
+}
 --------------------------------------------------------------------------------------------------
 character_specific.dictator.specials = {
   {
@@ -579,7 +676,9 @@ character_specific.dictator.specials = {
       {0x80, 0x06}
     },
 	id = 0x00,
+	charge_address = 0x81,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -590,7 +689,9 @@ character_specific.dictator.specials = {
       {0x88, 0x06}
     },
 	id = 0x02,
+	charge_address = 0x89,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -601,7 +702,9 @@ character_specific.dictator.specials = {
       {0x91, 0x06}
     },
 	id = 0x04,
+	charge_address = 0x92,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -612,7 +715,9 @@ character_specific.dictator.specials = {
       {0xAC, 0x06}
     },
 	id = 0x06,
+	charge_address = 0xAD,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -623,13 +728,19 @@ character_specific.dictator.specials = {
       {0xC5, 0x0A}
     },
 	id = 0x08,
+	charge_address = 0xC6,
 	strength_set = 0,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.dictator.throw = {"MP","HP"}
+character_specific.dictator.infos = {
+charge_character = true,
+has_projectile	 = false
+}
 ---------------------------------------------------------------------------------
 character_specific.feilong.specials = {
   {
@@ -640,6 +751,7 @@ character_specific.feilong.specials = {
     },
 	id = 0x00,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -659,6 +771,7 @@ character_specific.feilong.specials = {
     },
 	id = 0x02,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"back"}, {"down"}, {"down", "back"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -670,6 +783,7 @@ character_specific.feilong.specials = {
     },
 	id = 0x06,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"back"}, {"down"}, {"forward", "down"}, {"forward", "up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}} -- only lk works
@@ -681,12 +795,17 @@ character_specific.feilong.specials = {
     },
 	id = 0x04,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
      input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.feilong.throw = {"MP","HP","MK","HK"}
+character_specific.feilong.infos = {
+charge_character = false,
+has_projectile	 = false
+}
 -------------------------------------------------------------------------------------------
 character_specific.guile.specials = {
   {
@@ -695,7 +814,9 @@ character_specific.guile.specials = {
       {0x80, 0x06}
     },
 	id = 0x00,
+	charge_address = 0x81,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -706,7 +827,9 @@ character_specific.guile.specials = {
       {0x86, 0x06}
     },
 	id = 0x02,
+	charge_address = 0x87,
 	strength_set = 1,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "v_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -717,13 +840,19 @@ character_specific.guile.specials = {
       {0x94, 0x0A}
     },
 	id = 0x04,
+	charge_address = 0x95,
 	strength_set = 0,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "v_charge"}, {"forward"}, {"back"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.guile.throw = {"MP","HP"}
+character_specific.guile.infos = {
+charge_character = true,
+has_projectile	 = true
+}
 ----------------------------------------------------------------------
 character_specific.ehonda.specials = {
   {
@@ -732,7 +861,9 @@ character_specific.ehonda.specials = {
       {0x88, 0x06}
     },
 	id = 0x00,
+	charge_address = 0x89,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
      input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -747,6 +878,7 @@ character_specific.ehonda.specials = {
     },
 	id = 0x02,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -757,7 +889,9 @@ character_specific.ehonda.specials = {
       {0x90, 0x06}
     },
 	id = 0x04,
+	charge_address = 0x91,
 	strength_set = 2,
+	charge_move = true,
 	reversal = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -769,6 +903,7 @@ character_specific.ehonda.specials = {
     },
 	id = 0x08,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"}, {"forward", "down"}, {"down"}, {"back"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -779,13 +914,19 @@ character_specific.ehonda.specials = {
       {0x94, 0x0A}
     },
 	id = 0x06,
+	charge_address = 0x95,
 	strength_set = 0,
+	charge_move = true,
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.ehonda.throw = {"MP","HP","HK"}
+character_specific.ehonda.infos = {
+charge_character = true,
+has_projectile	 = false
+}
 -----------------------------------------------------------------------
 character_specific.thawk.specials = {
  {
@@ -795,6 +936,7 @@ character_specific.thawk.specials = {
     },
 	id = 0x00,
 	strength_set = 2, -- Bug
+	charge_move = false,
 	reversal = true,
 	input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -809,6 +951,7 @@ character_specific.thawk.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = {{"back"}}, -- fixme
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -819,12 +962,17 @@ character_specific.thawk.specials = {
     },
 	id = 0x06,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.thawk.throw = {"MP","HP","HK"}
+character_specific.thawk.infos = {
+charge_character = false,
+has_projectile	 = false
+}
 --------------------------------------------------------------------
 character_specific.ken.specials = {
   {
@@ -834,6 +982,7 @@ character_specific.ken.specials = {
     },
 	id = 0x00,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -845,6 +994,7 @@ character_specific.ken.specials = {
     },
 	id = 0x02,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "back"}, {"back"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -856,6 +1006,7 @@ character_specific.ken.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -867,6 +1018,7 @@ character_specific.ken.specials = {
     },
 	id = 0x08,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -878,6 +1030,7 @@ character_specific.ken.specials = {
     },
 	id = 0x0A,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"}, {"down", "forward"}, {"down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -889,6 +1042,7 @@ character_specific.ken.specials = {
     },
 	id = 0x0C,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -900,12 +1054,17 @@ character_specific.ken.specials = {
     },
 	id = 0x06,
 	strength_set = 0,
+	charge_move = false,
 	reversal = false,
     input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.ken.throw = {"MP","HP","MK","HK"}
+character_specific.ken.infos = {
+charge_character = false,
+has_projectile	 = true
+}
 ----------------------------------------------------------------------
 character_specific.ryu.specials = {
   {
@@ -915,6 +1074,7 @@ character_specific.ryu.specials = {
     },
 	id = 0x00,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -926,6 +1086,7 @@ character_specific.ryu.specials = {
     },
 	id = 0x02,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "back"}, {"back"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -937,6 +1098,7 @@ character_specific.ryu.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -948,6 +1110,7 @@ character_specific.ryu.specials = {
     },
 	id = 0x06,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"back"}, {"back", "forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -959,12 +1122,17 @@ character_specific.ryu.specials = {
     },
 	id = 0x08,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.ryu.throw = {"MP","HP","MK","HK"}
+character_specific.ryu.infos = {
+charge_character = false,
+has_projectile	 = true
+}
 ----------------------------------------------------------------------------------------
 character_specific.sagat.specials = {
   {
@@ -974,6 +1142,7 @@ character_specific.sagat.specials = {
     },
 	id = 0x00,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -985,6 +1154,7 @@ character_specific.sagat.specials = {
     },
 	id = 0x04,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -996,6 +1166,7 @@ character_specific.sagat.specials = {
     },
 	id = 0x02,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
    input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -1007,6 +1178,7 @@ character_specific.sagat.specials = {
     },
 	id = 0x06,
 	strength_set = 2,
+	charge_move = false,
 	reversal = true,
     input = { {"down"}, {"forward"}, {"forward", "up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -1018,12 +1190,17 @@ character_specific.sagat.specials = {
     },
     id = 0x08,
     strength_set = 0,
+	charge_move = false,
 	reversal = false,
     input = { {"down"}, {"forward", "down"}, {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}, {"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.sagat.throw = {"MP","HP"}
+character_specific.sagat.infos = {
+charge_character = false,
+has_projectile	 = true
+}
 ------------------------------------------------------------------------
 character_specific.zangief.specials = {
   {
@@ -1036,6 +1213,7 @@ character_specific.zangief.specials = {
     },
 	id = 0x02,
 	strength_set = 1,
+	charge_move = false,
 	reversal = true,
     input = {{}}, -- fixme
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -1050,6 +1228,7 @@ character_specific.zangief.specials = {
     },
 	id = 0x04,
 	strength_set = 1,
+	charge_move = false,
 	reversal = true,
     input = {{"back"}}, -- fixme
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
@@ -1062,6 +1241,7 @@ character_specific.zangief.specials = {
     },
 	id = 0x0A,
 	strength_set = 1,
+	charge_move = false,
 	reversal = true,
     input = { {"forward"}, {"forward", "down"}, {"down"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -1071,6 +1251,7 @@ character_specific.zangief.specials = {
     memory_map = {},
 	id = 0x00,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LP","MP","HP"}, {"LK","MK","HK"}},
@@ -1080,6 +1261,7 @@ character_specific.zangief.specials = {
     memory_map = {},
 	id = 0x0,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LP","MP","HP"}, {"LK","MK","HK"}},
@@ -1091,17 +1273,22 @@ character_specific.zangief.specials = {
     },
 	id = 0x08,
 	strength_set = 0,
+	charge_move = false,
 	reversal = true,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
 }
 character_specific.zangief.throw = {"MP","HP","MK","HK"}
+character_specific.zangief.infos = {
+charge_character = false,
+has_projectile	 = false
+}
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 function determineStrengthValue(_variation, _strength_set)
 	if _variation == "LP" or _variation == "LK" then
-			return 0x0
+			return 0x00
 	elseif _variation == "MP" or _variation == "MK" then
 		if _strength_set == 1 then
 			return 0x01
@@ -1159,21 +1346,169 @@ function determineThrowInput(_throw)
 		return "Strong Kick"
 	end
 end
-function do_special_move (_input, _player_obj, _special, _variation)
-  print(_special.name)
-  for i, byte in pairs(_special.memory_map) do
-    memory.writebyte(_player_obj.base + byte[1], byte[2])
+
+local player_keys = {
+  "Up",
+  "Down",
+  "Left",
+  "Right",
+  "Weak Punch",
+  "Medium Punch",
+  "Strong Punch",
+  "Weak Kick",
+  "Medium Kick",
+  "Strong Kick",
+}
+
+local player_keys_extra = {
+  "Start",
+  "Coin",
+}
+
+local sequence_to_key_mapping = {
+  up = "Up",
+  down = "Down",
+  LP = "Weak Punch",
+  MP = "Medium Punch",
+  HP = "Strong Punch",
+  LK = "Weak Kick",
+  MK = "Medium Kick",
+  HK = "Strong Kick",
+}
+
+key_to_sequence_mapping = {}
+for k, v in pairs(sequence_to_key_mapping) do
+  key_to_sequence_mapping[v] = k
+end
+
+function sequence_input_to_key(_key, _flip_input)
+  if _key == "forward" then
+    if _flip_input then
+      return "Right"
+    else
+      return "Left"
+    end
+  elseif _key == "back" then
+    if _flip_input then
+      return "Left"
+    else
+      return "Right"
+    end
+  else
+    return sequence_to_key_mapping[_key]
   end
+end
+
+function clearInputSet(player)
+	inputs.properties.enableinputset = true
+	if player == 1 then
+		for i = 1, #player_keys do
+			inputs.setinputs["P1 "..player_keys[i]] = false
+		end
+	elseif player == 2 then
+		for i = 1, #player_keys do
+			--print(player_keys[i])
+			inputs.setinputs["P2 "..player_keys[i]] = false
+		end
+	end
+	setInputs()
+end
+
+function modifyInputSet(player, ...)
+	inputs.properties.enableinputset = true
+	local dir1, dir2, button1, button2, button3, button4, button5, button6 = ...
+	if type(dir1)=="number" then
+		local a = {{"Down", "Left"}, {"Down"}, {"Down", "Right"}, {"Left"}, {}, {"Right"}, {"Up", "Left"}, {"Up"}, {"Up", "Right"}} -- numpad
+		dir2 = a[dir1][2]
+		dir1 = a[dir1][1]
+	end
+	local a = {{"Weak Punch"}, {"Medium Punch"}, {"Strong Punch"}, {"Weak Kick"}, {"Medium Kick"}, {"Strong Kick"}}
+	if type(button1) =="number" then
+		button1 = a[button1][1]
+	end
+	if type(button2) =="number" then
+		button2 = a[button2][1]
+	end
+	if type(button3) =="number" then
+		button3 = a[button3][1]
+	end
+	if type(button4) =="number" then
+		button4 = a[button4][1]
+	end
+	if type(button5) =="number" then
+		button5 = a[button5][1]
+	end
+	if type(button6) =="number" then
+		button6 = a[button6][1]
+	end
+
+
+	if player == 1 then
+		if dir1 then inputs.setinputs["P1 "..dir1] = true end
+		if dir2 then inputs.setinputs["P1 "..dir2] = true end
+		if button1 then inputs.setinputs["P1 "..button1] = true end
+		if button2 then inputs.setinputs["P1 "..button2] = true end
+		if button3 then inputs.setinputs["P1 "..button3] = true end
+		if button4 then inputs.setinputs["P1 "..button4] = true end
+		if button5 then inputs.setinputs["P1 "..button5] = true end
+		if button6 then inputs.setinputs["P1 "..button6] = true end
+	end
+
+	if player == 2 then
+		if dir1 then inputs.setinputs["P2 "..dir1] = true end
+		if dir2 then inputs.setinputs["P2 "..dir2] = true end
+		if button1 then inputs.setinputs["P2 "..button1] = true end
+		if button2 then inputs.setinputs["P2 "..button2] = true end
+		if button3 then inputs.setinputs["P2 "..button3] = true end
+		if button4 then inputs.setinputs["P2 "..button4] = true end
+		if button5 then inputs.setinputs["P2 "..button5] = true end
+		if button6 then inputs.setinputs["P2 "..button6] = true end
+	end
+
+	setInputs()
+end
+
+function do_special_move (_player_obj, _special, _variation, easy_special_status)
+	--print(_special.name)
+	local dir1 = 5 -- numpad neutral
+	local dir2 = 5
+	local button1 = ""
+	local button2 = ""
+	local button3 = ""
+
+  -- Toggle easy special
+  if easy_special_status == true then
+	for i, byte in pairs(_special.memory_map) do
+		wb(_player_obj.base + byte[1], byte[2])
+	end
+end
 
   -- Cancel all input
-  clear_player_input(_input, _player_obj.id, false)
+	clearInputSet(_player_obj.id)
 
-  for i, _move in pairs(_special.input[#_special.input]) do
-    _input[_player_obj.prefix .. " " .. sequence_input_to_key(_move, _player_obj.flip_input)] = true
+  for i, _stick in pairs(_special.input[#_special.input]) do
+	if i == 1 then
+		dir1 = sequence_input_to_key(_stick, _player_obj.flip_input)
+	elseif i == 2 then
+		dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
+	end
   end
 
-  for i, _move in pairs(_special.input_variations[_variation]) do
-    _input[_player_obj.prefix .. " " .. sequence_input_to_key(_move, _player_obj.flip_input)] = true
+  for i, _button in pairs(_special.input_variations[_variation]) do
+	if i == 1 then
+		button1 = sequence_input_to_key(_button, _player_obj.flip_input)
+	elseif i == 2 then
+		button2 = sequence_input_to_key(_button, _player_obj.flip_input)
+	elseif i == 3 then
+		button3 = sequence_input_to_key(_button, _player_obj.flip_input)
+	end
+	button = i
   end
+  --print(dir1)
+  --print(dir2)
+  --print(button1)
+  --print(button2)
+  --print(button3)
+	modifyInputSet(_player_obj.id, dir1, dir2, button1, button2, button3)
 end
 -------------------------------------------------------------------------------------------------

@@ -969,8 +969,9 @@ function changeConfig(tab, index, value, otherlocation, otherindex) -- table in 
 	end
 end
 
-local saveConfig = function()
-	if not availablefunctions.tablesave or not config.changed then return end
+ignore_save_config = false
+saveConfig = function()
+	if not availablefunctions.tablesave or not config.changed or ignore_save_config then return end
 	config.changed = false -- only saves if the config has changed
 	print("Saving config: " .. configpath)
 	assert(table.save(config, configpath)==nil, "Can't save config file")
@@ -1662,7 +1663,7 @@ savestatePlayBack = function()
 	togglePlayBack(true)
 end
 
-local setInputs = function()
+setInputs = function()
 	if inputs.properties.enableinputset then
 		joypad.set(inputs.setinputs)
 	end
