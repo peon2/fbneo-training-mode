@@ -1546,7 +1546,8 @@ local logRecording = function()
 
 end
 
-local togglePlayBack = function(bool, vargs)
+-- global, as it is used in ssf2x
+togglePlayBack = function(bool, vargs)
 	if interactivegui.movehud then return end
 	
 	local _playbackslot = recording.playbackslot or recording.recordingslot -- tmp for playbackslot
