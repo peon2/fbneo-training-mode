@@ -472,3 +472,23 @@ end
 table.insert(inp,{games,i})
 
 --------------------------------------------------------------------------------
+--Ultimate Mortal Kombat 3
+games = {"umk3"}
+x,dx = 0x8,0x128
+y,dy = 0xd0,0
+i = {}
+for n=1,2 do
+	i[n.."^" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x0, "P"..n.." Up"}
+	i[n.."v" ] = {x+dx*(n-1)+0x18, y+dy*(n-1)+0x8, "P"..n.." Down"}
+	i[n.."<" ] = {x+dx*(n-1)+0x10, y+dy*(n-1)+0x4, "P"..n.." Left"}
+	i[n..">" ] = {x+dx*(n-1)+0x20, y+dy*(n-1)+0x4, "P"..n.." Right"}
+	i[n.."1"] =  {x+dx*(n-1)+0x30, y+dy*(n-1)+0x0, "P"..n.." Low Punch",   "P"..n.." Button 1"}
+	i[n.."2"] =  {x+dx*(n-1)+0x38, y+dy*(n-1)+0x0, "P"..n.." High Punch",  "P"..n.." Button 2"}
+	i[n.."3"] =  {x+dx*(n-1)+0x40, y+dy*(n-1)+0x0, "P"..n.." Low Kick",    "P"..n.." Button 3"}
+	i[n.."4"] =  {x+dx*(n-1)+0x30, y+dy*(n-1)+0x8, "P"..n.." High Kick",   "P"..n.." Button 4"}
+	i[n.."BL"] = {x+dx*(n-1)+0x38, y+dy*(n-1)+0x8, "P"..n.." Block",       "P"..n.." Button 5"}
+	i[n.."RN"] = {x+dx*(n-1)+0x40, y+dy*(n-1)+0x8, "P"..n.." Run",         "P"..n.." Button 6"}
+	i[n.."S" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x0, "P"..n.." Start",        n..(n==1 and " Player" or " Players").." Start"}
+	i[n.."c" ] = {x+dx*(n-1)+0x00, y+dy*(n-1)+0x8, "P"..n.." Coin",         "Coin "..n}
+end
+table.insert(inp,{games,i})

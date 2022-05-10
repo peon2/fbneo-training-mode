@@ -268,6 +268,24 @@ gamekeys = {
 		{      "C",        "coin", "Coin", "Coin" },
 		{      "S",    "start",    "Start",    "Start" },
 	},
+	{ set =
+		{ "midway",     fba,       mame    },
+		{      "l",    "Left",     "Left"  },
+		{      "r",    "Right",    "Right" },
+		{      "u",    "Up",       "Up"    },
+		{      "d",    "Down",     "Down"  },
+		{     "ul"                         },
+		{     "ur"                         },
+		{     "dl"                         },
+		{     "dr"                         },
+		{      "1",    "Low Punch",  "Button 4" },
+		{      "2",    "High Punch", "Button 1" },
+		{     "BL",    "Block",  	 "Button 2" },
+		{      "3",    "Low Kick",   "Button 5" },
+		{      "4",    "High Kick",  "Button 3" },
+		{     "RN",    "Run",        "Button 6" },
+		{      "S",    "Start",      "Start" },
+	},
 }
 
 --folder with scrolling-input-code.lua, icon files, & frame dump folder (relative to this lua file)
