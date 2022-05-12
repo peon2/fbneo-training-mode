@@ -55,8 +55,8 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=178,
-		combotexty=48,
+		combotextx=174,
+		combotexty=49,
 		comboenabled=true,
 		p1healthx=17,
 		p1healthy=22,
@@ -1325,8 +1325,8 @@ local ST_HUD_settings = {
 22,		--p1healthy
 340,	--p2healthy
 22,		--p2healthy
-175,	--combotextx
-50,		--combotexty
+174,	--combotextx
+49,		--combotexty
 false,	--p1meterenabled
 false,	--p2meterenabled
 3,		--p1scrollinginputxoffset
@@ -2520,6 +2520,10 @@ local throw_ended = false
 local throw_exception = false
 
 local function frameAdvantageDisplay()
+	if not gamestate.is_in_match then
+		return
+	end
+
 	if frame_advantage_selector == 0 then
 		local DEBUG = false
 		-------------------
@@ -2813,6 +2817,10 @@ local reset = false
 local nb_calculation = 1
 
 local function frameTrapDisplay()
+	if not gamestate.is_in_match then
+		return
+	end
+
 	local DEBUG = false
 
 	if DEBUG then
@@ -2908,7 +2916,7 @@ local function frameTrapDisplay()
 		----------------------
 		-- Display
 		----------------------
-		local x = inputs.properties.scrollinginput.scrollinginputxoffset[1] + 70
+		local x = inputs.properties.scrollinginput.scrollinginputxoffset[1] + 90
 		local y = 100
 		if frame_trap_calculated[#frame_trap_calculated] then
 			for i = 1, #frame_trap_calculated do
