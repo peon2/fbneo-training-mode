@@ -124,7 +124,7 @@ local defaultconfig = {
 	p1 = {
 		-- Health
 		refillhealthspeed = 10,
-		instantrefillhealth = true,
+		instantrefillhealth = false,
 		refillhealthenabled = true,
 		refillmeterspeed = 10,
 		instantrefillmeter = false,
@@ -133,7 +133,7 @@ local defaultconfig = {
 	p2 = {
 		-- Health
 		refillhealthspeed = 10,
-		instantrefillhealth = true,
+		instantrefillhealth = false,
 		refillhealthenabled = true,
 		refillmeterspeed = 10,
 		instantrefillmeter = false,
