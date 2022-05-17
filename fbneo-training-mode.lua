@@ -94,6 +94,7 @@ local games = {
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
 	ssf2xjr1 = {"ssf2xjr1", hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
 	tkdensho = {"tkdensho", iconfile = "icons-banpresto-32.png"},
+	umk3 = {"umk3", iconfile = "icons-midway-32.png"},
 	vamp = {"vamp", "vampjr1", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhunt2 = {"vhunt2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhuntjr2 = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -1546,7 +1547,8 @@ local logRecording = function()
 
 end
 
-local togglePlayBack = function(bool, vargs)
+-- global, as it is used in ssf2x
+togglePlayBack = function(bool, vargs)
 	if interactivegui.movehud then return end
 	
 	local _playbackslot = recording.playbackslot or recording.recordingslot -- tmp for playbackslot
