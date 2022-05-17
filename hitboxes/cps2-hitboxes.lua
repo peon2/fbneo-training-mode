@@ -69,24 +69,6 @@ local profile = {
 		{anim_ptr = 0x20, addr_table_ptr = 0x08, p_addr_table_ptr = 0x4, id_ptr = 0x0C, id_shift = 0x2, type = "throwable"},
 		{anim_ptr = 0x20, addr_table_ptr = 0x06, p_addr_table_ptr = 0x2, id_ptr = 0x0B, id_shift = 0x4, type = "attack"},
 	},
-	breakpoints = {
-		{["sfa"] = 0x020F14, func = function() --ground throws
-			insert_throw({
-				val_x = signed_register("d0"),
-				rad_x = signed_register("d1"),
-				type = "throw",
-			})
-		end},
-		{["sfa"] = 0x020FF2, func = function() --air throws
-			insert_throw({
-				val_x = signed_register("d0"),
-				rad_x = signed_register("d1"),
-				val_y = signed_register("d2"),
-				rad_y = signed_register("d3"),
-				type = "axis throw",
-			})
-		end},
-	},
 	clones = {
 		["sfar3"] = -0xB4, ["sfar2"] = -0x64, ["sfar1"] = -0x18, ["sfad"] = 0, ["sfau"] = -0x64, 
 		["sfza"] = -0x64, ["sfzbr1"] = 0, ["sfzb"] = 0x5B4, ["sfzhr1"] = -0x64, ["sfzh"] = -0x18, 
@@ -139,31 +121,6 @@ local profile = {
 		{anim_ptr = 0x1C, addr_table_ptr = 0x118, p_addr_table_ptr = 0x0, id_ptr = 0x0A, id_shift = 0x3, type = "vulnerability"},
 		{anim_ptr = 0x1C, addr_table_ptr = 0x120, p_addr_table_ptr = 0x4, id_ptr = 0x0C, id_shift = 0x3, type = "throwable"},
 		{anim_ptr = 0x1C, addr_table_ptr = 0x11C, p_addr_table_ptr = 0x2, id_ptr = 0x0B, id_shift = 0x5, type = "attack"},
-	},
-	breakpoints = {
-		{["sfa2"] = 0x025516, ["sfz2al"] = 0x025C8A, func = function() --ground throws
-			insert_throw({
-				val_x = signed_register("d0"),
-				rad_x = signed_register("d1"),
-				type = "throw",
-			})
-		end},
-		{["sfa2"] = 0x02564A, ["sfz2al"] = 0x025DD6, func = function() --tripwire
-			insert_throw({
-				val_x = signed_register("d0"),
-				rad_x = signed_register("d1"),
-				type = "throw",
-			})
-		end},
-		{["sfa2"] = 0x025786, ["sfz2al"] = 0x025F12, func = function() --air throws
-			insert_throw({
-				val_x = signed_register("d0"),
-				rad_x = signed_register("d1"),
-				val_y = signed_register("d2"),
-				rad_y = signed_register("d3"),
-				type = "axis throw",
-			})
-		end},
 	},
 	clones = {
 		["sfa2u"] = 0xBD2, ["sfa2ur1"] = 0xBC2, ["sfz2ad"] = 0xC0A, ["sfz2a"] = 0xC0A, 
@@ -238,16 +195,6 @@ local profile = {
 		{anim_ptr =  nil, addr_table_ptr = 0xA0, id_ptr = 0x32F, id_shift = 0x5, type = "throw", clear = true},
 		{anim_ptr =  nil, addr_table_ptr = 0xA0, id_ptr =  0x82, id_shift = 0x5, type = "tripwire", clear = true},
 	},
-	watchpoints = {
-		{offset = 0x32F, size = 1, func = function() insert_throw({
-			id = bit.band(memory.getregister("m68000.d0"), 0xFF),
-			anim_ptr = nil, addr_table_ptr = 0xA0, type = "throw", id_shift = 0x5,
-		}) end},
-		{offset = 0x1E4, size = 2, func = function() insert_throw({
-			pos_x = bit.band(memory.getregister("m68000.d0"), 0xFFFF),
-			anim_ptr = nil, addr_table_ptr = 0xA0, type = "tripwire", id_ptr = 0x82, id_shift = 0x5,
-		}) end},
-	},
 	process_throw = function(obj, box)
 		box.pos_x = box.pos_x and rws(obj.base + 0x1E4) + box.pos_x
 		return define_box[game.box_type](obj, box)
@@ -321,37 +268,6 @@ local profile = {
 	throw_box_list = {
 		{method = "range given", base_x = 0x010, range_x = 0x1E8, range_y = 0x1E9, air_state = 0x4C, type = "throwable"},
 	},
-	breakpoints = {
-		{["dstlk"] = 0x033CBE, func = function() --attempt ground throws from any range
-			memory.setregister("m68000.d3", 0)
-		end},
---		{["dstlk"] = 0x033D22, func = function() --ground throws
---			local base = memory.getregister("m68000.a6")
---			local range = rws(rd(base + 0x1EA) + rb(base + 0x27))
---			insert_throw({range_x = range})
---		end},
---		{["dstlk"] = 0x033BEC, func = function() --air throws
---			local base = memory.getregister("m68000.a6")
---			local curr = rw(base + game.offset.player_space - 0x7A)
---			local prev = rw(base + game.offset.player_space - 0x78)
---			local range = bit.band(memory.getregister("m68000.d0"), 0xFF)
---			range = rws(rd(base + 0x1EA) + range)
---			if any_true({
---				bit.band(curr, 0x07) == 0, 
---				bit.band(bit.band(bit.bnot(prev), curr), 0x60) == 0, 
---				range == 0, 
---			}) then
---				return --input check @ 0451D6
---			end
---			insert_throw({range_x = range, height = 0xC}) --vertical range @ 033BE0
---		end},
-		{["dstlk"] = 0x03B8F4, ["dstlku"] = 0x03BBCE, ["dstlkh"] = 0x03BBCE, 
-			["vampjr1"] = 0x03DDA4, ["vampj"] = 0x03DDB8, ["vampja"] = 0x03DDB8, 
-			func = function() --midnight pleasure
-				insert_throw({range_x = 0x24}) --hard range @ 03B938
-			end, 
-		},
-	},
 	clones = {
 		["dstlka"] = 0, ["dstlkh"] = 0x2D6, ["dstlku1d"] = 0, ["dstlkur1"] = 0, ["dstlku"] = 0x2D6, 
 		["vampjr1"] = 0x24A2, ["vampj"] = 0x24B6, ["vampja"] = 0x24B6, 
@@ -418,36 +334,6 @@ local profile = {
 	throw_box_list = {
 		{method = "range given", base_x = 0x010, range_x = 0x1E8, range_y = 0x1E9, air_state = 0x41, type = "throwable"},
 		{method = "range given", base_x = 0x192, range_x = 0x196, range_y = 0x194, type = "axis throw"}, --"no_box" projectiles
-	},
-	breakpoints = {
-		{["nwarr"] = 0x02A002, func = function() --attempt ground throws from any range
-			memory.setregister("m68000.d3", 0)
-		end},
-		{["nwarr"] = 0x02A172, func = function() --ground throws
-			local base = memory.getregister("m68000.a6")
-			local range = rws(rd(base + 0x1EA) + rb(base + 0x27))
-			insert_throw({range_x = range})
-		end},
-		{["nwarr"] = 0x029F5C, func = function() --air throws
-			local base = memory.getregister("m68000.a6")
-			local curr = rw(base + game.offset.player_space - 0x7A)
-			local prev = rw(base + game.offset.player_space - 0x78)
-			local range = bit.band(memory.getregister("m68000.d0"), 0xFF)
-			range = rws(rd(base + 0x1EA) + range)
-			if any_true({
-				bit.band(curr, 0x07) == 0, 
-				bit.band(bit.band(bit.bnot(prev), curr), 0x60) == 0, 
-				range == 0, 
-			}) then
-				return --input check @ 0355CE
-			end
-			insert_throw({range_x = range, height = 0xC}) --vertical range @ 029F50
-		end},
-		{["nwarr"] = 0x0366C2, ["vhuntjr2"] = 0x036488, ["vhuntjr1"] = 0x0366F4, ["vhuntj"] = 0x0366F4, 
-			func = function() --midnight pleasure
-				insert_throw({range_x = 0x22}) --hard range @ 036706
-			end, 
-		},
 	},
 	clones = {
 		["nwarra"] = -0x282, ["nwarrb"] = 0, ["nwarrh"] = 0, ["nwarrud"] = 0, ["nwarru"] = 0, 
@@ -530,44 +416,6 @@ local profile = {
 		{anim_ptr =  nil, addr_table_ptr = 0x88, id_ptr = 0x96, id_shift = 0x3, type = "vulnerability"},
 		{anim_ptr =  nil, addr_table_ptr = 0x90, id_ptr = 0x97, id_shift = 0x3, type = "throwable"}, --identical to pushbox
 		{anim_ptr = 0x1C, addr_table_ptr = 0x8C, id_ptr = 0x0A, id_shift = 0x5, type = "attack"},
-	},
-	breakpoints = {
-		{["vsav"] = 0x029450, ["vsav2"] = 0x02874A, ["vhunt2"] = 0x028778, 
-		func = function() --non-ranged throws
-			local stack, pc = rd(memory.getregister("m68000.a7")), memory.getregister("m68000.pc")
-			if stack ~= pc + 0x30 and stack ~= pc + 0xB2 and stack ~= pc + 0xBE then
-				return --don't draw the initial range check of command throws
-			end
-			insert_throw({
-				id = bit.band(memory.getregister("m68000.d0"), 0xFF),
-				anim_ptr = nil, addr_table_ptr = 0x8C, id_ptr = 0x98, id_shift = 0x5, type = "throw",
-			})
-		end},
-		{["vsav"] = 0x0191A2, ["vsav2"] = 0x017BA4, ["vhunt2"] = 0x017BAA, ["vhunt2r1"] = 0x017B3A, 
-		func = function() --attempt cmd throws from any range
-			local stack = {rd(memory.getregister("m68000.a7")), rd(memory.getregister("m68000.a7") + 4)}
-			local target = {["vsav"] = 0x029472, ["vsav2"] = 0x02876C, ["vhunt2"] = 0x02879A, ["vhunt2r1"] = 0x0286E8}
-			target = target[emu.romname()] or target[emu.parentname()]
-			if any_true({
-				stack[1] ~= target, --must be a command throw setup
-				stack[2] == target + 0x0E, --don't interfere with actual throw attempts
-				stack[2] == target + 0x90, --don't interfere with attacks
-				stack[2] == target + 0x9C, --don't interfere with vsav2/vhunt2 air throws
-				}) then
-				return
-			end
-			memory.setregister("m68000.d1", 0)
-		end},
-		{["vsav"] = 0x029638, ["vsav2"] = 0x02893E, ["vhunt2"] = 0x02896C, 
-		func = function() --ranged throws
-			local base = memory.getregister("m68000.a4")
-			insert_throw({
-				id = bit.band(memory.getregister("m68000.d0"), 0xFF),
-				pos_x = get_x(rws(base + game.offset.pos_x)),
-				pos_y = get_y(rws(base + game.offset.pos_y)),
-				anim_ptr = nil, addr_table_ptr = 0x8C, id_ptr = 0x98, id_shift = 0x5, type = "throw",
-			})
-		end},
 	},
 	clones = {
 		["vsava"] = 0, ["vsavd"] = 0, ["vsavh"] = 0, ["vsavj"] = 0, ["vsavu"] = 0, 
@@ -657,17 +505,6 @@ local profile = {
 		{method = "dimensions", dimensions = 0x19E, type = "throwable"},
 		{anim_ptr = nil, addr_table_ptr = 0x00, id_ptr = 0x62, id_shift = 0x4, type = "attack"},
 	},
-	breakpoints = {
-		{["cybots"] = 0x002DF0, func = function()
-			local base = memory.getregister("m68000.a6")
-			insert_throw({
-				val_x = rws(base + 0x160),
-				val_y = rws(base + 0x162),
-				rad_x = rws(base + 0x164),
-				rad_y = rws(base + 0x164), --Same as rad_x. Glitch?
-				type = "axis throw",
-			}) end},
-	},
 	clones = {
 		["cybotsj"] = 0, ["cybotsud"] = 0, ["cybotsu"] = 0, 
 	},
@@ -727,12 +564,6 @@ local profile = {
 		{anim_ptr =  nil, addr_table_ptr = 0x84, id_ptr = 0x91, id_shift = 0x3, type = "vulnerability"},
 		{anim_ptr = 0x1C, addr_table_ptr = 0x8C, id_ptr = 0x0B, id_shift = 0x3, type = "throwable"}, --same as pushbox?
 		{anim_ptr =  nil, addr_table_ptr = 0x88, id_ptr = 0x92, id_shift = 0x5, type = "attack"},
-	},
-	breakpoints = {
-		{["sgemf"] = 0x012800, func = function() insert_throw({
-			id = bit.band(memory.getregister("m68000.d0"), 0xFF),
-			anim_ptr = nil, addr_table_ptr = 0x88, id_ptr = 0x98, id_shift = 0x5, type = "throw",
-		}) end},
 	},
 	clones = {
 		["pfghtj"] = 0, ["sgemfd"] = 0, ["sgemfa"] = 0, ["sgemfh"] = 0, 
@@ -1278,17 +1109,6 @@ end)
 --------------------------------------------------------------------------------
 -- initialize on game startup
 
-local initialize_bps = function()
-	for _, pc in ipairs(globals.breakpoints or {}) do
-		memory.registerexec(pc, nil)
-	end
-	for _, addr in ipairs(globals.watchpoints or {}) do
-		memory.registerwrite(addr, nil)
-	end
-	globals.breakpoints, globals.watchpoints = {}, {}
-end
-
-
 local initialize_fb = function()
 	frame_buffer = {}
 	for f = 1, DRAW_DELAY + 1 do
@@ -1308,29 +1128,13 @@ end
 local whatgame = function()
 	game = nil
 	initialize_fb()
-	initialize_bps()
 	for _, module in ipairs(profile) do
 		for _, shortname in ipairs(module.games) do
 			if emu.romname() == shortname or emu.parentname() == shortname then
 				game = module
 				initialize_throw_buffer()
 				if not emu.registerfuncs then
-					if game.breakpoints then
-						--print("(FBA-rr 0.0.7+ can show throwboxes for this game.)")
-					end
 					return
-				end
-				for _, bp in ipairs(game.breakpoints or {}) do
-					local pc = bp[emu.romname()] or bp[shortname] + game.clones[emu.romname()]
-					memory.registerexec(pc, bp.func)
-					table.insert(globals.breakpoints, pc)
-				end
-				for _, wp in ipairs(game.watchpoints or {}) do
-					for p = 1, game.number.players do
-						local addr = game.address.player + (p-1) * game.offset.player_space + wp.offset
-						memory.registerwrite(addr, wp.size, wp.func)
-						table.insert(globals.watchpoints, addr)
-					end
 				end
 				return
 			end
