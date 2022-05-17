@@ -130,7 +130,7 @@ do
 		if str:sub(1,40) ~= "assert(rb,\"Run fbneo-training-mode.lua\")" then return nil end
 	
 		local ftables, err = loadfile( sfile )
-		if err then return _,err end
+		if err then return nil end
 		local tables = ftables()
 		for idx = 1,#tables do
 			local tolinki = {}

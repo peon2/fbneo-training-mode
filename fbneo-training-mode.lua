@@ -27,7 +27,7 @@ local games = {
 	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
 	avengrgs = {"avengrgs", iconfile = "icons-banpresto-32.png"},
 	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
-	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-jojos-32.png"},
+	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-cybots-32.png"},
 	dankuga = {"dankuga", iconfile= "icons-capcom-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
@@ -237,7 +237,7 @@ for i, v in pairs(games) do
 		end
 	end
 end
-
+print "1"
 ----------------------------------------------
 -- CHECK IF ROM MEMORY FILE EXISTS
 ----------------------------------------------
@@ -267,7 +267,7 @@ if translationtable then
 		end
 	end
 end
-
+print "2"
 if nbuttons == 0 then
 	print("No buttons found for "..rom)
 	print "Attempting to make a translationtable from defaults"
@@ -345,7 +345,7 @@ if nbuttons == 0 then
 		nbuttons = 0
 	end
 end
-
+print "3"
 ----------------------------------------------
 -- CHECK IF TABLEIO IS PRESENT AND TRYING TO OPEN CONFIG FILE
 ----------------------------------------------
@@ -397,7 +397,7 @@ end
 ----------------------------------------------
 -- VARIABLE TABLES
 ----------------------------------------------
-
+print "4"
 availablefunctions = {}
 
 checkAvailableFunctions = function() -- SETUP availablefunctions TABLE
@@ -432,7 +432,7 @@ checkAvailableFunctions = function() -- SETUP availablefunctions TABLE
 end
 
 checkAvailableFunctions()
-
+print "5"
 interactivegui = {
 	enabled = false,
 	page = 1, -- these should be numbers referencing interactiveguipages
@@ -647,7 +647,7 @@ end
 ----------------------------------------------
 -- TRYING TO DISPLAY INPUTS
 ----------------------------------------------
-
+print "6"
 if fexists("inputs/input-display.lua") then
 	if fexists("inputs/input-modules.lua") then
 		dofile("inputs/input-display.lua")
@@ -676,7 +676,7 @@ if games[dirname].iconfile then
 else
 	print("No scrolling input image found for "..rom)
 end
-
+print "7"
 ----------------------------------------------
 -- 
 ----------------------------------------------
@@ -758,7 +758,7 @@ createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements
 	return menu
 
 end
-
+print "8"
 createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, closingfunc, autofunc, text)
 	local menu = {}
 	text = text or ""
@@ -852,7 +852,7 @@ end
 local hitplayback=gd.createFromPng("resources/replay/hitplayback.png"):gdStr() -- load images
 local playback=gd.createFromPng("resources/replay/playback.png"):gdStr()
 local savestateslot=gd.createFromPng("resources/replay/savestateslot.png"):gdStr()
-
+print "9"
 drawReplayInfo = function()
 	for i = 1, 5 do
 		if (recording[i][1]) then -- something in slot
@@ -968,7 +968,7 @@ function changeConfig(tab, index, value, otherlocation, otherindex) -- table in 
 		end
 	end
 end
-
+print "10"
 ignore_save_config = false
 saveConfig = function()
 	if not availablefunctions.tablesave or not config.changed or ignore_save_config then return end
@@ -1117,7 +1117,7 @@ local comboHandlerP2 = function()
 		combovars.p2.comboDamage = combovars.p2.comboDamage + combovars.p2.healthdiff
 	end
 end
-
+print "11"
 local healthHandlerP2 = function()
 
 	if not combovars.p2.refillhealthenabled then return end
@@ -1221,7 +1221,7 @@ local stickimgs = {}
 for i = 1,9 do
 	stickimgs[i]=gd.createFromPng("resources/stick/"..i..".png"):gdStr() -- load images
 end
-
+print "12"
 function displayStick(x, y)
 	local a = function(b) if b then return 1 end return 0 end -- bool to num
 	local dir = 5+a(guiinputs.P1["up"])*3 + a(guiinputs.P1["left"])*-1 + a(guiinputs.P1["right"])*1 + a(guiinputs.P1["down"])*-3
@@ -1272,7 +1272,7 @@ local toggleSwapInputs = function(bool, vargs)
 	if vargs then vargs.swapinputs = false end
 	toggleStates(vargs)
 end
-
+print "13"
 local swapInputs = function()
 
 	if not inputs.properties.enableinputswap then return end
@@ -1365,7 +1365,7 @@ local serialiseInit = function(recordslot) -- set up compression, reduce the siz
 		end
 	end
 end
-
+print "14"
 local serialise = function(recordslot)
 	for i = 1, #recordslot do -- serialize
 		local num = 0
@@ -1484,7 +1484,7 @@ local toggleRecording = function(bool, vargs)
 		end
 	end
 end
-
+print "15"
 local logRecording = function()
 
 	if not recording.enabled then return end
@@ -1649,7 +1649,7 @@ local playBack = function()
 	recordslot[fc - recordslot.framestart + start].p1facingleft = nil
 	recordslot[fc - recordslot.framestart + start].p2facingleft = nil
 end
-
+print "16"
 local hitPlayBack = function()
 	if not recording.hitslot then return end
 	if combovars.p2.previouscombo <= combovars.p2.combo then return end
@@ -1705,14 +1705,14 @@ local applyDirection = function() -- getting a player to hold down/up etc.
 	end
 	inputs.properties.enableinputset = true
 end
-
+print "17"
 -- set up gd images
 local helpElements = {}
-local icons = {[16] = {}, [32] = {}} -- follows translationtable series
+local icons = {[16] = {}} -- follows translationtable series
 local helpButtons = {}
 local helpShell = gd.createFromPng("resources/info/shell.png")
 helpShell = helpShell:gdStr()
-
+print "17a"
 if scrollingInputReg then -- if there's a scrolling input file loaded
 	local img = gd.createFromPng("inputs/scrolling-input/"..games[dirname].iconfile) -- always assume we're using a 32x32 tileset image
 	local imgcnt = img:sizeY()/32
@@ -1738,37 +1738,32 @@ if scrollingInputReg then -- if there's a scrolling input file loaded
 		Start
 	--]]
 	
-	for i = 1, 4 do
-		icons[32][i] = gd.create(32,32)
-		icons[32][i]:copy(img, 0, 0, 0, (i-1)*32, 32, 32)
-		icons[32][i] = icons[32][i]:gdStr()
-		
+	-- change to 16x16 for displaying
+	for i = 1, 4 do	-- directions
 		icons[16][i] = gd.create(16,16)
 		icons[16][i]:copyResampled(img, 0, 0, 0, (i-1)*32, 16, 16, 32, 32)
 		icons[16][i] = icons[16][i]:gdStr()
 	end
-	
-	for i = 9, imgcnt do -- skip diagonals
-		icons[32][i-4] = gd.create(32,32)
-		icons[32][i-4]:copy(img, 0, 0, 0, (i-1)*32, 32, 32)
-		icons[32][i-4] = icons[32][i-4]:gdStr()
-		
+	for i = 9, imgcnt do -- skip diagonals, rest of the buttons
 		icons[16][i-4] = gd.create(16,16)
 		icons[16][i-4]:copyResampled(img, 0, 0, 0, (i-1)*32, 16, 16, 32, 32)
 		icons[16][i-4] = icons[16][i-4]:gdStr()
 	end
-	
+	print "17d"
 	for i = 1,nbuttons do
-		helpButtons[i] = icons[16][i+4]
+		helpButtons[i] = icons[16][i+4] -- assign buttons
 		y=y+32
 	end
+	print "17e"
 else -- otherwise use these defaults
+	print "17z"
 	for i = 1,nbuttons do
 		helpButtons[i] = gd.createFromPng("resources/info/"..i..".png")
 		helpButtons[i] = helpButtons[i]:gdStr()
 	end
+	print "17y"
 end
-
+print "18"
 local buttonHandlerInputs = {
 	["button1"] = 1,
 	["button2"] = 2,
@@ -1865,7 +1860,7 @@ local buttonHandler = function(t)
 		helpElements.len = math.min(nbuttons,helpElements.len)
 	end
 end
-
+print "19"
 local toggledrawhelp = true
 
 local drawHelp = function()
@@ -1909,7 +1904,7 @@ local toggleInteractiveGuiEnabled = function(bool, vargs)
 end
 
 local garbagecount = {disp = collectgarbage("count")}
-
+print "20"
 local callGuiSelectionFunc = function()
 	local func = interactiveguipages[interactivegui.page][interactivegui.selection].func
 	if not interactivegui.enabled or not func then return end
@@ -1961,7 +1956,7 @@ local blankKB = function()
 		end
 	end
 end
-
+print "21"
 local drawInteractiveGuiFuncs = {
 	function(but) -- SLCT
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
@@ -2162,7 +2157,7 @@ local drawInteractiveGui = function()
 	if page.other_func then page.other_func() end -- if theres anything else to be ran
 	buttonHandler(t)
 end
-
+print "22"
 changeInteractiveGuiPage = function(n)
 	if not interactivegui.enabled then return end
 	n = n or interactivegui.page+1
@@ -2240,13 +2235,13 @@ local drawKB = function(x,y)
 		gui.text(x+6+(i-1)*4,y+24,v,col)
 	end
 end
-
+print "23"
 --fall backs in case can't read joypad input
 input.registerhotkey(1, toggleInteractiveGuiEnabled)
 input.registerhotkey(2, callGuiSelectionFunc)
 input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
-
+print "24"
 local readGUIInputs = function()
 	--inspired by grouflons and crystal_cubes menus
 
@@ -2335,7 +2330,7 @@ function drawHUD() -- all parts of the hud should be dropped in here
 		if v.enabled() then v.drawfunc() end
 	end
 end
-
+print "25"
 local hudworkingframes = function(n) -- get faster the longer it runs
 	if (n < 60) then
 		if n%10==1 then return 1 end -- maybe tie this to coin input leniency?
@@ -2490,7 +2485,7 @@ local moveHUDFuncs = {
 		end
 	end,
 }
-
+print "26"
 local moveHUD = function()
 
 	if not interactivegui.movehud then return end
@@ -2530,7 +2525,7 @@ local registers = {
 	guiregister = {},
 	registerafter = {},
 }
-
+print "27"
 local drawcomboHUD = function()
 	if combovars.p2.healthdiff > 0 then
 		gui.text(hud.combotextx-4,hud.combotexty,"Damage: " ..combovars.p2.healthdiff,hud.damagetextcolour)
@@ -2619,7 +2614,7 @@ toggleReplayEditor = function(bool, vargs)
 		toggleRecording(false, vargs) -- sets up serialising stuff
 	end
 end
-
+print "28"
 local drawReplayEditorFuncs = {
 	function(but) -- set
 		if interactivegui.replayeditor.framestart then -- countdown to taking input
@@ -2756,7 +2751,7 @@ local drawReplayEditorFuncs = {
 		if guiinputs.P1.downframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+hudworkingframes(guiinputs.P1.downframecount) end
 	end,
 }
-
+print "29"
 local drawReplayEditor = function()
 	if not interactivegui.replayeditor.enabled then return end
 	local length = SERIALISETABLE.p1.len-1 -- don't want to include start or coin
@@ -3105,7 +3100,7 @@ setRegisters = function() -- pre-calc stuff
 	print()
 	usage()
 end
-
+print "8"
 local saveprocedure = function()
 	toggleStates({})
 end
