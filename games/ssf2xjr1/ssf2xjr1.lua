@@ -72,7 +72,7 @@ gamedefaultconfig = {
 		p2meterenabled=false,
 	},
 	inputs = {
-		iconsize=8,
+		iconsize=9,
 		framenumbersenabled=true,
 		scrollinginputxoffset={2,335},
 		scrollinginputyoffset={95,95},
