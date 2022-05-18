@@ -168,7 +168,7 @@ function readCharacterName(_player_obj) -- Translate _player_obj.character into 
 	end
 end
 
-local function isChargeCharacter(_player_obj)
+function isChargeCharacter(_player_obj)
 	if character_specific[readCharacterName(_player_obj)].infos.charge_character then
 		return true
 	else
@@ -186,16 +186,16 @@ function playerTwoFacingLeft()
 end
 ---------------------------------
 
-local getDistanceBetweenPlayers = function()
+getDistanceBetweenPlayers = function()
 	if playerOneFacingLeft() then
 		distance = gamestate.P1.pos_x - gamestate.P2.pos_x
 	else
-		distance = gamestate.P2.pos_x - gamestate.P2.pos_x
+		distance = gamestate.P2.pos_x - gamestate.P1.pos_x
 	end
 	return distance
 end
 
-local function playerCrouching(_player_obj)
+function playerCrouching(_player_obj)
 	if _player_obj.state == crouching then
 		return true
 	end
@@ -297,7 +297,7 @@ function draw_messages()
 	gui.text(100,216,msg2)
 end
 
-local function str(bool)
+function str(bool)
 	if bool then
 		return "true"
 	else
@@ -3172,10 +3172,26 @@ local function ST_Training_misc()
 	end
 end
 
+local addons_charged = false
+
+local function loadAddons()
+	if not addons_charged then
+		dofile("games/ssf2xjr1/addon/addons.lua")
+		for i = 1, #addons_run do
+			if fexists("games/ssf2xjr1/addon/"..addons_run[i]) then
+				dofile("games/ssf2xjr1/addon/"..addons_run[i])
+			end
+		end
+		insertAddonButton()
+		addons_charged = true
+	end
+end 
+
+ST_functions = {updateGamestate, ST_Training_misc, ST_Training_basic_settings, ST_Training_advanced_settings, draw_messages}
+
 function Run() -- runs every frame
-	updateGamestate()
-	ST_Training_misc()
-	ST_Training_basic_settings()
-	ST_Training_advanced_settings()
-	draw_messages()
+	for i = 1, #ST_functions do
+		ST_functions[i]()
+	end
+	loadAddons()
 end

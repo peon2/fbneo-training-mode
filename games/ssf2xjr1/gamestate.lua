@@ -237,7 +237,7 @@ function gamestate.stock_player_vars(_player_obj)
 	-----------------
 	-- Animation
 	-----------------
-	--animation_id 					= _player_obj.animation_id,
+	animation_id 					= _player_obj.animation_id,
 	animation_frames_left			= _player_obj.animation_frames_left,
 	--hitbox_id						= _player_obj.hitbox_id,
 	is_attacking					= _player_obj.is_attacking,

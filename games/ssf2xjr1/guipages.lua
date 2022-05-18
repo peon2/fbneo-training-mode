@@ -928,3 +928,47 @@ reloadProjectileSettings = function()
 	makeProjectileSettings()
 	formatGuiTables()
 end
+------------------------------------------
+-- Add-on
+------------------------------------------
+addonpage = {
+	title = {
+		text = "Add-On",
+		x = interactivegui.boxxlength/2 - 10,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() 
+			interactivegui.page = 5
+			interactivegui.selection = 1 
+		end,
+	},
+}
+guipages.addonpage = addonpage
+
+addonbutton = {
+		text = "Add-On",
+		x = 86,
+		y = 150,
+		olcolour = "black",
+		handle = 7,
+		func = 	function() CIG("addonpage", 1) end,
+		}
+
+function insertAddonButton()
+	if #addonpage > 1 then
+		table.insert(guicustompage, addonbutton)
+		formatGuiTables()
+	end
+end
+
+function determineButtonYPos(_guipage)
+	if #_guipage == 1 then 
+		return 40
+	else
+		return _guipage[#_guipage].y+20
+	end
+end

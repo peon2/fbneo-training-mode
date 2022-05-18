@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------
--- Made by McMic and Asunaro
+-- Made by McMic and Asunaro 
 -----------------------------------------------------------------------------
 character_specific = {}
 characters =
@@ -21,7 +21,7 @@ characters =
       "feilong",
       "deejay",
     }
-
+	
 for i = 1, #characters do
   character_specific[characters[i]] = { specials = {}, throw = {}, infos = {}}
 end
@@ -118,6 +118,10 @@ character_specific.blanka.specials = {
   }
 }
 character_specific.blanka.throw = {"HP"}
+character_specific.blanka.hitboxes = {
+throw = {64},
+throwable = 30, 
+}
 character_specific.blanka.infos = {
 charge_character = true,
 has_projectile	 = false
@@ -261,6 +265,10 @@ character_specific.boxer.specials = {
   }
 }
 character_specific.boxer.throw = {"MP","HP"}
+character_specific.boxer.hitboxes = {
+throw = {41,51},
+throwable = 27,
+}
 character_specific.boxer.infos = {
 charge_character = true,
 has_projectile	 = false
@@ -302,7 +310,7 @@ character_specific.cammy.specials = {
 	reversal = true,
     input = { {"back"}, {"back", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
-  },
+  }, 
   {
     name = "Hooligan Combination",
     memory_map = {
@@ -329,6 +337,10 @@ character_specific.cammy.specials = {
   }
 }
 character_specific.cammy.throw = {"MP", "HP", "MK", "HK"}
+character_specific.cammy.hitboxes = {
+throw = {42},
+throwable = 25,
+}
 character_specific.cammy.infos = {
 charge_character = false,
 has_projectile	 = false
@@ -407,12 +419,16 @@ character_specific.chunli.specials = {
   }
 }
 character_specific.chunli.throw = {"MP","HP"}
+character_specific.chunli.hitboxes = {
+throw = {48},
+throwable = 25,
+}
 character_specific.chunli.infos = {
 charge_character = true,
 has_projectile	 = true
 }
 ----------------------------------------------------------------------------------
-character_specific.claw.specials = {
+character_specific.claw.specials = { 
 	{
     name = "Crystal Flash",
     memory_map = {
@@ -474,7 +490,7 @@ character_specific.claw.specials = {
 	charge_move = false,
 	reversal = true,
     input_variations = {{"LP", "MP", "HP"}},
-  },
+  },  
   {
     name = "Back Flip (Kick)",
     memory_map = {},
@@ -500,12 +516,16 @@ character_specific.claw.specials = {
   }
 }
 character_specific.claw.throw = {"MP","HP"}
+character_specific.claw.hitboxes = {
+throw = {48},
+throwable = 28,
+}
 character_specific.claw.infos = {
 charge_character = true,
 has_projectile	 = false
 }
 ---------------------------------------------------------------------------------
-character_specific.deejay.specials = {
+character_specific.deejay.specials = { 
   {
     name = "Sobat Kick",
     memory_map = {
@@ -518,7 +538,7 @@ character_specific.deejay.specials = {
 	reversal = true,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
-  },
+  }, 
   {
     name = "Machine Gun Upper",
     memory_map = {
@@ -573,12 +593,16 @@ character_specific.deejay.specials = {
   }
 }
 character_specific.deejay.throw = {"MP","HP","MK","HK"}
+character_specific.deejay.hitboxes = {
+throw = {48},
+throwable = 30,
+}
 character_specific.deejay.infos = {
 charge_character = true,
 has_projectile	 = true
 }
 --------------------------------------------------------------------------------
-character_specific.dhalsim.specials = {
+character_specific.dhalsim.specials = { 
   {
     name = "Yoga Fire",
     memory_map = {
@@ -664,6 +688,10 @@ character_specific.dhalsim.specials = {
   }
 }
 character_specific.dhalsim.throw = {"MP","HP"}
+character_specific.dhalsim.hitboxes = {
+throw = {64},
+throwable = 35,
+}
 character_specific.dhalsim.infos = {
 charge_character = false,
 has_projectile	 = true
@@ -802,6 +830,10 @@ character_specific.feilong.specials = {
   }
 }
 character_specific.feilong.throw = {"MP","HP","MK","HK"}
+character_specific.feilong.hitboxes = {
+throw = {40},
+throwable = 29,
+}
 character_specific.feilong.infos = {
 charge_character = false,
 has_projectile	 = false
@@ -849,6 +881,10 @@ character_specific.guile.specials = {
   }
 }
 character_specific.guile.throw = {"MP","HP"}
+character_specific.guile.hitboxes = {
+throw = {48},
+throwable = 30,
+}
 character_specific.guile.infos = {
 charge_character = true,
 has_projectile	 = true
@@ -923,12 +959,16 @@ character_specific.ehonda.specials = {
   }
 }
 character_specific.ehonda.throw = {"MP","HP","HK"}
+character_specific.ehonda.hitboxes = {
+throw = {64,69}, -- Throw, Oicho
+throwable = 28,
+}
 character_specific.ehonda.infos = {
 charge_character = true,
 has_projectile	 = false
 }
 -----------------------------------------------------------------------
-character_specific.thawk.specials = {
+character_specific.thawk.specials = { 
  {
     name = "Tomahawk",
     memory_map = {
@@ -969,6 +1009,10 @@ character_specific.thawk.specials = {
   }
 }
 character_specific.thawk.throw = {"MP","HP","HK"}
+character_specific.thawk.hitboxes = {
+throw = {48,83}, -- Throw, 360
+throwable = 35,
+}
 character_specific.thawk.infos = {
 charge_character = false,
 has_projectile	 = false
@@ -986,7 +1030,7 @@ character_specific.ken.specials = {
 	reversal = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
-  },
+  },  
   {
     name = "Hurricane Kick",
     memory_map = {
@@ -1061,6 +1105,10 @@ character_specific.ken.specials = {
   }
 }
 character_specific.ken.throw = {"MP","HP","MK","HK"}
+character_specific.ken.hitboxes = {
+throw = {48},
+throwable = 29,
+}
 character_specific.ken.infos = {
 charge_character = false,
 has_projectile	 = true
@@ -1129,6 +1177,10 @@ character_specific.ryu.specials = {
   }
 }
 character_specific.ryu.throw = {"MP","HP","MK","HK"}
+character_specific.ryu.hitboxes = {
+throw = {48},
+throwable = 29,
+}
 character_specific.ryu.infos = {
 charge_character = false,
 has_projectile	 = true
@@ -1197,12 +1249,16 @@ character_specific.sagat.specials = {
   }
 }
 character_specific.sagat.throw = {"MP","HP"}
+character_specific.sagat.hitboxes = {
+throw = {48},
+throwable = 32,
+}
 character_specific.sagat.infos = {
 charge_character = false,
 has_projectile	 = true
 }
 ------------------------------------------------------------------------
-character_specific.zangief.specials = {
+character_specific.zangief.specials = { 
   {
     name = "Spinning Pile Driver", -- To be fixed : works only on one side
     memory_map = {
@@ -1233,7 +1289,7 @@ character_specific.zangief.specials = {
     input = {{"back"}}, -- fixme
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
-
+ 
   {
     name = "Banishing Flat",
     memory_map = {
@@ -1280,6 +1336,10 @@ character_specific.zangief.specials = {
   }
 }
 character_specific.zangief.throw = {"MP","HP","MK","HK"}
+character_specific.zangief.hitboxes = {
+throw = {64, 66, 69, 83, 111, 138, 147, 155},
+throwable = 45,
+}
 character_specific.zangief.infos = {
 charge_character = false,
 has_projectile	 = false
@@ -1289,20 +1349,20 @@ has_projectile	 = false
 function determineStrengthValue(_variation, _strength_set)
 	if _variation == "LP" or _variation == "LK" then
 			return 0x00
-	elseif _variation == "MP" or _variation == "MK" then
-		if _strength_set == 1 then
+	elseif _variation == "MP" or _variation == "MK" then 
+		if _strength_set == 1 then 
 			return 0x01
-		elseif _strength_set == 2 then
+		elseif _strength_set == 2 then 
 			return 0x02
-		end
-	elseif _variation == "HP" or _variation == "HK" then
-		if _strength_set == 1 then
+		end 
+	elseif _variation == "HP" or _variation == "HK" then 
+		if _strength_set == 1 then 
 			return 0x02
-		elseif _strength_set == 2 then
+		elseif _strength_set == 2 then 
 			return 0x04
-		end
-	end
-	if _strength_set == 0 then
+		end 
+	end 
+	if _strength_set == 0 then 
 			return 0x00
 	end
 	if _strength_set == -1 then -- Dhalsim TP or Boxer TAP
@@ -1312,95 +1372,95 @@ function determineStrengthValue(_variation, _strength_set)
 			return 0x02
 		elseif _variation == "F+P"then
 			return 0x04
-		elseif _variation == "F+K"then
+		elseif _variation == "F+K"then 
 			return 0x06
 		--------------------------------
-		elseif _variation == "1" then
+		elseif _variation == "1" then 
 			return 0x00
-		elseif _variation == "2" then
+		elseif _variation == "2" then 
 			return 0x01
-		elseif _variation == "3" then
+		elseif _variation == "3" then 
 			return 0x02
-		elseif _variation == "4" then
+		elseif _variation == "4" then 
 			return 0x03
-		elseif _variation == "5" then
+		elseif _variation == "5" then 
 			return 0x04
-		elseif _variation == "6" then
+		elseif _variation == "6" then 
 			return 0x05
-		elseif _variation == "7" then
+		elseif _variation == "7" then 
 			return 0x06
-		elseif _variation == "Final" then
+		elseif _variation == "Final" then 
 			return 0x07
-		end
+		end 
 	end
-end
+end 
 
 function determineThrowInput(_throw)
-	if _throw == "MP" then
+	if _throw == "MP" then 
 		return "Medium Punch"
-	elseif _throw == "HP" then
+	elseif _throw == "HP" then 
 		return "Strong Punch"
-	elseif _throw == "MK" then
+	elseif _throw == "MK" then 
 		return "Medium Kick"
-	elseif _throw == "HK" then
+	elseif _throw == "HK" then 
 		return "Strong Kick"
-	end
-end
+	end 
+end 
 
 local player_keys = {
-  "Up",
-  "Down",
-  "Left",
-  "Right",
-  "Weak Punch",
-  "Medium Punch",
-  "Strong Punch",
-  "Weak Kick",
-  "Medium Kick",
-  "Strong Kick",
+	"Up",
+	"Down",
+	"Left",
+	"Right",
+	"Weak Punch",
+	"Medium Punch",
+	"Strong Punch",
+	"Weak Kick",
+	"Medium Kick",
+	"Strong Kick",
 }
 
 local player_keys_extra = {
-  "Start",
-  "Coin",
+	"Start",
+	"Coin",
 }
 
 local sequence_to_key_mapping = {
-  up = "Up",
-  down = "Down",
-  LP = "Weak Punch",
-  MP = "Medium Punch",
-  HP = "Strong Punch",
-  LK = "Weak Kick",
-  MK = "Medium Kick",
-  HK = "Strong Kick",
+	up = "Up",
+	down = "Down",
+	LP = "Weak Punch",
+	MP = "Medium Punch",
+	HP = "Strong Punch",
+	LK = "Weak Kick",
+	MK = "Medium Kick",
+	HK = "Strong Kick",
 }
 
 key_to_sequence_mapping = {}
 for k, v in pairs(sequence_to_key_mapping) do
-  key_to_sequence_mapping[v] = k
+	key_to_sequence_mapping[v] = k
 end
 
 function sequence_input_to_key(_key, _flip_input)
-  if _key == "forward" then
-    if _flip_input then
-      return "Right"
-    else
-      return "Left"
-    end
-  elseif _key == "back" then
-    if _flip_input then
-      return "Left"
-    else
-      return "Right"
-    end
-  else
-    return sequence_to_key_mapping[_key]
-  end
+	if _key == "forward" then
+		if _flip_input then
+			return "Right"
+		else
+			return "Left"
+		end
+	elseif _key == "back" then
+		if _flip_input then
+			return "Left"
+		else
+			return "Right"
+		end
+	else
+		return sequence_to_key_mapping[_key]
+	end
 end
 
 function clearInputSet(player)
-	inputs.properties.enableinputset = true
+	inputs.properties.enableinputset = true 
 	if player == 1 then
 		for i = 1, #player_keys do
 			inputs.setinputs["P1 "..player_keys[i]] = false
@@ -1412,10 +1472,10 @@ function clearInputSet(player)
 		end
 	end
 	setInputs()
-end
+end 
 
 function modifyInputSet(player, ...)
-	inputs.properties.enableinputset = true
+	inputs.properties.enableinputset = true 
 	local dir1, dir2, button1, button2, button3, button4, button5, button6 = ...
 	if type(dir1)=="number" then
 		local a = {{"Down", "Left"}, {"Down"}, {"Down", "Right"}, {"Left"}, {}, {"Right"}, {"Up", "Left"}, {"Up"}, {"Up", "Right"}} -- numpad
@@ -1441,9 +1501,9 @@ function modifyInputSet(player, ...)
 	if type(button6) =="number" then
 		button6 = a[button6][1]
 	end
-
-
-	if player == 1 then
+	
+	
+	if player == 1 then 
 		if dir1 then inputs.setinputs["P1 "..dir1] = true end
 		if dir2 then inputs.setinputs["P1 "..dir2] = true end
 		if button1 then inputs.setinputs["P1 "..button1] = true end
@@ -1464,7 +1524,7 @@ function modifyInputSet(player, ...)
 		if button5 then inputs.setinputs["P2 "..button5] = true end
 		if button6 then inputs.setinputs["P2 "..button6] = true end
 	end
-
+	
 	setInputs()
 end
 
@@ -1475,40 +1535,33 @@ function do_special_move (_player_obj, _special, _variation, easy_special_status
 	local button1 = ""
 	local button2 = ""
 	local button3 = ""
-
+	
   -- Toggle easy special
-  if easy_special_status == true then
-	for i, byte in pairs(_special.memory_map) do
-		wb(_player_obj.base + byte[1], byte[2])
+	if easy_special_status == true then
+		for i, byte in pairs(_special.memory_map) do
+			wb(_player_obj.base + byte[1], byte[2])
+		end
 	end
-end
 
   -- Cancel all input
 	clearInputSet(_player_obj.id)
 
-  for i, _stick in pairs(_special.input[#_special.input]) do
-	if i == 1 then
-		dir1 = sequence_input_to_key(_stick, _player_obj.flip_input)
-	elseif i == 2 then
-		dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
+	for i, _stick in pairs(_special.input[#_special.input]) do
+		if i == 1 then 
+			dir1 = sequence_input_to_key(_stick, _player_obj.flip_input)
+		elseif i == 2 then 
+			dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
+		end 
 	end
-  end
 
-  for i, _button in pairs(_special.input_variations[_variation]) do
-	if i == 1 then
-		button1 = sequence_input_to_key(_button, _player_obj.flip_input)
-	elseif i == 2 then
-		button2 = sequence_input_to_key(_button, _player_obj.flip_input)
-	elseif i == 3 then
-		button3 = sequence_input_to_key(_button, _player_obj.flip_input)
+	for i, _button in pairs(_special.input_variations[_variation]) do
+		if i == 1 then 
+			button1 = sequence_input_to_key(_button, _player_obj.flip_input)
+		elseif i == 2 then 
+			button2 = sequence_input_to_key(_button, _player_obj.flip_input)
+		elseif i == 3 then 
+			button3 = sequence_input_to_key(_button, _player_obj.flip_input)
+		end
 	end
-	button = i
-  end
-  --print(dir1)
-  --print(dir2)
-  --print(button1)
-  --print(button2)
-  --print(button3)
 	modifyInputSet(_player_obj.id, dir1, dir2, button1, button2, button3)
 end
--------------------------------------------------------------------------------------------------
