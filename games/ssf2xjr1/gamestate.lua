@@ -198,7 +198,7 @@ function gamestate.stock_player_vars(_player_obj)
 	--life_backup					= _player_obj.life_backup,
 	--life_hud 						= _player_obj.life_hud,
 	--special_meter 				= _player_obj.special_meter,
-	--stun_meter					= _player_obj.stun_meter,
+	stun_meter					= _player_obj.stun_meter,
 	--destun_meter					= _player_obj.destun_meter,
 	-----------------
 	-- Position
