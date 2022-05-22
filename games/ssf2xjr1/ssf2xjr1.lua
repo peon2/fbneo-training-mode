@@ -227,7 +227,7 @@ local function setFrameskip(status)
 	end
 end
 
-local was_frameskip = false
+was_frameskip = false
 
 local function checkFrameskip()
 	local x = gamestate.prev.frame_number - gamestate.frame_number
@@ -248,10 +248,82 @@ function countFrames(event_frame_count)
 	end
 	return frame_count + 1
 end
+
+function isPressed(_player_obj, _input)
+	local bitmask = 0
+	if _input == "left" then
+		bitmask = 0x0001
+	elseif _input == "right" then
+		bitmask = 0x0001
+	elseif _input == "forward" then
+		if _player_obj.flip_input then 
+			bitmask = 0x0001
+		else
+			bitmask = 0x0002
+		end 
+	elseif _input == "back" then
+		if _player_obj.flip_input then 
+			bitmask = 0x0002
+		else
+			bitmask = 0x0001
+		end 
+	elseif _input == "down" then
+		bitmask = 0x0004
+	elseif _input == "up" then
+		bitmask = 0x0008
+	elseif _input == "LP" then
+		bitmask = 0x0010
+	elseif _input == "MP" then
+		bitmask = 0x0020
+	elseif _input == "HP" then
+		bitmask = 0x0040
+	elseif _input == "LK" then
+		bitmask = 0x0100
+	elseif _input == "MK" then
+		bitmask = 0x0200
+	elseif _input == "HK" then
+		bitmask = 0x0400
+	end 
+	if _player_obj.prev.curr_input == _player_obj.prev_input then
+		return bit.band(_player_obj.curr_input, bitmask) > 0
+	else
+		return bit.band(_player_obj.prev_input, bitmask) > 0
+	end
+end
+
+function wasPressed(_player_obj, _input)
+	local bitmask = 0
+	if _input == "left" then
+		bitmask = 0x0001
+	elseif _input == "right" then
+		bitmask = 0x0002
+	elseif _input == "down" then
+		bitmask = 0x0004
+	elseif _input == "up" then
+		bitmask = 0x0008
+	elseif _input == "LP" then
+		bitmask = 0x0010
+	elseif _input == "MP" then
+		bitmask = 0x0020
+	elseif _input == "HP" then
+		bitmask = 0x0040
+	elseif _input == "LK" then
+		bitmask = 0x0100
+	elseif _input == "MK" then
+		bitmask = 0x0200
+	elseif _input == "HK" then
+		bitmask = 0x0400
+	end 
+	if _player_obj.prev.curr_input == _player_obj.prev_input then
+		return bit.band(_player_obj.prev.curr_input, bitmask) > 0
+	else
+		return bit.band(_player_obj.prev.prev_input, bitmask) > 0
+	end
+end
 ----------------------
 -- Check for changes
 ----------------------
-local function characterChanged(_player_obj)
+function characterChanged(_player_obj)
 	if _player_obj.prev.character ~= _player_obj.character then
 		return true
 	else
@@ -261,22 +333,20 @@ end
 ------------------------------------------------------------
 --	 Messages -- Borrowed from sako.lua by Born2SPD
 ------------------------------------------------------------
-local MSG_FRAMELIMIT = 600
-local msg1 = ""
-local msg2 = ""
-local msg_fcount = 0
-
-local hit_delay_result = 0
+MSG_FRAMELIMIT = 600
+msg1 = ""
+msg2 = ""
+msg3 = ""
+msg_fcount = 0
 
 function update_msg(code)
 	if code == 0 then -- reset
 		msg1 = ""
+		msg2 = ""
+		msg3 = ""
 		msg_fcount = 0
 	elseif code == 1 then
 		msg1 = result1
-		msg_fcount = MSG_FRAMELIMIT-120
-	elseif code == 2 then
-		msg1 = "	Delay : "..hit_delay_result.." frames"
 		msg_fcount = MSG_FRAMELIMIT-120
 	end
 end
@@ -285,16 +355,15 @@ function reset_msg()
 	update_msg(0)
 end
 
-local message_selector = 0
-
-function draw_messages()
+local function draw_messages()
 	if msg_fcount >= MSG_FRAMELIMIT then
 		reset_msg()
 	elseif msg_fcount > 0 then
 		msg_fcount = countFrames(msg_fcount)
 	end
-	gui.text(223,216,msg1)
-	gui.text(100,216,msg2)
+	gui.text(92,56,msg1)
+	gui.text(92,64,msg2)
+	gui.text(92,72,msg3)
 end
 
 function str(bool)
@@ -1466,18 +1535,18 @@ end
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 local reversal_options_checked = {} -- Stocks the relevant values to perform the choosen reversals
-local listenReversalSettingsModfications = false
+local listenReversalSettingsModifications = false
 local once = false -- Condition of reversal_trigger 2
 
 function stockReversalOptionsChecked()
-	if interactivegui.enabled and not listenReversalSettingsModfications then -- If the menu has been opened, clean the table (maybe there's a cleaner way)
+	if interactivegui.enabled and not listenReversalSettingsModifications then -- If the menu has been opened, clean the table (maybe there's a cleaner way)
 		for k in pairs(reversal_options_checked) do
 			reversal_options_checked[k] = nil
 		end
 		patched_autoreversal_selector = 0
-		listenReversalSettingsModfications = true
+		listenReversalSettingsModifications = true
 	end
-	if not interactivegui.enabled and listenReversalSettingsModfications then -- If the menu has been closed, stock the options selected
+	if not interactivegui.enabled and listenReversalSettingsModifications then -- If the menu has been closed, stock the options selected
 		for i = 1, #reversal_options do
 			if reversal_options[i].checked then
 					table.insert(reversal_options_checked, reversal_options[i].reversal_id)
@@ -1500,7 +1569,7 @@ function stockReversalOptionsChecked()
 		elseif #reversal_options_checked > 1 then
 			patched_autoreversal_selector = 2
 		end
-		listenReversalSettingsModfications = false
+		listenReversalSettingsModifications = false
 		once = false
 	end
 end
@@ -1741,7 +1810,7 @@ function patchedReversalLogic()
 			customSequence()
 			current_recording_state = recording.playback
 		else
-			if reversal_reroll or gamestate.P2.reversal_flag == 0x00 then
+			if reversal_reroll or gamestate.P2.reversal_flag == 0x00 or gamestate.P2.reversal_id ~= reversal_options_checked[1] or gamestate.P2.reversal_strength ~= reversal_options_checked[2] then
 				setReversal(gamestate.P2, reversal_options_checked[1])
 				reversal_reroll = false
 			end
@@ -1767,7 +1836,7 @@ function patchedReversalLogic()
 			elseif reversal_options_checked[random_reversal] == "do_not_reversal" then
 				clearReversal(gamestate.P2)
 			else
-				if reversal_reroll or gamestate.P2.reversal_flag == 0x00 then
+				if reversal_reroll or gamestate.P2.reversal_flag == 0x00 or gamestate.P2.reversal_id ~= reversal_options_checked[random_reversal][1] or gamestate.P2.reversal_strength ~= reversal_options_checked[random_reversal][2] then
 					setReversal(gamestate.P2, reversal_options_checked[random_reversal])
 				end
 			end
@@ -2503,6 +2572,8 @@ local calculation_end = false
 local frame_advantage = 0
 local frame_disadvantage = 0
 local frame_addition = 0
+local frame_advantage_result = 0
+local frame_advantage_msg_fcount = 0
 -- Read the kind of move performed
 local projectile_hit = false
 local projectile_duel = false
@@ -2635,8 +2706,9 @@ local function frameAdvantageDisplay()
 		-- Calculation
 		----------------
 		if step == 1 then
-		update_msg(0)
-		-- Display frameskip
+			frame_advantage_result = ""
+			frame_advantage_msg_fcount = 0
+			-- Display frameskip
 			if DEBUG then
 				if gamestate.prev.frame_number ~= gamestate.frame_number then
 					if was_frameskip then
@@ -2771,15 +2843,22 @@ local function frameAdvantageDisplay()
 			exception = false
 			--------------------------------
 			if frame_disadvantage > 0 then
-				result1 = "-"..frame_disadvantage
+				frame_advantage_result = "-"..frame_disadvantage
+				frame_advantage_msg_fcount = MSG_FRAMELIMIT-120
 			else
-				result1 = "+"..frame_advantage
+				frame_advantage_result = "+"..frame_advantage
+				frame_advantage_msg_fcount = MSG_FRAMELIMIT-120
 			end
-			update_msg(1)
 			calculation_end = false
 		end
-
-		gui.text(153,216,"Frame Advantage : ")
+		
+		if frame_advantage_msg_fcount >= MSG_FRAMELIMIT then
+			frame_advantage_result = ""
+			frame_advantage_msg_fcount = 0
+		elseif frame_advantage_msg_fcount > 0 then
+			frame_advantage_msg_fcount = countFrames(frame_advantage_msg_fcount)
+		end
+		gui.text(153,216,"Frame Advantage : "..frame_advantage_result)
 
 		if DEBUG then
 			gui.text(210,50,"Frame advantage : "..frame_advantage)
