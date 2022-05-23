@@ -60,10 +60,10 @@ gamedefaultconfig = {
 		comboenabled=true,
 		p1healthx=17,
 		p1healthy=22,
-		p1healthenabled=false,
+		p1healthenabled=true,
 		p2healthx=355,
 		p2healthy=22,
-		p2healthenabled=false,
+		p2healthenabled=true,
 		p1meterx=82,
 		p1metery=207,
 		p1meterenabled=false,
@@ -421,12 +421,20 @@ end
 
 function readPlayerOneHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P1.life_backup
+	if p1maxhealth == trainingmaxhealth then
+		return gamestate.P1.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P1.life_backup
+	end
 end
 
 function readPlayerTwoHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P2.life_backup
+	if p2maxhealth == trainingmaxhealth then
+		return gamestate.P2.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P2.life_backup
+	end
 end
 
 function writePlayerOneHealth(health)
