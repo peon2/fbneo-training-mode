@@ -60,10 +60,10 @@ gamedefaultconfig = {
 		comboenabled=true,
 		p1healthx=17,
 		p1healthy=22,
-		p1healthenabled=false,
+		p1healthenabled=true,
 		p2healthx=355,
 		p2healthy=22,
-		p2healthenabled=false,
+		p2healthenabled=true,
 		p1meterx=82,
 		p1metery=207,
 		p1meterenabled=false,
@@ -168,7 +168,7 @@ function readCharacterName(_player_obj) -- Translate _player_obj.character into 
 	end
 end
 
-local function isChargeCharacter(_player_obj)
+function isChargeCharacter(_player_obj)
 	if character_specific[readCharacterName(_player_obj)].infos.charge_character then
 		return true
 	else
@@ -186,16 +186,16 @@ function playerTwoFacingLeft()
 end
 ---------------------------------
 
-local getDistanceBetweenPlayers = function()
+getDistanceBetweenPlayers = function()
 	if playerOneFacingLeft() then
 		distance = gamestate.P1.pos_x - gamestate.P2.pos_x
 	else
-		distance = gamestate.P2.pos_x - gamestate.P2.pos_x
+		distance = gamestate.P2.pos_x - gamestate.P1.pos_x
 	end
 	return distance
 end
 
-local function playerCrouching(_player_obj)
+function playerCrouching(_player_obj)
 	if _player_obj.state == crouching then
 		return true
 	end
@@ -227,7 +227,7 @@ local function setFrameskip(status)
 	end
 end
 
-local was_frameskip = false
+was_frameskip = false
 
 local function checkFrameskip()
 	local x = gamestate.prev.frame_number - gamestate.frame_number
@@ -248,10 +248,82 @@ function countFrames(event_frame_count)
 	end
 	return frame_count + 1
 end
+
+function isPressed(_player_obj, _input)
+	local bitmask = 0
+	if _input == "left" then
+		bitmask = 0x0001
+	elseif _input == "right" then
+		bitmask = 0x0001
+	elseif _input == "forward" then
+		if _player_obj.flip_input then
+			bitmask = 0x0001
+		else
+			bitmask = 0x0002
+		end
+	elseif _input == "back" then
+		if _player_obj.flip_input then
+			bitmask = 0x0002
+		else
+			bitmask = 0x0001
+		end
+	elseif _input == "down" then
+		bitmask = 0x0004
+	elseif _input == "up" then
+		bitmask = 0x0008
+	elseif _input == "LP" then
+		bitmask = 0x0010
+	elseif _input == "MP" then
+		bitmask = 0x0020
+	elseif _input == "HP" then
+		bitmask = 0x0040
+	elseif _input == "LK" then
+		bitmask = 0x0100
+	elseif _input == "MK" then
+		bitmask = 0x0200
+	elseif _input == "HK" then
+		bitmask = 0x0400
+	end
+	if _player_obj.prev.curr_input == _player_obj.prev_input then
+		return bit.band(_player_obj.curr_input, bitmask) > 0
+	else
+		return bit.band(_player_obj.prev_input, bitmask) > 0
+	end
+end
+
+function wasPressed(_player_obj, _input)
+	local bitmask = 0
+	if _input == "left" then
+		bitmask = 0x0001
+	elseif _input == "right" then
+		bitmask = 0x0002
+	elseif _input == "down" then
+		bitmask = 0x0004
+	elseif _input == "up" then
+		bitmask = 0x0008
+	elseif _input == "LP" then
+		bitmask = 0x0010
+	elseif _input == "MP" then
+		bitmask = 0x0020
+	elseif _input == "HP" then
+		bitmask = 0x0040
+	elseif _input == "LK" then
+		bitmask = 0x0100
+	elseif _input == "MK" then
+		bitmask = 0x0200
+	elseif _input == "HK" then
+		bitmask = 0x0400
+	end
+	if _player_obj.prev.curr_input == _player_obj.prev_input then
+		return bit.band(_player_obj.prev.curr_input, bitmask) > 0
+	else
+		return bit.band(_player_obj.prev.prev_input, bitmask) > 0
+	end
+end
 ----------------------
 -- Check for changes
 ----------------------
-local function characterChanged(_player_obj)
+function characterChanged(_player_obj)
 	if _player_obj.prev.character ~= _player_obj.character then
 		return true
 	else
@@ -261,22 +333,20 @@ end
 ------------------------------------------------------------
 --	 Messages -- Borrowed from sako.lua by Born2SPD
 ------------------------------------------------------------
-local MSG_FRAMELIMIT = 600
-local msg1 = ""
-local msg2 = ""
-local msg_fcount = 0
-
-local hit_delay_result = 0
+MSG_FRAMELIMIT = 600
+msg1 = ""
+msg2 = ""
+msg3 = ""
+msg_fcount = 0
 
 function update_msg(code)
 	if code == 0 then -- reset
 		msg1 = ""
+		msg2 = ""
+		msg3 = ""
 		msg_fcount = 0
 	elseif code == 1 then
 		msg1 = result1
-		msg_fcount = MSG_FRAMELIMIT-120
-	elseif code == 2 then
-		msg1 = "	Delay : "..hit_delay_result.." frames"
 		msg_fcount = MSG_FRAMELIMIT-120
 	end
 end
@@ -285,19 +355,18 @@ function reset_msg()
 	update_msg(0)
 end
 
-local message_selector = 0
-
-function draw_messages()
+local function draw_messages()
 	if msg_fcount >= MSG_FRAMELIMIT then
 		reset_msg()
 	elseif msg_fcount > 0 then
 		msg_fcount = countFrames(msg_fcount)
 	end
-	gui.text(223,216,msg1)
-	gui.text(100,216,msg2)
+	gui.text(92,56,msg1)
+	gui.text(92,64,msg2)
+	gui.text(92,72,msg3)
 end
 
-local function str(bool)
+function str(bool)
 	if bool then
 		return "true"
 	else
@@ -352,12 +421,20 @@ end
 
 function readPlayerOneHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P1.life_backup
+	if p1maxhealth == trainingmaxhealth then
+		return gamestate.P1.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P1.life_backup
+	end
 end
 
 function readPlayerTwoHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P2.life_backup
+	if p2maxhealth == trainingmaxhealth then
+		return gamestate.P2.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P2.life_backup
+	end
 end
 
 function writePlayerOneHealth(health)
@@ -754,7 +831,7 @@ local function determine_char(_player_obj)
 			gui.text(90,65,"Flip Kick: " .. rb(0xFF84EB))
 			gui.text(90,73,"Rolling Izuna Drop: " .. rb(0xFF84E7))
 		elseif gamestate.P1.character == Zangief then
-			gui.text(2,65, "Bear Grab: " .. rb(0xFF84E9) ..  ", " .. rb(0xFF84EA))
+			gui.text(2,65, "Bear Grab: " .. rb(0xFF84E9) .. ", " .. rb(0xFF84EA))
 			gui.text(2,73, "Spinning Pile Driver: " .. rb(0xFF84CE) .. ", " .. rb(0xFF84CF))
 			gui.text(2,81, "Banishing Flat: " .. rb(0xFF8501))
 			gui.text(2,89, "Final Atomic Buster: " .. rb(0xFF84FA) .. ", " .. rb(0xFF84FB))
@@ -845,7 +922,7 @@ local function determine_char(_player_obj)
 			gui.text(298,65,"Flip Kick: " .. rb(0xFF84EB+p2))
 			gui.text(298,73,"Rolling Izuna Drop: " .. rb(0xFF84E7+p2))
 		elseif gamestate.P2.character == Zangief then
-			gui.text(275,65, "Bear Grab: " .. rb(0xFF84E9+p2) ..  ", " .. rb(0xFF84EA+p2))
+			gui.text(275,65, "Bear Grab: " .. rb(0xFF84E9+p2) .. ", " .. rb(0xFF84EA+p2))
 			gui.text(275,73, "Spinning Pile Driver: " .. rb(0xFF84CE+p2) .. ", " .. rb(0xFF84CF+p2))
 			gui.text(275,81, "Banishing Flat: " .. rb(0xFF8501+p2))
 			gui.text(275,89, "Final Atomic Buster: " .. rb(0xFF84FA+p2) .. ", " .. rb(0xFF84FB+p2))
@@ -1155,7 +1232,7 @@ local p2_gf = gamestate.P2.grab_flag
 local p2_tf = gamestate.P2.throw_flag
 
 	if p1_c == Honda or p1_c == Blanka or p1_c == Ken or p1_c == Zangief or p1_c == Dhalsim or p1_c == Boxer or p1_c == Hawk then
-		if p1_c == Honda  or p1_c == Blanka or p1_c == Ken or p1_c == Dhalsim or p1_c == Hawk then
+		if p1_c == Honda or p1_c == Blanka or p1_c == Ken or p1_c == Dhalsim or p1_c == Hawk then
 			if p1_c == Dhalsim then
 				p1_gv = 0x06
 			end
@@ -1204,7 +1281,7 @@ local p2_tf = gamestate.P2.throw_flag
 	end
 
 	if p2_c == Honda or p2_c == Blanka or p2_c == Ken or p2_c == Zangief or p2_c == Dhalsim or p2_c == Boxer or p2_c == Hawk then
-		if p2_c == Honda  or p2_c == Blanka or p2_c == Ken or p2_c == Dhalsim or p2_c == Hawk then
+		if p2_c == Honda or p2_c == Blanka or p2_c == Ken or p2_c == Dhalsim or p2_c == Hawk then
 			p2_gc = 0xFF886C
 		elseif p2_c == Zangief then
 			p2_gc = 0xFF88D7
@@ -1466,18 +1543,18 @@ end
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 local reversal_options_checked = {} -- Stocks the relevant values to perform the choosen reversals
-local listenReversalSettingsModfications = false
+local listenReversalSettingsModifications = false
 local once = false -- Condition of reversal_trigger 2
 
 function stockReversalOptionsChecked()
-	if interactivegui.enabled and not listenReversalSettingsModfications then -- If the menu has been opened, clean the table (maybe there's a cleaner way)
+	if interactivegui.enabled and not listenReversalSettingsModifications then -- If the menu has been opened, clean the table (maybe there's a cleaner way)
 		for k in pairs(reversal_options_checked) do
 			reversal_options_checked[k] = nil
 		end
 		patched_autoreversal_selector = 0
-		listenReversalSettingsModfications = true
+		listenReversalSettingsModifications = true
 	end
-	if not interactivegui.enabled and listenReversalSettingsModfications then -- If the menu has been closed, stock the options selected
+	if not interactivegui.enabled and listenReversalSettingsModifications then -- If the menu has been closed, stock the options selected
 		for i = 1, #reversal_options do
 			if reversal_options[i].checked then
 					table.insert(reversal_options_checked, reversal_options[i].reversal_id)
@@ -1500,7 +1577,7 @@ function stockReversalOptionsChecked()
 		elseif #reversal_options_checked > 1 then
 			patched_autoreversal_selector = 2
 		end
-		listenReversalSettingsModfications = false
+		listenReversalSettingsModifications = false
 		once = false
 	end
 end
@@ -1741,7 +1818,7 @@ function patchedReversalLogic()
 			customSequence()
 			current_recording_state = recording.playback
 		else
-			if reversal_reroll or gamestate.P2.reversal_flag == 0x00 then
+			if reversal_reroll or gamestate.P2.reversal_flag == 0x00 or gamestate.P2.reversal_id ~= reversal_options_checked[1] or gamestate.P2.reversal_strength ~= reversal_options_checked[2] then
 				setReversal(gamestate.P2, reversal_options_checked[1])
 				reversal_reroll = false
 			end
@@ -1767,7 +1844,7 @@ function patchedReversalLogic()
 			elseif reversal_options_checked[random_reversal] == "do_not_reversal" then
 				clearReversal(gamestate.P2)
 			else
-				if reversal_reroll or gamestate.P2.reversal_flag == 0x00 then
+				if reversal_reroll or gamestate.P2.reversal_flag == 0x00 or gamestate.P2.reversal_id ~= reversal_options_checked[random_reversal][1] or gamestate.P2.reversal_strength ~= reversal_options_checked[random_reversal][2] then
 					setReversal(gamestate.P2, reversal_options_checked[random_reversal])
 				end
 			end
@@ -2352,8 +2429,8 @@ end
 -----------------------------
 local easyCharge = function(_player_obj)
 	if _player_obj.character == Honda and _player_obj.is_old then
-        wb(_player_obj.base + 0x81, 0x01) --B,F+P
-    end
+		wb(_player_obj.base + 0x81, 0x01) --B,F+P
+	end
 	if _player_obj.character == Honda and _player_obj.is_old and rb(0xAA+_player_obj.base) <= 0x02 then
 		wb(_player_obj.base + 0xAB, 0x01) --D,U+K
 	end
@@ -2374,13 +2451,13 @@ local easyCharge = function(_player_obj)
 		wb(_player_obj.base + 0xC2, 0x01) --B,F,B,F+P
 	end
 ------------------------------------
-    if _player_obj.character == Guile then
+	if _player_obj.character == Guile then
 		wb(_player_obj.base + 0x81, 0x01) --B,F+P
 		wb(_player_obj.base + 0x87, 0x01) --D,U+K
 		wb(_player_obj.base + 0x95, 0x01) --D,F,B,U+K
 	end
 ------------------------------------
-    if _player_obj.character == Chun then
+	if _player_obj.character == Chun then
 		wb(_player_obj.base + 0x81, 0x01) --B,F+P
 	end
 	if _player_obj.character == Chun and rb(0xB0+_player_obj.base) <= 0x02 then
@@ -2389,62 +2466,62 @@ local easyCharge = function(_player_obj)
 	if _player_obj.character == Chun and rb(0xBA+_player_obj.base) <= 0x02 then
 		wb(_player_obj.base + 0xBB, 0x01) --D,U+K
 	end
-    if _player_obj.character == Chun and rb(0xBF+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0xC0, 0x01) --B,F+K
-    end
+	if _player_obj.character == Chun and rb(0xBF+_player_obj.base) <= 0x02 then
+		wb(_player_obj.base + 0xC0, 0x01) --B,F+K
+	end
 ------------------------------------
-    if _player_obj.character == Dictator then
-        wb(_player_obj.base + 0x81, 0x01) --B,F+P
-        wb(_player_obj.base + 0x89, 0x01) --B,F+K
-        wb(_player_obj.base + 0x92, 0x01) --D,U+K
-        wb(_player_obj.base + 0xC6, 0x01) --B,F,B,F+K
+	if _player_obj.character == Dictator then
+		wb(_player_obj.base + 0x81, 0x01) --B,F+P
+		wb(_player_obj.base + 0x89, 0x01) --B,F+K
+		wb(_player_obj.base + 0x92, 0x01) --D,U+K
+		wb(_player_obj.base + 0xC6, 0x01) --B,F,B,F+K
 	end
 	if _player_obj.character == Dictator and rb(0xAC+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xAD, 0x01) --D,U+P
-    end
+		wb(_player_obj.base + 0xAD, 0x01) --D,U+P
+	end
 ------------------------------------
-    if _player_obj.character == Boxer then
+	if _player_obj.character == Boxer then
 		wb(_player_obj.base + 0x81, 0x01)  --B,F+P
 		wb(_player_obj.base + 0x89, 0x01)  --B,F+K
-        wb(_player_obj.base + 0xC1, 0x01)  --D,U+P
+		wb(_player_obj.base + 0xC1, 0x01)  --D,U+P
 		wb(_player_obj.base + 0xD7, 0x01)  --B,DF+P
-        wb(_player_obj.base + 0xDE, 0x01)  --B,DF+K
-    end
+		wb(_player_obj.base + 0xDE, 0x01)  --B,DF+K
+	end
 	if _player_obj.character == Boxer and not _player_obj.is_old and rb(0xD4+_player_obj.base) <= 0x02 then
 		wb(_player_obj.base + 0xD5, 0x01)--B,F,B,F+P
-    end
+	end
 ------------------------------------
 	if _player_obj.character == Claw and rb(0x88+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x89, 0x01)--B,F+P
+		wb(_player_obj.base + 0x89, 0x01)--B,F+P
 	end
 	if _player_obj.character == Claw and rb(0x8C+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x8D, 0x01)--D,U+K
-    end
+		wb(_player_obj.base + 0x8D, 0x01)--D,U+K
+	end
 	if _player_obj.character == Claw and rb(0x90+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x91, 0x01)--D,U+P
-    end
+		wb(_player_obj.base + 0x91, 0x01)--D,U+P
+	end
 	if _player_obj.character == Claw and rb(0x99+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x9A, 0x01)--D,F,B,U+K
-    end
+		wb(_player_obj.base + 0x9A, 0x01)--D,F,B,U+K
+	end
 	if _player_obj.character == Claw and rb(0x9D+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x9E, 0x01)--DB,F+K
-    end
+		wb(_player_obj.base + 0x9E, 0x01)--DB,F+K
+	end
 ------------------------------------
 	if _player_obj.character == Deejay and rb(0x92+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0x93, 0x01) --B,F+K
-    end
+		wb(_player_obj.base + 0x93, 0x01) --B,F+K
+	end
 	if _player_obj.character == Deejay and rb(0x96+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0x97, 0x01) --D,U+P
-    end
+		wb(_player_obj.base + 0x97, 0x01) --D,U+P
+	end
 	if _player_obj.character == Deejay and rb(0xA6+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xA7, 0x01) --B,F+P
+		wb(_player_obj.base + 0xA7, 0x01) --B,F+P
 	end
 	if _player_obj.character == Deejay and rb(0xAB+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xAC, 0x01) --D,U+K
-    end
+		wb(_player_obj.base + 0xAC, 0x01) --D,U+K
+	end
 	if _player_obj.character == Deejay and rb(0xAF+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xB0, 0x01) --B,F,B,F+K
-    end
+		wb(_player_obj.base + 0xB0, 0x01) --B,F,B,F+K
+	end
 end
 -------------------------------
 easy_charge_moves_selector = customconfig.easy_charge_moves_selector
@@ -2503,6 +2580,8 @@ local calculation_end = false
 local frame_advantage = 0
 local frame_disadvantage = 0
 local frame_addition = 0
+local frame_advantage_result = 0
+local frame_advantage_msg_fcount = 0
 -- Read the kind of move performed
 local projectile_hit = false
 local projectile_duel = false
@@ -2635,8 +2714,9 @@ local function frameAdvantageDisplay()
 		-- Calculation
 		----------------
 		if step == 1 then
-		update_msg(0)
-		-- Display frameskip
+			frame_advantage_result = ""
+			frame_advantage_msg_fcount = 0
+			-- Display frameskip
 			if DEBUG then
 				if gamestate.prev.frame_number ~= gamestate.frame_number then
 					if was_frameskip then
@@ -2771,15 +2851,22 @@ local function frameAdvantageDisplay()
 			exception = false
 			--------------------------------
 			if frame_disadvantage > 0 then
-				result1 = "-"..frame_disadvantage
+				frame_advantage_result = "-"..frame_disadvantage
+				frame_advantage_msg_fcount = MSG_FRAMELIMIT-120
 			else
-				result1 = "+"..frame_advantage
+				frame_advantage_result = "+"..frame_advantage
+				frame_advantage_msg_fcount = MSG_FRAMELIMIT-120
 			end
-			update_msg(1)
 			calculation_end = false
 		end
-
-		gui.text(153,216,"Frame Advantage : ")
+		
+		if frame_advantage_msg_fcount >= MSG_FRAMELIMIT then
+			frame_advantage_result = ""
+			frame_advantage_msg_fcount = 0
+		elseif frame_advantage_msg_fcount > 0 then
+			frame_advantage_msg_fcount = countFrames(frame_advantage_msg_fcount)
+		end
+		gui.text(153,216,"Frame Advantage : "..frame_advantage_result)
 
 		if DEBUG then
 			gui.text(210,50,"Frame advantage : "..frame_advantage)
@@ -3172,10 +3259,26 @@ local function ST_Training_misc()
 	end
 end
 
+local addons_charged = false
+
+local function loadAddons()
+	if not addons_charged then
+		dofile("games/ssf2xjr1/addon/addons.lua")
+		for i = 1, #addons_run do
+			if fexists("games/ssf2xjr1/addon/"..addons_run[i]) then
+				dofile("games/ssf2xjr1/addon/"..addons_run[i])
+			end
+		end
+		insertAddonButton()
+		addons_charged = true
+	end
+end
+
+ST_functions = {updateGamestate, ST_Training_misc, ST_Training_basic_settings, ST_Training_advanced_settings, draw_messages}
+
 function Run() -- runs every frame
-	updateGamestate()
-	ST_Training_misc()
-	ST_Training_basic_settings()
-	ST_Training_advanced_settings()
-	draw_messages()
+	for i = 1, #ST_functions do
+		ST_functions[i]()
+	end
+	loadAddons()
 end
