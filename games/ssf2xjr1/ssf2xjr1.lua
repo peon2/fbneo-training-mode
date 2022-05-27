@@ -23,6 +23,8 @@ else
 		slowdown_selector = - 1,
 		stage_selector = -1,
 		tech_throw_selector = -1,
+		crossup_display_selector = 0,
+		tech_throw_selector = 0
 	}
 end
 
@@ -340,7 +342,7 @@ msg3 = ""
 -- Messages following the players
 msg_p1 = ""
 msg_p2 = ""
--- Messges timer
+-- Messages timer
 MSG_FRAMELIMIT = 600
 msg_fcount = 0
 player_msg_fcount = 0
@@ -3057,7 +3059,7 @@ end
 -------------------------
 -- Tick Throw
 -------------------------
-tick_throw_display_selector = 0
+tick_throw_display_selector = customconfig.tick_throw_display_selector
 
 local tick_step = 0
 local tick_timer = 0
@@ -3234,7 +3236,7 @@ end
 ---------------------------------
 -- Crossup Display
 ---------------------------------
-crossup_display_selector = 0
+crossup_display_selector = customconfig.crossup_display_selector
 
 local begin_crossup_display = false
 local jump_crossup_attempt = false
@@ -3253,6 +3255,11 @@ local function crossupDisplay()
 			if DEBUG then
 				gui.text(250,80, "P2 Flip Input : "..str(gamestate.P2.flip_input))
 				gui.text(250,90, "P2 Hitfreeze counter : "..gamestate.P2.hitfreeze_counter)
+				if gamestate.P2.flip_input then
+					block_direction = "left"
+				else
+					block_direction = "right"
+				end
 			end
 			if gamestate.frame_number ~= gamestate.prev.frame_number then
 				if begin_crossup_display then
@@ -3325,20 +3332,28 @@ local function crossupDisplay()
 							end
 							if (gamestate.P2.flip_input ~= prev_flip_value) or (gamestate.P2.prev.flip_input ~= prev_flip_value) then
 								if DEBUG then 
-									print("> True Crossup")
+									print("> True Crossup : should have been blocked "..block_direction)
 								end
 								msg_p1 = "True crossup"
+								if DEBUG then
+									msg_p1 = "True crossup : should block "..block_direction
+								end
 								player_msg_fcount = MSG_FRAMELIMIT-120
 							else
 								if DEBUG then 
-									print("> Fake Crossup")
+									print("> Fake Crossup : should have been blocked "..block_direction)
 								end
 								msg_p1 = "Fake crossup"
+								if DEBUG then
+									msg_p1 = "Fake crossup : should block "..block_direction
+								end
 								player_msg_fcount = MSG_FRAMELIMIT-120
 							end
 						else
 							if DEBUG then
-								print("> Non Crossup")
+								msg_p1 = "Non crossup : should block "..block_direction
+								player_msg_fcount = MSG_FRAMELIMIT-120
+								print("> Non Crossup : should have been blocked "..block_direction)
 							end
 						end
 					end
