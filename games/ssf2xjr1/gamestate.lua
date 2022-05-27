@@ -10,8 +10,11 @@ frame_number = 0,
 turbo = 0,
 curr_state = 0,
 is_in_match = false,
+screen_x = 0,
+screen_y = 0,
 patched = false,
 player_objects = {},
+
 P1 = nil,
 P2 = nil,
 hit_counter = 0
@@ -65,6 +68,11 @@ function gamestate.read_game_vars()
 	-- counters
 	---------------------
 	gamestate.hit_counter 	= rb(addresses.global.hit_counter)
+	---------------------
+	-- screen related
+	---------------------
+	gamestate.screen_x		= rw(addresses.global.screen_x)
+	gamestate.screen_y		= rw(addresses.global.screen_y)
 end
 
 local function isAttacking(_player_obj)
@@ -186,26 +194,26 @@ function gamestate.stock_player_vars(_player_obj)
 	-----------------
 	state							= _player_obj.state,
 	substate 						= _player_obj.substate,
-	--air_state						= _player_obj.air_state,
+	air_state						= _player_obj.air_state,
 	airborn							= _player_obj.airborn,
 	projectile_ready 				= _player_obj.projectile_ready,
 	--cancel_ready					= _player_obj.cancel_ready,
-	--dizzy							= _player_obj.dizzy,
+	dizzy							= _player_obj.dizzy,
 	-----------------
 	-- Gauges
 	-----------------
-	--life 							= _player_obj.life,
+	life 							= _player_obj.life,
 	--life_backup					= _player_obj.life_backup,
-	--life_hud 						= _player_obj.life_hud,
-	--special_meter 				= _player_obj.special_meter,
-	stun_meter					= _player_obj.stun_meter,
+	life_hud 						= _player_obj.life_hud,
+	special_meter 					= _player_obj.special_meter,
+	stun_meter						= _player_obj.stun_meter,
 	--destun_meter					= _player_obj.destun_meter,
 	-----------------
 	-- Position
 	-----------------
-	--pos_x							= _player_obj.pos_x,
-	--pos_y							= _player_obj.pos_y,
-	--flip_input					= _player_obj.flip_input,
+	pos_x							= _player_obj.pos_x,
+	pos_y							= _player_obj.pos_y,
+	flip_input						= _player_obj.flip_input,
 	-----------------
 	-- Character
 	-----------------

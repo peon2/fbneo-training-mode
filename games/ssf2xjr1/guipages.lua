@@ -398,7 +398,7 @@ end
 do_not_reversal = { -- If checked, the dummy won't reversal, randomly
 				text = "Nothing",
 				x = 4,
-				y = 135,
+				y = 155,
 				olcolour = "black",
 				fillpercent = 0,
 				checked = false,
@@ -418,7 +418,7 @@ table.insert(guipages.reversalsettings, do_not_reversal)
 custom_sequence = { -- When the dummy goes out of blockstun/hitsun or lands on his feet,plays a sequence defined in the Replay Editor
 				text = "Custom Sequence",
 				x = 40,
-				y = 135,
+				y = 155,
 				olcolour = "black",
 				fillpercent = 0,
 				checked = false,
@@ -437,7 +437,7 @@ table.insert(guipages.reversalsettings, custom_sequence)
 
 reversal_frequence = { -- When the dummy goes out of blockstun/hitsun or lands on his feet,plays a sequence defined in the Replay Editor
 				text = "Reversal : settings",
-				x = 4,
+				x = 165,
 				y = 155,
 				olcolour = "black",
 				fillpercent = 0,
@@ -703,7 +703,7 @@ advanced_settings = {
 		frameskip = {
 			text = "Disable Frameksip",
 			x = 8,
-			y = 50,
+			y = 150,
 			olcolour = "black",
 			func =	function()
 					frameskip_selector = frameskip_selector + 1
@@ -721,8 +721,8 @@ advanced_settings = {
 		},
 		slowdown = {
 			text = "Disable Impact Slowdown",
-			x = 8,
-			y = 70,
+			x = 110,
+			y = 150,
 			olcolour = "black",
 			func =	function()
 					slowdown_selector = slowdown_selector + 1
@@ -739,7 +739,7 @@ advanced_settings = {
 				end,
 		},
 		easy_charge_moves = {
-			text = "Enable Easy Charge Moves",
+			text = "Easy Charge Moves",
 			x = 8,
 			y = 90,
 			olcolour = "black",
@@ -755,13 +755,13 @@ advanced_settings = {
 				end,
 			autofunc = function(this)
 					if easy_charge_moves_selector == -1 then
-						this.text = "Enable Easy Charge Moves: Off"
+						this.text = "Easy Charge Moves: Off"
 					elseif easy_charge_moves_selector == 0 then
-						this.text = "Enable Easy Charge Moves: P1"
+						this.text = "Easy Charge Moves: P1"
 					elseif easy_charge_moves_selector == 1 then
-						this.text = "Enable Easy Charge Moves: P2"
+						this.text = "Easy Charge Moves: P2"
 					elseif easy_charge_moves_selector == 2 then
-						this.text = "Enable Easy Charge Moves: P1/P2"
+						this.text = "Easy Charge Moves: P1/P2"
 					end
 				end,
 		},
@@ -806,7 +806,7 @@ advanced_settings = {
 		round_start = {
 		text = "Round start action",
 		x = 8,
-		y = 150,
+		y = 50,
 		olcolour = "black",
 		info = {
 			"Control round start action on P2",
@@ -817,7 +817,7 @@ advanced_settings = {
 		},
 		func =	function()
 				roundstart_selector = roundstart_selector + 1
-				if roundstart_selector > 2 then
+				if roundstart_selector > 1 then
 					roundstart_selector = -1
 				end
 			end,
@@ -830,7 +830,45 @@ advanced_settings = {
 					this.text = "Round start action (P2): Post-start"
 				end
 			end,
-	},
+		},
+		crossup = {
+			text = "Display Crossup Infos",
+			x = 8,
+			y = 70,
+			olcolour = "black",
+			func =	function()
+					crossup_display_selector = crossup_display_selector + 1
+					if crossup_display_selector > 1 then
+						crossup_display_selector = 0
+					end
+				end,
+			autofunc = function(this)
+					if crossup_display_selector == 0 then
+						this.text = "Display Crossup Infos: Off"
+					elseif crossup_display_selector == 1 then
+						this.text = "Display Crossup Infos: On"
+					end
+				end,
+		},
+		tick_throws = {
+			text = "Display Tick Throws Infos",
+			x = 120,
+			y = 70,
+			olcolour = "black",
+			func =	function()
+					tick_throw_display_selector = tick_throw_display_selector + 1
+					if tick_throw_display_selector > 1 then
+						tick_throw_display_selector = 0
+					end
+				end,
+			autofunc = function(this)
+					if tick_throw_display_selector == 0 then
+						this.text = "Display Tick Throws Infos: Off"
+					elseif tick_throw_display_selector == 1 then
+						this.text = "Display Tick Throws Infos: On"
+					end
+				end,
+		},
 }
 table.insert(guipages.advancedsettings, advanced_settings["select_stage"])
 table.insert(guipages.advancedsettings, advanced_settings["frameskip"])
@@ -839,6 +877,8 @@ table.insert(guipages.advancedsettings, advanced_settings["easy_charge_moves"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_advantage"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_trap"])
 table.insert(guipages.advancedsettings, advanced_settings["round_start"])
+table.insert(guipages.advancedsettings, advanced_settings["crossup"])
+table.insert(guipages.advancedsettings, advanced_settings["tick_throws"])
 
 ------------------------------------------
 ------------------------------------------

@@ -23,6 +23,8 @@ else
 		slowdown_selector = - 1,
 		stage_selector = -1,
 		tech_throw_selector = -1,
+		crossup_display_selector = 0,
+		tick_throw_selector = 0
 	}
 end
 
@@ -333,21 +335,28 @@ end
 ------------------------------------------------------------
 --	 Messages -- Borrowed from sako.lua by Born2SPD
 ------------------------------------------------------------
-MSG_FRAMELIMIT = 600
+-- Messages in the middle of the screen
 msg1 = ""
 msg2 = ""
 msg3 = ""
+-- Messages following the players
+msg_p1 = ""
+msg_p2 = ""
+-- Messages timer
+MSG_FRAMELIMIT = 600
 msg_fcount = 0
+player_msg_fcount = 0
 
 function update_msg(code)
-	if code == 0 then -- reset
+	if code == 0 then -- reset general messages
 		msg1 = ""
 		msg2 = ""
 		msg3 = ""
 		msg_fcount = 0
-	elseif code == 1 then
-		msg1 = result1
-		msg_fcount = MSG_FRAMELIMIT-120
+	elseif code == -1 then -- reset player messages
+		msg_p1 = ""
+		msg_p2 = ""
+		player_msg_fcount = 0
 	end
 end
 
@@ -355,15 +364,46 @@ function reset_msg()
 	update_msg(0)
 end
 
+function reset_player_msg()
+	update_msg(-1)
+end
+
+local function get_player_msg_x(_player_obj)
+	return (_player_obj.pos_x-gamestate.screen_x)-15
+end
+
+local function get_player_msg_y(_player_obj)
+	local character = _player_obj.character
+	local screen_y = 0
+	
+	if character == Boxer or character == Zangief then
+		screen_y = 125
+	elseif character == Claw or character == Hawk or character == Sagat then
+		screen_y = 115
+	elseif character == Deejay then
+		screen_y = 130
+	else
+		screen_y = 140
+	end
+	return screen_y-_player_obj.pos_y
+end 
+
 local function draw_messages()
 	if msg_fcount >= MSG_FRAMELIMIT then
 		reset_msg()
 	elseif msg_fcount > 0 then
 		msg_fcount = countFrames(msg_fcount)
 	end
+	if player_msg_fcount >= MSG_FRAMELIMIT then
+		reset_player_msg()
+	elseif player_msg_fcount > 0 then
+		player_msg_fcount = countFrames(player_msg_fcount)
+	end
 	gui.text(92,56,msg1)
 	gui.text(92,64,msg2)
 	gui.text(92,72,msg3)
+	gui.text(get_player_msg_x(gamestate.P1),get_player_msg_y(gamestate.P1),msg_p1)
+	gui.text(get_player_msg_x(gamestate.P2),get_player_msg_y(gamestate.P2),msg_p2)
 end
 
 function str(bool)
@@ -3025,6 +3065,312 @@ local function frameTrapDisplay()
 	end
 end
 -------------------------
+-- Tick Throw
+-------------------------
+tick_throw_display_selector = customconfig.tick_throw_display_selector
+
+local tick_step = 0
+local tick_timer = 0
+local reset_tick = false
+
+local function tickAnalysis()
+	if reset_tick then
+		tick_step = 0
+		tick_timer = 0
+		reset_tick = false
+	end
+	if tick_step == 0 and gamestate.P2.in_hitstun and gamestate.P1.throw_flag == 0x00 then
+		tick_step = 1
+		tick_timer = 0
+	end
+	if tick_step == 1 then
+		if gamestate.P2.state ~= being_hit then
+			tick_timer = countFrames(tick_timer)
+		end
+		if tick_timer > 10 then 
+			reset_tick = true
+		end
+		if gamestate.P1.throw_flag == 0x01 then -- If we detect a throw
+			reset_tick = true
+			if tick_timer <= 10 then
+				msg1 = "Succesful tick throw : you threw "..tick_timer.." frames after your tick" 
+				msg_fcount = MSG_FRAMELIMIT-120
+			end
+		end
+	end
+end
+
+local p1_throw_range = {}
+local p2_throw_range = {}
+local could_have_been_throw = false
+local begin_throw_display = false
+
+local function resetThrowDisplay(_player_obj)
+	local character = readCharacterName(_player_obj)
+	if _player_obj.id == 1 then
+		for i = 1, #p1_throw_range do
+			p1_throw_range[i] = nil
+		end
+		for i = 1, #character_specific[character].hitboxes.throw do
+			p1_throw_range[i] = {"", 0, nil}
+			p1_throw_range[i][1] = character_specific[character].hitboxes.throw[i][1]
+		end
+	elseif _player_obj.id == 2 then 
+		for i = 1, #p2_throw_range do
+			p2_throw_range[i] = nil
+		end
+		for i = 1, #character_specific[character].hitboxes.throw do
+			p2_throw_range[i] = {"", 0, nil}
+			p2_throw_range[i][1] = character_specific[character].hitboxes.throw[i][1]
+		end
+	end
+end
+
+local function tickThrow()
+	if gamestate.is_in_match then
+	-- Throw Display initialization
+		local p1character = readCharacterName(gamestate.P1)
+		local p2character = readCharacterName(gamestate.P2)
+		
+		if not begin_throw_display then
+			resetThrowDisplay(gamestate.P1)
+			resetThrowDisplay(gamestate.P2)
+			begin_throw_display = true
+		elseif characterChanged(gamestate.P1) then 
+			resetThrowDisplay(gamestate.P1)
+		elseif characterChanged(gamestate.P2) then
+			resetThrowDisplay(gamestate.P2)
+		end 
+		if tick_throw_display_selector > 0 then
+		-- Tick analysis
+			tickAnalysis()
+		-- Get Throw Informations
+			if gamestate.P1.throw_flag == 0x00 and gamestate.P2.throw_flag == 0x00 then
+				-- P1 throw range
+				if gamestate.P1.flip_input then 
+					for i = 1, #character_specific[p1character].hitboxes.throw do
+						p1_throw_range[i][2] = (gamestate.P1.pos_x + character_specific[p1character].hitboxes.throw[i][2]) - (gamestate.P2.pos_x - character_specific[p2character].hitboxes.throwable)
+					end
+				else
+					for i = 1, #character_specific[p1character].hitboxes.throw do
+						p1_throw_range[i][2] = (gamestate.P2.pos_x + character_specific[p2character].hitboxes.throwable) - (gamestate.P1.pos_x - character_specific[p1character].hitboxes.throw[i][2])
+					end
+				end
+				-- P2 throw range
+				if gamestate.P2.flip_input then
+					for i = 1, #character_specific[p2character].hitboxes.throw do
+						p2_throw_range[i][2] = (gamestate.P2.pos_x + character_specific[p2character].hitboxes.throw[1][2]) - (gamestate.P1.pos_x - character_specific[p1character].hitboxes.throwable)
+					end
+				else
+					for i = 1, #character_specific[p2character].hitboxes.throw do
+						p2_throw_range[i][2] = (gamestate.P1.pos_x + character_specific[p1character].hitboxes.throwable) - (gamestate.P2.pos_x - character_specific[p2character].hitboxes.throw[i][2]) 
+					end
+				end
+				-- Can P1 throw ?
+				for i = 1, #p1_throw_range do
+					if p1_throw_range[i][2] >= 0 then 
+						p1_throw_range[i][3] = true
+					else
+						p1_throw_range[i][3] = false
+					end
+				end
+				-- Can P2 throw ?
+				for i = 1, #p2_throw_range do
+					if p2_throw_range[i][2] >= 0 then 
+						p2_throw_range[i][3] = true
+					else
+						p2_throw_range[i][3] = false
+					end
+				end
+			else
+				if tick_timer ~= 0 then -- If we did a tick
+					for i = 1, #p2_throw_range do
+						if p2_throw_range[i][3] then -- If p2 could have thrown 
+							could_have_been_throw = true
+						end
+					end
+					if not could_have_been_throw then 
+						msg2 = "P2 couldn't have thrown you. Nice !"
+						msg_fcount = MSG_FRAMELIMIT-120
+					else
+						msg2 = "However P2 could have thrown you"
+						msg_fcount = MSG_FRAMELIMIT-120
+					end
+					could_have_been_throw = false
+				end 
+			end
+			-- Informations at the bottom of the screen
+			-- P1
+			for i = 1, #p1_throw_range do
+			
+				local column = 1
+				if i > 3 then column = 2 end
+				local line = (i%3)
+				if line == 0 then line = 3 end
+				local x_base = 0
+				if #p1_throw_range > 3 then x_base = -88 else x_base = -15 end
+
+				local x = x_base+100*column
+				local y = 165 + 10*line
+				
+				if not p1_throw_range[i][3] then
+					gui.text(x,y,p1_throw_range[i][1].." : "..p1_throw_range[i][2])
+				else
+					gui.text(x,y,p1_throw_range[i][1].." : OK (+"..p1_throw_range[i][2]..")")
+				end
+			end
+			-- P2
+			for i=1, #p2_throw_range do
+			
+				local column = 1
+				if i > 3 then column = 2 end
+				local line = (i%3)
+				if line == 0 then line = 3 end
+				local x_base = 0
+				if #p2_throw_range > 3 then x_base = 102 else x_base = 165 end
+				
+				local x = x_base+100*column
+				local y = 165 + 10*line
+				
+				if not p2_throw_range[i][3] then
+					gui.text(x,y,p2_throw_range[i][1].." : "..p2_throw_range[i][2])
+				else
+					gui.text(x,y,p2_throw_range[i][1].." : OK (+"..p2_throw_range[i][2]..")")
+				end
+			end
+		end
+	end
+end
+---------------------------------
+-- Crossup Display
+---------------------------------
+crossup_display_selector = customconfig.crossup_display_selector
+
+local begin_crossup_display = false
+local jump_crossup_attempt = false
+local ground_crossup_attempt = false
+local prev_flip_value = nil
+local prev_p1_left_side = false
+local DEBUG = false
+
+local function isP1Left()
+	return gamestate.P2.pos_x-gamestate.P1.pos_x > 0
+end
+
+local function crossupDisplay()
+	if crossup_display_selector > 0 then
+		if gamestate.is_in_match then 
+			if DEBUG then
+				gui.text(250,80, "P2 Flip Input : "..str(gamestate.P2.flip_input))
+				gui.text(250,90, "P2 Hitfreeze counter : "..gamestate.P2.hitfreeze_counter)
+				if gamestate.P2.flip_input then
+					block_direction = "left"
+				else
+					block_direction = "right"
+				end
+			end
+			if gamestate.frame_number ~= gamestate.prev.frame_number then
+				if begin_crossup_display then
+					if jump_crossup_attempt and gamestate.P1.prev.airborn and not gamestate.P1.airborn then
+						if DEBUG then
+							print("Reset (Jump)")
+						end
+						begin_crossup_display = false
+						prev_flip_value = nil
+						jump_crossup_attempt = false
+						ground_crossup_attempt = false
+					elseif ground_crossup_attempt and not gamestate.P1.is_attacking then
+						if DEBUG then
+							print("Reset (Ground)")
+						end
+						begin_crossup_display = false
+						prev_flip_value = nil
+						jump_crossup_attempt = false
+						ground_crossup_attempt = false
+					end
+				end
+				
+				if not begin_crossup_display then
+					if gamestate.P1.state == jumping and gamestate.P1.prev.state ~= jumping then
+						jump_crossup_attempt = true
+						begin_crossup_display = true
+						prev_p1_left_side = isP1Left()
+						if DEBUG then
+							print("Jump crossup attempt")
+						end
+					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping then
+						ground_crossup_attempt = true -- slides etc.
+						begin_crossup_display = true
+						prev_p1_left_side = isP1Left()
+						if DEBUG then
+							print("Ground crossup attempt")
+						end
+					end
+				end
+				
+				if begin_crossup_display then
+					if prev_flip_value == nil then
+						if jump_crossup_attempt and (gamestate.P2.state == standing or gamestate.P2.state == blocking or gamestate.P2.state == landing or gamestate.P2.is_attacking) then
+							prev_flip_value = gamestate.P2.flip_input
+							if DEBUG then
+								print("Saving flip value (jump crossup attempt) : P2 flip = "..str(gamestate.P2.flip_input))
+							end
+						elseif ground_crossup_attempt then
+							prev_flip_value = gamestate.P2.flip_input
+							if DEBUG then
+								print("Saving flip value (ground crossup attempt) : P2 flip = "..str(gamestate.P2.flip_input))
+							end
+						end
+					end
+					if gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter then
+						if DEBUG then 
+							print("Hit. gamestate prev/curr flip input : "..str(gamestate.P2.prev.flip_input).."/"..str(gamestate.P2.flip_input))
+							print("Hit happened at :"..getDistanceBetweenPlayers())
+						end
+						if prev_p1_left_side ~= isP1Left() then
+							if prev_flip_value == nil then
+								if gamestate.P2.flip_input then
+									block_direction = "left"
+								else
+									block_direction = "right"
+								end
+								msg1 = "We couldn't determine if it was a crossup"
+								msg2 = "Dummy should have blocked "..block_direction
+								msg_fcount = MSG_FRAMELIMIT-300
+							end
+							if (gamestate.P2.flip_input ~= prev_flip_value) or (gamestate.P2.prev.flip_input ~= prev_flip_value) then
+								if DEBUG then 
+									print("> True Crossup : should have been blocked "..block_direction)
+								end
+								msg_p1 = "True crossup"
+								if DEBUG then
+									msg_p1 = "True crossup : should block "..block_direction
+								end
+								player_msg_fcount = MSG_FRAMELIMIT-120
+							else
+								if DEBUG then 
+									print("> Fake Crossup : should have been blocked "..block_direction)
+								end
+								msg_p1 = "Fake crossup"
+								if DEBUG then
+									msg_p1 = "Fake crossup : should block "..block_direction
+								end
+								player_msg_fcount = MSG_FRAMELIMIT-120
+							end
+						else
+							if DEBUG then
+								msg_p1 = "Non crossup : should block "..block_direction
+								player_msg_fcount = MSG_FRAMELIMIT-120
+								print("> Non Crossup : should have been blocked "..block_direction)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+-------------------------
 -------------------------
 -- Character Specific
 -------------------------
@@ -3244,6 +3590,8 @@ local function ST_Training_advanced_settings()
 	easyChargeControl()
 	frameAdvantageDisplay()
 	frameTrapDisplay()
+	tickThrow()
+	crossupDisplay()
 	projectileTraining()
 	roundStart()
 end
