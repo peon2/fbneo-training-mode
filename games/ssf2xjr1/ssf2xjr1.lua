@@ -62,10 +62,10 @@ gamedefaultconfig = {
 		comboenabled=true,
 		p1healthx=17,
 		p1healthy=22,
-		p1healthenabled=false,
+		p1healthenabled=true,
 		p2healthx=355,
 		p2healthy=22,
-		p2healthenabled=false,
+		p2healthenabled=true,
 		p1meterx=82,
 		p1metery=207,
 		p1meterenabled=false,
@@ -258,17 +258,17 @@ function isPressed(_player_obj, _input)
 	elseif _input == "right" then
 		bitmask = 0x0001
 	elseif _input == "forward" then
-		if _player_obj.flip_input then 
+		if _player_obj.flip_input then
 			bitmask = 0x0001
 		else
 			bitmask = 0x0002
-		end 
+		end
 	elseif _input == "back" then
-		if _player_obj.flip_input then 
+		if _player_obj.flip_input then
 			bitmask = 0x0002
 		else
 			bitmask = 0x0001
-		end 
+		end
 	elseif _input == "down" then
 		bitmask = 0x0004
 	elseif _input == "up" then
@@ -285,7 +285,7 @@ function isPressed(_player_obj, _input)
 		bitmask = 0x0200
 	elseif _input == "HK" then
 		bitmask = 0x0400
-	end 
+	end
 	if _player_obj.prev.curr_input == _player_obj.prev_input then
 		return bit.band(_player_obj.curr_input, bitmask) > 0
 	else
@@ -315,7 +315,7 @@ function wasPressed(_player_obj, _input)
 		bitmask = 0x0200
 	elseif _input == "HK" then
 		bitmask = 0x0400
-	end 
+	end
 	if _player_obj.prev.curr_input == _player_obj.prev_input then
 		return bit.band(_player_obj.prev.curr_input, bitmask) > 0
 	else
@@ -461,12 +461,20 @@ end
 
 function readPlayerOneHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P1.life_backup
+	if p1maxhealth == trainingmaxhealth then
+		return gamestate.P1.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P1.life_backup
+	end
 end
 
 function readPlayerTwoHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P2.life_backup
+	if p2maxhealth == trainingmaxhealth then
+		return gamestate.P2.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P2.life_backup
+	end
 end
 
 function writePlayerOneHealth(health)
@@ -863,7 +871,7 @@ local function determine_char(_player_obj)
 			gui.text(90,65,"Flip Kick: " .. rb(0xFF84EB))
 			gui.text(90,73,"Rolling Izuna Drop: " .. rb(0xFF84E7))
 		elseif gamestate.P1.character == Zangief then
-			gui.text(2,65, "Bear Grab: " .. rb(0xFF84E9) ..  ", " .. rb(0xFF84EA))
+			gui.text(2,65, "Bear Grab: " .. rb(0xFF84E9) .. ", " .. rb(0xFF84EA))
 			gui.text(2,73, "Spinning Pile Driver: " .. rb(0xFF84CE) .. ", " .. rb(0xFF84CF))
 			gui.text(2,81, "Banishing Flat: " .. rb(0xFF8501))
 			gui.text(2,89, "Final Atomic Buster: " .. rb(0xFF84FA) .. ", " .. rb(0xFF84FB))
@@ -954,7 +962,7 @@ local function determine_char(_player_obj)
 			gui.text(298,65,"Flip Kick: " .. rb(0xFF84EB+p2))
 			gui.text(298,73,"Rolling Izuna Drop: " .. rb(0xFF84E7+p2))
 		elseif gamestate.P2.character == Zangief then
-			gui.text(275,65, "Bear Grab: " .. rb(0xFF84E9+p2) ..  ", " .. rb(0xFF84EA+p2))
+			gui.text(275,65, "Bear Grab: " .. rb(0xFF84E9+p2) .. ", " .. rb(0xFF84EA+p2))
 			gui.text(275,73, "Spinning Pile Driver: " .. rb(0xFF84CE+p2) .. ", " .. rb(0xFF84CF+p2))
 			gui.text(275,81, "Banishing Flat: " .. rb(0xFF8501+p2))
 			gui.text(275,89, "Final Atomic Buster: " .. rb(0xFF84FA+p2) .. ", " .. rb(0xFF84FB+p2))
@@ -1264,7 +1272,7 @@ local p2_gf = gamestate.P2.grab_flag
 local p2_tf = gamestate.P2.throw_flag
 
 	if p1_c == Honda or p1_c == Blanka or p1_c == Ken or p1_c == Zangief or p1_c == Dhalsim or p1_c == Boxer or p1_c == Hawk then
-		if p1_c == Honda  or p1_c == Blanka or p1_c == Ken or p1_c == Dhalsim or p1_c == Hawk then
+		if p1_c == Honda or p1_c == Blanka or p1_c == Ken or p1_c == Dhalsim or p1_c == Hawk then
 			if p1_c == Dhalsim then
 				p1_gv = 0x06
 			end
@@ -1313,7 +1321,7 @@ local p2_tf = gamestate.P2.throw_flag
 	end
 
 	if p2_c == Honda or p2_c == Blanka or p2_c == Ken or p2_c == Zangief or p2_c == Dhalsim or p2_c == Boxer or p2_c == Hawk then
-		if p2_c == Honda  or p2_c == Blanka or p2_c == Ken or p2_c == Dhalsim or p2_c == Hawk then
+		if p2_c == Honda or p2_c == Blanka or p2_c == Ken or p2_c == Dhalsim or p2_c == Hawk then
 			p2_gc = 0xFF886C
 		elseif p2_c == Zangief then
 			p2_gc = 0xFF88D7
@@ -2461,8 +2469,8 @@ end
 -----------------------------
 local easyCharge = function(_player_obj)
 	if _player_obj.character == Honda and _player_obj.is_old then
-        wb(_player_obj.base + 0x81, 0x01) --B,F+P
-    end
+		wb(_player_obj.base + 0x81, 0x01) --B,F+P
+	end
 	if _player_obj.character == Honda and _player_obj.is_old and rb(0xAA+_player_obj.base) <= 0x02 then
 		wb(_player_obj.base + 0xAB, 0x01) --D,U+K
 	end
@@ -2483,13 +2491,13 @@ local easyCharge = function(_player_obj)
 		wb(_player_obj.base + 0xC2, 0x01) --B,F,B,F+P
 	end
 ------------------------------------
-    if _player_obj.character == Guile then
+	if _player_obj.character == Guile then
 		wb(_player_obj.base + 0x81, 0x01) --B,F+P
 		wb(_player_obj.base + 0x87, 0x01) --D,U+K
 		wb(_player_obj.base + 0x95, 0x01) --D,F,B,U+K
 	end
 ------------------------------------
-    if _player_obj.character == Chun then
+	if _player_obj.character == Chun then
 		wb(_player_obj.base + 0x81, 0x01) --B,F+P
 	end
 	if _player_obj.character == Chun and rb(0xB0+_player_obj.base) <= 0x02 then
@@ -2498,62 +2506,62 @@ local easyCharge = function(_player_obj)
 	if _player_obj.character == Chun and rb(0xBA+_player_obj.base) <= 0x02 then
 		wb(_player_obj.base + 0xBB, 0x01) --D,U+K
 	end
-    if _player_obj.character == Chun and rb(0xBF+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0xC0, 0x01) --B,F+K
-    end
+	if _player_obj.character == Chun and rb(0xBF+_player_obj.base) <= 0x02 then
+		wb(_player_obj.base + 0xC0, 0x01) --B,F+K
+	end
 ------------------------------------
-    if _player_obj.character == Dictator then
-        wb(_player_obj.base + 0x81, 0x01) --B,F+P
-        wb(_player_obj.base + 0x89, 0x01) --B,F+K
-        wb(_player_obj.base + 0x92, 0x01) --D,U+K
-        wb(_player_obj.base + 0xC6, 0x01) --B,F,B,F+K
+	if _player_obj.character == Dictator then
+		wb(_player_obj.base + 0x81, 0x01) --B,F+P
+		wb(_player_obj.base + 0x89, 0x01) --B,F+K
+		wb(_player_obj.base + 0x92, 0x01) --D,U+K
+		wb(_player_obj.base + 0xC6, 0x01) --B,F,B,F+K
 	end
 	if _player_obj.character == Dictator and rb(0xAC+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xAD, 0x01) --D,U+P
-    end
+		wb(_player_obj.base + 0xAD, 0x01) --D,U+P
+	end
 ------------------------------------
-    if _player_obj.character == Boxer then
+	if _player_obj.character == Boxer then
 		wb(_player_obj.base + 0x81, 0x01)  --B,F+P
 		wb(_player_obj.base + 0x89, 0x01)  --B,F+K
-        wb(_player_obj.base + 0xC1, 0x01)  --D,U+P
+		wb(_player_obj.base + 0xC1, 0x01)  --D,U+P
 		wb(_player_obj.base + 0xD7, 0x01)  --B,DF+P
-        wb(_player_obj.base + 0xDE, 0x01)  --B,DF+K
-    end
+		wb(_player_obj.base + 0xDE, 0x01)  --B,DF+K
+	end
 	if _player_obj.character == Boxer and not _player_obj.is_old and rb(0xD4+_player_obj.base) <= 0x02 then
 		wb(_player_obj.base + 0xD5, 0x01)--B,F,B,F+P
-    end
+	end
 ------------------------------------
 	if _player_obj.character == Claw and rb(0x88+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x89, 0x01)--B,F+P
+		wb(_player_obj.base + 0x89, 0x01)--B,F+P
 	end
 	if _player_obj.character == Claw and rb(0x8C+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x8D, 0x01)--D,U+K
-    end
+		wb(_player_obj.base + 0x8D, 0x01)--D,U+K
+	end
 	if _player_obj.character == Claw and rb(0x90+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x91, 0x01)--D,U+P
-    end
+		wb(_player_obj.base + 0x91, 0x01)--D,U+P
+	end
 	if _player_obj.character == Claw and rb(0x99+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x9A, 0x01)--D,F,B,U+K
-    end
+		wb(_player_obj.base + 0x9A, 0x01)--D,F,B,U+K
+	end
 	if _player_obj.character == Claw and rb(0x9D+_player_obj.base) <= 0x02 then
-        wb(_player_obj.base + 0x9E, 0x01)--DB,F+K
-    end
+		wb(_player_obj.base + 0x9E, 0x01)--DB,F+K
+	end
 ------------------------------------
 	if _player_obj.character == Deejay and rb(0x92+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0x93, 0x01) --B,F+K
-    end
+		wb(_player_obj.base + 0x93, 0x01) --B,F+K
+	end
 	if _player_obj.character == Deejay and rb(0x96+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0x97, 0x01) --D,U+P
-    end
+		wb(_player_obj.base + 0x97, 0x01) --D,U+P
+	end
 	if _player_obj.character == Deejay and rb(0xA6+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xA7, 0x01) --B,F+P
+		wb(_player_obj.base + 0xA7, 0x01) --B,F+P
 	end
 	if _player_obj.character == Deejay and rb(0xAB+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xAC, 0x01) --D,U+K
-    end
+		wb(_player_obj.base + 0xAC, 0x01) --D,U+K
+	end
 	if _player_obj.character == Deejay and rb(0xAF+_player_obj.base) <= 0x02 then
-         wb(_player_obj.base + 0xB0, 0x01) --B,F,B,F+K
-    end
+		wb(_player_obj.base + 0xB0, 0x01) --B,F,B,F+K
+	end
 end
 -------------------------------
 easy_charge_moves_selector = customconfig.easy_charge_moves_selector
@@ -3612,7 +3620,7 @@ local function loadAddons()
 		insertAddonButton()
 		addons_charged = true
 	end
-end 
+end
 
 ST_functions = {updateGamestate, ST_Training_misc, ST_Training_basic_settings, ST_Training_advanced_settings, draw_messages}
 
