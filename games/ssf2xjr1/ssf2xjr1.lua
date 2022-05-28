@@ -24,7 +24,7 @@ else
 		stage_selector = -1,
 		tech_throw_selector = -1,
 		crossup_display_selector = 0,
-		tick_throw_selector = 0
+		tick_throw_display_selector = 0,
 	}
 end
 
