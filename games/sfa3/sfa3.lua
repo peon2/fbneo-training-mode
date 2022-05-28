@@ -10,7 +10,8 @@ if fexists("games/sfa3/customconfig.lua") then
 else
 	customconfig = {
 	counter_hit_selector = 0,
-	air_recover_selector = 0,
+	air_tech_selector = 0,
+	tech_type_selector = 0,
 	crouch_cancel_training_selector = 0,
 	}
 end
@@ -376,6 +377,7 @@ end
 --------------------------------
 --------------------------------
 counter_hit_selector = customconfig.counter_hit_selector
+
 local function setCounterHit()
 	if counter_hit_selector > 0 or crouch_cancel_training_selector > 0 then
 		if gamestate.P1.state == doing_normal_move or gamestate.P1.air_state == jump_attack or gamestate.P1.state == doing_special_move then
@@ -389,15 +391,39 @@ local function setCounterHit()
 	end
 end 
 
-air_recover_selector = customconfig.air_recover_selector
+air_tech_selector = customconfig.air_tech_selector
+tech_type_selector = customconfig.tech_type_selector
 local jump_error = 0
+
 local function autoRecover()
-	if air_recover_selector > 0 or crouch_cancel_training_selector > 0 then
+	if air_tech_selector > 0 or crouch_cancel_training_selector > 0 then
 		if jump_error == 1 or (gamestate.P2.been_air_counter_hit and gamestate.P1.state == idle) then
-			modifyInputSet(2,5,5,2,3)
+			inputs.properties.enablehold = false
+			if tech_type_selector == 0 then -- Neutral Tech
+				modifyInputSet(2,5,5,2,3)
+			elseif tech_type_selector == 1 then	-- Backward Tech
+				if gamestate.P2.flip_input then
+					modifyInputSet(2,4,5,2,3)
+				else
+					modifyInputSet(2,6,5,2,3)
+				end
+			elseif tech_type_selector == 2 then	-- Forward Tech
+				if gamestate.P2.flip_input then
+					modifyInputSet(2,6,5,2,3)
+				else
+					modifyInputSet(2,4,5,2,3)
+				end
+			end
+		else
+			for i, _ in pairs(inputs.properties.p2hold) do
+				if inputs.properties.p2hold[i] then
+					inputs.properties.enablehold = true
+					return
+				end
+			end
 		end
 	end
-end 
+end
 ---------------------------
 ---------------------------
 -- Crouch Cancel Training
@@ -488,7 +514,21 @@ local function Z3_Training_basic_settings()
 	crouchCancelTraining()
 end
 
-Z3_functions = {updateGamestate, Z3_Training_basic_settings, draw_messages}
+local addons_charged = false
+local function loadAddons()
+	if not addons_charged then
+		dofile("games/sfa3/addon/addons.lua")
+		for i = 1, #addons_run do
+			if fexists("games/sfa3/addon/"..addons_run[i]) then
+				dofile("games/sfa3/addon/"..addons_run[i])
+			end
+		end
+		insertAddonButton()
+		addons_charged = true
+	end
+end
+
+Z3_functions = {updateGamestate, Z3_Training_basic_settings, loadAddons, draw_messages}
 
 function Run() -- runs every frame
 	for i = 1, #Z3_functions do

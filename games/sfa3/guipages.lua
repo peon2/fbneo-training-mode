@@ -31,7 +31,7 @@ guicustompage = {
 			end,
 	},
 	{
-		text = "Toggle Auto Air Recover",
+		text = "Toggle Auto Air Tech",
 		x = 8,
 		y = 50,
 		olcolour = "black",
@@ -39,16 +39,40 @@ guicustompage = {
 		info = {
 		},
 		func =	function()
-				air_recover_selector = air_recover_selector + 1
-				if air_recover_selector > 1 then
-					air_recover_selector = 0
+				air_tech_selector = air_tech_selector + 1
+				if air_tech_selector > 1 then
+					air_tech_selector = 0
 				end
 			end,
 		autofunc = function(this)
-				if air_recover_selector == 0 then
-					this.text = "Toggle Auto Air Recover: Off"
-				elseif air_recover_selector == 1 then
-					this.text = "Toggle Auto Air Recover: On"
+				if air_tech_selector == 0 then
+					this.text = "Toggle Auto Air Tech: Off"
+				elseif air_tech_selector == 1 then
+					this.text = "Toggle Auto Air Tech: On"
+				end
+			end,
+	},
+	{
+		text = "Air tech",
+		x = 170,
+		y = 50,
+		olcolour = "black",
+		handle = 3,
+		info = {
+		},
+		func =	function()
+				tech_type_selector = tech_type_selector + 1
+				if tech_type_selector > 2 then
+					tech_type_selector = 0
+				end
+			end,
+		autofunc = function(this)
+				if tech_type_selector == 0 then
+					this.text = "Air Tech: Neutral"
+				elseif tech_type_selector == 1 then
+					this.text = "Air Tech: Backward"
+				elseif tech_type_selector == 2 then
+					this.text = "Air Tech: Forward"
 				end
 			end,
 	},
@@ -63,8 +87,10 @@ guicustompage = {
 		func =	function()
 				crouch_cancel_training_selector = crouch_cancel_training_selector + 1
 				if crouch_cancel_training_selector > 1 then
-					crouch_cancel_training_selector = -1
+					crouch_cancel_training_selector = 0
 				end
+				counter_hit_selector = 1
+				air_tech_selector = 1
 			end,
 		autofunc = function(this)
 				if crouch_cancel_training_selector == 0 then
@@ -75,3 +101,47 @@ guicustompage = {
 			end,
 	},
 }
+------------------------------------------
+-- Add-on
+------------------------------------------
+addonpage = {
+	title = {
+		text = "Add-On",
+		x = interactivegui.boxxlength/2 - 10,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() 
+			interactivegui.page = 5
+			interactivegui.selection = 1 
+		end,
+	},
+}
+guipages.addonpage = addonpage
+
+addonbutton = {
+		text = "Add-On",
+		x = 210,
+		y = 150,
+		olcolour = "black",
+		handle = 7,
+		func = 	function() CIG("addonpage", 1) end,
+		}
+
+function insertAddonButton()
+	if #addonpage > 1 then
+		table.insert(guicustompage, addonbutton)
+		formatGuiTables()
+	end
+end
+
+function determineButtonYPos(_guipage)
+	if #_guipage == 1 then 
+		return 40
+	else
+		return _guipage[#_guipage].y+20
+	end
+end

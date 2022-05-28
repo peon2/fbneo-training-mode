@@ -90,10 +90,11 @@ function gamestate.read_player_vars(_player_obj)
 	_player_obj.air_state				= rb(_player_obj.addresses.air_state)
 	_player_obj.pos_x					= rb(_player_obj.addresses.pos_x)
 	--_player_obj.pos_y					= rb(_player_obj.addresses.pos_y)
+	_player_obj.flip_input				= (rb(_player_obj.addresses.flip_x) == 1)
 	_player_obj.is_attacking			= rb(_player_obj.addresses.is_attacking)
 	_player_obj.jump_animation			= rb(_player_obj.addresses.jump_animation)
 	_player_obj.counter_hit_related		= rb(_player_obj.addresses.counter_hit_related)
-	_player_obj.been_air_counter_hit	= (rb(_player_obj.addresses.jump_animation) ~= 0x00 and rb(_player_obj.addresses.jump_animation) ~= 0x05 and  rb(_player_obj.addresses.jump_animation) ~= 0xFB)
+	_player_obj.been_air_counter_hit	= (rb(_player_obj.addresses.jump_animation) ~= 0x00 and rb(_player_obj.addresses.jump_animation) ~= 0x05 and rb(_player_obj.addresses.jump_animation) ~= 0xFB)
 end
 
 function gamestate.stock_player_vars(_player_obj)
