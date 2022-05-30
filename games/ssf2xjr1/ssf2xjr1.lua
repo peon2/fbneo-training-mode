@@ -399,9 +399,9 @@ local function draw_messages()
 	elseif player_msg_fcount > 0 then
 		player_msg_fcount = countFrames(player_msg_fcount)
 	end
-	gui.text(92,56,msg1)
-	gui.text(92,64,msg2)
-	gui.text(92,72,msg3)
+	gui.text(92,78,msg1)
+	gui.text(92,86,msg2)
+	gui.text(92,94,msg3)
 	gui.text(get_player_msg_x(gamestate.P1),get_player_msg_y(gamestate.P1),msg_p1)
 	gui.text(get_player_msg_x(gamestate.P2),get_player_msg_y(gamestate.P2),msg_p2)
 end
@@ -3087,14 +3087,14 @@ local function tickAnalysis()
 		if gamestate.P2.state ~= being_hit then
 			tick_timer = countFrames(tick_timer)
 		end
-		if tick_timer > 10 then 
+		if tick_timer > 12 then
 			reset_tick = true
 		end
 		if gamestate.P1.throw_flag == 0x01 then -- If we detect a throw
 			reset_tick = true
-			if tick_timer <= 10 then
-				msg1 = "Succesful tick throw : you threw "..tick_timer.." frames after your tick" 
-				msg_fcount = MSG_FRAMELIMIT-120
+			if tick_timer <= 12 then
+				msg1 = "Succesful tick throw: you threw "..tick_timer.." frames after your tick."
+				msg_fcount = MSG_FRAMELIMIT-220
 			end
 		end
 	end
@@ -3183,18 +3183,18 @@ local function tickThrow()
 					end
 				end
 			else
-				if tick_timer ~= 0 then -- If we did a tick
+				if gamestate.P1.throw_flag == 0x01 and tick_timer > 0 and tick_timer <= 12 then -- If we did a tick
 					for i = 1, #p2_throw_range do
 						if p2_throw_range[i][3] then -- If p2 could have thrown 
 							could_have_been_throw = true
 						end
 					end
 					if not could_have_been_throw then 
-						msg2 = "P2 couldn't have thrown you. Nice !"
-						msg_fcount = MSG_FRAMELIMIT-120
+						msg2 = "P2 couldn't have thrown you. Nice!"
+						msg_fcount = MSG_FRAMELIMIT-220
 					else
-						msg2 = "However P2 could have thrown you"
-						msg_fcount = MSG_FRAMELIMIT-120
+						msg2 = "However P2 could have thrown you :("
+						msg_fcount = MSG_FRAMELIMIT-220
 					end
 					could_have_been_throw = false
 				end 
