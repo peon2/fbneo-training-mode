@@ -3071,12 +3071,14 @@ tick_throw_display_selector = customconfig.tick_throw_display_selector
 
 local tick_step = 0
 local tick_timer = 0
+local throwable_timer = 0
 local reset_tick = false
 
 local function tickAnalysis()
 	if reset_tick then
 		tick_step = 0
 		tick_timer = 0
+		throwable_timer = 0
 		reset_tick = false
 	end
 	if tick_step == 0 and gamestate.P2.in_hitstun and gamestate.P1.throw_flag == 0x00 then
@@ -3085,6 +3087,9 @@ local function tickAnalysis()
 	end
 	if tick_step == 1 then
 		if gamestate.P2.state ~= being_hit then
+			if (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
+				throwable_timer = countFrames(throwable_timer)
+			end
 			tick_timer = countFrames(tick_timer)
 		end
 		if tick_timer > 12 then
@@ -3127,6 +3132,15 @@ local function resetThrowDisplay(_player_obj)
 end
 
 local function tickThrow()
+	if tick_throw_display_selector > 0 then
+	-- needs to be outside of is_in_match to update data when we press F2 or reset to change char
+		if characterChanged(gamestate.P1) then
+			resetThrowDisplay(gamestate.P1)
+		end
+		if characterChanged(gamestate.P2) then
+			resetThrowDisplay(gamestate.P2)
+		end
+	end
 	if gamestate.is_in_match then
 	-- Throw Display initialization
 		local p1character = readCharacterName(gamestate.P1)
@@ -3136,10 +3150,6 @@ local function tickThrow()
 			resetThrowDisplay(gamestate.P1)
 			resetThrowDisplay(gamestate.P2)
 			begin_throw_display = true
-		elseif characterChanged(gamestate.P1) then 
-			resetThrowDisplay(gamestate.P1)
-		elseif characterChanged(gamestate.P2) then
-			resetThrowDisplay(gamestate.P2)
 		end 
 		if tick_throw_display_selector > 0 then
 		-- Tick analysis
@@ -3189,11 +3199,15 @@ local function tickThrow()
 							could_have_been_throw = true
 						end
 					end
-					if not could_have_been_throw then 
+					if (not could_have_been_throw) or (throwable_timer == 0) then
 						msg2 = "P2 couldn't have thrown you. Nice!"
 						msg_fcount = MSG_FRAMELIMIT-220
 					else
-						msg2 = "However P2 could have thrown you :("
+						if (throwable_timer >= tick_timer) then
+							msg2 = "However P2 could have thrown you :("
+						else
+							msg2 = "However P2 could have thrown you during "..throwable_timer.." frames :("
+						end
 						msg_fcount = MSG_FRAMELIMIT-220
 					end
 					could_have_been_throw = false
