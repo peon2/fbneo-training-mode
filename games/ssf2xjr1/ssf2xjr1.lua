@@ -3087,9 +3087,6 @@ local function tickAnalysis()
 	end
 	if tick_step == 1 then
 		if gamestate.P2.state ~= being_hit then
-			if (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
-				throwable_timer = countFrames(throwable_timer)
-			end
 			tick_timer = countFrames(tick_timer)
 		end
 		if tick_timer > 12 then
@@ -3188,6 +3185,9 @@ local function tickThrow()
 				for i = 1, #p2_throw_range do
 					if p2_throw_range[i][2] >= 0 then 
 						p2_throw_range[i][3] = true
+						if (tick_step == 1) and (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt or gamestate.P2.state == doing_normal_move or gamestate.P2.state == doing_special_move) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
+							throwable_timer = countFrames(throwable_timer)
+						end
 					else
 						p2_throw_range[i][3] = false
 					end
@@ -3199,17 +3199,16 @@ local function tickThrow()
 							could_have_been_throw = true
 						end
 					end
-					if (not could_have_been_throw) or (throwable_timer == 0) then
+					if (not could_have_been_throw) and (throwable_timer > 0) then
+						msg2 = "P2 could've thrown for "..throwable_timer.." frames, but you threw outside of P2 range."
+					elseif (not could_have_been_throw) or (throwable_timer == 0) then
 						msg2 = "P2 couldn't have thrown you. Nice!"
-						msg_fcount = MSG_FRAMELIMIT-220
-					else
-						if (throwable_timer >= tick_timer) then
-							msg2 = "However P2 could have thrown you :("
-						else
-							msg2 = "However P2 could have thrown you during "..throwable_timer.." frames :("
-						end
-						msg_fcount = MSG_FRAMELIMIT-220
+					elseif could_have_been_throw and (throwable_timer >= tick_timer) then
+						msg2 = "However P2 could have thrown you :("
+					elseif could_have_been_throw and (throwable_timer < tick_timer) then
+						msg2 = "However P2 could have thrown you during "..throwable_timer.." frames :("
 					end
+					msg_fcount = MSG_FRAMELIMIT-220
 					could_have_been_throw = false
 				end 
 			end
