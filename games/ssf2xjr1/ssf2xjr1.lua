@@ -488,7 +488,7 @@ function writePlayerOneHealth(health)
 	elseif gamestate.P1.life < 33 and gamestate.P2.prev.state ~= doing_special_move and gamestate.P1.state ~= being_hit then
 		-- if health < 33 we refill even if it will cause some small glitches
 		refill = true
-	elseif ((gamestate.P1.life < p1maxhealth) and (gamestate.P1.state ~= being_thrown and gamestate.P1.state ~= being_hit and gamestate.P1.state ~= blocking_attempt) and (gamestate.P2.state == crouching or gamestate.P2.state == standing)) then
+	elseif ((gamestate.P1.life < p1maxhealth) and (gamestate.P1.state ~= being_thrown and gamestate.P1.state ~= being_hit and gamestate.P1.state ~= blocking_attempt) and (gamestate.P2.state == crouching or gamestate.P2.state == standing) and (gamestate.P2.projectile_ready)) then
 		-- this only refills when p2 is idle or crouching and p1 is not blocking or after being hit/thrown
 		refill = true
 	end
@@ -511,7 +511,7 @@ function writePlayerTwoHealth(health)
 	elseif gamestate.P2.life < 33 and gamestate.P1.prev.state ~= doing_special_move and gamestate.P2.state ~= being_hit then
 		-- if health < 33 we refill regardless of the state
 		refill = true
-	elseif ((gamestate.P2.life < p2maxhealth) and (gamestate.P2.state ~= being_thrown and gamestate.P2.state ~= being_hit and gamestate.P2.state ~= blocking_attempt) and (gamestate.P1.state == crouching or gamestate.P1.state == standing)) then
+	elseif ((gamestate.P2.life < p2maxhealth) and (gamestate.P2.state ~= being_thrown and gamestate.P2.state ~= being_hit and gamestate.P2.state ~= blocking_attempt) and (gamestate.P1.state == crouching or gamestate.P1.state == standing) and (gamestate.P1.projectile_ready)) then
 		-- this only refills when p1 is idle or crouching and p2 is not blocking or after being hit/thrown
 		refill = true
 	end
