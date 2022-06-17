@@ -266,7 +266,7 @@ character_specific.boxer.specials = {
 }
 character_specific.boxer.throw = {"MP","HP"}
 character_specific.boxer.hitboxes = {
-throw = {{"HP",41},{"MP",51}},
+throw = {{"MP",51},{"HP",41}},
 throwable = 27,
 }
 character_specific.boxer.infos = {
@@ -338,7 +338,7 @@ character_specific.cammy.specials = {
 }
 character_specific.cammy.throw = {"MP", "HP", "MK", "HK"}
 character_specific.cammy.hitboxes = {
-throw = {{"All variations",42}},
+throw = {{"All Throws",42}},
 throwable = 25,
 }
 character_specific.cammy.infos = {
@@ -420,7 +420,7 @@ character_specific.chunli.specials = {
 }
 character_specific.chunli.throw = {"MP","HP"}
 character_specific.chunli.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 25,
 }
 character_specific.chunli.infos = {
@@ -517,7 +517,7 @@ character_specific.claw.specials = {
 }
 character_specific.claw.throw = {"MP","HP"}
 character_specific.claw.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 28,
 }
 character_specific.claw.infos = {
@@ -594,7 +594,7 @@ character_specific.deejay.specials = {
 }
 character_specific.deejay.throw = {"MP","HP","MK","HK"}
 character_specific.deejay.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 30,
 }
 character_specific.deejay.infos = {
@@ -689,7 +689,7 @@ character_specific.dhalsim.specials = {
 }
 character_specific.dhalsim.throw = {"MP","HP"}
 character_specific.dhalsim.hitboxes = {
-throw = {{"All variations",64}},
+throw = {{"All Throws",64}},
 throwable = 35,
 }
 character_specific.dhalsim.infos = {
@@ -766,7 +766,7 @@ character_specific.dictator.specials = {
 }
 character_specific.dictator.throw = {"MP","HP"}
 character_specific.dictator.hitboxes = {
-throw = {{"All variations",62}},
+throw = {{"All Throws",62}},
 throwable = 28,
 }
 character_specific.dictator.infos = {
@@ -835,7 +835,7 @@ character_specific.feilong.specials = {
 }
 character_specific.feilong.throw = {"MP","HP","MK","HK"}
 character_specific.feilong.hitboxes = {
-throw = {{"All variations",40}},
+throw = {{"All Throws",40}},
 throwable = 29,
 }
 character_specific.feilong.infos = {
@@ -886,7 +886,7 @@ character_specific.guile.specials = {
 }
 character_specific.guile.throw = {"MP","HP"}
 character_specific.guile.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 30,
 }
 character_specific.guile.infos = {
@@ -964,7 +964,7 @@ character_specific.ehonda.specials = {
 }
 character_specific.ehonda.throw = {"MP","HP","HK"}
 character_specific.ehonda.hitboxes = {
-throw = {{"Normal throws",64},{"Oicho",69}},
+throw = {{"Oicho",69},{"Normal throws",64}},
 throwable = 28,
 }
 character_specific.ehonda.infos = {
@@ -1014,7 +1014,7 @@ character_specific.thawk.specials = {
 }
 character_specific.thawk.throw = {"MP","HP","HK"}
 character_specific.thawk.hitboxes = {
-throw = {{"Normal throws",48},{"Mexican Typhoon",83}},
+throw = {{"Mexican Typhoon",83},{"Normal throws",48}},
 throwable = 35,
 }
 character_specific.thawk.infos = {
@@ -1110,7 +1110,7 @@ character_specific.ken.specials = {
 }
 character_specific.ken.throw = {"MP","HP","MK","HK"}
 character_specific.ken.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 29,
 }
 character_specific.ken.infos = {
@@ -1182,7 +1182,7 @@ character_specific.ryu.specials = {
 }
 character_specific.ryu.throw = {"MP","HP","MK","HK"}
 character_specific.ryu.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 29,
 }
 character_specific.ryu.infos = {
@@ -1254,7 +1254,7 @@ character_specific.sagat.specials = {
 }
 character_specific.sagat.throw = {"MP","HP"}
 character_specific.sagat.hitboxes = {
-throw = {{"All variations",48}},
+throw = {{"All Throws",48}},
 throwable = 32,
 }
 character_specific.sagat.infos = {
@@ -1341,7 +1341,7 @@ character_specific.zangief.specials = {
 }
 character_specific.zangief.throw = {"MP","HP","MK","HK"}
 character_specific.zangief.hitboxes = {
-throw = {{"720",64}, {"LK Suplex",66}, {"MK Suplex / Normal Throws",69}, {"HK Suplex",83}, {"SPD",111}},--, {138}, {147}, {155}},
+throw = {{"SPD",111},{"HK Suplex",83},{"Normal Throws",69},{"MK Suplex",69},{"LK Suplex",66},{"720",64}},--, {138}, {147}, {155}},
 throwable = 45,
 }
 character_specific.zangief.infos = {
