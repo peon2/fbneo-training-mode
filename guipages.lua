@@ -942,3 +942,5 @@ local playerrecelements = {
 					{text = "P1&P2", selectfunc = function() return function() recording.replayP1=true recording.replayP2=true end end},
 				}
 guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrecelements, 144, 55, nil)
+
+formatGuiTables()

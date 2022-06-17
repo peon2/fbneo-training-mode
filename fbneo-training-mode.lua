@@ -1343,7 +1343,7 @@ local serialiseInit = function(recordslot) -- set up compression, reduce the siz
 	for i,_ in pairs(recordslot.constants) do 
 		player = i:sub(1,2)
 		input = i:sub(4)
-		if player == "P1" then
+		if player == "P1" and recordslot._stable.p1[input] then
 			num = recordslot._stable.p1[input]
 			for i = num+1, recordslot._stable.p1.len do
 				recordslot._stable.p1[input] = nil -- remove
@@ -1353,7 +1353,7 @@ local serialiseInit = function(recordslot) -- set up compression, reduce the siz
 			recordslot._stable.p1.len = recordslot._stable.p1.len-1
 			for i = 1, #recordslot._stable.p1-recordslot._stable.p1.len do table.remove(recordslot._stable.p1) end-- remove garbage
 			for i, v in pairs(recordslot._stable.p1) do if recordslot._stable.p1[v]==nil and i~="len" then recordslot._stable.p1[i]=nil end end
-		elseif player == "P2" then
+		elseif player == "P2" and recordslot._stable.p2[input] then
 			num = recordslot._stable.p2[input]
 			for i = num+1, recordslot._stable.p2.len do
 				recordslot._stable.p2[input] = nil -- remove
@@ -1372,13 +1372,13 @@ local serialise = function(recordslot)
 		local num = 0
 		recordslot[i].serial={}
 		recordslot[i].serial.other={}
-		for i, v in pairs(recordslot[i].raw.p1) do
+		for i, v in pairs(recordslot[i].raw.p1 or {}) do
 			if v and recordslot.constants["P1 "..i]==nil then num = bit.bor(num, bit.lshift(1, recordslot._stable.p1[i]-1)) end
 		end
-		for i, v in pairs(recordslot[i].raw.p2) do
+		for i, v in pairs(recordslot[i].raw.p2 or {}) do
 			if v and recordslot.constants["P2 "..i]==nil then num = bit.bor(num, bit.lshift(1, recordslot._stable.p2[i]-1+recordslot._stable.p1.len)) end
 		end
-		for j, v in pairs(recordslot[i].raw.other) do -- dipswitches aren't boolean so they can't be serialised
+		for j, v in pairs(recordslot[i].raw.other or {}) do -- dipswitches aren't boolean so they can't be serialised
 			if recordslot.constants[j]==nil then recordslot[i].serial.other[j] = v end -- only put in the ones we need
 		end
 		--final bit to track direction
@@ -1554,8 +1554,7 @@ togglePlayBack = function(bool, vargs)
 	local _playbackslot = recording.playbackslot or recording.recordingslot -- tmp for playbackslot
 	recording.playbackslot = nil
 	
-	if vargs then vargs.playback = false end
-	toggleStates(vargs)
+	local _rs = recording.recordingslot
 	
 	if recording.randomise then
 		local b = false
@@ -1569,7 +1568,14 @@ togglePlayBack = function(bool, vargs)
 				_playbackslot = pos
 			end
 		end
+		-- make sure the recordslot is properly serialised if using randomise
+		recording.recordingslot = _playbackslot
 	end
+	
+	if vargs then vargs.playback = false end
+	toggleStates(vargs)
+	
+	recording.recordingslot = _rs -- restore recordingslot after serialise (through toggleRecord)
 	
 	local recordslot = recording[_playbackslot]
 	if not recordslot then return end
@@ -1631,9 +1637,10 @@ local playBack = function()
 	end
 
 	gui.text(1,1,"Slot "..recording.playbackslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
+	
 	Unserialise(recordslot[fc - recordslot.framestart + start], recordslot._stable, recordslot.constants)
 	local raw = recordslot[fc - recordslot.framestart + start].raw
-	
+
 	if modulevars.p1.facingleft ~= recordslot[fc - recordslot.framestart + start].p1facingleft and recording.autoturn then
 		raw.p1 = swapPlayerDirection(raw.p1)
 	end
@@ -1799,6 +1806,7 @@ local moreButtonsFunc = function(but)
 end
 
 local buttonHandler = function(t)
+	if (nbuttons == 0) then return end -- can't do anything with no buttons
 	--[[
 		t={
 			{name="", button=""},
@@ -1834,13 +1842,13 @@ local buttonHandler = function(t)
 
 		helpElements.more = 0
 		helpElements.block = 0
-		if t.len > nbuttons or #t.funcs > t.len then -- not enough buttons for functions, set up the MORE button
+		if (t.len > nbuttons or #t.funcs > t.len) then -- not enough buttons for functions, set up the MORE button
 			local back = t[t.len] -- back button
 			for i = t.len+1, nbuttons+1, -1 do t[i] = t[i-2] t[i-2] = {} end -- shunt along
 			t[nbuttons] = back -- put back in place
 			t[nbuttons-1].name = "MORE" -- set attributes for more button
 			t[nbuttons-1].button="button"..(nbuttons-1)
-			t[nbuttons-1].func = moreButtonsFunc -- t.funcs.more or  put more in place, use default if there isn't a specific one
+			t[nbuttons-1].func = t.funcs.more or moreButtonsFunc -- put more in place, use default if there isn't a specific one
 			helpElements.more = 1 -- mark more as being added
 			t.len=t.len+1 -- space for more
 		end
@@ -2800,8 +2808,12 @@ local drawReplayEditor = function()
 	end
 	
 	if startframe+frames>#reinputs+1 then -- make sure end of replay is on screen
-		gui.line(x,y+48+(#reinputs-startframe)*16,x+length*16,y+48+(#reinputs-startframe)*16,"red") -- red line marking end of replay
+		gui.line(x,y+32+(#reinputs-startframe)*16,x+length*16,y+32+(#reinputs-startframe)*16,"red") -- red line marking end of replay
 	end
+	
+	gui.box(x,y+32+length*16,x+16,y+80+length*16, "blue")
+	gui.box(x,y+32+length*16,x+16,y+48+length*16)
+	gui.text(x+2,y+38+length*16,#reinputs,"red")
 	
 	--deserialise and images
 	--make sure that it does need to display images
