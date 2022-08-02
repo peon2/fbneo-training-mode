@@ -18,6 +18,7 @@
 --	- Visual bug : Fix the "disappearing" of save_frame's textfield 
 --	and slot buttons when you enter name edition
 --	- Lua hotkey 5 is not really intuitive
+--	- Accept numbers in save_name only if they follow a character
 ---------------------------------------------------------------------
 
 ------------------------------------------
@@ -25,7 +26,7 @@
 ------------------------------------------
 local DEBUG = false
 
-local function back() -- Should be modified since "back" could be mapped to another button
+function back() -- Should be modified since "back" could be mapped to another button
 	if guiinputs.P1["button6"] and not guiinputs.P1.previousinputs["button6"] then
 		return true
 	else
@@ -82,23 +83,25 @@ local available_characters = {
 	"T",
 	"U",
 	"V",
+	"W",
 	"X",
 	"Y",
 	"Z",
-	"0",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
+--	"0",
+--	"1",
+--	"2",
+--	"3",
+--	"4",
+--	"5",
+--	"6",
+--	"7",
+--	"8",
+--	"9",
 	"_",
 }
 
 local numbers = {
+	" ",
 	"0",
 	"1",
 	"2",
@@ -123,6 +126,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	-- Create the textfield
 	-------------------------
 	BaseMenu[name] = { x = x - 4 , y = y, text = "",}
+	menu.tf_help = { text = "Right: Next  Left: Prev  Up/Down: Change character", x = -5, y = 100}	-- to be modified if this function is used out of this script
 	
 	local tf = {}
 	tf.x = x*1000 -- this way the button automatically created should be hidden (maybe there's a cleaner way)
@@ -177,7 +181,6 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 		for i = 1, #tf.content do
 			_str = _str.._available_characters[tf.content[i]]
 		end
-		if _str == " " then _str = "" end
 		tf.string = _str
 	end
 	
@@ -204,6 +207,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 				table.remove(tf.content, _last_empty_index)
 			end
 		end
+		tf:sync_to_var()
 	end
 
 	function tf:left()
@@ -264,9 +268,10 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 		tf:sync_to_var()
 	end
 
-	function tf:cancel()
+	function tf:exit()
 		tf:crop_char_table()
-		tf:sync_to_var()
+		tf.in_edition = false
+		BaseMenu[name].text = tf.string
 	end
 	
 	function tf:clear()
@@ -294,11 +299,13 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 		tf:right()
 		tf:up()
 		tf:down()
+		if back() then
+			tf:exit()
+		end
 	end
-	tf.func = function() 
+	tf.func = function()
+		tf:exit()
 		CIG(interactivegui.previouspage, interactivegui.previousselection)
-		tf.in_edition = false
-		BaseMenu[name].text = tf.string
 	end
 
 	menu[1] = tf
@@ -978,6 +985,9 @@ local random_mission = 1
 local was_playback = false
 
 local function playMissionLogic()
+	if mission_selector > 0 and guiinputs.P1.coin then
+		return
+	end
 	stockMissionsChecked()
 	if mission_selector == 1 then
 		playMission(missions_checked[1])
@@ -999,5 +1009,4 @@ local function missions()
 	drawErrorMsg()
 	playMissionLogic()
 end
-
 table.insert(ST_functions, missions)
