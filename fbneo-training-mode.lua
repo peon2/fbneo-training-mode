@@ -1901,7 +1901,7 @@ local drawHelp = function()
 	end
 end
 
-local toggleInteractiveGuiEnabled = function(bool, vargs)
+toggleInteractiveGuiEnabled = function(bool, vargs)
 	if vargs then vargs.interactiveguienabled = false end
 	toggleStates(vargs)
 	recording[recording.recordingslot] = recording[recording.recordingslot] or {}

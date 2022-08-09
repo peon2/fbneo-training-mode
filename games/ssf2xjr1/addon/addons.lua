@@ -2,5 +2,6 @@
 addons_run = {
 	"sako.lua",
 	"blankaOS.lua",
-	"triggerBoxerDashes.lua"
+	"triggerBoxerDashes.lua",
+	"missions.lua",
 }

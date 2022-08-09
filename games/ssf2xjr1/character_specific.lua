@@ -3,24 +3,24 @@
 -----------------------------------------------------------------------------
 character_specific = {}
 characters =
-    {
-      "ryu",
-      "ehonda",
-      "blanka",
-      "guile",
-      "ken",
-      "chunli",
-      "zangief",
-      "dhalsim",
-      "dictator",
-      "sagat",
-      "boxer",
-      "claw",
-      "cammy",
-      "thawk",
-      "feilong",
-      "deejay",
-    }
+{
+	"blanka",
+	"boxer",
+	"cammy",
+	"chunli",
+	"claw",
+	"deejay",
+	"dhalsim",
+	"dictator",
+	"ehonda",
+	"feilong",
+	"guile",
+	"ken",
+	"ryu",
+	"sagat",
+	"thawk",
+	"zangief",
+}
 	
 for i = 1, #characters do
   character_specific[characters[i]] = { specials = {}, throw = {}, infos = {}}
