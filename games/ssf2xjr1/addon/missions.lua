@@ -1,10 +1,10 @@
 ---------------------------------------------------------------------
 --	Add-on allowing to save a savestate with one or multiple actions
 --	to be performed by the dummy. Those scenarios can then be selected
---	in a menu called "Missions".
+--	in a menu called "Missions". 
 --	I hope this word is not too misleading : it was my first idea
 --	since this project is inspired by TRUST, a former project of
---	Shoryuken's forum which used this terminolgy.
+--	Shoryuken's forum which used this terminolgy. 
 --	We could change this later anyway if someone comes with a better
 --	option.
 --
@@ -15,7 +15,7 @@
 --	To be improved/added :
 --	- Insert new pages in characters' sections if more than
 --	30 missions are created
---	- Visual bug : Fix the "disappearing" of save_frame's textfield
+--	- Visual bug : Fix the "disappearing" of save_frame's textfield 
 --	and slot buttons when you enter name edition
 --	- Lua hotkey 5 is not really intuitive
 --	- Accept numbers in save_name only if they follow a character
@@ -56,7 +56,7 @@ local characters_name = {
 	"Zangief",
 }
 --------------------------------------------------
---	Textfield : adaptation of Grouflon's work
+--	Textfield : adaptation of Grouflon's work 
 -- 	https://github.com/Grouflon/3rd_training_lua
 --------------------------------------------------
 local available_characters = {
@@ -127,7 +127,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	-------------------------
 	BaseMenu[name] = { x = x - 4 , y = y, text = "",}
 	menu.tf_help = { text = "Right: Next  Left: Prev  Up/Down: Change character", x = -5, y = 100}	-- to be modified if this function is used out of this script
-
+	
 	local tf = {}
 	tf.x = x*1000 -- this way the button automatically created should be hidden (maybe there's a cleaner way)
 	tf.y = y*1000
@@ -137,14 +137,14 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	tf.string = ""	-- stocks the string
 	tf.edition_index = 1 -- trace wich character will be modified
 	tf.in_edition = false
-
+	
 	local _available_characters = {}
 	if characters_set then
 		_available_characters = characters_set
 	else
 		_available_characters = available_characters
 	end
-
+	
 	if text then
 		tf.string = text
 	end
@@ -161,7 +161,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 			tf.in_edition = true
 		end
 	end
-
+	
 	function tf:sync_from_var()
 		tf.content = {}
 		for i = 1, #tf.string do
@@ -183,7 +183,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 		end
 		tf.string = _str
 	end
-
+	
 	function tf:draw()
 		local _c = 0xFFFF00FF
 		local _cycle = 100
@@ -247,7 +247,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 			return false
 		end
 	end
-
+	
 	function tf:validate()
 		if tf.content[tf.edition_index] ~= 1 then
 			if #tf.content < tf.max_length then
@@ -273,7 +273,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 		tf.in_edition = false
 		BaseMenu[name].text = tf.string
 	end
-
+	
 	function tf:clear()
 		tf.content = {}
 		if text then
@@ -285,7 +285,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 		tf.in_edition = false
 		BaseMenu[name].text = tf.string
 	end
-
+	
 	tf:sync_from_var()
 	tf:sync_to_var()
 	BaseMenu[name].text = tf.string
@@ -655,7 +655,7 @@ local function createSlotsFunctions()
 		end
 		slot_buttons[i].func = newfunction
 	end
-end
+end 
 createSlotsFunctions()
 
 local function insertSlotButtons()
@@ -693,7 +693,7 @@ guipages.save_mission = save_mission
 interactivegui.boxxlength = 6*(emu.screenwidth()/8) -- fix the precedent modification
 ----------------------------------
 -- Would need a fix : since save_frame is created after save_name, the first createTextfield() doesn't reproduce it. Thus save_frame's textfield seems to disappear when you enter in name edition
--- We have the same problem with slot buttons which seem to disappear when you enter in a textfield
+-- We have the same problem with slot buttons which seem to disappear when you enter in a textfield 
 guipages.save_name = createTextfield(guipages.save_mission, "name", 60, 20, 17)
 guipages.save_frame = createTextfield(guipages.save_mission, "frame", 145, 50, 3, numbers, "150")
 ----------------------------------
@@ -759,7 +759,7 @@ local function closePopUp()
 	guipages.save_name[1]:clear()
 	guipages.save_frame[1]:clear()
 	if fexists("./new_savestate") then
-		os.remove("./new_savestate")
+		os.remove("./new_savestate") 
 	end
 	for i = 1, #slot_buttons do
 		slot_buttons[i].checked = false
@@ -794,7 +794,7 @@ local function handlePopUp()
 		interactivegui.boxy = emu.screenheight()/3-10
 		interactivegui.boxx2 = 3*(emu.screenwidth()/4)
 		interactivegui.boxy2 = 4*(emu.screenheight()/6)+9
-	else
+	else		
 		-- restaures default values
 		interactivegui.boxx = emu.screenwidth()/8
 		interactivegui.boxy = emu.screenheight()/10-10
@@ -875,7 +875,7 @@ local function deleteMission()
 		if missions_list[characters[i]] ~= nil then
 			for k in pairs(missions_list[characters[i]]) do
 				if missions_list[characters[i]][k].checked then
-					table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, mission_text = missions_list[characters[i]][k].mission_text, missions_list[characters[i]][k].dizzy})
+					table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, missions_list[characters[i]][k].dizzy})
 				end
 			end
 		end
@@ -883,11 +883,11 @@ local function deleteMission()
 	if #missions_checked > 0 then
 		for i = 1, #missions_checked do
 			if fexists(mission_path..missions_checked[i].character.."/"..missions_checked[i].name..".fs") then
-				os.remove(mission_path..missions_checked[i].character.."/"..missions_checked[i].name..".fs")
+				os.remove(mission_path..missions_checked[i].character.."/"..missions_checked[i].name..".fs") 
 			end
 			for j = 1, missions_checked[i].slots_nb do
 				if fexists(mission_path..missions_checked[i].character.."/"..missions_checked[i].name.."_"..j..".lua") then
-					os.remove(mission_path..missions_checked[i].character.."/"..missions_checked[i].name.."_"..j..".lua")
+					os.remove(mission_path..missions_checked[i].character.."/"..missions_checked[i].name.."_"..j..".lua") 
 				end
 			end
 			local in_file = io.open("./"..mission_path..missions_checked[i].character.."/missions_list.lua", "r")
@@ -944,9 +944,6 @@ local function playMission(mission) -- mission[1] = character / [2] = mission's 
 		togglePlayBack(nil, {})
 		timer = 0
 	end
-	if mission.mission_text then
-		msg1 = mission.mission_text
-	end
 end
 
 local mission_selector = 0
@@ -966,7 +963,7 @@ local function stockMissionsChecked()
 			if missions_list[characters[i]] ~= nil then
 				for k in pairs(missions_list[characters[i]]) do
 					if missions_list[characters[i]][k].checked then
-						table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, mission_text = missions_list[characters[i]][k].mission_text, missions_list[characters[i]][k].dizzy})
+						table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, missions_list[characters[i]][k].dizzy})
 					end
 				end
 			end
