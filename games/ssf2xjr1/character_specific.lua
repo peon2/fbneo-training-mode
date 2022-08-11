@@ -266,7 +266,7 @@ character_specific.boxer.specials = {
 }
 character_specific.boxer.throw = {"MP","HP"}
 character_specific.boxer.hitboxes = {
-throw = {{"MP",51},{"HP",41}},
+throw = {}, -- may vary, see below getBoxerThrowDistance()
 throwable = 27,
 }
 character_specific.boxer.infos = {
@@ -1397,6 +1397,28 @@ function determineStrengthValue(_variation, _strength_set)
 			return 0x07
 		end 
 	end
+end
+
+function getBoxerThrowDistance(opponent)
+	local throw = {}
+	if opponent == Dhalsim then
+		throw = {{"MP",40},{"HP",30}}
+	elseif opponent == Zangief then
+		throw = {{"MP",41},{"HP",31}}
+	elseif opponent == Guile then
+		throw = {{"MP",50},{"HP",40}}
+	elseif opponent == Chun or opponent == Cammy or opponent == Fei or opponent == Hawk or opponent == Ken or opponent == Ryu then
+		throw = {{"MP",51},{"HP",41}}
+	elseif opponent == Claw or opponent == Deejay or opponent == Dictator or opponent == Sagat then
+		throw = {{"MP",52},{"HP",42}}
+	elseif opponent == Boxer then
+		throw = {{"MP",53},{"HP",43}}
+	elseif opponent == Blanka then
+		throw = {{"MP",63},{"HP",53}}
+	elseif opponent == Honda then
+		throw = {{"MP",64},{"HP",58}}
+	end
+	character_specific.boxer.hitboxes.throw = throw
 end 
 
 function determineThrowInput(_throw)
@@ -1532,8 +1554,7 @@ function modifyInputSet(player, ...)
 	setInputs()
 end
 
-function do_special_move (_player_obj, _special, _variation, easy_special_status)
-	--print(_special.name)
+function do_special_move(_player_obj, _special, _variation, easy_special_status)
 	local dir1 = 5 -- numpad neutral
 	local dir2 = 5
 	local button1 = ""
@@ -1557,7 +1578,6 @@ function do_special_move (_player_obj, _special, _variation, easy_special_status
 			dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
 		end 
 	end
-
 	for i, _button in pairs(_special.input_variations[_variation]) do
 		if i == 1 then 
 			button1 = sequence_input_to_key(_button, _player_obj.flip_input)

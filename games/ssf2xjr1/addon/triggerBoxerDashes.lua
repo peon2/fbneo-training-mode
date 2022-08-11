@@ -8,7 +8,8 @@ boxer_dashes_button = {
 		olcolour = "black",
 		handle = 1,
 		info = {
-			"",
+			"In this menu, you can choose the dashes",
+			"you want to be performed by Boxer"
 		},
 		func = 	function() CIG("boxer_dashes_page", 1) end,
 	}
@@ -17,7 +18,7 @@ table.insert(addonpage, boxer_dashes_button)
 local boxer_dashes_page = {
 	title = {
 		text = "Select the dashes you want to be performed",
-		x = interactivegui.boxxlength/2 - 60,
+		x = interactivegui.boxxlength/2 - 80,
 		y = 1,
 	},
 	{
@@ -178,6 +179,26 @@ function insertDashesSettingsFunctions()
 			newfunction = function()
 				boxer_dashes_options[15].checked = not boxer_dashes_options[15].checked
 				end
+		elseif i == 16 then
+			newfunction = function()
+				boxer_dashes_options[16].checked = not boxer_dashes_options[16].checked
+				end
+		elseif i == 17 then
+			newfunction = function()
+				boxer_dashes_options[17].checked = not boxer_dashes_options[17].checked
+				end
+		elseif i == 18 then
+			newfunction = function()
+				boxer_dashes_options[18].checked = not boxer_dashes_options[18].checked
+				end
+		elseif i == 19 then
+			newfunction = function()
+				boxer_dashes_options[19].checked = not boxer_dashes_options[19].checked
+				end
+		elseif i == 20 then
+			newfunction = function()
+				boxer_dashes_options[20].checked = not boxer_dashes_options[20].checked
+				end
 		end
 		boxer_dashes_options[i].func = newfunction
 	end
@@ -218,9 +239,9 @@ local function triggerDash(_dash_id)
 			else
 				distance_set = false
 			end 
-		elseif distance_selector == 0 then 
-			if rb(0xFF8896) == 0x02 then 
-				distance_set = true 
+		elseif distance_selector == 0 then
+			if gamestate.P2.is_cornered then
+				distance_set = true
 			else
 				distance_set = false
 			end
@@ -229,7 +250,7 @@ local function triggerDash(_dash_id)
 			dashing = false
 		end
 		if not distance_set and not dashing then 
-			if (distance_selector == 0 and rb(0xFF8896) ~= 0x02) or (distance_selector ~= 0 and distance < dash_distance) then 
+			if (distance_selector == 0 and not gamestate.P2.is_cornered) or (distance_selector ~= 0 and distance < dash_distance) then
 				if playerOneFacingLeft() then 
 					modifyInputSet(2,4)
 				else
@@ -244,37 +265,37 @@ local function triggerDash(_dash_id)
 			end
 			return 
 		end
-			if not gamestate.P2.is_attacking and gamestate.P2.state ~= being_hit then
-				if dashes_delay < 0 and dashes_frequence_selector == 1 then
-					dashes_delay = countFrames(dashes_delay)
-				end
-			end
-
-			if (rb(0xFF84CE+p2) < 0x04 or rb(0xFF84D6+p2) < 0x04 or rb(0xFF852B+p2) < 0x04 or rb(0xFF8524+p2) < 0x04) or (dashes_frequence_selector == 1 and dashes_delay < 0) then
-				if gamestate.P2.flip_input then
-					modifyInputSet(2,1)
-				else
-					modifyInputSet(2,3)
-				end
-				dashing = true
-			elseif (rb(0xFF84CE+p2) == 0x04 and rb(0xFF84D6+p2) == 0x04 and rb(0xFF852B+p2) == 0x04 and rb(0xFF8524+p2) == 0x04) then
-				modifyInputSet(2,5)
-				dashing = true
-			elseif (rb(0xFF84CE+p2) == 0x06 or rb(0xFF84D6+p2) == 0x06 or rb(0xFF852B+p2) == 0x06 or rb(0xFF8524+p2) == 0x06) then
-				ready_to_fire = true
-				dashing = true
-			end
-			
-			if ready_to_fire then
-				do_special_move(gamestate.P2, character_specific[character].specials[_dash_id[1]], _dash_id[2], false)
-				if dashes_frequence_selector == 1 then
-					if dashes_delay >= 0 then
-						dashes_delay = math.random(-150,0)
-					end
-				end
-				ready_to_fire = false
+		if not gamestate.P2.is_attacking and gamestate.P2.state ~= being_hit then
+			if dashes_delay < 0 and dashes_frequence_selector == 1 then
+				dashes_delay = countFrames(dashes_delay)
 			end
 		end
+
+		if (rb(0xFF84CE+p2) < 0x04 or rb(0xFF84D6+p2) < 0x04 or rb(0xFF852B+p2) < 0x04 or rb(0xFF8524+p2) < 0x04) or (dashes_frequence_selector == 1 and dashes_delay < 0) then
+			if gamestate.P2.flip_input then
+				modifyInputSet(2,1)
+			else
+				modifyInputSet(2,3)
+			end
+			dashing = true
+		elseif (rb(0xFF84CE+p2) == 0x04 and rb(0xFF84D6+p2) == 0x04 and rb(0xFF852B+p2) == 0x04 and rb(0xFF8524+p2) == 0x04) then
+			modifyInputSet(2,5)
+			dashing = true
+		elseif (rb(0xFF84CE+p2) == 0x06 or rb(0xFF84D6+p2) == 0x06 or rb(0xFF852B+p2) == 0x06 or rb(0xFF8524+p2) == 0x06) then
+			ready_to_fire = true
+			dashing = true
+		end
+
+		if ready_to_fire then
+			do_special_move(gamestate.P2, character_specific[character].specials[_dash_id[1]], _dash_id[2], false)
+			if dashes_frequence_selector == 1 then
+				if dashes_delay >= 0 then
+					dashes_delay = math.random(-150,0)
+				end
+			end
+			ready_to_fire = false
+		end
+	end
 end
 
 local dashes_checked = {}

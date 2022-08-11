@@ -418,7 +418,7 @@ end
 -- Infinite time, infinite life etc.
 ------------------------------------------
 ------------------------------------------
-trainingmaxhealth = 0x7fff
+trainingmaxhealth = 144
 p1maxhealth = trainingmaxhealth
 p2maxhealth = trainingmaxhealth
 p1maxmeter = 0x30
@@ -461,20 +461,12 @@ end
 
 function readPlayerOneHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	if p1maxhealth == trainingmaxhealth then
-		return gamestate.P1.life_backup-(trainingmaxhealth-144)
-	else
-		return gamestate.P1.life_backup
-	end
+	return gamestate.P1.life_backup
 end
 
 function readPlayerTwoHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	if p2maxhealth == trainingmaxhealth then
-		return gamestate.P2.life_backup-(trainingmaxhealth-144)
-	else
-		return gamestate.P2.life_backup
-	end
+	return gamestate.P2.life_backup
 end
 
 function writePlayerOneHealth(health)
@@ -565,41 +557,49 @@ local neverEnd_p1 = function()
 
 	local DEBUG=false
 	local p1scaledhealth = p1maxhealth
+	p1maxhealth = modulevars.p1.maxhealth
+
+	if modulevars.p1.maxhealth < 80 and not interactivegui.enabled then
+		modulevars.p1.maxhealth = 80
+		msg1 = "Max health option is currently bugged when the value"
+		msg2 = "is too low. The maximum value has been set to 80."
+		msg3 = "Sorry for the inconvenience."
+		msg_fcount = MSG_FRAMELIMIT-300
+	end
+
+	if gamestate.P1.life > p1maxhealth then
+		ww(gamestate.P1.addresses.life, p1maxhealth)
+		ww(gamestate.P1.addresses.life_backup, p1maxhealth)
+		ww(gamestate.P1.addresses.life_hud, p1maxhealth)
+	end
 
 	-- no health refill
 	if not combovars.p1.refillhealthenabled then
-		if gamestate.P1.life > 144 and gamestate.P1.life <= trainingmaxhealth then
-			p1maxhealth = 144
-			ww(gamestate.P1.addresses.life, p1maxhealth)
-			ww(gamestate.P1.addresses.life_backup, p1maxhealth)
-			ww(gamestate.P1.addresses.life_hud, p1maxhealth)
-		end
 		return
 	end
 
-	if gamestate.P1.life <= 144 then
-		p1maxhealth = trainingmaxhealth
+	-- health refill options
+	if gamestate.P1.life <= p1maxhealth then
 		p1_need_health_refill = true
 	end
 
 	-- health always full
 	if combovars.p1.instantrefillhealth then
-		p1scaledhealth = gamestate.P1.life
-		ww(gamestate.P1.addresses.life_hud, p1scaledhealth)
+		ww(gamestate.P1.addresses.life_hud, p1maxhealth)
 	end
 
 	-- refill after combo, compute the scaled health value to display
 	if not combovars.p1.instantrefillhealth then
-		p1scaledhealth = 144-(p1maxhealth-gamestate.P1.life)
+		p1scaledhealth = p1maxhealth-(p1maxhealth-gamestate.P1.life)
 		p1limit = p1scaledhealth
-		if p1scaledhealth >= 144 then
+		if p1scaledhealth >= p1maxhealth then
 			p1scaledhealth = p1maxhealth
 		end
-		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud < 144 then
+		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud < p1maxhealth then
 			p1scaledhealth = gamestate.P1.life_hud
 		end
 		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud >= p1maxhealth - 1 and p1limit > 0 then
-			p1scaledhealth = 144
+			p1scaledhealth = p1maxhealth
 			if DEBUG then print("[P1] >>>>>> 144") end
 		end
 		if gamestate.P1.life_hud <= p1limit + 1 then
@@ -627,40 +627,49 @@ local neverEnd_p2 = function()
 	local DEBUG=false
 	local p2scaledhealth = p2maxhealth
 
+	p2maxhealth = modulevars.p2.maxhealth
+
+	if modulevars.p2.maxhealth < 80 and not interactivegui.enabled then
+		modulevars.p2.maxhealth = 80
+		msg1 = "Max health option is currently bugged when the value"
+		msg2 = "is too low. The maximum value has been set to 80."
+		msg3 = "Sorry for the inconvenience."
+		msg_fcount = MSG_FRAMELIMIT-300
+	end
+
+	if gamestate.P2.life > p2maxhealth then
+		ww(gamestate.P2.addresses.life, p2maxhealth)
+		ww(gamestate.P2.addresses.life_backup, p2maxhealth)
+		ww(gamestate.P2.addresses.life_hud, p2maxhealth)
+	end
+
 	-- no health refill
 	if not combovars.p2.refillhealthenabled then
-		if gamestate.P2.life > 144 and gamestate.P2.life <= trainingmaxhealth then
-			p2maxhealth = 144
-			ww(gamestate.P2.addresses.life, p2maxhealth)
-			ww(gamestate.P2.addresses.life_backup, p2maxhealth)
-			ww(gamestate.P2.addresses.life_hud, p2maxhealth)
-		end
 		return
 	end
 
-	if gamestate.P2.life <= 144 then
-		p2maxhealth = trainingmaxhealth
+	-- health refill options
+	if gamestate.P2.life <= p2maxhealth then
 		p2_need_health_refill = true
 	end
 
 	-- health always full
 	if combovars.p2.instantrefillhealth then
-		p2scaledhealth = gamestate.P2.life
-		ww(gamestate.P2.addresses.life_hud, p2scaledhealth)
+		ww(gamestate.P2.addresses.life_hud, p2maxhealth) -- just visual
 	end
 
 	-- refill after combo, compute the scaled health value to display
 	if not combovars.p2.instantrefillhealth then
-		p2scaledhealth = 144-(p2maxhealth-gamestate.P2.life)
+		p2scaledhealth = p2maxhealth-(p2maxhealth-gamestate.P2.life)
 		p2limit = p2scaledhealth
-		if p2scaledhealth >= 144 then
+		if p2scaledhealth >= p2maxhealth then
 			p2scaledhealth = p2maxhealth
 		end
-		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud < 144 then
+		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud < p2maxhealth then
 			p2scaledhealth = gamestate.P2.life_hud
 		end
 		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud >= p2maxhealth - 1 and p2limit > 0 then
-			p2scaledhealth = 144
+			p2scaledhealth = p2maxhealth
 			if DEBUG then print("[P2] >>>>>> 144") end
 		end
 		if gamestate.P2.life_hud <= p2limit + 1 then
@@ -793,6 +802,7 @@ local function determine_char(_player_obj)
 			gui.text(80,65,"Upper Dash: " .. rb(0xFF8524))
 			gui.text(80,73,"Buffalo Headbutt: " .. rb(0xFF850E))
 			gui.text(80,81,"Crazy Buffalo: " .. rb(0xFF8522))
+			gui.text(34,56,"TAP: " .. display_taplevel(1))
 		elseif gamestate.P1.character == Blanka then
 			gui.text(2,65,"Normal Roll: " .. rb(0xFF8507))
 			gui.text(2,73,"Vertical Roll: " .. rb(0xFF84FE))
@@ -884,6 +894,7 @@ local function determine_char(_player_obj)
 			gui.text(307,65,"Upper Dash: " .. rb(0xFF8524+p2))
 			gui.text(307,73,"Buffalo Headbutt: " .. rb(0xFF850E+p2))
 			gui.text(307,81,"Crazy Buffalo: " .. rb(0xFF8522+p2))
+			gui.text(266,56,"TAP: " .. display_taplevel(2))
 		elseif gamestate.P2.character == Blanka then
 			gui.text(302,65,"Normal Roll: " .. rb(0xFF8507+p2))
 			gui.text(302,73,"Vertical Roll: " .. rb(0xFF84FE+p2))
@@ -1098,14 +1109,14 @@ end
 --------------------------
 --Grab meters
 --------------------------
-local p_a = 0
-local p1_hg = gamestate.P1.grab_strength
-local p2_hg = gamestate.P2.grab_strength
-
 local p1_grab_drawn = false
 local p2_grab_drawn = false
 
 local function draw_grab(player,p1_char,p2_char,p_gc)
+
+	local p_a = 0
+	local p1_hg = gamestate.P1.grab_strength
+	local p2_hg = gamestate.P2.grab_strength
 
 	if player == 0 then
 
@@ -1533,12 +1544,6 @@ local function render_st_hud()
 		gui.text(310,216,"Cancel: " .. check_cancel(gamestate.P2))
 
 		-- Character specific HUD
-		if gamestate.P1.character == Boxer then
-			gui.text(34,56,"TAP: " .. display_taplevel(1))
-		end
-		if gamestate.P2.character == Boxer then
-			gui.text(266,56,"TAP: " .. display_taplevel(2))
-		end
 		if character_specific[readCharacterName(gamestate.P1)].infos.has_projectile then
 			gui.text(34,56,"Projectile: " .. projectile_onscreen(gamestate.P1))
 		end
@@ -2434,6 +2439,7 @@ local function techThrowControl()
 	if tech_throw_selector == 0 then
 		if gamestate.P1.throw_flag == 0x01 then
 			modifyInputSet(2,6,5,3)
+			wb(gamestate.P2.addresses.grab_break, 0x00) -- will now automatically escape hold throws
 		end
 	end
 end
@@ -3086,7 +3092,7 @@ local function tickAnalysis()
 		tick_timer = 0
 	end
 	if tick_step == 1 then
-		if gamestate.P2.state ~= being_hit then
+		if (gamestate.P2.state ~= being_hit) then
 			tick_timer = countFrames(tick_timer)
 		end
 		if tick_timer > 12 then
@@ -3108,6 +3114,13 @@ local could_have_been_throw = false
 local begin_throw_display = false
 
 local function resetThrowDisplay(_player_obj)
+	-- Display the correct Boxer throw distance
+	if gamestate.P1.character == Boxer then
+		getBoxerThrowDistance(gamestate.P2.character)
+	elseif gamestate.P2.character == Boxer then
+		getBoxerThrowDistance(gamestate.P1.character)
+	end
+
 	local character = readCharacterName(_player_obj)
 	if _player_obj.id == 1 then
 		for i = 1, #p1_throw_range do
@@ -3129,6 +3142,8 @@ local function resetThrowDisplay(_player_obj)
 end
 
 local function tickThrow()
+	if tick_throw_display_selector < 1 then begin_throw_display = false end
+
 	if tick_throw_display_selector > 0 then
 	-- needs to be outside of is_in_match to update data when we press F2 or reset to change char
 		if characterChanged(gamestate.P1) then
@@ -3143,11 +3158,11 @@ local function tickThrow()
 		local p1character = readCharacterName(gamestate.P1)
 		local p2character = readCharacterName(gamestate.P2)
 		
-		if not begin_throw_display then
+		if not begin_throw_display and tick_throw_display_selector > 0 then
 			resetThrowDisplay(gamestate.P1)
 			resetThrowDisplay(gamestate.P2)
 			begin_throw_display = true
-		end 
+		end
 		if tick_throw_display_selector > 0 then
 		-- Tick analysis
 			tickAnalysis()
@@ -3185,7 +3200,7 @@ local function tickThrow()
 				for i = 1, #p2_throw_range do
 					if p2_throw_range[i][2] >= 0 then 
 						p2_throw_range[i][3] = true
-						if (tick_step == 1) and (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt or gamestate.P2.state == doing_normal_move or gamestate.P2.state == doing_special_move) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
+						if (tick_step == 1) and (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt or gamestate.P2.state == doing_normal_move or gamestate.P2.state == doing_special_move or gamestate.P2.state == 0x06) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
 							throwable_timer = countFrames(throwable_timer)
 						end
 					else
@@ -3197,6 +3212,13 @@ local function tickThrow()
 					for i = 1, #p2_throw_range do
 						if p2_throw_range[i][3] then -- If p2 could have thrown 
 							could_have_been_throw = true
+						end
+					end
+					if could_have_been_throw then
+						if throwable_timer == 0 then
+							throwable_timer = 1
+						else
+							throwable_timer = countFrames(throwable_timer)
 						end
 					end
 					if (not could_have_been_throw) and (throwable_timer > 0) then
@@ -3262,9 +3284,12 @@ crossup_display_selector = customconfig.crossup_display_selector
 local begin_crossup_display = false
 local jump_crossup_attempt = false
 local ground_crossup_attempt = false
+local special_crossup_attempt = false
 local prev_flip_value = nil
 local prev_p1_left_side = false
+local did_not_crossup = false
 local DEBUG = false
+local block_direction = ""
 
 local function isP1Left()
 	return gamestate.P2.pos_x-gamestate.P1.pos_x > 0
@@ -3284,7 +3309,19 @@ local function crossupDisplay()
 			end
 			if gamestate.frame_number ~= gamestate.prev.frame_number then
 				if begin_crossup_display then
-					if jump_crossup_attempt and gamestate.P1.prev.airborn and not gamestate.P1.airborn then
+					-- Correcting some attemps mislabeled
+					if ground_crossup_attempt and (gamestate.P1.character == Claw and gamestate.P1.state == doing_special_move and gamestate.P1.airborn) then 
+						if DEBUG then
+							print("Claw Flying move -> Correcting : Special crossup attempt")
+						end
+						begin_crossup_display = false
+						prev_flip_value = nil
+						jump_crossup_attempt = false
+						ground_crossup_attempt = false
+						special_crossup_attempt = true
+					end
+					-- Reseting
+					if jump_crossup_attempt and ((gamestate.P1.prev.state == jumping and gamestate.P1.state ~= jumping) or (gamestate.P2.prev.state == jumping and (gamestate.P2.state == being_hit or gamestate.P2.state == being_thrown))) then
 						if DEBUG then
 							print("Reset (Jump)")
 						end
@@ -3292,6 +3329,7 @@ local function crossupDisplay()
 						prev_flip_value = nil
 						jump_crossup_attempt = false
 						ground_crossup_attempt = false
+						special_crossup_attempt = false
 					elseif ground_crossup_attempt and not gamestate.P1.is_attacking then
 						if DEBUG then
 							print("Reset (Ground)")
@@ -3300,14 +3338,33 @@ local function crossupDisplay()
 						prev_flip_value = nil
 						jump_crossup_attempt = false
 						ground_crossup_attempt = false
+						special_crossup_attempt = false
+					elseif special_crossup_attempt and gamestate.P1.prev.state == doing_special_move and gamestate.P1.state ~= doing_special_move then
+						if DEBUG then
+							print("Reset (Special)")
+						end
+						begin_crossup_display = false
+						prev_flip_value = nil
+						jump_crossup_attempt = false
+						ground_crossup_attempt = false
+						special_crossup_attempt = false
 					end
 				end
 				
 				if not begin_crossup_display then
-					if gamestate.P1.state == jumping and gamestate.P1.prev.state ~= jumping then
+					if special_crossup_attempt then
+						if gamestate.P1.character == Claw then
+							if gamestate.P1.prev.is_attacking and not gamestate.P1.is_attacking then -- Claw did bounce against a wall
+								begin_crossup_display = true
+								prev_p1_left_side = isP1Left()
+								did_not_crossup = false
+							end
+						end
+					elseif gamestate.P1.state == jumping and gamestate.P1.prev.state ~= jumping then
 						jump_crossup_attempt = true
 						begin_crossup_display = true
 						prev_p1_left_side = isP1Left()
+						did_not_crossup = false
 						if DEBUG then
 							print("Jump crossup attempt")
 						end
@@ -3315,6 +3372,7 @@ local function crossupDisplay()
 						ground_crossup_attempt = true -- slides etc.
 						begin_crossup_display = true
 						prev_p1_left_side = isP1Left()
+						did_not_crossup = false
 						if DEBUG then
 							print("Ground crossup attempt")
 						end
@@ -3323,19 +3381,40 @@ local function crossupDisplay()
 				
 				if begin_crossup_display then
 					if prev_flip_value == nil then
-						if jump_crossup_attempt and (gamestate.P2.state == standing or gamestate.P2.state == blocking or gamestate.P2.state == landing or gamestate.P2.is_attacking) then
-							prev_flip_value = gamestate.P2.flip_input
+						if jump_crossup_attempt or special_crossup_attempt then
+							prev_flip_value = not isP1Left()
 							if DEBUG then
-								print("Saving flip value (jump crossup attempt) : P2 flip = "..str(gamestate.P2.flip_input))
+								local side = ""
+								if prev_p1_left_side then
+									side = "Left"
+								else
+									side = "Right"
+								end
+								if jump_crossup_attempt then
+									print("Saving jump original side (jump crossup attempt) : "..side)
+								elseif special_crossup_attempt then
+									print("Saving special move original side (special crossup attempt) : "..side)
+								end
 							end
 						elseif ground_crossup_attempt then
-							prev_flip_value = gamestate.P2.flip_input
+							prev_flip_value = not isP1Left()
 							if DEBUG then
-								print("Saving flip value (ground crossup attempt) : P2 flip = "..str(gamestate.P2.flip_input))
+								local side = ""
+								if prev_p1_left_side then
+									side = "Left"
+								else
+									side = "Right"
+								end
+								print("Saving attack original side (ground crossup attempt) : "..side)
 							end
 						end
 					end
-					if gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter then
+					if DEBUG then
+						if (gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter) and gamestate.P2.state == jumping then
+							print("Air-to-Air : This is not a crossup")
+						end
+					end
+					if (gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter) and gamestate.P2.state ~= jumping then
 						if DEBUG then 
 							print("Hit. gamestate prev/curr flip input : "..str(gamestate.P2.prev.flip_input).."/"..str(gamestate.P2.flip_input))
 							print("Hit happened at :"..getDistanceBetweenPlayers())
@@ -3376,9 +3455,21 @@ local function crossupDisplay()
 								player_msg_fcount = MSG_FRAMELIMIT-120
 								print("> Non Crossup : should have been blocked "..block_direction)
 							end
+							did_not_crossup = true
 						end
 					end
 				end
+			end
+			if special_crossup_attempt and (did_not_crossup and isP1Left() ~= prev_p1_left_side) then -- If Claw did a Barcelona over his opponent we want to display a message even if the special hit from front
+				if DEBUG then
+					print("> Fake Crossup : should have been blocked "..block_direction)
+				end
+				msg_p1 = "Fake crossup"
+				if DEBUG then
+					msg_p1 = "Fake crossup : should block "..block_direction
+				end
+				player_msg_fcount = MSG_FRAMELIMIT-120
+				did_not_crossup = false
 			end
 		end
 	end
