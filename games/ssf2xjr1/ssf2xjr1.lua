@@ -418,7 +418,7 @@ end
 -- Infinite time, infinite life etc.
 ------------------------------------------
 ------------------------------------------
-trainingmaxhealth = 144
+trainingmaxhealth = 0x7fff
 p1maxhealth = trainingmaxhealth
 p2maxhealth = trainingmaxhealth
 p1maxmeter = 0x30
@@ -461,12 +461,20 @@ end
 
 function readPlayerOneHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P1.life_backup
+	if p1maxhealth == trainingmaxhealth then
+		return gamestate.P1.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P1.life_backup
+	end
 end
 
 function readPlayerTwoHealth()
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
-	return gamestate.P2.life_backup
+	if p2maxhealth == trainingmaxhealth then
+		return gamestate.P2.life_backup-(trainingmaxhealth-144)
+	else
+		return gamestate.P2.life_backup
+	end
 end
 
 function writePlayerOneHealth(health)
@@ -557,49 +565,41 @@ local neverEnd_p1 = function()
 
 	local DEBUG=false
 	local p1scaledhealth = p1maxhealth
-	p1maxhealth = modulevars.p1.maxhealth
-
-	if modulevars.p1.maxhealth < 80 and not interactivegui.enabled then
-		modulevars.p1.maxhealth = 80
-		msg1 = "Max health option is currently bugged when the value"
-		msg2 = "is too low. The maximum value has been set to 80."
-		msg3 = "Sorry for the inconvenience."
-		msg_fcount = MSG_FRAMELIMIT-300
-	end
-
-	if gamestate.P1.life > p1maxhealth then
-		ww(gamestate.P1.addresses.life, p1maxhealth)
-		ww(gamestate.P1.addresses.life_backup, p1maxhealth)
-		ww(gamestate.P1.addresses.life_hud, p1maxhealth)
-	end
 
 	-- no health refill
 	if not combovars.p1.refillhealthenabled then
+		if gamestate.P1.life > 144 and gamestate.P1.life <= trainingmaxhealth then
+			p1maxhealth = 144
+			ww(gamestate.P1.addresses.life, p1maxhealth)
+			ww(gamestate.P1.addresses.life_backup, p1maxhealth)
+			ww(gamestate.P1.addresses.life_hud, p1maxhealth)
+		end
 		return
 	end
 
-	-- health refill options
-	if gamestate.P1.life <= p1maxhealth then
+	if gamestate.P1.life <= 144 then
+		p1maxhealth = trainingmaxhealth
 		p1_need_health_refill = true
 	end
 
 	-- health always full
 	if combovars.p1.instantrefillhealth then
-		ww(gamestate.P1.addresses.life_hud, p1maxhealth)
+		p1scaledhealth = gamestate.P1.life
+		ww(gamestate.P1.addresses.life_hud, p1scaledhealth)
 	end
 
 	-- refill after combo, compute the scaled health value to display
 	if not combovars.p1.instantrefillhealth then
-		p1scaledhealth = p1maxhealth-(p1maxhealth-gamestate.P1.life)
+		p1scaledhealth = 144-(p1maxhealth-gamestate.P1.life)
 		p1limit = p1scaledhealth
-		if p1scaledhealth >= p1maxhealth then
+		if p1scaledhealth >= 144 then
 			p1scaledhealth = p1maxhealth
 		end
-		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud < p1maxhealth then
+		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud < 144 then
 			p1scaledhealth = gamestate.P1.life_hud
 		end
 		if (gamestate.P1.life_hud > p1scaledhealth) and gamestate.P1.life_hud >= p1maxhealth - 1 and p1limit > 0 then
-			p1scaledhealth = p1maxhealth
+			p1scaledhealth = 144
 			if DEBUG then print("[P1] >>>>>> 144") end
 		end
 		if gamestate.P1.life_hud <= p1limit + 1 then
@@ -627,49 +627,40 @@ local neverEnd_p2 = function()
 	local DEBUG=false
 	local p2scaledhealth = p2maxhealth
 
-	p2maxhealth = modulevars.p2.maxhealth
-
-	if modulevars.p2.maxhealth < 80 and not interactivegui.enabled then
-		modulevars.p2.maxhealth = 80
-		msg1 = "Max health option is currently bugged when the value"
-		msg2 = "is too low. The maximum value has been set to 80."
-		msg3 = "Sorry for the inconvenience."
-		msg_fcount = MSG_FRAMELIMIT-300
-	end
-
-	if gamestate.P2.life > p2maxhealth then
-		ww(gamestate.P2.addresses.life, p2maxhealth)
-		ww(gamestate.P2.addresses.life_backup, p2maxhealth)
-		ww(gamestate.P2.addresses.life_hud, p2maxhealth)
-	end
-
 	-- no health refill
 	if not combovars.p2.refillhealthenabled then
+		if gamestate.P2.life > 144 and gamestate.P2.life <= trainingmaxhealth then
+			p2maxhealth = 144
+			ww(gamestate.P2.addresses.life, p2maxhealth)
+			ww(gamestate.P2.addresses.life_backup, p2maxhealth)
+			ww(gamestate.P2.addresses.life_hud, p2maxhealth)
+		end
 		return
 	end
 
-	-- health refill options
-	if gamestate.P2.life <= p2maxhealth then
+	if gamestate.P2.life <= 144 then
+		p2maxhealth = trainingmaxhealth
 		p2_need_health_refill = true
 	end
 
 	-- health always full
 	if combovars.p2.instantrefillhealth then
-		ww(gamestate.P2.addresses.life_hud, p2maxhealth) -- just visual
+		p2scaledhealth = gamestate.P2.life
+		ww(gamestate.P2.addresses.life_hud, p2scaledhealth)
 	end
 
 	-- refill after combo, compute the scaled health value to display
 	if not combovars.p2.instantrefillhealth then
-		p2scaledhealth = p2maxhealth-(p2maxhealth-gamestate.P2.life)
+		p2scaledhealth = 144-(p2maxhealth-gamestate.P2.life)
 		p2limit = p2scaledhealth
-		if p2scaledhealth >= p2maxhealth then
+		if p2scaledhealth >= 144 then
 			p2scaledhealth = p2maxhealth
 		end
-		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud < p2maxhealth then
+		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud < 144 then
 			p2scaledhealth = gamestate.P2.life_hud
 		end
 		if (gamestate.P2.life_hud > p2scaledhealth) and gamestate.P2.life_hud >= p2maxhealth - 1 and p2limit > 0 then
-			p2scaledhealth = p2maxhealth
+			p2scaledhealth = 144
 			if DEBUG then print("[P2] >>>>>> 144") end
 		end
 		if gamestate.P2.life_hud <= p2limit + 1 then
