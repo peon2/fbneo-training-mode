@@ -20,4 +20,4 @@ WHIFF_PUNISH_CRHK = {
 		end,
 }
 table.insert(missions_list["ryu"], WHIFF_PUNISH_CRHK)
----
+--END

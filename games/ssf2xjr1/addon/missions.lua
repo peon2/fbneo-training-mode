@@ -137,7 +137,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	tf.string = ""	-- stocks the string
 	tf.edition_index = 1 -- trace wich character will be modified
 	tf.in_edition = false
-
+	
 	local _available_characters = {}
 	if characters_set then
 		_available_characters = characters_set
@@ -322,7 +322,11 @@ local missions_button = {
 		x = 8,
 		y = determineButtonYPos(addonpage),
 		olcolour = "black",
-		info = "",
+		info = {
+			"A mission is a savestate coupled with one or more replay files.",
+			"When you select a mission, its savestate is loaded regularly",
+			"and the dummy performs the actions saved in the replay"
+		},
 		func = 	function() CIG("missions_hub", 1) end,
 	}
 table.insert(addonpage, missions_button)
@@ -349,6 +353,7 @@ local missions_hub = {
 		x = 150,
 		y = 150,
 		olcolour = "black",
+		func =  function() end,
 	},
 	{
 		text = "Blanka",
@@ -569,7 +574,10 @@ local save_mission = {
 			y = 20,
 			fillpercent = 0,
 			olcolour = "white",
-			info = "",
+			info = {
+				"Name of your mission",
+				"Use Up and Down to select a character, Right to validate"
+			},
 			func = 	function()
 						CIG("save_name")
 					end,
@@ -588,7 +596,10 @@ local save_mission = {
 			y = 50,
 			fillpercent = 0,
 			olcolour = "white",
-			info = "",
+			info = {
+				"Controls how many frames should be left after a replay end and before",
+				"the savestate is loaded again"
+			},
 			func = 	function()
 						CIG("save_frame")
 					end,
@@ -599,7 +610,9 @@ local save_mission = {
 			y = 68,
 			fillpercent = 0,
 			olcolour = "black",
-			info = "",
+			info = {
+				"Saves your mission in your character's directory"
+			},
 		},
 }
 
@@ -661,10 +674,7 @@ createSlotsFunctions()
 local function insertSlotButtons()
 	if #save_mission ~= 3 then -- if one or more slot buttons has been inserted
 		for i = 1, #save_mission-3 do
-			-- print(i)
-			-- if save_mission[i].slot then
-				table.remove(save_mission)
-			-- end
+			table.remove(save_mission)
 		end
 	end
 	local framesrecorded = 0
@@ -811,8 +821,8 @@ end
 local mission_path = "games/ssf2xjr1/addon/missions_saved/"
 
 local function makeMissionButton(_mission_name, _mission_frame_delay)
-	return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tautoblock = "..autoblock_selector..",\n".."\t\tdizzy = "..dizzy_selector..",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n"..
-	"\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..readCharacterName(gamestate.P1).."\"], ".._mission_name..")".."\n---"
+	return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tautoblock = "..autoblock_selector..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n"..
+	"\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..readCharacterName(gamestate.P1).."\"], ".._mission_name..")".."\n--END"
 end
 
 local function saveMission()
@@ -828,6 +838,9 @@ local function saveMission()
 	stockSlotsChecked()
 	if guipages.save_mission.name.text == "" then
 		guipages.save_mission.infos.text = "Please enter a name"
+		error_msg_fcount = ERROR_MSG_FRAMELIMIT-120
+	elseif guipages.save_mission.name.text == "_" then
+		guipages.save_mission.infos.text = "Please enter a valid name"
 		error_msg_fcount = ERROR_MSG_FRAMELIMIT-120
 	elseif #slots_checked == 0 then
 		guipages.save_mission.infos.text = "Please select a slot"
@@ -868,34 +881,26 @@ local function saveMission()
 end
 guipages.save_mission[3].func = saveMission
 
-local missions_checked = {}
+local missions_checked = {} -- for loading
+local missions_checked_deletion = {} -- for deleting. Maybe I'm being overcautious for not merging the two tables though
 
 local function deleteMission()
-	for i = 1, #characters do
-		if missions_list[characters[i]] ~= nil then
-			for k in pairs(missions_list[characters[i]]) do
-				if missions_list[characters[i]][k].checked then
-					table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, mission_text = missions_list[characters[i]][k].mission_text, missions_list[characters[i]][k].dizzy})
+	if #missions_checked_deletion > 0 then
+		for i = 1, #missions_checked_deletion do
+			if fexists(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name..".fs") then
+				os.remove(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name..".fs")
+			end
+			for j = 1, missions_checked_deletion[i].slots_nb do
+				if fexists(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name.."_"..j..".lua") then
+					os.remove(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name.."_"..j..".lua")
 				end
 			end
-		end
-	end
-	if #missions_checked > 0 then
-		for i = 1, #missions_checked do
-			if fexists(mission_path..missions_checked[i].character.."/"..missions_checked[i].name..".fs") then
-				os.remove(mission_path..missions_checked[i].character.."/"..missions_checked[i].name..".fs")
-			end
-			for j = 1, missions_checked[i].slots_nb do
-				if fexists(mission_path..missions_checked[i].character.."/"..missions_checked[i].name.."_"..j..".lua") then
-					os.remove(mission_path..missions_checked[i].character.."/"..missions_checked[i].name.."_"..j..".lua")
-				end
-			end
-			local in_file = io.open("./"..mission_path..missions_checked[i].character.."/missions_list.lua", "r")
+			local in_file = io.open("./"..mission_path..missions_checked_deletion[i].character.."/missions_list.lua", "r")
 			local file_text = in_file:read("*a")
 			in_file:close()
 
-			local out_text = string.gsub(file_text, "("..missions_checked[i].name.." = {.*%-%-%-)", "")
-			local out_file = io.open("./"..mission_path..missions_checked[i].character.."/missions_list.lua", "w+")
+			local out_text = string.gsub(file_text, "(\n"..missions_checked_deletion[i].name.." = {.-%-%-END)", "")
+			local out_file = io.open("./"..mission_path..missions_checked_deletion[i].character.."/missions_list.lua", "w+")
 			out_file:write(out_text)
 			out_file:close()
 		end
@@ -912,40 +917,86 @@ local function deleteMission()
 		end
 		toggleInteractiveGuiEnabled(false, {})
 		formatGuiTables()
-		msg1 = "\t    Missions succesfully deleted"
+		local s = ""
+		if #missions_checked_deletion > 1 then
+			s = "s"
+		end
+		msg1 = "\t    Mission"..s.." succesfully deleted"
 		msg_fcount = MSG_FRAMELIMIT-120
 	else
 		guipages.missions_hub.infos.text = "\tNo missions were selected"
 		error_msg_fcount = ERROR_MSG_FRAMELIMIT-120
 	end
-	for k in pairs(missions_checked) do
-		missions_checked[k] = nil
+	for k in pairs(missions_checked_deletion) do
+		missions_checked_deletion[k] = nil
 	end
 end
-guipages.missions_hub[2].func = deleteMission
+
+local function clearMissionsCheckedForDeletion()
+	for k in pairs(missions_checked_deletion) do
+		missions_checked_deletion[k] = nil
+	end
+end
+
+local function stockMissionsCheckedForDeletion()
+	clearMissionsCheckedForDeletion()
+	for i = 1, #characters do
+		if missions_list[characters[i]] ~= nil then
+			for k in pairs(missions_list[characters[i]]) do
+				if missions_list[characters[i]][k].checked then
+					table.insert(missions_checked_deletion, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb})
+				end
+			end
+		end
+	end
+end
+
+local Elements = {
+	{text = "No", releasefunc = function() return function()  CIG(interactivegui.previouspage, interactivegui.previousselection) interactivegui.previouspage = interactivegui.page interactivegui.previousselection = interactivegui.selection clearMissionsCheckedForDeletion() resetErrorMsg() end end},
+	{text = "Yes", releasefunc = function() return function() CIG(interactivegui.previouspage, interactivegui.previousselection) interactivegui.previouspage = interactivegui.page interactivegui.previousselection = interactivegui.selection deleteMission() resetErrorMsg() end end},
+}
+guipages.delete = createPopUpMenu(guipages.missions_hub, nil, nil, nil, Elements, 125, 125)
+guipages.delete[2].x = guipages.delete[1].x + 15
+guipages.delete[2].y = guipages.delete[1].y
+
+guipages.missions_hub[2].func = function()
+	stockMissionsCheckedForDeletion()
+	if #missions_checked_deletion < 1 then
+		guipages.missions_hub.infos.text = "\tNo missions were selected"
+		error_msg_fcount = ERROR_MSG_FRAMELIMIT-120
+	else
+		local s = ""
+		if #missions_checked_deletion > 1 then
+			s = "s"
+		end
+		guipages.missions_hub.infos.text = #missions_checked_deletion.." mission"..s.." will be deleted, are you sure ?"
+		CIG("delete",1)
+	end
+end
 -------------------------------
 --	Play a mission
 -------------------------------
+local frame_delay = 0
 local timer = 0
 local random_slot = 1
 
 local function playMission(mission) -- mission[1] = character / [2] = mission's name
-	local frame_delay = mission.frame_delay
 	if frame_delay < 3 then frame_delay = 3 end -- to be sure that we can reroll a mission
 	if not recording.playback then
 		timer = countFrames(timer)
 	end
 	if timer > frame_delay then
 		savestate.load(mission_path..mission.character.."/"..mission.name..".fs") -- savestate
+		if mission.mission_text then
+			msg1 = mission.mission_text
+		end
 		random_slot = math.random(1, mission.slots_nb)
 		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
 			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
 		end
 		togglePlayBack(nil, {})
 		timer = 0
-	end
-	if mission.mission_text then
-		msg1 = mission.mission_text
+		frame_delay = mission.frame_delay
 	end
 end
 
@@ -955,6 +1006,7 @@ local mission_reroll = true
 
 local function stockMissionsChecked()
 	if interactivegui.enabled and not listenMissionsSettingsModfications then
+		reset_msg()
 		for k in pairs(missions_checked) do
 			missions_checked[k] = nil
 		end
@@ -966,7 +1018,7 @@ local function stockMissionsChecked()
 			if missions_list[characters[i]] ~= nil then
 				for k in pairs(missions_list[characters[i]]) do
 					if missions_list[characters[i]][k].checked then
-						table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, mission_text = missions_list[characters[i]][k].mission_text, missions_list[characters[i]][k].dizzy})
+						table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, mission_text = missions_list[characters[i]][k].mission_text})
 					end
 				end
 			end

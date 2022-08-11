@@ -39,17 +39,29 @@
 -- script modified by @asunaro to fit in the fbneo training mode as an add-on (May 2022). 
 -- Input Display and Hitbox Viewer are loaded in a different place now
 
-sako_training_button = {
+local backup_comboenabled = hud.comboenabled
+
+local sako_training_button = {
 		text = "Sako Training",
 		x = 8,
 		y = determineButtonYPos(addonpage),
 		olcolour = "black",
+		info = {
+			"Script by Born2SPD - Print instructions on screen",
+			"to help you perform a Sako Tick"
+		},
 		func =	function()
 				sako_training = sako_training + 1
-				if sako_training == 1 then permissive = true end
-				if sako_training == 2 then permissive = false end
-				if sako_training > 2 then
+				if sako_training == 1 then
+					permissive = true
+					backup_comboenabled = hud.comboenabled
+					hud.comboenabled = false
+				elseif sako_training == 2 then
+					permissive = false
+					hud.comboenabled = false
+				elseif sako_training > 2 then
 					sako_training = 0
+					hud.comboenabled = backup_comboenabled
 				end
 			end,
 		autofunc = function(this)
