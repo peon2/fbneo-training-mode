@@ -2843,7 +2843,7 @@ local function frameAdvantageDisplay()
 		end
 		-- throw
 		if gamestate.P1.throw_flag == 0x01 then
-			if gamestate.P1.character == Guile or gamestate.P1.character == Cammy or gamestate.P1.character == Zangief then
+			if gamestate.P1.character == Guile or gamestate.P1.character == Cammy or gamestate.P1.character == Zangief or gamestate.P1.character == Hawk then
 				throw_exception = true -- Those characters can trigger hitfreeze with their throws
 			end
 		end
@@ -3414,7 +3414,7 @@ local function isP1Left()
 end
 
 local function crossupDisplay()
-	local DEBUG = true
+	local DEBUG = false
 	if crossup_display_selector > 0 then
 		if gamestate.is_in_match then 
 			if DEBUG then
