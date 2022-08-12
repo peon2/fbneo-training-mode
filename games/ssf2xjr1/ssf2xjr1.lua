@@ -332,6 +332,15 @@ function characterChanged(_player_obj)
 		return false
 	end
 end
+
+function oldStatusChanged(_player_obj)
+	if _player_obj.prev.is_old ~= _player_obj.is_old then
+		return true
+	else
+		return false
+	end
+
+end
 ------------------------------------------------------------
 --	 Messages -- Borrowed from sako.lua by Born2SPD
 ------------------------------------------------------------
@@ -1642,10 +1651,17 @@ local function setReversal(_player_obj, reversal)
 	wb(_player_obj.addresses.reversal_id, reversal[1])
 	wb(_player_obj.addresses.reversal_strength, reversal[2])
 	-- just a little fix
-	if _player_obj.character == Hawk then -- Voir si ça marche pour le P1 aussi
-		if reversal[1] == 0x00 then -- DP
-			wb(0xFF84DE,reversal[2])
-			wb(0xFF84DD,reversal[2])
+	if _player_obj.character == Hawk then
+		if not _player_obj.is_old then
+			if reversal[1] == 0x00 then -- DP
+				wb(0xFF88DE,reversal[2])
+				wb(0xFF88DD,reversal[2])
+			end
+		else
+			if reversal[1] == 0x00 then
+				wb(0xFF88F0,reversal[2])
+				wb(0xFF88F1,reversal[2])
+			end
 		end
 	end
 end
@@ -2135,6 +2151,9 @@ local forceblock = false
 local inputs_at_jumpstart = 0
 local autoblock_skip_counter = 60
 local canblock = false
+local canblock_counter = 0
+local canblock_length = 20
+
 local autoBlock = function()
 
 	if autoblock_selector == -1 then
@@ -2148,7 +2167,11 @@ local autoBlock = function()
 		setDirection(2,5)
 		forceblock = false
 		if autoblock_selector == 2 and canblock == true then
-			canblock = false
+			canblock_counter = countFrames(canblock_counter)
+			if canblock_counter >= canblock_length then
+				canblock = false
+				canblock_counter = 0
+			end
 		end
 		return
 	end
@@ -2790,7 +2813,7 @@ local function frameAdvantageDisplay()
 			end
 			-- Throw
 			if successful_throw or teched_throw then
-				if gamestate.P1.throw_flag == 0x00 and gamestate.P1.state ~= 0x0A and gamestate.P1.substate ~= 0x04 then
+				if gamestate.P1.throw_flag == 0x00 and gamestate.P1.state ~= 0x0A and gamestate.P1.state ~= doing_special_move and gamestate.P1.substate ~= 0x04 then
 					throw_ended = true
 				end
 				if throw_ended then
@@ -2885,7 +2908,7 @@ local function frameAdvantageDisplay()
 			defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
-			exception = false
+			throw_exception = false
 			--------------------------------
 			if frame_disadvantage > 0 then
 				frame_advantage_result = "-"..frame_disadvantage
@@ -3221,7 +3244,7 @@ local function tickThrow()
 					elseif could_have_been_throw and (throwable_timer < tick_timer) then
 						msg2 = "However P2 could have thrown you during "..throwable_timer.." frames :("
 					end
-					msg_fcount = MSG_FRAMELIMIT-220
+					msg_fcount = MSG_FRAMELIMIT-300
 					could_have_been_throw = false
 				end 
 			end
@@ -3279,7 +3302,6 @@ local special_crossup_attempt = false
 local prev_flip_value = nil
 local prev_p1_left_side = false
 local did_not_crossup = false
-local DEBUG = false
 local block_direction = ""
 
 local function isP1Left()
@@ -3287,6 +3309,7 @@ local function isP1Left()
 end
 
 local function crossupDisplay()
+	local DEBUG = true
 	if crossup_display_selector > 0 then
 		if gamestate.is_in_match then 
 			if DEBUG then
@@ -3359,7 +3382,7 @@ local function crossupDisplay()
 						if DEBUG then
 							print("Jump crossup attempt")
 						end
-					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping then
+					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping and gamestate.P1.throw_flag ~= 0x01 and gamestate.P2.state ~= being_thrown then
 						ground_crossup_attempt = true -- slides etc.
 						begin_crossup_display = true
 						prev_p1_left_side = isP1Left()
@@ -3611,7 +3634,7 @@ function displayReversalSettings()
 		makeReversalSettings(gamestate.patched)
 	end
 	if gamestate.patched then
-		if characterChanged(gamestate.P2) then
+		if characterChanged(gamestate.P2) or oldStatusChanged(gamestate.P2) then
 			if #reversal_options_checked > 0 then
 				for k in pairs(reversal_options_checked) do
 				reversal_options_checked[k] = nil

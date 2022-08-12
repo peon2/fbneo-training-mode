@@ -250,9 +250,11 @@ function makeReversalSettingsButtons()
 	local n = 0 -- count the number of reversal options
 	local s = 0 -- count the number of unique special moves a character can reversal
 	local character = readCharacterName(gamestate.P2)
+	local old = gamestate.P2.is_old
+	updateForOldChar(gamestate.P2) -- Uses the correct values for old characters
 	-- Specials
 	for i = 1, #character_specific[character].specials do
-		if character_specific[character].specials[i].reversal then
+		if character_specific[character].specials[i].reversal and ((not old) or (old and not character_specific[character].specials[i].new_only)) then
 			s = s + 1
 			for k = 1, #character_specific[character].specials[i].input_variations do
 			 if (character_specific[character].specials[i].strength_set ~= 0) or (character_specific[character].specials[i].strength_set == 0 and k == 1) then -- Don't display variations for super moves or moves that don't have variations
