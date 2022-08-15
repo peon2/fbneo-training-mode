@@ -332,6 +332,15 @@ function characterChanged(_player_obj)
 		return false
 	end
 end
+
+function oldStatusChanged(_player_obj)
+	if _player_obj.prev.is_old ~= _player_obj.is_old then
+		return true
+	else
+		return false
+	end
+
+end
 ------------------------------------------------------------
 --	 Messages -- Borrowed from sako.lua by Born2SPD
 ------------------------------------------------------------
@@ -787,187 +796,292 @@ local function determine_char(_player_obj)
 	local text
 	if _player_obj.id == 1 then
 		if gamestate.P1.character == Boxer then
-			gui.text(2,65,"Ground Straight: ".. rb(0xFF84CE))
-			gui.text(2,73,"Ground Upper: " ..rb(0xFF84D6))
-			gui.text(2,81,"Straight: " .. rb(0xFF852B))
-			gui.text(80,65,"Upper Dash: " .. rb(0xFF8524))
-			gui.text(80,73,"Buffalo Headbutt: " .. rb(0xFF850E))
-			gui.text(80,81,"Crazy Buffalo: " .. rb(0xFF8522))
-			gui.text(34,56,"TAP: " .. display_taplevel(1))
+			gui.text(2,65,"Buffalo Headbutt: " .. rb(0xFF850E))
+			gui.text(50,56,"TAP: " .. display_taplevel(1))
+			if gamestate.P1.is_old then
+				gui.text(2,73,"Straight: " .. rb(0xFF84CE))
+				gui.text(2,81,"Upper Dash: " .. rb(0xFF84D6))
+			else
+				gui.text(2,73,"Straight: " .. rb(0xFF852B))
+				gui.text(2,81,"Upper Dash: " .. rb(0xFF8524))
+				gui.text(83,65,"Ground Straight: ".. rb(0xFF84CE))
+				gui.text(83,73,"Ground Upper: " ..rb(0xFF84D6))
+				gui.text(83,81,"Crazy Buffalo: " .. rb(0xFF8522))
+			end
 		elseif gamestate.P1.character == Blanka then
 			gui.text(2,65,"Normal Roll: " .. rb(0xFF8507))
 			gui.text(2,73,"Vertical Roll: " .. rb(0xFF84FE))
-			gui.text(2,81,"Ground Shave Roll: " .. rb(0xFF850F))
+			gui.text(2,81,"Rainbow Roll: " .. rb(0xFF8507))
+			gui.text(80,65,"Electricity: " .. rb(0xFF84E8)%6 .. ", " .. rb(0xFF84EA)%6 .. ", " .. rb(0xFF84EC)%6) -- this way you know when you reached the 5 inputs needed
+			if not gamestate.P1.is_old then
+				gui.text(80,73,"Ground Shave Roll: " .. rb(0xFF850F))
+			end
 		elseif gamestate.P1.character == Cammy then
 			gui.text(2,65,"Spin Knuckle: " .. rb(0xFF84F0))
 			gui.text(2,73,"Cannon Spike: " .. rb(0xFF84E0))
 			gui.text(2,81,"Spiral Arrow: ".. rb(0xFF84E4))
-			gui.text(80,65,"Hooligan Combination: " .. rb(0xFF84F7))
-			gui.text(80,73,"Spin Drive Smasher: " .. rb(0xFF84F4))
+			if not gamestate.P1.is_old then
+				gui.text(80,65,"Hooligan Combination: " .. rb(0xFF84F7))
+				gui.text(80,73,"Spin Drive Smasher: " .. rb(0xFF84F4))
+			end
 		elseif gamestate.P1.character == Chun then
-			gui.text(2,65,"Kikouken: ".. rb(0xFF84CE))
-			gui.text(2,73,"Up Kicks: " .. rb(0xFF8508))
-			gui.text(2,81,"Spinning Bird Kick: " .. rb(0xFF84FE))
-			gui.text(80,65,"Senretsu Kyaku: " .. rb(0xFF850D))
+			gui.text(2,73,"Spinning Bird Kick: " .. rb(0xFF84FE))
+			gui.text(2,81,"Hyakuretsu Kyaku: " .. rb(0xFF84E8)%6 .. ", " .. rb(0xFF84EA)%6 .. ", " .. rb(0xFF84EC)%6)
+			if gamestate.P1.is_old then
+				gui.text(2,65,"Kikouken: ".. rb(0xFF84FE))
+			else
+				gui.text(2,65,"Kikouken: ".. rb(0xFF84CE))
+				gui.text(92,65,"Up Kicks: " .. rb(0xFF8508))
+				gui.text(92,73,"Senretsu Kyaku: " .. rb(0xFF850D))
+			end
 		elseif gamestate.P1.character == Deejay then
 			gui.text(2,65,"Air Slasher: " .. rb(0xFF84E0))
 			gui.text(2,73,"Sovat Kick: " .. rb(0xFF84F4))
-			gui.text(2,81,"Jack Knife: ".. rb(0xFF84E4))
-			gui.text(80,65,"Machine Gun Upper: " .. rb(0xFF84F9))
-			gui.text(80,73,"Sovat Carnival: " .. rb(0xFF84FD))
+			if gamestate.P1.is_old then
+				gui.text(2,81,"Machine Gun Upper: " .. rb(0xFF84E4))
+			else
+				gui.text(2,81,"Machine Gun Upper: " .. rb(0xFF84F9))
+				gui.text(80,65,"Jack Knife: ".. rb(0xFF84E4))
+				gui.text(80,73,"Sovat Carnival: " .. rb(0xFF84FD))
+			end
 		elseif gamestate.P1.character == Dhalsim then
-			gui.text(2,65,"Yoga Blast: " .. rb(0xFF84D2))
-			gui.text(2,73,"Yoga Flame: " .. rb(0xFF84E8))
+			gui.text(2,65,"Yoga Teleport: ".. rb(0xFF84D6))
 			gui.text(2,81,"Yoga Fire: " .. rb(0xFF84CE))
-			gui.text(80,65,"Yoga Teleport: ".. rb(0xFF84D6))
-			gui.text(80,73,"Yoga Inferno: " .. rb(0xFF84E4))
+			if gamestate.P1.is_old then
+				gui.text(2,73,"Yoga Flame: " .. rb(0xFF84D2))
+			else
+				gui.text(2,73,"Yoga Flame: " .. rb(0xFF84E8))
+				gui.text(80,65,"Yoga Blast: " .. rb(0xFF84D2))
+				gui.text(80,73,"Yoga Inferno: " .. rb(0xFF84E4))
+			end
 		elseif gamestate.P1.character == Honda then
-			gui.text(2,65,"Flying Headbutt: " .. rb(0xFF84D6))
-			gui.text(2,73,"Butt Drop: " .. rb(0xFF84DE))
-			gui.text(2,81,"Oichio Throw: " .. rb(0xFF84E4))
-			gui.text(80,65, "Double Headbutt" .. rb(0xFF84E2))
+			if gamestate.P1.is_old then
+				gui.text(2,65,"Flying Headbutt: " .. rb(0xFF84CE))
+				gui.text(2,73,"Butt Drop: " .. rb(0xFF84F8))
+				gui.text(2,81,"Hundred Hands Slap: " .. rb(0xFF84E8)%6 .. ", " .. rb(0xFF84EA)%6 .. ", " .. rb(0xFF84EC)%6)
+			else
+				gui.text(2,65,"Flying Headbutt: " .. rb(0xFF84D6))
+				gui.text(2,73,"Butt Drop: " .. rb(0xFF84DE))
+				gui.text(2,81,"Hundred Hands Slap: " .. rb(0xFF8514)%6 .. ", " .. rb(0xFF8516)%6 .. ", " .. rb(0xFF8518)%6)
+				gui.text(80,65,"Oichio Throw: " .. rb(0xFF84E4))
+				gui.text(80,73, "Double Headbutt: " .. rb(0xFF84E2))
+			end
 		elseif gamestate.P1.character == Fei then
 			gui.text(2,65,"Rekka: " .. rb(0xFF84DE))
 			gui.text(2,73,"Rekka 2: " .. rb(0xFF84EE))
 			gui.text(2,81,"Flame Kick: " .. rb(0xFF84E2))
-			gui.text(80,65,"Chicken Wing: " .. rb(0xFF8502))
-			gui.text(80,73,"Rekka Sinken: " .. rb(0xFF84FE))
+			if not gamestate.P1.is_old then
+				gui.text(80,65,"Chicken Wing: " .. rb(0xFF8502))
+				gui.text(80,73,"Rekka Sinken: " .. rb(0xFF84FE))
+			end
 		elseif gamestate.P1.character == Guile then
 			gui.text(2,65,"Sonic Boom: " .. rb(0xFF84CE))
 			gui.text(2,73,"Flash Kick: " .. rb(0xFF84D4))
-			gui.text(2,81,"Double Somersault: " .. rb(0xFF84E2))
+			if not gamestate.P1.is_old then
+				gui.text(2,81,"Double Somersault: " .. rb(0xFF84E2))
+			end
 		elseif gamestate.P1.character == Ken then
 			gui.text(2,65, "Hadouken: ".. rb(0xFF84E2))
 			gui.text(2,73, "Shoryuken: " .. rb(0xFF84E6))
 			gui.text(2,81, "Hurricane Kick: " .. rb(0xFF84DE))
-			gui.text(42,89, "Shoryureppa: " .. rb(0xFF84EE))
-			gui.text(80,65, "Crazy Kick 1: " .. rb(0xFF8534))
-			gui.text(80,73, "Crazy Kick 2: " .. rb(0xFF8536))
-			gui.text(80,81, "Crazy Kick 3: " .. rb(0xFF8538))
+			if not gamestate.P1.is_old then
+				gui.text(42,89, "Shoryureppa: " .. rb(0xFF84EE))
+				gui.text(80,65, "Crazy Kick 1: " .. rb(0xFF8534))
+				gui.text(80,73, "Crazy Kick 2: " .. rb(0xFF8536))
+				gui.text(80,81, "Crazy Kick 3: " .. rb(0xFF8538))
+			end
 		elseif gamestate.P1.character == Dictator then
 			gui.text(2,65,"Scissor Kick: " .. rb(0xFF84D6))
 			gui.text(2,73,"Head Stomp: ".. rb(0xFF84DF))
 			gui.text(2,81,"Devil's Reverse: " .. rb(0xFF84FA))
 			gui.text(80,65,"Psycho Crusher: " .. rb(0xFF84CE))
-			gui.text(80,73,"Knee Press Knightmare: " .. rb(0xFF8513))
+			if not gamestate.P1.is_old then
+				gui.text(80,73,"Knee Press Knightmare: " .. rb(0xFF8513))
+			end
 		elseif gamestate.P1.character == Ryu then
 			gui.text(2,65,"Hadouken: " .. rb(0xFF84E2))
 			gui.text(2,73,"Shoryuken: " .. rb(0xFF84E6))
 			gui.text(2,81, "Hurricane Kick: " .. rb(0xFF84DE))
 			gui.text(80,65, "Red Hadouken: " .. rb(0xFF852E))
-			gui.text(80,73, "Shinku Hadouken: " .. rb(0xFF84EE))
+			if not gamestate.P1.is_old then
+				gui.text(80,73, "Shinku Hadouken: " .. rb(0xFF84EE))
+			end
 		elseif gamestate.P1.character == Sagat then
 			gui.text(2,65,"Tiger Shot: " .. rb(0xFF84DA))
 			gui.text(2,73,"Tiger Knee: " .. rb(0xFF84D2))
 			gui.text(2,81,"Tiger Uppercut: " .. rb(0xFF84CE))
-			gui.text(80,65, "Tiger Genocide: " .. rb(0xFF84EC))
+			if not gamestate.P1.is_old then
+				gui.text(80,65, "Tiger Genocide: " .. rb(0xFF84EC))
+			end
 		elseif gamestate.P1.character == Hawk then
-			gui.text(2,65,"Mexican Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84E1))
-			gui.text(2,73,"Tomahawk: " .. rb(0xFF84DB))
-			gui.text(2,81,"Double Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84ED))
+			if gamestate.P1.is_old then
+				gui.text(2,65,"Mexican Typhoon: " .. rb(0xFF84E8))
+				gui.text(2,73,"Tomahawk: " .. rb(0xFF84E0))
+			else
+				gui.text(2,65,"Mexican Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84E1))
+				gui.text(2,73,"Tomahawk: " .. rb(0xFF84DB))
+				gui.text(2,81,"Double Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84ED))
+			end
 		elseif gamestate.P1.character == Claw then
 			gui.text(2,65,"Wall Dive (Kick): " .. rb(0xFF84DA))
 			gui.text(2,73,"Wall Dive (Punch): " .. rb(0xFF84DE))
 			gui.text(2,81,"Crystal Flash: " .. rb(0xFF84D6))
-			gui.text(90,65,"Flip Kick: " .. rb(0xFF84EB))
-			gui.text(90,73,"Rolling Izuna Drop: " .. rb(0xFF84E7))
+			if not gamestate.P1.is_old then
+				gui.text(2,81,"Crystal Flash: " .. rb(0xFF84D6))
+				gui.text(90,65,"Flip Kick: " .. rb(0xFF84EB))
+				gui.text(90,73,"Rolling Izuna Drop: " .. rb(0xFF84E7))
+			end
 		elseif gamestate.P1.character == Zangief then
 			gui.text(2,65, "Bear Grab: " .. rb(0xFF84E9) .. ", " .. rb(0xFF84EA))
 			gui.text(2,73, "Spinning Pile Driver: " .. rb(0xFF84CE) .. ", " .. rb(0xFF84CF))
-			gui.text(2,81, "Banishing Flat: " .. rb(0xFF8501))
-			gui.text(2,89, "Final Atomic Buster: " .. rb(0xFF84FA) .. ", " .. rb(0xFF84FB))
+			if not gamestate.P1.is_old then
+				gui.text(2,81, "Banishing Flat: " .. rb(0xFF8501))
+				gui.text(2,89, "Final Atomic Buster: " .. rb(0xFF84FA) .. ", " .. rb(0xFF84FB))
+			end
 		end
 	else
 		if gamestate.P2.character == Boxer then
-			gui.text(230,65,"Ground Straight: " .. rb(0xFF84CE+p2))
-			gui.text(230,73,"Ground Upper: " ..rb(0xFF84D6+p2))
-			gui.text(230,81,"Straight: " .. rb(0xFF852B+p2))
-			gui.text(307,65,"Upper Dash: " .. rb(0xFF8524+p2))
-			gui.text(307,73,"Buffalo Headbutt: " .. rb(0xFF850E+p2))
-			gui.text(307,81,"Crazy Buffalo: " .. rb(0xFF8522+p2))
+			gui.text(227,65,"Buffalo Headbutt: " .. rb(0xFF850E+p2))
 			gui.text(266,56,"TAP: " .. display_taplevel(2))
+			if gamestate.P2.is_old then
+				gui.text(227,73,"Straight: " .. rb(0xFF84CE+p2))
+				gui.text(227,81,"Upper Dash: " .. rb(0xFF84D6+p2))
+			else
+				gui.text(227,73,"Straight: " .. rb(0xFF852B+p2))
+				gui.text(227,81,"Upper Dash: " .. rb(0xFF8524+p2))
+				gui.text(307,65,"Ground Straight: " .. rb(0xFF84CE+p2))
+				gui.text(307,73,"Ground Upper: " ..rb(0xFF84D6+p2))
+				gui.text(307,81,"Crazy Buffalo: " .. rb(0xFF8522+p2))
+			end
 		elseif gamestate.P2.character == Blanka then
-			gui.text(302,65,"Normal Roll: " .. rb(0xFF8507+p2))
-			gui.text(302,73,"Vertical Roll: " .. rb(0xFF84FE+p2))
-			gui.text(302,81,"Ground Shave Roll: " .. rb(0xFF850F+p2))
+			gui.text(225,65,"Normal Roll: " .. rb(0xFF8507+p2))
+			gui.text(225,73,"Vertical Roll: " .. rb(0xFF84FE+p2))
+			gui.text(225,81,"Rainbow Roll: " .. rb(0xFF8507+p2))
+			gui.text(302,65,"Electricity: " .. rb(0xFF84E8+p2)%6 .. ", " .. rb(0xFF84EA+p2)%6 .. ", " .. rb(0xFF84EC+p2)%6)
+			if not gamestate.P2.is_old then
+				gui.text(302,73,"Ground Shave Roll: " .. rb(0xFF850F+p2))
+			end
 		elseif gamestate.P2.character == Cammy then
 			gui.text(218,65,"Spin Knuckle: " .. rb(0xFF84F0+p2))
 			gui.text(218,73,"Cannon Spike: " .. rb(0xFF84E0+p2))
 			gui.text(218,81,"Spiral Arrow: " .. rb(0xFF84E4+p2))
-			gui.text(290,65,"Hooligan Combination: " .. rb(0xFF84F7+p2))
-			gui.text(290,73,"Spin Drive Smasher: " .. rb(0xFF84F4+p2))
+			if not gamestate.P2.is_old then
+				gui.text(290,65,"Hooligan Combination: " .. rb(0xFF84F7+p2))
+				gui.text(290,73,"Spin Drive Smasher: " .. rb(0xFF84F4+p2))
+			end
 		elseif gamestate.P2.character == Chun then
-			gui.text(233,65,"Kikouken: " .. rb(0xFF84CE+p2))
-			gui.text(233,73,"Up Kicks: " .. rb(0xFF8508+p2))
-			gui.text(233,81,"Spinning Bird Kick: " .. rb(0xFF84FE+p2))
-			gui.text(313,65,"Senretsu Kyaku: " .. rb(0xFF850D+p2))
+			gui.text(233,73,"Spinning Bird Kick: " .. rb(0xFF84FE+p2))
+			gui.text(233,81,"Hyakuretsu Kyaku: " .. rb(0xFF84E8+p2)%6 .. ", " .. rb(0xFF84EA+p2)%6 .. ", " .. rb(0xFF84EC+p2)%6)
+			if gamestate.P2.is_old then
+				gui.text(233,65,"Kikouken: " .. rb(0xFF84FE+p2))
+			else
+				gui.text(233,65,"Kikouken: " .. rb(0xFF84CE+p2))
+				gui.text(313,65,"Up Kicks: " .. rb(0xFF8508+p2))
+				gui.text(313,73,"Senretsu Kyaku: " .. rb(0xFF850D+p2))
+			end
 		elseif gamestate.P2.character == Deejay then
 			gui.text(223,65,"Air Slasher: " .. rb(0xFF84E0+p2))
 			gui.text(223,73,"Sovat Kick: " .. rb(0xFF84F4+p2))
-			gui.text(223,81,"Jack Knife: " .. rb(0xFF84E4+p2))
-			gui.text(303,65,"Machine Gun Upper: " .. rb(0xFF84F9+p2))
-			gui.text(303,73,"Sovat Carnival: " .. rb(0xFF84FD+p2))
+			if gamestate.P2.is_old then
+				gui.text(223,81,"Machine Gun Upper: " .. rb(0xFF84E4+p2))
+			else
+				gui.text(223,81,"Machine Gun Upper: " .. rb(0xFF84F9+p2))
+				gui.text(303,65,"Jack Knife: " .. rb(0xFF84E4+p2))
+				gui.text(303,73,"Sovat Carnival: " .. rb(0xFF84FD+p2))
+			end
 		elseif gamestate.P2.character == Dhalsim then
-			gui.text(223,65,"Yoga Blast: " .. rb(0xFF84D2+p2))
-			gui.text(223,73,"Yoga Flame: " .. rb(0xFF84E8+p2))
+			gui.text(223,65,"Yoga Teleport: ".. rb(0xFF84D6+p2))
 			gui.text(223,81,"Yoga Fire: " .. rb(0xFF84CE+p2))
-			gui.text(303,65,"Yoga Teleport: ".. rb(0xFF84D6+p2))
-			gui.text(303,73,"Yoga Inferno: " .. rb(0xFF84E4+p2))
+			if gamestate.P2.is_old then
+				gui.text(223,73,"Yoga Flame: " .. rb(0xFF84D2+p2))
+			else
+				gui.text(223,73,"Yoga Flame: " .. rb(0xFF84E8+p2))
+				gui.text(303,65,"Yoga Blast: " .. rb(0xFF84D2+p2))
+				gui.text(303,73,"Yoga Inferno: " .. rb(0xFF84E4+p2))
+			end
 		elseif gamestate.P2.character == Honda then
-			gui.text(223,65,"Flying Headbutt: " .. rb(0xFF84D6+p2))
-			gui.text(223,73,"Butt Drop: " .. rb(0xFF84DE+p2))
-			gui.text(223,81,"Oichio Throw: " .. rb(0xFF84E4+p2))
-			gui.text(303,65, "Double Headbutt: " .. rb(0xFF84E2+p2))
+			if gamestate.P2.is_old then
+				gui.text(223,65,"Flying Headbutt: " .. rb(0xFF84CE+p2))
+				gui.text(223,73,"Butt Drop: " .. rb(0xFF84F8+p2))
+				gui.text(223,81,"Hundred Hands Slap: " .. rb(0xFF84E8+p2)%6 .. ", " .. rb(0xFF84EA+p2)%6 .. ", " .. rb(0xFF84EC+p2)%6)
+			else
+				gui.text(223,65,"Flying Headbutt: " .. rb(0xFF84D6+p2))
+				gui.text(223,73,"Butt Drop: " .. rb(0xFF84DE+p2))
+				gui.text(223,81,"Hundred Hands Slap: " .. rb(0xFF8514+p2)%6 .. ", " .. rb(0xFF8516+p2)%6 .. ", " .. rb(0xFF8518+p2)%6)
+				gui.text(303,65,"Oichio Throw: " .. rb(0xFF84E4+p2))
+				gui.text(303,73, "Double Headbutt: " .. rb(0xFF84E2+p2))
+			end
 		elseif gamestate.P2.character == Fei then
 			gui.text(242,65,"Rekka: " .. rb(0xFF84DE+p2))
 			gui.text(242,73,"Rekka 2: "	.. rb(0xFF84EE+p2))
 			gui.text(242,81,"Flame Kick: " .. rb(0xFF84E2+p2))
-			gui.text(322,65, "Chicken Wing: " .. rb(0xFF8502+p2))
-			gui.text(322,73, "Rekka Sinken: " .. rb(0xFF84FE+p2))
+			if not gamestate.P2.is_old then
+				gui.text(322,65, "Chicken Wing: " .. rb(0xFF8502+p2))
+				gui.text(322,73, "Rekka Sinken: " .. rb(0xFF84FE+p2))
+			end
 		elseif gamestate.P2.character == Guile then
 			gui.text(302,65,"Sonic Boom: " .. rb(0xFF84CE+p2))
 			gui.text(302,73,"Flash Kick: " .. rb(0xFF84D4+p2))
-			gui.text(302,81,"Double Somersault: " .. rb(0xFF84E2+p2))
+			if not gamestate.P2.is_old then
+				gui.text(302,81,"Double Somersault: " .. rb(0xFF84E2+p2))
+			end
 		elseif gamestate.P2.character == Ken then
 			gui.text(223,65, "Hadouken: " .. rb(0xFF84E2+p2))
 			gui.text(223,73, "Shoryuken: " .. rb(0xFF84E6+p2))
 			gui.text(223,81, "Hurricane Kick: " .. rb(0xFF84DE+p2))
-			gui.text(322,65, "Crazy Kick 1: " .. rb(0xFF8534+p2))
-			gui.text(322,73, "Crazy Kick 2: " .. rb(0xFF8536+p2))
-			gui.text(322,81, "Crazy Kick 3: " .. rb(0xFF8538+p2))
-			gui.text(272,89, "Shoryureppa: " .. rb(0xFF84EE+p2))
+			if not gamestate.P2.is_old then
+				gui.text(322,65, "Crazy Kick 1: " .. rb(0xFF8534+p2))
+				gui.text(322,73, "Crazy Kick 2: " .. rb(0xFF8536+p2))
+				gui.text(322,81, "Crazy Kick 3: " .. rb(0xFF8538+p2))
+				gui.text(272,89, "Shoryureppa: " .. rb(0xFF84EE+p2))
+			end
 		elseif gamestate.P2.character == Dictator then
 			gui.text(217,65,"Scissor Kick: " .. rb(0xFF84D6+p2))
 			gui.text(217,73,"Headstomp: " .. rb(0xFF84DF+p2))
 			gui.text(217,81,"Devil's Reverse: " .. rb(0xFF84FA+p2))
 			gui.text(290,65,"Psycho Crusher: " .. rb(0xFF84CE+p2))
-			gui.text(290,73,"Knee Press Nightmare: " .. rb(0xFF8513+p2))
+			if not gamestate.P2.is_old then
+				gui.text(290,73,"Knee Press Nightmare: " .. rb(0xFF8513+p2))
+			end
 		elseif gamestate.P2.character == Ryu then
 			gui.text(210,65,"Hadouken: " .. rb(0xFF84E2+p2))
 			gui.text(210,73,"Shoryuken: " .. rb(0xFF84E6+p2))
 			gui.text(210,81, "Hurricane Kick: " .. rb(0xFF84DE+p2))
 			gui.text(310,65, "Red Hadouken: " .. rb(0xFF852E+p2))
-			gui.text(310,73, "Shinku Hadouken: " .. rb(0xFF84EE+p2))
+			if not gamestate.P2.is_old then
+				gui.text(310,73, "Shinku Hadouken: " .. rb(0xFF84EE+p2))
+			end
 		elseif gamestate.P2.character == Sagat then
 			gui.text(214,65,"Tiger Shot: " .. rb(0xFF84DA+p2))
 			gui.text(214,73,"Tiger Knee: " .. rb(0xFF84D2+p2))
 			gui.text(214,81,"Tiger Uppercut: " .. rb(0xFF84CE+p2))
-			gui.text(314,65, "Tiger Genocide: " .. rb(0xFF84EC+p2))
+			if not gamestate.P2.is_old then
+				gui.text(314,65, "Tiger Genocide: " .. rb(0xFF84EC+p2))
+			end
 		elseif gamestate.P2.character == Hawk then
-			gui.text(294,65,"Mexican Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84E1+p2))
-			gui.text(294,73,"Tomahawk: " .. rb(0xFF84DB+p2))
-			gui.text(294,81,"Double Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84ED+p2))
+			if gamestate.P2.is_old then
+				gui.text(294,65,"Mexican Typhoon: " .. rb(0xFF84E8+p2))
+				gui.text(294,73,"Tomahawk: " .. rb(0xFF84E0+p2))
+			else
+				gui.text(294,65,"Mexican Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84E1+p2))
+				gui.text(294,73,"Tomahawk: " .. rb(0xFF84DB+p2))
+				gui.text(294,81,"Double Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84ED+p2))
+			end
 		elseif gamestate.P2.character == Claw then
 			gui.text(210,65,"Wall Dive (Kick): " .. rb(0xFF84DA+p2))
 			gui.text(210,73,"Wall Dive (Punch): " .. rb(0xFF84DE+p2))
 			gui.text(210,81,"Crystal Flash: " .. rb(0xFF84D6+p2))
-			gui.text(298,65,"Flip Kick: " .. rb(0xFF84EB+p2))
-			gui.text(298,73,"Rolling Izuna Drop: " .. rb(0xFF84E7+p2))
+			if not gamestate.P2.is_old then
+				gui.text(298,65,"Flip Kick: " .. rb(0xFF84EB+p2))
+				gui.text(298,73,"Rolling Izuna Drop: " .. rb(0xFF84E7+p2))
+			end
 		elseif gamestate.P2.character == Zangief then
 			gui.text(275,65, "Bear Grab: " .. rb(0xFF84E9+p2) .. ", " .. rb(0xFF84EA+p2))
 			gui.text(275,73, "Spinning Pile Driver: " .. rb(0xFF84CE+p2) .. ", " .. rb(0xFF84CF+p2))
-			gui.text(275,81, "Banishing Flat: " .. rb(0xFF8501+p2))
-			gui.text(275,89, "Final Atomic Buster: " .. rb(0xFF84FA+p2) .. ", " .. rb(0xFF84FB+p2))
+			if not gamestate.P2.is_old then
+				gui.text(275,81, "Banishing Flat: " .. rb(0xFF8501+p2))
+				gui.text(275,89, "Final Atomic Buster: " .. rb(0xFF84FA+p2) .. ", " .. rb(0xFF84FB+p2))
+			end
 		end
 	end
 end
@@ -1642,10 +1756,17 @@ local function setReversal(_player_obj, reversal)
 	wb(_player_obj.addresses.reversal_id, reversal[1])
 	wb(_player_obj.addresses.reversal_strength, reversal[2])
 	-- just a little fix
-	if _player_obj.character == Hawk then -- Voir si ça marche pour le P1 aussi
-		if reversal[1] == 0x00 then -- DP
-			wb(0xFF84DE,reversal[2])
-			wb(0xFF84DD,reversal[2])
+	if _player_obj.character == Hawk then
+		if not _player_obj.is_old then
+			if reversal[1] == 0x00 then -- DP
+				wb(0xFF88DE,reversal[2])
+				wb(0xFF88DD,reversal[2])
+			end
+		else
+			if reversal[1] == 0x00 then
+				wb(0xFF88F0,reversal[2])
+				wb(0xFF88F1,reversal[2])
+			end
 		end
 	end
 end
@@ -2135,6 +2256,9 @@ local forceblock = false
 local inputs_at_jumpstart = 0
 local autoblock_skip_counter = 60
 local canblock = false
+local canblock_counter = 0
+local canblock_length = 20
+
 local autoBlock = function()
 
 	if autoblock_selector == -1 then
@@ -2148,7 +2272,11 @@ local autoBlock = function()
 		setDirection(2,5)
 		forceblock = false
 		if autoblock_selector == 2 and canblock == true then
-			canblock = false
+			canblock_counter = countFrames(canblock_counter)
+			if canblock_counter >= canblock_length then
+				canblock = false
+				canblock_counter = 0
+			end
 		end
 		return
 	end
@@ -2715,7 +2843,7 @@ local function frameAdvantageDisplay()
 		end
 		-- throw
 		if gamestate.P1.throw_flag == 0x01 then
-			if gamestate.P1.character == Guile or gamestate.P1.character == Cammy or gamestate.P1.character == Zangief then
+			if gamestate.P1.character == Guile or gamestate.P1.character == Cammy or gamestate.P1.character == Zangief or gamestate.P1.character == Hawk then
 				throw_exception = true -- Those characters can trigger hitfreeze with their throws
 			end
 		end
@@ -2790,7 +2918,7 @@ local function frameAdvantageDisplay()
 			end
 			-- Throw
 			if successful_throw or teched_throw then
-				if gamestate.P1.throw_flag == 0x00 and gamestate.P1.state ~= 0x0A and gamestate.P1.substate ~= 0x04 then
+				if gamestate.P1.throw_flag == 0x00 and gamestate.P1.state ~= 0x0A and gamestate.P1.state ~= doing_special_move and gamestate.P1.substate ~= 0x04 then
 					throw_ended = true
 				end
 				if throw_ended then
@@ -2885,7 +3013,7 @@ local function frameAdvantageDisplay()
 			defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
-			exception = false
+			throw_exception = false
 			--------------------------------
 			if frame_disadvantage > 0 then
 				frame_advantage_result = "-"..frame_disadvantage
@@ -3221,7 +3349,7 @@ local function tickThrow()
 					elseif could_have_been_throw and (throwable_timer < tick_timer) then
 						msg2 = "However P2 could have thrown you during "..throwable_timer.." frames :("
 					end
-					msg_fcount = MSG_FRAMELIMIT-220
+					msg_fcount = MSG_FRAMELIMIT-300
 					could_have_been_throw = false
 				end 
 			end
@@ -3279,7 +3407,6 @@ local special_crossup_attempt = false
 local prev_flip_value = nil
 local prev_p1_left_side = false
 local did_not_crossup = false
-local DEBUG = false
 local block_direction = ""
 
 local function isP1Left()
@@ -3287,6 +3414,7 @@ local function isP1Left()
 end
 
 local function crossupDisplay()
+	local DEBUG = false
 	if crossup_display_selector > 0 then
 		if gamestate.is_in_match then 
 			if DEBUG then
@@ -3359,7 +3487,7 @@ local function crossupDisplay()
 						if DEBUG then
 							print("Jump crossup attempt")
 						end
-					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping then
+					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping and gamestate.P1.throw_flag ~= 0x01 and gamestate.P2.state ~= being_thrown then
 						ground_crossup_attempt = true -- slides etc.
 						begin_crossup_display = true
 						prev_p1_left_side = isP1Left()
@@ -3611,7 +3739,7 @@ function displayReversalSettings()
 		makeReversalSettings(gamestate.patched)
 	end
 	if gamestate.patched then
-		if characterChanged(gamestate.P2) then
+		if characterChanged(gamestate.P2) or oldStatusChanged(gamestate.P2) then
 			if #reversal_options_checked > 0 then
 				for k in pairs(reversal_options_checked) do
 				reversal_options_checked[k] = nil
