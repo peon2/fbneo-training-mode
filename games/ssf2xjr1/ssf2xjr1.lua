@@ -2261,7 +2261,7 @@ local canblock_length = 20
 
 local autoBlock = function()
 
-	if autoblock_selector == -1 then
+	if autoblock_selector == -1 or gamestate.P1.throw_flag == 0x01 then -- If P2 is thrown we return, this way the dummy can tech a throw
 		return
 	end
 
@@ -2818,7 +2818,7 @@ local function frameAdvantageDisplay()
 			step = 1
 		end
 
-		if not gamestate.P1.prev.projectile_ready and not gamestate.P2.prev.projectile_ready then
+		if not gamestate.P1.prev.projectile_ready and not gamestate.P2.prev.projectile_ready then -- Sometimes it won't trigger because of the frameskip, maybe we'll have to find a fix
 			if gamestate.P1.projectile_ready and gamestate.P2.projectile_ready then
 			--
 			frame_advantage = 0
@@ -3231,6 +3231,7 @@ local p1_throw_range = {}
 local p2_throw_range = {}
 local could_have_been_throw = false
 local begin_throw_display = false
+local buffersize_modified = false
 
 local function resetThrowDisplay(_player_obj)
 	-- Display the correct Boxer throw distance
@@ -3239,7 +3240,7 @@ local function resetThrowDisplay(_player_obj)
 	elseif gamestate.P2.character == Boxer then
 		getBoxerThrowDistance(gamestate.P1.character)
 	end
-
+	-- Reset throw range values
 	local character = readCharacterName(_player_obj)
 	if _player_obj.id == 1 then
 		for i = 1, #p1_throw_range do
@@ -3258,10 +3259,24 @@ local function resetThrowDisplay(_player_obj)
 			p2_throw_range[i][1] = character_specific[character].hitboxes.throw[i][1]
 		end
 	end
+	-- Modify buffersize in scrolling-input-display, this way inputs won't overlap with the informations drawn
+	if gamestate.P1.character == Zangief or gamestate.P2.character == Zangief then
+		buffersize = 9
+		scrollingInputClear()
+		buffersize_modified = true
+	else
+		buffersize = 13
+	end
 end
 
 local function tickThrow()
-	if tick_throw_display_selector < 1 then begin_throw_display = false end
+	if tick_throw_display_selector < 1 then
+		begin_throw_display = false
+		if buffersize_modified then -- Can I simply write "buffersize = 13" every frame ? What is the most efficient ?
+			buffersize = 13
+			buffersize_modified = false
+		end
+	end
 
 	if tick_throw_display_selector > 0 then
 	-- needs to be outside of is_in_match to update data when we press F2 or reset to change char
@@ -3355,6 +3370,7 @@ local function tickThrow()
 			end
 			-- Informations at the bottom of the screen
 			-- P1
+			gui.text(85,165,"P1")
 			for i = 1, #p1_throw_range do
 			
 				local column = 1
@@ -3374,6 +3390,7 @@ local function tickThrow()
 				end
 			end
 			-- P2
+			gui.text(265,165,"P2")
 			for i=1, #p2_throw_range do
 			
 				local column = 1
