@@ -801,7 +801,7 @@ advanced_settings = {
 			},
 			func =	function()
 					frame_advantage_selector = frame_advantage_selector + 1
-					if frame_advantage_selector > 0 then
+					if frame_advantage_selector > 1 then
 						frame_advantage_selector = -1
 					end
 				end,
@@ -809,7 +809,9 @@ advanced_settings = {
 					if frame_advantage_selector == -1 then
 						this.text = "Display Frame Advantage: Off"
 					elseif frame_advantage_selector == 0 then
-						this.text = "Display Frame Advantage: On"
+						this.text = "Display Frame Advantage: P1"
+					elseif frame_advantage_selector == 1 then
+						this.text = "Display Frame Advantage: P2"
 					end
 				end,
 		},

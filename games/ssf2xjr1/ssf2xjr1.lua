@@ -273,18 +273,26 @@ function isPressed(_player_obj, _input)
 		bitmask = 0x0004
 	elseif _input == "up" then
 		bitmask = 0x0008
+	elseif _input == "direction" then
+		bitmask = 0x000F
 	elseif _input == "LP" then
 		bitmask = 0x0010
 	elseif _input == "MP" then
 		bitmask = 0x0020
 	elseif _input == "HP" then
 		bitmask = 0x0040
+	elseif _input == "punch" then
+		bitmask = 0x00F0
 	elseif _input == "LK" then
 		bitmask = 0x0100
 	elseif _input == "MK" then
 		bitmask = 0x0200
 	elseif _input == "HK" then
 		bitmask = 0x0400
+	elseif _input == "kick" then
+		bitmask = 0x0F00
+	elseif _input == "button" then
+		bitmask = 0x0FF0
 	end
 	if _player_obj.prev.curr_input == _player_obj.prev_input then
 		return bit.band(_player_obj.curr_input, bitmask) > 0
@@ -299,22 +307,42 @@ function wasPressed(_player_obj, _input)
 		bitmask = 0x0001
 	elseif _input == "right" then
 		bitmask = 0x0002
+	elseif _input == "forward" then
+		if _player_obj.flip_input then
+			bitmask = 0x0001
+		else
+			bitmask = 0x0002
+		end
+	elseif _input == "back" then
+		if _player_obj.flip_input then
+			bitmask = 0x0002
+		else
+			bitmask = 0x0001
+		end
 	elseif _input == "down" then
 		bitmask = 0x0004
 	elseif _input == "up" then
 		bitmask = 0x0008
+	elseif _input == "direction" then
+		bitmask = 0x000F
 	elseif _input == "LP" then
 		bitmask = 0x0010
 	elseif _input == "MP" then
 		bitmask = 0x0020
 	elseif _input == "HP" then
 		bitmask = 0x0040
+	elseif _input == "punch" then
+		bitmask = 0x00F0
 	elseif _input == "LK" then
 		bitmask = 0x0100
 	elseif _input == "MK" then
 		bitmask = 0x0200
 	elseif _input == "HK" then
 		bitmask = 0x0400
+	elseif _input == "kick" then
+		bitmask = 0x0F00
+	elseif _input == "button" then
+		bitmask = 0x0FF0
 	end
 	if _player_obj.prev.curr_input == _player_obj.prev_input then
 		return bit.band(_player_obj.prev.curr_input, bitmask) > 0
@@ -2740,6 +2768,9 @@ end
 
 frame_advantage_selector = customconfig.frame_advantage_selector
 
+local fa_attacker = nil
+local fa_defender = nil
+local fa_player = ""
 local step = 0
 local calculation_end = false
 local frame_advantage = 0
@@ -2768,13 +2799,23 @@ local function frameAdvantageDisplay()
 		return
 	end
 
-	if frame_advantage_selector == 0 then
+	if frame_advantage_selector > -1 then
 		local DEBUG = false
+		
+		if frame_advantage_selector == 0 then
+			fa_attacker = gamestate.P1
+			fa_defender = gamestate.P2
+			fa_player = "P1"
+		elseif frame_advantage_selector == 1 then
+			fa_attacker = gamestate.P2
+			fa_defender = gamestate.P1
+			fa_player = "P2"
+		end
 		-------------------
 		-- Reset (new hit)
 		-------------------
 		 -- not a projectile
-		if gamestate.P1.in_hitfreeze and gamestate.P2.in_hitfreeze and not throw_exception then
+		if fa_attacker.in_hitfreeze and fa_defender.in_hitfreeze and not throw_exception and not fa_defender.is_attacking then
 			--
 			frame_advantage = 0
 			frame_disadvantage = 0
@@ -2787,8 +2828,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2796,7 +2837,7 @@ local function frameAdvantageDisplay()
 			step = 1
 		end
 		-- projectile
-		if not gamestate.P1.projectile_ready and not gamestate.P1.in_hitfreeze and gamestate.P2.in_hitfreeze then -- projectile
+		if not fa_attacker.projectile_ready and not fa_attacker.in_hitfreeze and fa_defender.in_hitfreeze then -- projectile
 			--
 			frame_advantage = 0
 			frame_disadvantage = 0
@@ -2809,8 +2850,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2818,8 +2859,8 @@ local function frameAdvantageDisplay()
 			step = 1
 		end
 
-		if not gamestate.P1.prev.projectile_ready and not gamestate.P2.prev.projectile_ready then -- Sometimes it won't trigger because of the frameskip, maybe we'll have to find a fix
-			if gamestate.P1.projectile_ready and gamestate.P2.projectile_ready then
+		if not fa_attacker.prev.projectile_ready and not fa_defender.prev.projectile_ready then -- Sometimes it won't trigger because of the frameskip, maybe we'll have to find a fix
+			if fa_attacker.projectile_ready and fa_defender.projectile_ready then
 			--
 			frame_advantage = 0
 			frame_disadvantage = 0
@@ -2832,8 +2873,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2842,17 +2883,17 @@ local function frameAdvantageDisplay()
 			end
 		end
 		-- throw
-		if gamestate.P1.throw_flag == 0x01 then
-			if gamestate.P1.character == Guile or gamestate.P1.character == Cammy or gamestate.P1.character == Zangief or gamestate.P1.character == Hawk then
+		if fa_attacker.throw_flag == 0x01 then
+			if fa_attacker.character == Guile or fa_attacker.character == Cammy or fa_attacker.character == Zangief or fa_attacker.character == Hawk then
 				throw_exception = true -- Those characters can trigger hitfreeze with their throws
 			end
 		end
-		if gamestate.P1.prev.throw_flag == 0x01 and gamestate.P1.throw_flag == 0x00 then
-			if gamestate.P2.state == being_thrown and gamestate.P2.prev.state ~= being_thrown then
+		if fa_attacker.prev.throw_flag == 0x01 and fa_attacker.throw_flag == 0x00 then
+			if fa_defender.state == being_thrown and fa_defender.prev.state ~= being_thrown then
 				if DEBUG then print("Reset : throw (successful)") end
 				successful_throw = true
 				teched_throw = false
-			elseif gamestate.P2.state == being_hit and gamestate.P2.prev.state ~= being_hit then
+			elseif fa_defender.state == being_hit and fa_defender.prev.state ~= being_hit then
 				if DEBUG then print("Reset : throw (teched)") end
 				teched_throw = true
 				successful_throw = false
@@ -2867,8 +2908,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2896,29 +2937,29 @@ local function frameAdvantageDisplay()
 		----------------------
 			-- Projectile : We'll add hitfreeze to frame advantage
 			if projectile_hit then
-				if not gamestate.P1.is_attacking and gamestate.P2.state == being_hit then -- problem : if P1 performs an attack right when the hitfreeze begins the count won't be exact
+				if not fa_attacker.is_attacking and fa_defender.state == being_hit then -- problem : if P1 performs an attack right when the hitfreeze begins the count won't be exact
 					projectile_move_ended = true
 				end
-				if gamestate.P2.in_hitfreeze and projectile_move_ended then
+				if fa_defender.in_hitfreeze and projectile_move_ended then
 					if DEBUG then print("Advantage + "..frame_addition.." (Hitfreeze)") end
 					frame_advantage = countFrames(frame_advantage)
 				end
 			end
 			if projectile_duel then
-				if not gamestate.P1.is_attacking then
-					attacker_duel_projectile_move_ended = true
+				if not fa_attacker.is_attacking then
+					fa_attacker_duel_projectile_move_ended = true
 				end
-				if not gamestate.P2.is_attacking then
-					defender_duel_projectile_move_ended = true
+				if not fa_defender.is_attacking then
+					fa_defender_duel_projectile_move_ended = true
 				end
-				if attacker_duel_projectile_move_ended and not defender_duel_projectile_move_ended then
+				if fa_attacker_duel_projectile_move_ended and not fa_defender_duel_projectile_move_ended then
 					if DEBUG then print("Advantage + "..frame_addition.." (Projectile Duel)") end
 					frame_advantage = countFrames(frame_advantage)
 				end
 			end
 			-- Throw
 			if successful_throw or teched_throw then
-				if gamestate.P1.throw_flag == 0x00 and gamestate.P1.state ~= 0x0A and gamestate.P1.state ~= doing_special_move and gamestate.P1.substate ~= 0x04 then
+				if fa_attacker.throw_flag == 0x00 and fa_attacker.state ~= 0x0A and fa_attacker.state ~= doing_special_move and fa_attacker.substate ~= 0x04 then
 					throw_ended = true
 				end
 				if throw_ended then
@@ -2927,11 +2968,11 @@ local function frameAdvantageDisplay()
 				end
 			end
 			-- Knockdown / Air recovery
-			if gamestate.P2.air_state == 255 then -- Knockdown or Air recovery
+			if fa_defender.air_state == 255 then -- Knockdown or Air recovery
 				knockdown = true
 			end
 			if not teched_throw and knockdown then
-				if not gamestate.P1.is_attacking then
+				if not fa_attacker.is_attacking then
 					knockdown_sequence_ended = true
 				end
 				if knockdown_sequence_ended then
@@ -2940,8 +2981,8 @@ local function frameAdvantageDisplay()
 				end
 			end
 			-- Normal moves / Non-projectile specials / Projectiles (when P2 hitfreeze ends)
-			if gamestate.P2.in_hitstun then
-				if not knockdown and not gamestate.P1.is_attacking then
+			if fa_defender.in_hitstun then
+				if not knockdown and not fa_attacker.is_attacking then
 					general_sequence_ended = true
 				end
 				if general_sequence_ended or projectile_move_ended then
@@ -2952,16 +2993,16 @@ local function frameAdvantageDisplay()
 			-------------------------
 			-- Frame Disadvantage
 			-------------------------
-			if not gamestate.P2.in_hitstun then
+			if not fa_defender.in_hitstun then
 				if not successful_throw and not teched_throw and not knockdown and not projectile_move_ended and not projectile_duel and not general_sequence_ended then
-					if gamestate.P1.is_attacking and not gamestate.P2.in_hitfreeze then
+					if fa_attacker.is_attacking and not fa_defender.in_hitfreeze then
 						if DEBUG then print("Disadvantage + "..frame_addition) end
 						frame_disadvantage = countFrames(frame_disadvantage)
 					end
 				end
 			end
 			if projectile_duel then
-				if not attacker_duel_projectile_move_ended and defender_duel_projectile_move_ended then
+				if not fa_attacker_duel_projectile_move_ended and fa_defender_duel_projectile_move_ended then
 					if DEBUG then print("Disadvantage + "..frame_addition) end
 					frame_disadvantage = countFrames(frame_disadvantage)
 				end
@@ -2970,28 +3011,28 @@ local function frameAdvantageDisplay()
 			-- Knowing when to end
 			--------------------------
 			if projectile_duel then
-				if attacker_duel_projectile_move_ended and defender_duel_projectile_move_ended then
-					if DEBUG then print("End (Projectile duel) : Both player have finished their moves") end
+				if fa_attacker_duel_projectile_move_ended and fa_defender_duel_projectile_move_ended then
+					if DEBUG then print("End (Projectile duel) : Both players have finished their moves") end
 					calculation_end = true
 				end
 			elseif not knockdown and not successful_throw and not teched_throw then
-				if not gamestate.P1.is_attacking and not gamestate.P2.in_hitfreeze and not gamestate.P2.in_hitstun then
-					if DEBUG then print("End (General) : P2 is not in hitfreeze/hitstun/blockstun anymore") end
+				if not fa_attacker.is_attacking and not fa_defender.in_hitfreeze and not fa_defender.in_hitstun then
+					if DEBUG then print("End (General) : Defender is not in hitfreeze/hitstun/blockstun anymore") end
 					calculation_end = true
 				end
 			elseif knockdown then
-				if gamestate.P2.prev.state == being_hit and gamestate.P2.state ~= being_hit then
-					if DEBUG then print("End (Knockdown/Air recovery) : P2 has landed on his feet") end
+				if fa_defender.prev.state == being_hit and fa_defender.state ~= being_hit then
+					if DEBUG then print("End (Knockdown/Air recovery) : Defender has landed on his feet") end
 					calculation_end = true
 				end
 			elseif successful_throw then
-				if gamestate.P2.prev.state == being_thrown and gamestate.P2.state ~= being_thrown then
-					if DEBUG then print("End (Successful Throw) : P2 has recovered from the throw") end
+				if fa_defender.prev.state == being_thrown and fa_defender.state ~= being_thrown then
+					if DEBUG then print("End (Successful Throw) : Defender has recovered from the throw") end
 					calculation_end = true
 				end
 			elseif teched_throw then
-				if gamestate.P2.prev.state == being_hit and gamestate.P2.state ~= being_hit then
-					if DEBUG then print("End (Teched Throw) : P2 has recovered from the throw") end
+				if fa_defender.prev.state == being_hit and fa_defender.state ~= being_hit then
+					if DEBUG then print("End (Teched Throw) : Defender has recovered from the throw") end
 					calculation_end = true
 				end
 			end
@@ -3031,22 +3072,22 @@ local function frameAdvantageDisplay()
 		elseif frame_advantage_msg_fcount > 0 then
 			frame_advantage_msg_fcount = countFrames(frame_advantage_msg_fcount)
 		end
-		gui.text(153,216,"Frame Advantage : "..frame_advantage_result)
+		gui.text(140,216,"Frame Advantage ("..fa_player..") : "..frame_advantage_result)
 
 		if DEBUG then
-			gui.text(210,50,"Frame advantage : "..frame_advantage)
-			gui.text(210,60,"Frame disadvantage : "..frame_disadvantage)
+			gui.text(230,50,"Frame advantage : "..frame_advantage)
+			gui.text(230,60,"Frame disadvantage : "..frame_disadvantage)
 
-			gui.text(10,50,"P1 state : "..gamestate.P1.state)
-			gui.text(10,60,"P1 substate : "..gamestate.P1.substate)
-			gui.text(10,70,"P1 attacking : "..str(gamestate.P1.is_attacking))
-			gui.text(10,80,"P1 throw : "..gamestate.P1.throw_flag)
+			gui.text(10,50,"Att. state : "..fa_attacker.state)
+			gui.text(10,60,"Att. substate : "..fa_attacker.substate)
+			gui.text(10,70,"Att. attacking : "..str(fa_attacker.is_attacking))
+			gui.text(10,80,"Att. throw : "..fa_attacker.throw_flag)
 
 
-			gui.text(100,50,"P2 state : "..gamestate.P2.state)
-			gui.text(100,60,"P2 substate : "..gamestate.P2.substate)
-			gui.text(100,70,"P2 hitfreeze : "..str(gamestate.P2.in_hitfreeze))
-			gui.text(100,80,"P2 hitstun : "..str(gamestate.P2.in_hitstun))
+			gui.text(120,50,"Def. state : "..fa_defender.state)
+			gui.text(120,60,"Def. substate : "..fa_defender.substate)
+			gui.text(120,70,"Def. hitfreeze : "..str(fa_defender.in_hitfreeze))
+			gui.text(120,80,"Def. hitstun : "..str(fa_defender.in_hitstun))
 		end
 	end
 end
