@@ -1,7 +1,8 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
-
-print "It's recommended to run characters health refill option on 'Health Always Full'"
+function gamemsg()
+	print "It's recommended to run characters health refill option on 'Health Always Full'"
+end
 
 p1maxhealth = 0x90
 p2maxhealth = 0x90

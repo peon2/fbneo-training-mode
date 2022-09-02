@@ -1,3 +1,62 @@
+v0.22.09
+
+General Usage:
+Added an emergency toggle at the head of the fbneo-training-mode.lua file to hopefully avoid incessant crashing
+When leaving a menu through 'Coin' or 'Back' the input is no longer processed when the menu closes
+'Coin' now consistently returns to the game from any menu and 'Back' returns to the main menu if in a sub-menu
+Added an input delay option
+Adjusted sliding menu options to increment/decrement more smoothly
+If a game without health refill options is launched, it's ensured health refill isn't enabled
+Moved the set direction option to the 'Basic Settings' page
+Warning messages are spaced out to not be visible to the user unless text output is scrolled back up
+Extraneous hud/information is now not drawn to the screen while in a menu
+Memory size in the main menu now updates slower to be more visible
+
+Scrolling Inputs:
+Reduced the load of adjusting scrolling input to hopefully avoid more crashes
+Removed scrolling input option in the main menu, scrolling inputs can now be adjusted through HUD Settings
+
+HUD Settings:
+Moving a HUD element underneath the help display now hides help
+Adjusted HUD elements movement to be more smooth
+
+Replays:
+Replays can have a random delayed added to their start now
+Reduced the size of replays to reduce memory size/file size
+Replay Editor now better preserves the start and end of the inputs of a replay and displays such
+Replay Editor now better preserves direction of the input of a frame of replay and displays such with an option to change it
+Adjusted spacing of the frame count in the Replay Editor
+Fixed crashing issue related to switching slots in Replay Editor
+
+Added support for Breakers Revenge - Extra Mode (brkrevext)
+Added support for Cyberbots - Fullmetal Madness Unlock Hack (cybotsam)
+Added support for Fatal Fury 2 - Arata-Naru Tatakai (fatfury2)
+Added support for Super Street Fighter 2 Turbo - New Legacy (ssf2tnl)
+Added support for SNK vs. Capcom: SVC Chaos (svc)
+Added support for SNK vs. Capcom: SVC Chaos Super Plus (svcsplus)
+Added support for Ultimate Mortal Kombat 3 (umk3) (Thanks to Ausuri)
+Added support for Vampire Savior: The Lord of Vampire (Aesthetic Edition) (vsavae)
+
+breakrev:
+Added hitboxes through in-game debugger
+Fixed writing/reading P2 meter
+
+kof2003:
+Added hitboxes
+
+msh:
+Adjusted default HUD
+
+sfa3:
+Added support for crouch cancels and air techs (Thanks to Asunaro)
+
+ssf2xjr1:
+Numerous fixes, features, and refactors (Thanks to Pof and Asunaro)
+Introduction of 'Addons' system with many different modules to help players practice techniques such as sako ticks or boxer dash punches (Thanks to Asunaro)
+
+svc:
+Added hitboxes
+
 v0.22.04.08
 
 Added replay on savestate load

@@ -15,7 +15,7 @@ local p2meter = 0x20695EB
 local p1direction = 0x2068C76 
 local p2direction = 0x2068C77
 
-local p1combocounter = 0x2028861 
+local p1combocounter = 0x20696C5
 local p2combocounter = 0x206961D
 
 translationtable = {

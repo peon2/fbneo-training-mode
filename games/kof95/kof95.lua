@@ -1,8 +1,9 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with kof95"
-print "Combos aren't tracked"
-print ""
+function gamemsg()
+	print "Known issues with kof95:"
+	print "Combos aren't tracked"
+end
 
 p1maxhealth = 0xD0
 p2maxhealth = 0xD0

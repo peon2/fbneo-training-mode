@@ -11,10 +11,11 @@ local p2redhealth = 0x100589
 local p1direction = 0x100445
 local p2direction = 0x100345
 
-print "Note that fatfury1 has no meter"
-print "Known issue:"
-print "Hitstun not set up"
-print ""
+function gamemsg()
+	print "Note that fatfury1 has no meter"
+	print "Known issue:"
+	print "Hitstun not set up"
+end
 
 translationtable = {
 	"left",

@@ -1,6 +1,8 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
-print "Note that you may have to restart the script if you switch characters"
+function gamemsg()
+	print "Note that you have to restart the script whenever characters are switched"
+end
 
 p1maxhealth = 0x100
 p2maxhealth = 0x100

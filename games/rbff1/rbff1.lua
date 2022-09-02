@@ -15,7 +15,6 @@ local p2meter = 0x1005BA
 local p1direction = 0x100471
 local p2direction = 0x100571
 
-print "Note that fatfursp has no meter"
 
 translationtable = {
 	"left",

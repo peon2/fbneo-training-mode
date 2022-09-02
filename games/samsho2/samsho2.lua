@@ -1,8 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with samsho"
-print ""
-
 p1maxhealth = 0x80
 p2maxhealth = 0x80
 

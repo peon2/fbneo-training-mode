@@ -283,12 +283,6 @@ end
 togglescrollinginputsplayer()
 
 --[[
-
-local function clear()
-	inp = { [1] = {}, [2] = {} }
-	emu.message("Cleared screen.")
-end
-
 local function resize()
 	if icon_size < maximum_tile_size then
 		icon_size = icon_size + minimum_tile_size/4
@@ -401,7 +395,7 @@ function scrollingInputReg()
 			inputs.properties.scrollinginput.scrollinginputyoffset[i] = margin[3] 
 		end
 	end
-	
+
 	for player = 1, 2 do
 		local xoffset = inputs.properties.scrollinginput.scrollinginputxoffset[player]
 		local yoffset = inputs.properties.scrollinginput.scrollinginputyoffset[player]
@@ -443,6 +437,7 @@ function scrollingInputReg()
 end
 
 function scrollingInputRegAfter()
+	if (interactivegui.movehud.enabled) then return end
 	margin[1] = margin_left*effective_width
 	margin[2] = (emu.screenwidth and emu.screenwidth() or screenwidth) - margin_right*effective_width
 	margin[3] = margin_top*icon_size
@@ -467,4 +462,37 @@ function scrollingInputReload()
 	icon_size, image_icon_size = inputs.properties.scrollinginput.iconsize
 	readimages()
 	togglescrollinginputsplayer()
+end
+
+function scrollingInputClear()
+	idle = {[1] = 0, [2] = 0}
+	allinputcounters  = {[1] = {}, [2] = {}}
+end
+
+function scrollingInputSetInput(allinput, nullinput, activeinput)
+	if type(allinput)~="table" then return allinputcounters end
+	if type(nullinput)~="table" then return nullinputcounters end
+	if type(activeinput)~="table" then return activeinputcounters end
+	allinputcounters = allinput
+	nullinputcounters = nullinput
+	activeinputcounters = activeinput
+end
+
+function scrollingInputSetSampleInput() -- for display to judge size of scrollinginputs
+	local allinput, nullinput, activeinput
+	allinput =  {
+				{{1},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1}},
+				{{1},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1}}
+				}
+	
+	nullinput = {
+				{1,1,1,1,1,1,1,1,1,1,1,1,1},
+				{1,1,1,1,1,1,1,1,1,1,1,1,1}
+				}
+	
+	activeinput={
+				{1,1,1,1,1,1,1,1,1,1,1,1,1},
+				{1,1,1,1,1,1,1,1,1,1,1,1,1}
+				}
+	scrollingInputSetInput(allinput, nullinput, activeinput)
 end

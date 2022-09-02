@@ -1,3 +1,9 @@
+DISABLE_SCROLLING_INPUT = false
+-- flip this when the script keeps crashing
+-- replace the text after the '=' with:
+-- true, do use it
+-- false, don't use it
+
 -- memory macros
 wb = memory.writebyte
 ww = memory.writeword
@@ -8,7 +14,7 @@ rdw = memory.readdword
 
 require "gd"
 
-FBNEO_TRAINING_MODE_VERSION = "v0.22.04.08"
+FBNEO_TRAINING_MODE_VERSION = "v0.22.09"
 
 --- wait 3 frames to allow for emu.screenwidth() and emu.screenheight() to be obtained properly
 emu.frameadvance()
@@ -26,14 +32,15 @@ local games = {
 	asurabld = {"asurabld", iconfile = "icons-asurabus-32.png"},
 	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
 	avengrgs = {"avengrgs", iconfile = "icons-banpresto-32.png"},
-	breakrev = {"breakrev", iconfile = "icons-neogeo-32.png"},
-	cyberbots = {"cybots", hitboxes = "cps2-hitboxes", iconfile = "icons-cybots-32.png"},
+	breakrev = {"breakrev", "brkrevext", iconfile = "icons-neogeo-32.png"},
+	cyberbots = {"cybots", "cybotsam", hitboxes = "cps2-hitboxes", iconfile = "icons-cybots-32.png"},
 	dankuga = {"dankuga", iconfile= "icons-capcom-32.png"},
 	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
 	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
 	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
 	doubledr = {"doubledr", iconfile = "icons-neogeo-32.png"},
 	fatfury1 = {"fatfury1", iconfile = "icons-neogeo-32.png"},
+	fatfury2 = {"fatfury2", iconfile = "icons-neogeo-32.png"},
 	fatfury3 = {"fatfury3", iconfile = "icons-neogeo-32.png"},
 	fatfursp = {"fatfursp", iconfile = "icons-neogeo-32.png"},
 	galaxyfg = {"galaxyfg", iconfile = "icons-neogeo-32.png"},
@@ -56,7 +63,7 @@ local games = {
 	kof2000 = {"kof2000", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof2001 = {"kof2001", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2003 = {"kof2003", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2003 = {"kof2003", hitboxes = "kof2003-hitboxes", iconfile = "icons-neogeo-32.png"},
 	kf2k5uni = {"kf2k5uni", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
 	lastblad = {"lastblad", iconfile = "icons-neogeo-32.png"},
 	lb2 = {"lastbld2", iconfile = "icons-neogeo-32.png"},
@@ -92,13 +99,14 @@ local games = {
 	sfiii2 = {"sfiii2", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
 	sfiii3 = {"sfiii3", "sfiii3nr1", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
-	ssf2xjr1 = {"ssf2xjr1", hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
+	ssf2xjr1 = {"ssf2xjr1", "ssf2tnl", hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
+	svc = {"svc", "svcsplus", hitboxes = "svc-hitboxes", iconfile = "icons-neogeo-32.png"},
 	tkdensho = {"tkdensho", iconfile = "icons-banpresto-32.png"},
 	umk3 = {"umk3", iconfile = "icons-midway-32.png"},
 	vamp = {"vamp", "vampjr1", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhunt2 = {"vhunt2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vhuntjr2 = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	vsav = {"vsav", "vsavj", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	vsav = {"vsav", "vsavj", "vsavae", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	vsav2 = {"vsav2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
 	wakuwak7 = {"wakuwak7", "wakuwak7bh", iconfile = "icons-neogeo-32.png"},
 	whp = {"whp", iconfile = "icons-neogeo-32.png"},
@@ -140,7 +148,7 @@ local defaultconfig = {
 		refillmeterenabled = true,
 	},
 
-	-- Combo Gui
+	-- Combo GUI
 	hud = {
 		p1healthx = 10,
 		p1healthy = 10,
@@ -167,7 +175,7 @@ local defaultconfig = {
 		comboenabled = false,
 	},
 
-	-- Interactive Gui
+	-- Interactive GUI
 
 	interactivegui = {
 		bg = 0xF0F0F0FF,
@@ -182,7 +190,7 @@ local defaultconfig = {
 
 	-- Input Settings
 	inputs = {
-		simplestate = {0,0},
+		simplestate = {true,true},
 		simpleinputxoffset = {},
 		simpleinputyoffset = {},
 		kbstate = false,
@@ -425,6 +433,9 @@ checkAvailableFunctions = function() -- SETUP availablefunctions TABLE
 	if inputDisplayReg then availablefunctions.inputdisplayreg = true end
 	if scrollingInputReg then availablefunctions.scrollinginputreg = true end
 	if scrollingInputRegAfter then availablefunctions.scrollinginputregafter = true end
+	if scrollingInputClear then availablefunctions.scrollinginputclear = true end
+	if scrollingInputSetInput then availablefunctions.scrollinginputsetinput = true end
+	if scrollingInputSetSampleInput then availablefunctions.scrollinginputsetsampleinput = true end
 	--
 	-- Saving/Loading
 	if table.save then availablefunctions.tablesave = true end
@@ -436,6 +447,7 @@ checkAvailableFunctions()
 
 interactivegui = {
 	enabled = false,
+	inmenu = false,
 	page = 1, -- these should be numbers referencing interactiveguipages
 	selection = 1,
 	sw = emu.screenwidth(),
@@ -453,9 +465,7 @@ interactivegui = {
 	boxxmid = emu.screenwidth()/config.interactivegui.boxxd+(config.interactivegui.boxxm-1)*(emu.screenwidth()/config.interactivegui.boxxd)/2,
 	boxymid = emu.screenheight()/config.interactivegui.boxyd-10+(config.interactivegui.boxym-1)*(emu.screenheight()/config.interactivegui.boxyd)/2,
 	selectioncolour = config.interactivegui.selectioncolour,
-	movehud = false,
-	movehudselected = false,
-	movehudselection = 1,
+	movehud = {enabled = false, selected = false, selection = 1},
 	replayeditor = {inputs = {}},
 }
 
@@ -575,6 +585,8 @@ inputs = {
 			simplestate = config.inputs.simplestate,
 			simpleinputxoffset = config.inputs.simpleinputxoffset,
 			simpleinputyoffset = config.inputs.simpleinputyoffset,
+			p1simpleinput = config.inputs.simplestate[1],
+			p2simpleinput = config.inputs.simplestate[2],
 		},
 		scrollinginput = {
 			iconsize = config.inputs.iconsize,
@@ -582,6 +594,8 @@ inputs = {
 			frames = config.inputs.framenumbersenabled,
 			scrollinginputxoffset = config.inputs.scrollinginputxoffset,
 			scrollinginputyoffset = config.inputs.scrollinginputyoffset,
+			p1scrollinginput = config.inputs.scrollingstate[1],
+			p2scrollinginput = config.inputs.scrollingstate[2],
 		},
 		KB = {
 			kbstate = config.inputs.kbstate,
@@ -606,6 +620,7 @@ inputs = {
 
 hitboxes = {
 	enabled = config.hitbox.enabled,
+	prev = config.hitbox.enabled,
 }
 
 recording = {
@@ -624,6 +639,9 @@ recording = {
 	swapplayers = true,
 	replayP1 = false,
 	replayP2 = true,
+	maxstarttime = 0,
+	starttime = 0,
+	startcounter = 0,
 }
 
 ----------------------------------------------
@@ -659,9 +677,12 @@ else
 	print("input-display.lua not found")
 end
 
+print ""
+print "If the script crashes here you may need to edit DISABLE_SCROLLING_INPUT based on your computer. Open the fbneo-training-mode.lua file with a text editor (notepad, notepad++, etc.) and change DISABLE_SCROLLING_INPUT to true or false, whichever it isn't"
+
 if games[dirname].iconfile then
 	iconfile = games[dirname].iconfile
-	if fexists("inputs/scrolling-input/"..iconfile) then
+	if fexists("inputs/scrolling-input/"..iconfile) and not DISABLE_SCROLLING_INPUT then
 		if fexists("inputs/scrolling-input-display.lua") then
 			if fexists("inputs/scrolling-input/scrolling-input-code.lua") then
 				dofile("inputs/scrolling-input-display.lua")
@@ -807,10 +828,18 @@ createScrollingBar = function(BaseMenu, x, y, min, max, updatefunc, length, clos
 			return 0
 		elseif (n < 120) then
 			return 1
+		elseif (n < 150) then
+			return 2
 		elseif (n < 180) then
+			return 3
+		elseif (n < 210) then
 			return 5
+		elseif (n < 240) then
+			return 10
+		elseif (n < 300) then
+			return 10
 		end
-		return 10
+		return 100
 	end
 
 	but.autofunc = 	function(this)
@@ -933,7 +962,7 @@ if fexists("guipages.lua") then
 	dofile("guipages.lua")
 	interactiveguipages = guipages
 else
-	print("Gui pages not found"..rom)
+	print("GUI pages not found"..rom)
 end
 ----------------------------------------------
 end
@@ -1183,7 +1212,7 @@ local instantMeterP2 = function()
 	writePlayerTwoMeter(modulevars.p2.maxmeter)
 end
 
-local readGuiInputs = function()
+local readGUIInputs = function()
 	local player, inp
 	guiinputs.P1.previousinputs = nil
 	guiinputs.P2.previousinputs = nil
@@ -1275,30 +1304,48 @@ local toggleSwapInputs = function(bool, vargs)
 end
 
 local swapInputs = function()
-
 	if not inputs.properties.enableinputswap then return end
-
-	local tab = inputs.p1
+	
+	local t = inputs.p1
 	inputs.p1 = inputs.p2
-	inputs.p2 = tab
-
-	tab = combinePlayerInputs(inputs.p1, inputs.p2, inputs.other)
-	inputs.setinputs = tab
+	inputs.p2 = t
+	
+	inputs.setinputs = combinePlayerInputs(inputs.p1, inputs.p2, inputs.other)
 end
 
 local swapPlayerDirection = function(player)
-
 	local tab = copytable(player) -- shallow copy
-	
+
 	if tab.Left==true then tab.Right=true tab.Left=false
 	elseif tab.Right==true then tab.Left=true tab.Right=false end
 
 	return tab
+end
 
+local HUDElements = {}
+
+local menuCheck = function()
+	interactivegui.inmenu = interactivegui.enabled or interactivegui.movehud.enabled or interactivegui.replayeditor.enabled
+
+	inputs.properties.p1freeze = interactivegui.inmenu
+	inputs.properties.p2freeze = interactivegui.inmenu
+	
+	-- toggle hitboxes/inputs while in a menu
+	hitboxes.enabled = (not interactivegui.inmenu) and hitboxes.prev
+
+	-- find elements in HUDelements to adjust
+	if (interactivegui.inmenu and not interactivegui.movehud.enabled and availablefunctions.scrollinginputclear) then scrollingInputClear() end
+	for _,v in pairs(HUDElements or {}) do
+		if (v.name == "p1scrollinginput" or v.name == "p2scrollinginput") then -- (HP)+(!(I)P) scrolling inputs 
+			inputs.properties.scrollinginput.scrollingstate[tonumber(v.name:sub(2,2))] = ((interactivegui.movehud.enabled and inputs.properties.scrollinginput[v.name]) or ((not interactivegui.inmenu) and inputs.properties.scrollinginput[v.name]))
+		end
+		if (v.name == "p1simpleinput" or v.name == "p2simpleinput") then -- (HP)+(!(I)P) simple inputs
+			inputs.properties.simpleinput.simplestate[tonumber(v.name:sub(2,2))] = ((interactivegui.movehud.enabled and inputs.properties.simpleinput[v.name]) or ((not interactivegui.inmenu) and inputs.properties.simpleinput[v.name]))
+		end
+	end
 end
 
 local freezePlayer = function(player)
-
 	if player == 1 or not player then
 		if inputs.properties.p1freeze then
 			for i,_ in pairs(inputs.p1) do
@@ -1316,7 +1363,6 @@ local freezePlayer = function(player)
 			end
 		end
 	end
-	
 end
 
 -- Const
@@ -1385,12 +1431,20 @@ local serialise = function(recordslot)
 		if recordslot[i].p1facingleft then num = bit.bor(num, bit.lshift(1, recordslot._stable.p1.len+recordslot._stable.p2.len)) end
 		if recordslot[i].p2facingleft then num = bit.bor(num, bit.lshift(1, recordslot._stable.p1.len+recordslot._stable.p2.len+1)) end
 		recordslot[i].serial.player = num
-		recordslot[i].raw = {} -- we can empty this now
+		if not next(recordslot[i].serial.other) then recordslot[i].serial.other = nil recordslot[i].serial=num end -- more often than not dipswitches wont change
+		recordslot[i].raw = nil -- we can empty this now
 	end
 end
 
 local Unserialise = function(inputs, _stable, constants) -- takes inputs (recordslot[frame]), _stable and constants to unserialise
-	local serial = inputs.serial.player
+	local serial, other
+	if (type(inputs.serial)=="number") then
+		serial = inputs.serial
+		other = {}
+	else
+		serial = inputs.serial.player
+		other = inputs.serial.other
+	end
 	inputs.raw = {} -- initialise
 	inputs.raw.p1 = {}
 	inputs.raw.p2 = {}
@@ -1416,7 +1470,7 @@ local Unserialise = function(inputs, _stable, constants) -- takes inputs (record
 	inputs.p1facingleft = bit.band(serial,1)==1 -- set direction flag
 	inputs.p2facingleft = bit.band(serial,2)==2 -- set direction flag
 	t=inputs.raw.other
-	for i, v in pairs(inputs.serial.other) do
+	for i, v in pairs(other) do
 		t[i] = v
 	end
 	
@@ -1436,10 +1490,10 @@ end
 
 local toggleRecording = function(bool, vargs)
 
-	if interactivegui.movehud then return end
-	
+	if interactivegui.movehud.enabled then return end
+
 	local swp = vargs and vargs.swapinputs
-	
+
 	if vargs then vargs.recording = false end
 	toggleStates(vargs)
 
@@ -1449,7 +1503,7 @@ local toggleRecording = function(bool, vargs)
 	else recording.enabled = bool end
 
 	recording.swapplayers = not recording.replayP1
-	
+
 	if swp~=false then -- we only want to toggle the inputs when toggleSwapInputs is not originally called		
 		if recording.swapplayers then
 			toggleSwapInputs(recording.enabled, vargs)
@@ -1467,21 +1521,23 @@ local toggleRecording = function(bool, vargs)
 		recording[recording.recordingslot]._stable.p2 = copytable(SERIALISETABLE.p2)
 		recording[recording.recordingslot].constants = joypad.get()
 	else
-		local recordslot = recording[recording.recordingslot]
-		if not recordslot[1] or not recordslot[1].raw or not recordslot[1].raw.p1 or not recordslot[1].raw.p2 then return end -- nothing to do past here
-		if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
-			recording[recording.recordingslot] = {}
-		else
-			recordslot.p1start = recordslot.p1start or #recordslot
-			recordslot.p2start = recordslot.p2start or #recordslot
-			for i=#recordslot,recordslot.p1start,-1 do
-				if recordslot[i].raw.p1 then recordslot[i].raw.p1.Coin = false end-- clear coin
+		for j = 1, #recording do -- try to serialise everything that has a new input
+			local recordslot = recording[j]
+			if not recordslot[1] or not recordslot[1].raw or not recordslot[1].raw.p1 or not recordslot[1].raw.p2 then return end -- nothing to do past here
+			if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
+				recording[recording.recordingslot] = {}
+			else
+				recordslot.p1start = recordslot.p1start or #recordslot
+				recordslot.p2start = recordslot.p2start or #recordslot
+				for i=#recordslot,recordslot.p1start,-1 do
+					if recordslot[i].raw.p1 then recordslot[i].raw.p1.Coin = false end -- clear coin
+				end
+				for i=#recordslot,recordslot.p2start,-1 do
+					if recordslot[i].raw.p2 then recordslot[i].raw.p2.Coin = false end -- clear coin
+				end
+				serialiseInit(recordslot)
+				serialise(recordslot)
 			end
-			for i=#recordslot,recordslot.p2start,-1 do
-				if recordslot[i].raw.p2 then recordslot[i].raw.p2.Coin = false end -- clear coin
-			end
-			serialiseInit(recordslot)
-			serialise(recordslot)
 		end
 	end
 end
@@ -1516,22 +1572,22 @@ local logRecording = function()
 
 	if not recording[recording.recordingslot].p1start then -- move start forward to first frame that something happens on
 		if orTable(tab.raw.p1) and not tab.raw.p1.Coin then
-			recordslot.p1start = fc - recording.framestart + 1
+			recordslot.p1start = fc - recording.framestart
 		end
 	end
 
 	if not recording[recording.recordingslot].p2start then -- move start forward to first frame that something happens on
 		if orTable(tab.raw.p2) and not tab.raw.p2.Coin then
-			recordslot.p2start = fc - recording.framestart + 1
+			recordslot.p2start = fc - recording.framestart
 		end
 	end
 
 	if orTable(tab.raw.p1) and not tab.raw.p1.Coin then  -- put finish on the last frame that something happens
-		recordslot.p1finish = fc - recording.framestart - 1
+		recordslot.p1finish = fc - recording.framestart
 	end
 
 	if orTable(tab.raw.p2) and not tab.raw.p2.Coin then  -- put finish on the last frame that something happens
-		recordslot.p2finish = fc - recording.framestart - 1
+		recordslot.p2finish = fc - recording.framestart
 	end
 	
 	if availablefunctions.playeronefacingleft then
@@ -1549,7 +1605,7 @@ end
 
 -- global, as it is used in ssf2x
 togglePlayBack = function(bool, vargs)
-	if interactivegui.movehud then return end
+	if interactivegui.movehud.enabled then return end
 	
 	local _playbackslot = recording.playbackslot or recording.recordingslot -- tmp for playbackslot
 	recording.playbackslot = nil
@@ -1607,6 +1663,13 @@ togglePlayBack = function(bool, vargs)
 			recordslot.start = recordslot.p2start
 		end
 		if recordslot.start==recordslot.finish then toggleSwapInputs(false) return end -- nothing recorded
+		
+		recording.startcounter = 0 -- randomise starting playback
+		if recording.maxstarttime == 0 then
+			recording.starttime = 0
+		else
+			recording.starttime = math.random(recording.maxstarttime+1)-1 -- [0,maxstarttime]
+		end
 	end
 end
 
@@ -1623,6 +1686,16 @@ local playBack = function()
 	if recording.skiptostart and recordslot.start then start = recordslot.start end
 	if recording.skiptofinish and recordslot.finish then finish = recordslot.finish end
 
+	gui.text(1,1,"Slot "..recording.playbackslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
+	
+	if recording.starttime > recording.startcounter then -- delay until replay starts
+		recording.startcounter = recording.startcounter+1
+		recordslot.framestart = recordslot.framestart+1
+		return
+	end
+	
+	if recording.maxstarttime>0 then gui.text(72,1,"Delay: "..recording.starttime) end -- show delay
+
 	if fc - recordslot.framestart + start > finish then
 		recordslot.framestart = nil
 		if not recording.loop then -- finished replaying, reset everything
@@ -1635,8 +1708,6 @@ local playBack = function()
 		end
 		return
 	end
-
-	gui.text(1,1,"Slot "..recording.playbackslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
 	
 	Unserialise(recordslot[fc - recordslot.framestart + start], recordslot._stable, recordslot.constants)
 	local raw = recordslot[fc - recordslot.framestart + start].raw
@@ -1654,7 +1725,7 @@ local playBack = function()
 	else
 		inputs.setinputs = combinePlayerInputs(inputs.p1, raw.p2, raw.other)
 	end
-	recordslot[fc - recordslot.framestart + start].raw = {}
+	recordslot[fc - recordslot.framestart + start].raw = nil
 	recordslot[fc - recordslot.framestart + start].p1facingleft = nil
 	recordslot[fc - recordslot.framestart + start].p2facingleft = nil
 end
@@ -1670,6 +1741,42 @@ savestatePlayBack = function()
 	if not recording.savestateslot then return end
 	recording.playbackslot = recording.savestateslot
 	togglePlayBack(true)
+end
+
+local inputbuffer = {}
+
+for i = 1, 9 do -- max 9 frames of delay
+	inputbuffer[i] = joypad.get()
+end
+
+delayinputcount = 0
+
+local delayInputs = function()
+	if delayinputcount==0 then return end
+	if next(inputs.setinputs) then -- processed input
+		for i = delayinputcount, 2, -1 do
+			inputbuffer[i] = {}
+			inputbuffer[i] = copytable(inputbuffer[i-1])
+		end -- advance frame
+		inputbuffer[1] = {}
+		inputbuffer[1] = inputs.setinputs
+		
+		inputs.setinputs = inputbuffer[delayinputcount]
+	else -- raw
+		for i = delayinputcount, 2, -1 do
+			inputbuffer[i] = {p1={},p2={},other={}}
+			inputbuffer[i].p1 = copytable(inputbuffer[i-1].p1)
+			inputbuffer[i].p2 = copytable(inputbuffer[i-1].p2)
+			inputbuffer[i].other = copytable(inputbuffer[i-1].other)
+		end -- advance frame
+		inputbuffer[1] = {}
+		inputbuffer[1].p1 = inputs.p1 -- new inputs queued
+		inputbuffer[1].p2 = inputs.p2
+		inputbuffer[1].other = inputs.other
+		
+		inputs.setinputs = combinePlayerInputs(inputbuffer[delayinputcount].p1, inputbuffer[delayinputcount].p2, inputbuffer[delayinputcount].other) -- play input
+	end
+	
 end
 
 setInputs = function()
@@ -1875,7 +1982,7 @@ end
 local toggledrawhelp = true
 
 local drawHelp = function()
-	if not (interactivegui.movehud or interactivegui.enabled or interactivegui.replayeditor.enabled) then return end -- need some sort of state system eventually to make this sort of thing easier
+	if not (interactivegui.movehud.enabled or interactivegui.enabled or interactivegui.replayeditor.enabled) then return end
 
 	-- run buttons
 	for i=1,nbuttons do if helpElements[i] and helpElements[i].func then helpElements[i].func(helpElements[i].buttonnum) end end -- run all the functions
@@ -1901,7 +2008,7 @@ local drawHelp = function()
 	end
 end
 
-local toggleInteractiveGuiEnabled = function(bool, vargs)
+local toggleInteractiveGUI = function(bool, vargs)
 	if vargs then vargs.interactiveguienabled = false end
 	toggleStates(vargs)
 	recording[recording.recordingslot] = recording[recording.recordingslot] or {}
@@ -1909,26 +2016,23 @@ local toggleInteractiveGuiEnabled = function(bool, vargs)
 
 	if bool==nil then interactivegui.enabled = not interactivegui.enabled
 	else interactivegui.enabled = bool end
-
-	inputs.properties.p1freeze = interactivegui.enabled
-	inputs.properties.p2freeze = interactivegui.enabled
 end
 
 local garbagecount = {disp = collectgarbage("count")}
 
-local callGuiSelectionFunc = function()
+local callGUISelectionFunc = function()
 	local func = interactiveguipages[interactivegui.page][interactivegui.selection].func
 	if not interactivegui.enabled or not func then return end
 	func()
 end
 
-local callGuiSelectionReleaseFunc = function()
+local callGUISelectionReleaseFunc = function()
 	local func = interactiveguipages[interactivegui.page][interactivegui.selection].releasefunc
 	if not interactivegui.enabled or not func then return end
 	func()
 end
 
-local interactiveGuiSelectionInfo = function()
+local interactiveGUISelectionInfo = function()
 	
 	local info = interactiveguipages[interactivegui.page][interactivegui.selection].info
 	if not interactivegui.enabled or not info then return end
@@ -1947,7 +2051,7 @@ local interactiveGuiSelectionInfo = function()
 	end
 end
 
-local interactiveGuiSelectionBack = function()
+local interactiveGUISelectionBack = function()
 	if not interactivegui.enabled then return end
 	CIG(interactivegui.previouspage, interactivegui.previousselection)
 end
@@ -1968,13 +2072,13 @@ local blankKB = function()
 	end
 end
 
-local drawInteractiveGuiFuncs = {
+local drawInteractiveGUIFuncs = {
 	function(but) -- SLCT
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-			callGuiSelectionFunc()
+			callGUISelectionFunc()
 		end
 		if not guiinputs.P1[but] and guiinputs.P1.previousinputs[but] then
-			callGuiSelectionReleaseFunc()
+			callGUISelectionReleaseFunc()
 		end
 	end,
 	
@@ -1987,7 +2091,7 @@ local drawInteractiveGuiFuncs = {
 	
 	function(but) -- INFO
 		if guiinputs.P1[but] then
-			interactiveGuiSelectionInfo()
+			interactiveGUISelectionInfo()
 		end
 	end,
 	
@@ -1995,7 +2099,7 @@ local drawInteractiveGuiFuncs = {
 	
 	back = function(but) 
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- back button
-			interactiveGuiSelectionBack()
+			interactiveGUISelectionBack()
 		end
 	end,
 
@@ -2081,11 +2185,11 @@ local drawInteractiveGuiFuncs = {
 	end
 }
 
-local drawInteractiveGui = function()
+local drawInteractiveGUI = function()
 
 	if not interactivegui.enabled then return end
-	
-	local t = {{name="SLCT", button="button1"}, {name="HKEY", button="button2"}, {}, funcs=drawInteractiveGuiFuncs}
+
+	local t = {{name="SLCT", button="button1"}, {name="HKEY", button="button2"}, {}, funcs=drawInteractiveGUIFuncs}
 
 	local boxx, boxy, boxx2, boxy2, bgcolour, olcolour, page, selection
 
@@ -2153,16 +2257,16 @@ local drawInteractiveGui = function()
 	end
 	gui.box(selection.x + boxx, selection.y + boxy, selection.x + boxx + w + 4, selection.y + boxy + h, selection.bgcolour, colour)
 	gui.text(selection.x + boxx + 3, selection.y + boxy + 2, selection.text, selection.textcolour)
-	
-	table.insert(garbagecount, math.floor(collectgarbage("count")*100)/100) -- round to two places
-	if #garbagecount>=10 then
+
+	table.insert(garbagecount, collectgarbage("count")) -- round to two places
+	if #garbagecount>=30 then
 		local disp = 0
 		for _, v in ipairs(garbagecount) do
 			disp = disp+v
 		end
 		disp = disp/#garbagecount
 		garbagecount={}
-		garbagecount.disp = disp
+		garbagecount.disp = math.floor(disp*100)/100
 	end
 	gui.text(boxx+1, boxy2-7, "kB:"..garbagecount.disp)
 	if page.other_func then page.other_func() end -- if theres anything else to be ran
@@ -2248,12 +2352,12 @@ local drawKB = function(x,y)
 end
 
 --fall backs in case can't read joypad input
-input.registerhotkey(1, toggleInteractiveGuiEnabled)
-input.registerhotkey(2, callGuiSelectionFunc)
+input.registerhotkey(1, toggleInteractiveGUI)
+input.registerhotkey(2, callGUISelectionFunc)
 input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
 
-local readGUIInputs = function()
+local processGUIInputs = function()
 	--inspired by grouflons and crystal_cubes menus
 
 	-- some general input stuff put at the start, could be put in its own function
@@ -2264,19 +2368,23 @@ local readGUIInputs = function()
 		guiinputs.P1.coinpresscount = guiinputs.P1.coinpresscount+1
 	end
 
-
 	if fc - guiinputs.P1.coinframestart >= inputs.properties.coinleniency and guiinputs.P1.coinframestart ~= 0 and not guiinputs.P1.coin then
-		if fc - guiinputs.P1.coinframestart > inputs.properties.coinleniency*3 or interactivegui.enabled then
+		if (fc - guiinputs.P1.coinframestart > inputs.properties.coinleniency*3) or interactivegui.enabled then
+			guiinputs.P1.coinpresscount = 4
+		end
+		if interactivegui.replayeditor.enabled or interactivegui.movehud.enabled then -- do nothing
 			guiinputs.P1.coinpresscount = 0
 		end
-		if guiinputs.P1.coinpresscount == 1 then
+		if guiinputs.P1.coinpresscount == 0 then
+			toggleStates({}) -- clean up
+		elseif guiinputs.P1.coinpresscount == 1 then
 			togglePlayBack(nil, {})
 		elseif guiinputs.P1.coinpresscount == 2 then
 			toggleRecording(nil, {})
 		elseif guiinputs.P1.coinpresscount == 3 then
 			toggleSwapInputs(nil, {})
 		else
-			toggleInteractiveGuiEnabled(nil, {})
+			toggleInteractiveGUI(nil, {})
 		end
 		guiinputs.P1.coinframestart = 0
 		guiinputs.P1.coinpresscount = 0
@@ -2308,8 +2416,6 @@ local readGUIInputs = function()
 	end
 end
 
-local HUDElements = {}
-
 local HUDElementsParse = function(t) -- parses HUDElements to fit the guiTableFormatting format
 	local tab = {}
 	for i,v in ipairs(t) do	table.insert(tab, {id=i,x=v.x(),y=v.y()}) end
@@ -2321,22 +2427,23 @@ toggleMoveHUD = function(bool, vargs)
 	
 	if vargs then vargs.movehud = false end
 	toggleStates(vargs)
-	if bool then 
-		interactivegui.movehud = true
+	if bool then
+		interactivegui.movehud.enabled = true
 		guiinputs.P1.previousinputs.button1 = true -- stop double pressing
 		HUDElements.FormatTable = guiTableFormatting(HUDElementsParse(HUDElements)) -- for menu navigation
-	elseif bool == false then interactivegui.movehud = false
-	else interactivegui.movehud = not interactivegui.movehud end
-	interactivegui.movehudselected = false
-
-	inputs.properties.p1freeze = interactivegui.movehud
-	inputs.properties.p2freeze = interactivegui.movehud
+		if availablefunctions.scrollinginputsetsampleinput then scrollingInputSetSampleInput() end
+	elseif bool == false then 
+		interactivegui.movehud.enabled = false
+		if availablefunctions.scrollinginputclear then scrollingInputClear() end
+	else interactivegui.movehud.enabled = not interactivegui.movehud.enabled end
+	
+	interactivegui.movehud.selected = false
 end
 
 function drawHUD() -- all parts of the hud should be dropped in here
 
-	if interactivegui.enabled or interactivegui.replayeditor.enabled then return end
-
+	if interactivegui.inmenu and not interactivegui.movehud.enabled then return end
+	
 	for _, v in ipairs(HUDElements) do
 		if v.enabled() then v.drawfunc() end
 	end
@@ -2348,148 +2455,148 @@ local hudworkingframes = function(n) -- get faster the longer it runs
 		return 0
 	elseif (n < 120) then
 		return 1
+	elseif (n < 150) then
+		return 2
 	elseif (n < 180) then
+		return 3
+	elseif (n < 210) then
+		return 4
+	elseif (n < 300) then
 		return 5
 	end
 	return 10
 end
 
 local moveHUDFuncs = {
-	
-	function(but)
-		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- slct
-			interactivegui.movehudselected = not interactivegui.movehudselected
-			if interactivegui.movehudselected then
-				HUDElements[interactivegui.movehudselection].prevx = HUDElements[interactivegui.movehudselection].x()
-				HUDElements[interactivegui.movehudselection].prevy = HUDElements[interactivegui.movehudselection].y()
+	function(but) -- slct
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			interactivegui.movehud.selected = not interactivegui.movehud.selected
+			if interactivegui.movehud.selected then
+				HUDElements[interactivegui.movehud.selection].prevx = HUDElements[interactivegui.movehud.selection].x()
+				HUDElements[interactivegui.movehud.selection].prevy = HUDElements[interactivegui.movehud.selection].y()
 			else
 				HUDElements.FormatTable = guiTableFormatting(HUDElementsParse(HUDElements)) -- for menu navigation
 			end
 		end
 	end,
-	
-	function(but)
-		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- hide
-			local enabled = HUDElements[interactivegui.movehudselection].enabled()
+	function(but) -- hide
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			local enabled = HUDElements[interactivegui.movehud.selection].enabled()
 			if enabled==nil then enabled=false end
-			HUDElements[interactivegui.movehudselection].enabled(not enabled)
+			HUDElements[interactivegui.movehud.selection].enabled(not enabled)
 		end
 	end,
-	
-	back = function(but)
-		if guiinputs.P1.previousinputs[but] and not guiinputs.P1[but] then -- back
-			if interactivegui.movehudselected then
-				HUDElements[interactivegui.movehudselection].x(HUDElements[interactivegui.movehudselection].prevx)
-				HUDElements[interactivegui.movehudselection].y(HUDElements[interactivegui.movehudselection].prevy)
-				interactivegui.movehudselected = false
+	back = function(but) -- return to main menu
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+			if interactivegui.movehud.selected then
+				HUDElements[interactivegui.movehud.selection].x(HUDElements[interactivegui.movehud.selection].prevx)
+				HUDElements[interactivegui.movehud.selection].y(HUDElements[interactivegui.movehud.selection].prevy)
+				interactivegui.movehud.selected = false
 				HUDElements.FormatTable = guiTableFormatting(HUDElementsParse(HUDElements)) -- for menu navigation
 			else
-				toggleMoveHUD(false)
+				toggleInteractiveGUI(true, {})
 			end
 		end
 	end,
-	
 	coin = function()
-		if guiinputs.P1.coin and not guiinputs.P1.previousinputs.coin then -- back
-			if interactivegui.movehudselected then
-				HUDElements[interactivegui.movehudselection].x(HUDElements[interactivegui.movehudselection].prevx)
-				HUDElements[interactivegui.movehudselection].y(HUDElements[interactivegui.movehudselection].prevy)
-				interactivegui.movehudselected = false
+		if guiinputs.P1.coin and not guiinputs.P1.previousinputs.coin then
+			if interactivegui.movehud.selected then
+				HUDElements[interactivegui.movehud.selection].x(HUDElements[interactivegui.movehud.selection].prevx)
+				HUDElements[interactivegui.movehud.selection].y(HUDElements[interactivegui.movehud.selection].prevy)
+				interactivegui.movehud.selected = false
 				HUDElements.FormatTable = guiTableFormatting(HUDElementsParse(HUDElements)) -- for menu navigation
 			end
-			toggleMoveHUD(false)
 		end
 	end,
-	
 	other = function()
-		local x = HUDElements[interactivegui.movehudselection].x()
-		local y = HUDElements[interactivegui.movehudselection].y()
-		if interactivegui.movehudselected then 
+		local x = HUDElements[interactivegui.movehud.selection].x()
+		local y = HUDElements[interactivegui.movehud.selection].y()
+		if interactivegui.movehud.selected then 
 			local d = 0
 			local pos
 			if guiinputs.P1.left then
 				d = hudworkingframes(guiinputs.P1.leftframecount)*-1
-				pos = HUDElements[interactivegui.movehudselection].x(x+d)
-				if (pos < 0) then HUDElements[interactivegui.movehudselection].x(interactivegui.sw) end -- stay in bounds
+				pos = HUDElements[interactivegui.movehud.selection].x(x+d)
+				if (pos < 0) then HUDElements[interactivegui.movehud.selection].x(interactivegui.sw) end -- stay in bounds
 			elseif guiinputs.P1.right then
 				d = hudworkingframes(guiinputs.P1.rightframecount) 
-				pos = HUDElements[interactivegui.movehudselection].x(x+d)
-				if (pos > interactivegui.sw) then HUDElements[interactivegui.movehudselection].x(0) end -- stay in bounds
+				pos = HUDElements[interactivegui.movehud.selection].x(x+d)
+				if (pos > interactivegui.sw) then HUDElements[interactivegui.movehud.selection].x(0) end -- stay in bounds
 			end
 
 			if guiinputs.P1.up then
 				d = hudworkingframes(guiinputs.P1.upframecount)*-1
-				pos = HUDElements[interactivegui.movehudselection].y(y+d)
-				if (pos < 0) then HUDElements[interactivegui.movehudselection].y(interactivegui.sh) end -- stay in bounds
+				pos = HUDElements[interactivegui.movehud.selection].y(y+d)
+				if (pos < 0) then HUDElements[interactivegui.movehud.selection].y(interactivegui.sh) end -- stay in bounds
 			elseif guiinputs.P1.down then
 				d = hudworkingframes(guiinputs.P1.downframecount) 
-				pos = HUDElements[interactivegui.movehudselection].y(y+d)
-				if (pos > interactivegui.sh) then HUDElements[interactivegui.movehudselection].y(0) end -- stay in bounds
+				pos = HUDElements[interactivegui.movehud.selection].y(y+d)
+				if (pos > interactivegui.sh) then HUDElements[interactivegui.movehud.selection].y(0) end -- stay in bounds
 			end
 		else
 			local s -- selection
 			local t -- format table
 			local l -- location
 			if guiinputs.P1.left and not guiinputs.P1.previousinputs.left then
-				s = interactivegui.movehudselection
+				s = interactivegui.movehud.selection
 				t = HUDElements.FormatTable
 				l = t["A"..s]
 				if l[2]-1 <= 0 then
 					if l[1]-1<=0 then
-						interactivegui.movehudselection = t[t.len][t[t.len].len]--vertical wrap
+						interactivegui.movehud.selection = t[t.len][t[t.len].len]--vertical wrap
 					else
-						interactivegui.movehudselection = t[l[1]-1][t[l[1]-1].len]--horizontal wrap
+						interactivegui.movehud.selection = t[l[1]-1][t[l[1]-1].len]--horizontal wrap
 					end
 				else
-					interactivegui.movehudselection = t[l[1]][l[2]-1]
+					interactivegui.movehud.selection = t[l[1]][l[2]-1]
 				end
 			elseif guiinputs.P1.right and not guiinputs.P1.previousinputs.right then
-				s = interactivegui.movehudselection
+				s = interactivegui.movehud.selection
 				t = HUDElements.FormatTable
 				l = t["A"..s]
 				if l[2]+1 > t[l[1]].len then
 					if l[1]+1>t.len then
-						interactivegui.movehudselection = t[1][1]--vertical wrap
+						interactivegui.movehud.selection = t[1][1]--vertical wrap
 					else
-						interactivegui.movehudselection = t[l[1]+1][1]--horizontal wrap
+						interactivegui.movehud.selection = t[l[1]+1][1]--horizontal wrap
 					end
 				else
-					interactivegui.movehudselection = t[l[1]][l[2]+1]
+					interactivegui.movehud.selection = t[l[1]][l[2]+1]
 				end
 			end
 			
 			if guiinputs.P1.up and not guiinputs.P1.previousinputs.up then
-				s = interactivegui.movehudselection
+				s = interactivegui.movehud.selection
 				t = HUDElements.FormatTable
 				l = t["A"..s]
 				if l[1]-1<=0 then
 					if t[t.len][l[2]] then
-						interactivegui.movehudselection = t[t.len][l[2]]
+						interactivegui.movehud.selection = t[t.len][l[2]]
 					else
-						interactivegui.movehudselection = t[t.len][t[t.len].len]
+						interactivegui.movehud.selection = t[t.len][t[t.len].len]
 					end
 				else
 					if t[l[1]-1][l[2]] then
-						interactivegui.movehudselection = t[l[1]-1][l[2]]
+						interactivegui.movehud.selection = t[l[1]-1][l[2]]
 					else
-						interactivegui.movehudselection = t[l[1]-1][t[l[1]-1].len]
+						interactivegui.movehud.selection = t[l[1]-1][t[l[1]-1].len]
 					end
 				end
 			elseif guiinputs.P1.down and not guiinputs.P1.previousinputs.down then
-				s = interactivegui.movehudselection
+				s = interactivegui.movehud.selection
 				t = HUDElements.FormatTable
 				l = t["A"..s]
 				if l[1]+1>t.len then
 					if t[1][l[2]] then
-						interactivegui.movehudselection = t[1][l[2]]
+						interactivegui.movehud.selection = t[1][l[2]]
 					else
-						interactivegui.movehudselection = t[1][t[1].len]
+						interactivegui.movehud.selection = t[1][t[1].len]
 					end
 				else
 					if t[l[1]+1][l[2]] then
-						interactivegui.movehudselection = t[l[1]+1][l[2]]
+						interactivegui.movehud.selection = t[l[1]+1][l[2]]
 					else
-						interactivegui.movehudselection = t[l[1]+1][t[l[1]+1].len]
+						interactivegui.movehud.selection = t[l[1]+1][t[l[1]+1].len]
 					end
 				end
 			end
@@ -2497,25 +2604,35 @@ local moveHUDFuncs = {
 	end,
 }
 
-local moveHUD = function()
+local moveHUDInteract = function()
 
-	if not interactivegui.movehud then return end
+	if not interactivegui.movehud.enabled then return end
 
 	-- pick different hud elements, hook them up to changeconfig
 
 	t = {{name="SLCT", button="button1"}, {name="HIDE", button="button2"}, funcs=moveHUDFuncs}
 
 	local col = 0xff8000ff -- orange
-	if interactivegui.movehudselected then
+	if interactivegui.movehud.selected then
 		col = bit.bor(0xff0000ff, 0x00040000*(fc%40))
 		t[1].name = "BACK"
 	end
 	
-	local x = HUDElements[interactivegui.movehudselection].x()
-	local y = HUDElements[interactivegui.movehudselection].y()
+	local x = HUDElements[interactivegui.movehud.selection].x()
+	local y = HUDElements[interactivegui.movehud.selection].y()
+	
+	local temp
+	for _,v in ipairs(HUDElements[interactivegui.movehud.selection].movehud or {}) do
+		table.insert(t, {name=v.name, button=v.button})
+		temp = copytable(t.funcs)
+		t.funcs = nil -- avoid memory leaks
+		t.funcs = temp
+		table.insert(t.funcs, v.func)
+	end
+	
 	gui.pixel(x, y, col)
 	col = 0xffffffff
-	local enabled = HUDElements[interactivegui.movehudselection].enabled()
+	local enabled = HUDElements[interactivegui.movehud.selection].enabled()
 	if not enabled then
 		col = 0x0000ffff
 		t[2].name = "SHOW"
@@ -2526,8 +2643,11 @@ local moveHUD = function()
 	if #str*4+x>interactivegui.sw then dispx = interactivegui.sw - #str*4 end -- keep in bounds
 	if dispy<0 then dispy = 0 end -- keep in bounds
 	gui.text(dispx, dispy, str, col)
-		
-	if y>=interactivegui.sh-27 and (x>=(interactivegui.sw/2-helpElements.len*9) and x+#str<=(interactivegui.sw/2+helpElements.len*9)) then toggledrawhelp=false else toggledrawhelp=true end -- don't display the tooltip
+	
+	-- don't display the tooltip if it will cover up elements
+	if y>=interactivegui.sh-27 and (x>=(interactivegui.sw/2-helpElements.len*9) and x<=(interactivegui.sw/2+helpElements.len*9)) then toggledrawhelp=false else toggledrawhelp=true end
+	
+	helpElements.funcs = nil -- refresh
 	buttonHandler(t)
 end
 
@@ -2553,24 +2673,26 @@ end
 
 toggleReplayEditor = function(bool, vargs)
 	-- need state switching
-	
+
 	if bool==nil then interactivegui.replayeditor.enabled = not interactivegui.replayeditor.enabled 
 	else interactivegui.replayeditor.enabled=bool end
-	
+
 	if vargs then vargs.replayeditor = false end
 	toggleStates(vargs)
-	
-	inputs.properties.p1freeze = interactivegui.replayeditor.enabled
-	inputs.properties.p2freeze = interactivegui.replayeditor.enabled
-	
+
 	if interactivegui.replayeditor.enabled then
 		interactivegui.replayeditor.inputs = {[1]={},[2]={},[3]={},[4]={},[5]={}}
 		for j = 1, 5 do
 			local recordslot = recording[j]
 			for i = 1, #recordslot do -- unserialise them all so they can be seen
 				interactivegui.replayeditor.inputs[j][i] = {serial={}}
-				interactivegui.replayeditor.inputs[j][i].serial.player = recordslot[i].serial.player -- copy across necessary values
-				interactivegui.replayeditor.inputs[j][i].serial.other = recordslot[i].serial.other
+				if (type(recordslot[i].serial)=="number") then -- copy across necessary values, two different kinds of serialising
+					interactivegui.replayeditor.inputs[j][i].serial.player = recordslot[i].serial -- copy across necessary values
+					interactivegui.replayeditor.inputs[j][i].serial.other = {}
+				else
+					interactivegui.replayeditor.inputs[j][i].serial.player = recordslot[i].serial.player 
+					interactivegui.replayeditor.inputs[j][i].serial.other = recordslot[i].serial.other
+				end
 				Unserialise(interactivegui.replayeditor.inputs[j][i], recordslot._stable, recordslot.constants) -- should be able to do these in one and buffer it
 			end
 		end
@@ -2602,22 +2724,30 @@ toggleReplayEditor = function(bool, vargs)
 
 				if not recordslot.p1start then -- move start forward to first frame that something happens on
 					if orTable(recordslot[i].raw.p1) and not recordslot[i].raw.p1.Coin then
-						recordslot.p1start = fc - recording.framestart + 1
+						recordslot.p1start = i
 					end
 				end
 
 				if not recordslot.p2start then -- move start forward to first frame that something happens on
 					if orTable(recordslot[i].raw.p2) and not recordslot[i].raw.p2.Coin then
-						recordslot.p2start = fc - recording.framestart + 1
+						recordslot.p2start = i
 					end
 				end
 
 				if orTable(recordslot[i].raw.p1) and not recordslot[i].raw.p1.Coin then  -- put finish on the last frame that something happens
-					recordslot.p1finish = fc - recording.framestart - 1
+					recordslot.p1finish = i
 				end
 
 				if orTable(recordslot[i].raw.p2) and not recordslot[i].raw.p2.Coin then  -- put finish on the last frame that something happens
-					recordslot.p2finish = fc - recording.framestart - 1
+					recordslot.p2finish = i
+				end
+				
+				if availablefunctions.playeronefacingleft then
+					recordslot[i].p1facingleft = interactivegui.replayeditor.inputs[j][i].p1facingleft
+				end
+				
+				if availablefunctions.playertwofacingleft then
+					recordslot[i].p2facingleft = interactivegui.replayeditor.inputs[j][i].p2facingleft
 				end
 			end
 		end
@@ -2634,17 +2764,27 @@ local drawReplayEditorFuncs = {
 			if fc >= interactivegui.replayeditor.framestart+timer or interactivegui.replayeditor.framestart>fc then -- one second/failsafe
 				local recordslot = recording[recording.recordingslot]
 				local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
-				
+
 				reinputs[interactivegui.replayeditor.editframe] = {raw={p1={}, p2={}}}
 				reinputs[interactivegui.replayeditor.editframe].raw.p2=copytable(inputs.p1) -- new value
+				reinputs[interactivegui.replayeditor.editframe].p2facingleft = modulevars.p2.facingleft
 				
 				recordslot._stable = {} -- make sure this updates
 				recordslot._stable.p1 = copytable(SERIALISETABLE.p1)
 				recordslot._stable.p2 = copytable(SERIALISETABLE.p2)
 				
+				if (orTable(inputs.p1)) then -- if an input has been passed temp update start/finish for visuals
+					if (recordslot.p2start and interactivegui.replayeditor.editframe<recordslot.p2start) then
+						recordslot.p2start = interactivegui.replayeditor.editframe
+					end
+					if (recordslot.p2finish and interactivegui.replayeditor.editframe>recordslot.p2finish) then
+						recordslot.p2finish = interactivegui.replayeditor.editframe
+					end
+				end
+				
 				interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {} -- this slot has updated
 				interactivegui.replayeditor.changed[recording.recordingslot] = true
-				
+
 				interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+1
 				interactivegui.replayeditor.framestart=nil
 			end
@@ -2657,11 +2797,20 @@ local drawReplayEditorFuncs = {
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			if interactivegui.replayeditor.framestart or not interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] then return end -- something to copy
 			local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
-			
+
 			for i=#reinputs,interactivegui.replayeditor.editframe,-1 do
 				-- move everything down one
 				reinputs[i+1] = {raw={p1={}, p2={}}}
 				reinputs[i+1].raw.p2=copytable(reinputs[i].raw.p2)
+				reinputs[i+1].p2facingleft = reinputs[i].p2facingleft
+			end
+			
+			local recordslot = recording[recording.recordingslot] -- update start/finish for visuals
+			if (recordslot.p2start and interactivegui.replayeditor.editframe<recordslot.p2start) then -- plus one
+				recordslot.p2start = recordslot.p2start+1
+			end
+			if (recordslot.p2finish and interactivegui.replayeditor.editframe<=recordslot.p2finish) then -- plus one
+				recordslot.p2finish = recordslot.p2finish+1
 			end
 
 			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
@@ -2673,6 +2822,30 @@ local drawReplayEditorFuncs = {
 		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={p1={}, p2={}}}
+
+			local recordslot = recording[recording.recordingslot]
+			
+			local temp = true -- update start/finish for visuals
+			if recordslot.p2start == interactivegui.replayeditor.editframe then -- iterate forward
+				for i = recordslot.p2start+1, #interactivegui.replayeditor.inputs[recording.recordingslot] do
+					if orTable(interactivegui.replayeditor.inputs[recording.recordingslot][i].raw.p2) and temp then
+						recordslot.p2start = i
+						temp = false -- found start
+					end
+				end
+			end
+			temp = true
+			if recordslot.p2finish == interactivegui.replayeditor.editframe then -- iterate backwards
+				for i = recordslot.p2finish-1, 1, -1 do
+					if orTable(interactivegui.replayeditor.inputs[recording.recordingslot][i].raw.p2) and temp then
+						recordslot.p2finish = i
+						temp = false -- found finish
+					end
+				end
+			end
+
+			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
+			interactivegui.replayeditor.changed[recording.recordingslot] = true
 		end
 	end,
 	function(but) -- delete
@@ -2680,20 +2853,46 @@ local drawReplayEditorFuncs = {
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
 			if #reinputs==0 then return end -- nothing to delete
-			
+
 			for i=interactivegui.replayeditor.editframe,#reinputs-1 do
 				-- move everything up one
 				reinputs[i] = {raw={p1={}, p2={}}}
 				reinputs[i].raw.p2=copytable(reinputs[i+1].raw.p2)
+				reinputs[i].p2facingleft = reinputs[i+1].p2facingleft
 			end
-			
-			reinputs[#reinputs] = nil
-			
-			local recordslot = recording[recording.recordingslot]	
-			recordslot._stable = {} -- make sure this updates
+
+			reinputs[#reinputs] = nil -- remove one
+
+			local recordslot = recording[recording.recordingslot]
+			recordslot._stable = {} -- need to redo stables/starts&finishes
 			recordslot._stable.p1 = copytable(SERIALISETABLE.p1)
 			recordslot._stable.p2 = copytable(SERIALISETABLE.p2)
 			
+			local temp = true -- update start/finish for visuals
+			if recordslot.p2start == interactivegui.replayeditor.editframe then -- iterate forward
+				for i = recordslot.p2start+1, #interactivegui.replayeditor.inputs[recording.recordingslot] do
+					if orTable(interactivegui.replayeditor.inputs[recording.recordingslot][i].raw.p2) and temp then
+						recordslot.p2start = i
+						temp = false -- found start
+					end
+				end
+			elseif (recordslot.p2start and interactivegui.replayeditor.editframe<recordslot.p2start) then -- minus 1
+				recordslot.p2start = recordslot.p2start-1
+			end
+			temp = true
+			if recordslot.p2finish == interactivegui.replayeditor.editframe then -- iterate backwards
+				for i = recordslot.p2finish-1, 1, -1 do
+					if orTable(interactivegui.replayeditor.inputs[recording.recordingslot][i].raw.p2) and temp then
+						recordslot.p2finish = i
+						temp = false -- found finish
+					end
+				end
+			elseif (recordslot.p2finish and interactivegui.replayeditor.editframe<recordslot.p2finish) then -- minus 1
+				recordslot.p2finish = recordslot.p2finish-1
+			end
+
+			recordslot[#recordslot] = nil -- remove one
+
 			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
 			interactivegui.replayeditor.changed[recording.recordingslot] = true
 		end
@@ -2712,9 +2911,16 @@ local drawReplayEditorFuncs = {
 				end
 				reinputs[interactivegui.replayeditor.editframe+1] = {raw={p1={}, p2={}}}
 			end
-			
+
+			local recordslot = recording[recording.recordingslot] -- update for visuals
+			if (recordslot.p2start and interactivegui.replayeditor.editframe<recordslot.p2start) then -- plus one
+				recordslot.p2start = recordslot.p2start+1
+			end
+			if (recordslot.p2finish and interactivegui.replayeditor.editframe<recordslot.p2finish) then -- plus one
+				recordslot.p2finish = recordslot.p2finish+1
+			end
+
 			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
-			
 			interactivegui.replayeditor.changed[recording.recordingslot] = true
 		end
 	end,
@@ -2732,10 +2938,25 @@ local drawReplayEditorFuncs = {
 			if recording.recordingslot >=6 then recording.recordingslot = 1 end
 		end
 	end,
-	back = function(but)
+	function(but) -- swap directions
+		if interactivegui.replayeditor.framestart then return end
+		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then -- invert direction
+			if not interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] then return end -- bad input
+			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe].p2facingleft = not interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe].p2facingleft
+
+			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
+			interactivegui.replayeditor.changed[recording.recordingslot] = true
+		end
+	end,
+	back = function(but) -- return to main menu
 		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-			toggleReplayEditor(false)
+			toggleInteractiveGUI(true, {})
+		end
+	end,
+	coin = function()
+		if guiinputs.P1.coin and not guiinputs.P1.previousinputs.coin then
+			interactivegui.replayeditor.framestart = nil -- disable timer
 		end
 	end,
 	more = function(but)
@@ -2768,15 +2989,14 @@ local drawReplayEditor = function()
 	local length = SERIALISETABLE.p1.len-1 -- don't want to include start or coin
 	local recordslot = recording[recording.recordingslot]
 	local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
-	
-	local sw, sh = interactivegui.sw, interactivegui.sh
-	
-	--use these to control how a grid is drawn
-	local x,y,frames = sw/2 - (length)*8,1,12
-	
-	t = {{name="SET"}, {name="COPY"}, {name="CLR"}, {name="DEL"}, {name="BLNK"}, {name="<NUM"}, {name="NUM>"}, funcs = drawReplayEditorFuncs}
+
+	--use these to control how a grid is drawn, boxes are 16x16
+	local x,y = interactivegui.sw/2 - (length)*8,1
+	local frames = math.floor(((interactivegui.sh-27)-y)/16)-1 -- Tooltips are 27px high, avoid drawing under them
+
+	t = {{name="SET"}, {name="COPY"}, {name="CLR"}, {name="DEL"}, {name="BLNK"}, {name="<NUM"}, {name="NUM>"}, {name="SWP"}, funcs = drawReplayEditorFuncs}
 	buttonHandler(t)
-	
+
 	-- draw in frame numbers
 	if not interactivegui.replayeditor.editframe or interactivegui.replayeditor.editframe<1 then interactivegui.replayeditor.editframe = 1 end -- failsafe
 	local startframe = interactivegui.replayeditor.editframe -- first frame to draw
@@ -2786,11 +3006,14 @@ local drawReplayEditor = function()
 	if interactivegui.replayeditor.editframe>=#reinputs+1 then interactivegui.replayeditor.editframe = #reinputs+1 end -- keep selection in bounds
 	for i = 1, frames do
 		if startframe+i-1 == interactivegui.replayeditor.editframe then
-			gui.box(x, y+16*i, x+length*16, y+16*(i+1), "gray")
+			gui.box(x, y+16*i, x+length*16, y+16*(i+1), "gray") -- highlight selected
+		end
+		if startframe+i-1 == recordslot.p2start or startframe+i-1 == recordslot.p2finish then -- start or end of inputs
+			gui.box(x, y+16*i, x+16, y+16*(i+1), "green")
 		end
 		gui.text(x + 16 - #tostring(startframe+i-1)*4, y+6+16*i, tostring(startframe+i-1))
 	end
-	
+
 	-- draw grid
 	gui.box(x,y,x+length*16,y+16, "blue") -- blue background
 	gui.line(x,y,x+length*16,y) -- top line of top
@@ -2806,20 +3029,30 @@ local drawReplayEditor = function()
 	for i = 1, frames do -- should be the length of frames shown
 		gui.line(x,y+16+i*16,x+length*16,y+16+i*16) -- horizontal lines
 	end
-	
+
 	if startframe+frames>#reinputs+1 then -- make sure end of replay is on screen
 		gui.line(x,y+32+(#reinputs-startframe)*16,x+length*16,y+32+(#reinputs-startframe)*16,"red") -- red line marking end of replay
 	end
-	
-	gui.box(x,y+32+length*16,x+16,y+80+length*16, "blue")
-	gui.box(x,y+32+length*16,x+16,y+48+length*16)
-	gui.text(x+2,y+38+length*16,#reinputs,"red")
-	
+
+	gui.box(x,y+16+frames*16,x+16,y+32+frames*16, "blue") -- draw box with the number of inputs
+	gui.box(x,y+16+frames*16,x+16,y+32+frames*16)
+	gui.text(x+7-(#tostring(#reinputs)-1)*2,y+22+frames*16,#reinputs,"red")
+
+	gui.box(x+length*16-16,y+16+frames*16,x+length*16,y+32+frames*16, "blue") -- draw box with the orientation of the input
+	gui.box(x+length*16-16,y+16+frames*16,x+length*16,y+32+frames*16)
+	if reinputs[interactivegui.replayeditor.editframe] and reinputs[interactivegui.replayeditor.editframe].p2facingleft == true then
+		gui.text(x+length*16-9,y+22+frames*16,"L", "red")
+	elseif reinputs[interactivegui.replayeditor.editframe] and reinputs[interactivegui.replayeditor.editframe].p2facingleft == false then
+		gui.text(x+length*16-9,y+22+frames*16,"R", "red")
+	else
+		gui.text(x+length*16-13,y+22+frames*16,"N/A")
+	end
+
 	--deserialise and images
 	--make sure that it does need to display images
 	if not reinputs or not reinputs[1] then return end
 	if not recordslot or not recordslot._stable or not reinputs[1].raw.p2 then return end
-	
+
 	for i = 1, frames do
 		if not reinputs[startframe+i-1] then break end
 		for j,v in pairs(reinputs[startframe+i-1].raw.p2) do
@@ -2878,7 +3111,7 @@ toggleStates = function(vargs) -- nil = false, true = true, false = skip
 	if vargs["swapinputs"]==nil then toggleSwapInputs(false, vargs) elseif vargs["swapinputs"] then toggleSwapInputs(true, vargs) end
 	if vargs["recording"]==nil then toggleRecording(false, vargs) elseif vargs["recording"] then toggleRecording(true, vargs) end
 	if vargs["playback"]==nil then togglePlayBack(false, vargs) elseif vargs["playback"] then togglePlayBack(true, vargs) end
-	if vargs["interactiveguienabled"]==nil then toggleInteractiveGuiEnabled(false, vargs) elseif vargs["interactiveguienabled"] then toggleInteractiveGuiEnabled(true, vargs) end
+	if vargs["interactiveguienabled"]==nil then toggleInteractiveGUI(false, vargs) elseif vargs["interactiveguienabled"] then toggleInteractiveGUI(true, vargs) end
 	if vargs["movehud"]==nil then toggleMoveHUD(false, vargs) elseif vargs["movehud"] then toggleMoveHUD(true, vargs) end
 	if vargs["replayeditor"]==nil then toggleReplayEditor(false, vargs) elseif vargs["replayeditor"] then toggleReplayEditor(true, vargs) end 
 end
@@ -2894,7 +3127,20 @@ setRegisters = function() -- pre-calc stuff
 		print "Can't auto-swap directions in replays"
 	end
 
-	registers.registerbefore = {updateModuleVars, readInputs, swapInputs, logRecording, applyDirection, playBack, hitPlayBack, freezePlayer, setInputs}
+	registers.registerbefore = { -- order functions execute in
+		updateModuleVars,
+		readInputs,
+		swapInputs,
+		logRecording,
+		applyDirection,
+		playBack,
+		hitPlayBack,
+		menuCheck,
+		delayInputs,
+		freezePlayer,
+		setInputs
+	}
+
 	registers.guiregister = {}
 	registers.registerafter = {}
 
@@ -2907,7 +3153,7 @@ setRegisters = function() -- pre-calc stuff
 	local str = ""
 
 	if availablefunctions.readplayeronehealth then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1healthx", n, hud) end return hud.p1healthx end, y = function(n) if n then changeConfig("hud", "p1healthy", n, hud) end return hud.p1healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p1healthenabled", n, hud) end return hud.p1healthenabled end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health, hud.p1healthtextcolour) end})
+		table.insert(HUDElements, {name = "p1health", x = function(n) if n then changeConfig("hud", "p1healthx", n, hud) end return hud.p1healthx end, y = function(n) if n then changeConfig("hud", "p1healthy", n, hud) end return hud.p1healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p1healthenabled", n, hud) end return hud.p1healthenabled end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health, hud.p1healthtextcolour) end})
 		if availablefunctions.playeroneinhitstun then
 			table.insert(registers.guiregister, comboHandlerP1)
 		else
@@ -2918,7 +3164,7 @@ setRegisters = function() -- pre-calc stuff
 	end
 
 	if availablefunctions.readplayertwohealth then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
+		table.insert(HUDElements, {name = "p2health", x = function(n) if n then changeConfig("hud", "p2healthx", n, hud) end return hud.p2healthx end, y = function(n) if n then changeConfig("hud", "p2healthy", n, hud) end return hud.p2healthy end, enabled = function(n) if n~=nil then changeConfig("hud", "p2healthenabled", n, hud) end return hud.p2healthenabled end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health, hud.p2healthtextcolour) end})
 		if availablefunctions.playertwoinhitstun then
 			table.insert(registers.guiregister, comboHandlerP2)
 		else
@@ -2943,13 +3189,14 @@ setRegisters = function() -- pre-calc stuff
 		end
 		if not availablefunctions.playeroneinhitstun then
 			str = str .. "player one hitstun and "
+			combovars.p1.refillhealthenabled = false
 		end
 		print(str:sub(1,#str-5) .. " not set, can't do health refill for p1.\n")
 	end
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.readplayertwohealth and availablefunctions.writeplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, healthHandlerP2)
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n~=nil then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
+		table.insert(HUDElements, {name = "combocounter", x = function(n) if n then changeConfig("hud", "combotextx", n, hud) end return hud.combotextx end, y = function(n) if n then changeConfig("hud", "combotexty", n, hud) end return hud.combotexty end, enabled = function(n) if n~=nil then changeConfig("hud", "comboenabled", n, hud) end return hud.comboenabled end, drawfunc = drawcomboHUD})
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
@@ -2963,6 +3210,7 @@ setRegisters = function() -- pre-calc stuff
 		end
 		if not availablefunctions.playertwoinhitstun then
 			str = str .. "player two hitstun and "
+			combovars.p2.refillhealthenabled = false
 		end
 		print(str:sub(1,#str-5) .. " not set, can't do health refill for p2.\n")
 	end
@@ -2977,7 +3225,7 @@ setRegisters = function() -- pre-calc stuff
 		if not availablefunctions.writeplayeronehealth then
 			str = str .. "player one health write and "
 		end
-		print(str:sub(1,#str-5) .. " not set, can't do health refill for p1.\n")
+		print(str:sub(1,#str-5) .. " not set, can't set health for p1.\n")
 	end
 
 	if modulevars.p2.constants.maxhealth and availablefunctions.writeplayertwohealth then
@@ -2990,11 +3238,11 @@ setRegisters = function() -- pre-calc stuff
 		if not availablefunctions.writeplayertwohealth then
 			str = str .. "player two health write and "
 		end
-		print(str:sub(1,#str-5) .. " not set, can't do health refill for p2.\n")
+		print(str:sub(1,#str-5) .. " not set, can't set health for p2.\n")
 	end
 
 	if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p1meterx", n, hud) end return hud.p1meterx end, y = function(n) if n then changeConfig("hud", "p1metery", n, hud) end return hud.p1metery end, enabled = function(n) if n~=nil then changeConfig("hud", "p1meterenabled", n, hud) end return hud.p1meterenabled end, drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end})
+		table.insert(HUDElements, {name = "p1meter", x = function(n) if n then changeConfig("hud", "p1meterx", n, hud) end return hud.p1meterx end, y = function(n) if n then changeConfig("hud", "p1metery", n, hud) end return hud.p1metery end, enabled = function(n) if n~=nil then changeConfig("hud", "p1meterenabled", n, hud) end return hud.p1meterenabled end, drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end})
 		if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
 			table.insert(registers.registerafter, meterHandlerP1)
 		else
@@ -3012,7 +3260,7 @@ setRegisters = function() -- pre-calc stuff
 
 
 	if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer then
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("hud", "p2meterx", n, hud) end return hud.p2meterx end, y = function(n) if n then changeConfig("hud", "p2metery", n, hud) end return hud.p2metery end, enabled = function(n) if n~=nil then changeConfig("hud", "p2meterenabled", n, hud) end return hud.p2meterenabled end, drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end})
+		table.insert(HUDElements, {name = "p2meter", x = function(n) if n then changeConfig("hud", "p2meterx", n, hud) end return hud.p2meterx end, y = function(n) if n then changeConfig("hud", "p2metery", n, hud) end return hud.p2metery end, enabled = function(n) if n~=nil then changeConfig("hud", "p2meterenabled", n, hud) end return hud.p2meterenabled end, drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end})
 		if availablefunctions.writeplayertwometer and availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, meterHandlerP2)
 		else
@@ -3034,7 +3282,7 @@ setRegisters = function() -- pre-calc stuff
 	else
 		print "Can't display hitboxes"
 	end
-	
+
 	if availablefunctions.inputdisplayreg then
 		table.insert(registers.guiregister, inputDisplayReg)
 	else
@@ -3047,7 +3295,7 @@ setRegisters = function() -- pre-calc stuff
 	else
 		print "Can't display scrolling inputs"
 	end
-	
+
 	if modulevars.constants.translationtable then
 		table.insert(registers.guiregister, drawReplayEditor)
 	else
@@ -3055,37 +3303,49 @@ setRegisters = function() -- pre-calc stuff
 	end
 
 	table.insert(registers.guiregister, drawHUD)
-	table.insert(registers.guiregister, drawInteractiveGui)
+	table.insert(registers.guiregister, drawInteractiveGUI)
 	table.insert(registers.guiregister, readHotkeyIn)
 	table.insert(registers.guiregister, runHotkeys)
-	
+
 
 	if modulevars.constants.translationtable then
 		table.insert(registers.guiregister, drawHelp)
-		table.insert(registers.registerbefore, readGuiInputs)
-		table.insert(registers.guiregister, readGUIInputs)
-		table.insert(registers.guiregister, moveHUD)
+		table.insert(registers.registerbefore, readGUIInputs)
+		table.insert(registers.guiregister, processGUIInputs)
+		table.insert(registers.guiregister, moveHUDInteract)
 	else
 		print "No translation table found, can't read or process inputs from controller, or show input help, use lua hotkeys"
 	end
-	
+
 	--kb
 	local KB = inputs.properties.KB
-	table.insert(HUDElements, {x = function(n) if n then changeConfig("inputs", "kbinputxoffset", n, KB) end return KB.kbinputxoffset end, y = function(n) if n then changeConfig("inputs", "kbinputyoffset", n, KB) end return KB.kbinputyoffset end, enabled = function(n) if n~=nil then changeConfig("inputs", "kbstate", n, KB)end return KB.kbstate end, drawfunc = function() drawKB(KB.kbinputxoffset, KB.kbinputyoffset) end})
-	
+	table.insert(HUDElements, {name = "kb", x = function(n) if n then changeConfig("inputs", "kbinputxoffset", n, KB) end return KB.kbinputxoffset end, y = function(n) if n then changeConfig("inputs", "kbinputyoffset", n, KB) end return KB.kbinputyoffset end, enabled = function(n) if n~=nil then changeConfig("inputs", "kbstate", n, KB)end return KB.kbstate end, drawfunc = function() drawKB(KB.kbinputxoffset, KB.kbinputyoffset) end})
+
 	if scrollingInputReg then -- if scrolling-input-display.lua is loaded
 		local scroll = inputs.properties.scrollinginput -- keep it short
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("inputs", "scrollinginputxoffset", {n, scroll.scrollinginputxoffset[2]}, scroll) end return scroll.scrollinginputxoffset[1] end, y = function(n) if n then changeConfig("inputs", "scrollinginputyoffset", {n, scroll.scrollinginputyoffset[2]}, scroll) end return scroll.scrollinginputyoffset[1] end, enabled = function(n) if n~=nil then changeConfig("inputs", "scrollingstate", {n, scroll.scrollingstate[2]}, scroll) scrollingInputReload() end return scroll.scrollingstate[1] end, drawfunc = function() end})
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("inputs", "scrollinginputxoffset", {scroll.scrollinginputxoffset[1], n}, scroll) end return scroll.scrollinginputxoffset[2] end, y = function(n) if n then changeConfig("inputs", "scrollinginputyoffset", {scroll.scrollinginputyoffset[1], n}, scroll) end return scroll.scrollinginputyoffset[2] end, enabled = function(n) if n~=nil then changeConfig("inputs", "scrollingstate", {scroll.scrollingstate[1], n}, scroll) scrollingInputReload() end return scroll.scrollingstate[2] end, drawfunc = function() end})
-	end
-	
-	if inputDisplayReg then -- simple inputs
-		local simple = inputs.properties.simpleinput -- keep it short
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("inputs", "simpleinputxoffset", {n, simple.simpleinputxoffset[2]}, simple) end return simple.simpleinputxoffset[1] end, y = function(n) if n then changeConfig("inputs", "simpleinputyoffset", {n, simple.simpleinputyoffset[2]}, simple) end return simple.simpleinputyoffset[1] end, enabled = function(n) if n~=nil then changeConfig("inputs", "simplestate", {n, simple.simplestate[2]}, simple) end return simple.simplestate[1] end, drawfunc = function() end})
-		table.insert(HUDElements, {x = function(n) if n then changeConfig("inputs", "simpleinputxoffset", {simple.simpleinputxoffset[1], n}, simple) end return simple.simpleinputxoffset[2] end, y = function(n) if n then changeConfig("inputs", "simpleinputyoffset", {simple.simpleinputyoffset[1], n}, simple) end return simple.simpleinputyoffset[2] end, enabled = function(n) if n~=nil then changeConfig("inputs", "simplestate", {simple.simplestate[1], n}, simple) end return simple.simplestate[2] end, drawfunc = function() end})
+		table.insert(HUDElements, {name = "p1scrollinginput", x = function(n) if n then changeConfig("inputs", "scrollinginputxoffset", {n, scroll.scrollinginputxoffset[2]}, scroll) end return scroll.scrollinginputxoffset[1] end, y = function(n) if n then changeConfig("inputs", "scrollinginputyoffset", {n, scroll.scrollinginputyoffset[2]}, scroll) end return scroll.scrollinginputyoffset[1] end, enabled = function(n) if n~=nil then changeConfig("inputs", "scrollingstate", {n, scroll.scrollingstate[2]}, scroll) scroll.p1scrollinginput=scroll.scrollingstate[1] end togglescrollinginputsplayer() return scroll.scrollingstate[1] end, drawfunc = function() end,
+			movehud = { -- extra functions for scrolling input
+				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames) end end}, -- toggle numbers
+				{name="INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize<16 then changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize+1, inputs.properties.scrollinginput) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
+				{name="DEC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize>8  then changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize-1, inputs.properties.scrollinginput) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
+			}
+		})
+		table.insert(HUDElements, {name = "p2scrollinginput", x = function(n) if n then changeConfig("inputs", "scrollinginputxoffset", {scroll.scrollinginputxoffset[1], n}, scroll) end return scroll.scrollinginputxoffset[2] end, y = function(n) if n then changeConfig("inputs", "scrollinginputyoffset", {scroll.scrollinginputyoffset[1], n}, scroll) end return scroll.scrollinginputyoffset[2] end, enabled = function(n) if n~=nil then changeConfig("inputs", "scrollingstate", {scroll.scrollingstate[1], n}, scroll) scroll.p2scrollinginput=scroll.scrollingstate[2] end togglescrollinginputsplayer() return scroll.scrollingstate[2] end, drawfunc = function() end,
+		movehud = { -- extra functions for scrolling input
+				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames) end end}, -- toggle numbers
+				{name="INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize<16 then changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize+1, inputs.properties.scrollinginput) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
+				{name="DEC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize>8  then changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize-1, inputs.properties.scrollinginput) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
+			}
+		})
 	end
 
-	emu.registerbefore(function ()
+	if inputDisplayReg then -- simple inputs
+		local simple = inputs.properties.simpleinput -- keep it short
+		table.insert(HUDElements, {name = "p1simpleinput", x = function(n) if n then changeConfig("inputs", "simpleinputxoffset", {n, simple.simpleinputxoffset[2]}, simple) end return simple.simpleinputxoffset[1] end, y = function(n) if n then changeConfig("inputs", "simpleinputyoffset", {n, simple.simpleinputyoffset[2]}, simple) end return simple.simpleinputyoffset[1] end, enabled = function(n) if n~=nil then changeConfig("inputs", "simplestate", {n, simple.simplestate[2]}, simple) simple.p1simpleinput=simple.simplestate[1] end return simple.simplestate[1] end, drawfunc = function() end})
+		table.insert(HUDElements, {name = "p2simpleinput", x = function(n) if n then changeConfig("inputs", "simpleinputxoffset", {simple.simpleinputxoffset[1], n}, simple) end return simple.simpleinputxoffset[2] end, y = function(n) if n then changeConfig("inputs", "simpleinputyoffset", {simple.simpleinputyoffset[1], n}, simple) end return simple.simpleinputyoffset[2] end, enabled = function(n) if n~=nil then changeConfig("inputs", "simplestate", {simple.simplestate[1], n}, simple) simple.p2simpleinput=simple.simplestate[2] end return simple.simplestate[2] end, drawfunc = function() end})
+	end
+
+	emu.registerbefore(function()
 		fc = emu.framecount() -- update framecount
 		gui.clearuncommitted() -- just in case
 		for _,v in pairs(registers.registerbefore) do
@@ -3093,27 +3353,29 @@ setRegisters = function() -- pre-calc stuff
 		end
 	end)
 
-	gui.register(function ()
+	gui.register(function()
 		for _,v in ipairs(registers.guiregister) do
 			v()
 		end
 	end)
 
-	local garbage = 	function () -- garbage collection
+	local garbage = 	function() -- garbage collection
 							if collectgarbage("count") > 5000 then -- not sure how much garbage fbneo can handle at a time
 								collectgarbage("collect") -- garbage mostly comes from redoing gdimages in scrolling inputs and replays
 							end
 						end
 
-	emu.registerafter(function ()
+	emu.registerafter(function()
 		for _,v in ipairs(registers.registerafter) do
 			v()
 		end
 		garbage()
 	end)
+	-- white space so error messages/etc. aren't immediately visible
+	for _ = 1,20 do print() end
 
-	print()
 	usage()
+	if gamemsg then print() gamemsg() print() end
 end
 
 local saveprocedure = function()

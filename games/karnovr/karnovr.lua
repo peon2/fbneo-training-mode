@@ -11,9 +11,10 @@ local p1redhealth = 0x1037B9
 local p2health = 0x1039B7
 local p2redhealth = 0x1039B9
 
-print "Known issues with karnovr:"
-print "Note karnovr has no meter"
-print ""
+function gamemsg()
+	print "Known issues with karnovr:"
+	print "Note karnovr has no meter"
+end
 
 translationtable = {
 	"left",

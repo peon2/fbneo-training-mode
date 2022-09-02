@@ -6,12 +6,12 @@ p2maxhealth = 104
 p1maxmeter = 0x60
 p2maxmeter = 0x60
 
-
-print "Known Issues: with dino rex"
-print "Infinite meter breaks the game"
-print "No combo counter"
-print "Game is VERY prone to throwing errors"
-print ""
+function gamemsg()
+	print "Known issues with dinorex:"
+	print "Infinite meter breaks the game"
+	print "No combo counter"
+	print "Game is VERY prone to throwing errors"
+end
 
 local p1health = 0x605124
 local p2health = 0x605190
