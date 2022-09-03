@@ -1937,9 +1937,9 @@ local buttonHandler = function(t)
 	t.len=#t
 
 	helpElements.more = helpElements.more or 0
-	
-	if t.funcs ~= helpElements.funcs then -- new set of buttons
-		helpElements = {}
+
+	if helpElements.name==nil or t.funcs.name~=helpElements.name then -- new set of buttons, should be checking using enums
+		helpElements = {name = t.funcs.name}
 
 		t.len=t.len+1 -- space for back
 
@@ -1977,6 +1977,9 @@ local buttonHandler = function(t)
 		end
 		helpElements.len = math.min(nbuttons,helpElements.len)
 	end
+	
+	helpElements.name = t.funcs.name
+	
 end
 
 local toggledrawhelp = true
@@ -2182,7 +2185,8 @@ local drawInteractiveGUIFuncs = {
 				end
 			end
 		end	
-	end
+	end,
+	name = "drawInteractiveGUIFuncs",
 }
 
 local drawInteractiveGUI = function()
@@ -2620,14 +2624,17 @@ local moveHUDInteract = function()
 	
 	local x = HUDElements[interactivegui.movehud.selection].x()
 	local y = HUDElements[interactivegui.movehud.selection].y()
+	t.funcs.name = HUDElements[interactivegui.movehud.selection].name
 	
 	local temp
-	for _,v in ipairs(HUDElements[interactivegui.movehud.selection].movehud or {}) do
-		table.insert(t, {name=v.name, button=v.button})
-		temp = copytable(t.funcs)
-		t.funcs = nil -- avoid memory leaks
-		t.funcs = temp
-		table.insert(t.funcs, v.func)
+	if helpElements.name ~= t.funcs.name then -- if this needs to be changed
+		for _,v in ipairs(HUDElements[interactivegui.movehud.selection].movehud or {}) do
+			table.insert(t, {name=v.name, button=v.button})
+			temp = copytable(t.funcs)
+			t.funcs = nil -- avoid memory leaks
+			t.funcs = temp
+			table.insert(t.funcs, v.func)
+		end
 	end
 	
 	gui.pixel(x, y, col)
@@ -2647,7 +2654,6 @@ local moveHUDInteract = function()
 	-- don't display the tooltip if it will cover up elements
 	if y>=interactivegui.sh-27 and (x>=(interactivegui.sw/2-helpElements.len*9) and x<=(interactivegui.sw/2+helpElements.len*9)) then toggledrawhelp=false else toggledrawhelp=true end
 	
-	helpElements.funcs = nil -- refresh
 	buttonHandler(t)
 end
 
@@ -2982,6 +2988,7 @@ local drawReplayEditorFuncs = {
 		if guiinputs.P1.upframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe-hudworkingframes(guiinputs.P1.upframecount) end
 		if guiinputs.P1.downframecount ~= 0 then interactivegui.replayeditor.editframe=interactivegui.replayeditor.editframe+hudworkingframes(guiinputs.P1.downframecount) end
 	end,
+	name = "drawReplayEditorFuncs",
 }
 
 local drawReplayEditor = function()
@@ -3069,6 +3076,7 @@ local readHotkeyInFuncs = {
 			inputs.hotkeys.hotkeyin = false
 		end
 	end,
+	name = "readHotkeyInFuncs",
 }
 
 local readHotkeyIn = function()
