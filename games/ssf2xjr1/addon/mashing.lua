@@ -51,7 +51,7 @@ local function mashing()
 					gui.box(185,100,195,200,0x00000000, 0x000000FF)
 				gui.text(181,205,counter.."/100")
 			else
-				msg1 = "\t You reached "..goal.." points in "..mashing_count.." frame."
+				msg1 = "\t You reached "..goal.." points in "..mashing_count.." frames."
 				countdown = -180
 				begin_mash = false
 				counter = 0

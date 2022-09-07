@@ -274,6 +274,9 @@ local function sako_update_msg(er_code)
 		sako_msg1 = "You must complete the motion before the Jab animation "
 		sako_msg2 = "ends. T.Hawk is crouching for a moment: you're doing "
 		sako_msg3 = "the motion too slow or you're starting it too late."
+	elseif er_code == 31 then
+		sako_msg1 = "You began the 270 motion too late. Hawk would have   "
+		sako_msg2 = "jumped if the jab had whiffed."
 	elseif er_code == 41 then --Thawk on left side
 		sako_msg1 = "Input must be ^ < v >, you messed it somewhere. "
 		sako_msg2 = "Check it on the input display."
@@ -479,6 +482,10 @@ local function p1_punches_are_being_held()
 	return punchbit
 end
 
+local p1_doing_jab = false
+local jab_framecount = 0
+local jump_error = false
+
 -- Main function
 local function sako_logic()
 
@@ -487,6 +494,22 @@ local function sako_logic()
 	end
 	p2_check()
 	
+	if not p1_doing_jab then
+		if gamestate.P1.prev.animation_id == jab_startup_frame then
+			p1_doing_jab = true
+			jab_framecount = 1
+		elseif gamestate.P1.animation_id == jab_startup_frame then
+			p1_doing_jab = true
+		end
+	else
+		jab_framecount = countFrames(jab_framecount)
+		if not p1_is_attacking() then
+			p1_doing_jab = false
+			jab_framecount = 0
+			jump_error = false
+		end
+	end
+
 --##### STATE 0: Waiting for Jab #####--
 	if state == 0 then
 		if ((too_close()) and not(p1_typhoon())) then
@@ -496,7 +519,7 @@ local function sako_logic()
 			reset_state()
 			sako_update_msg(1)	--too close, no point in training sakos from this range
 			return
-		elseif p1_curr_anim_frame_is(jab_hitting_frame) then
+		elseif p1_curr_anim_frame_is(jab_hitting_frame) and not jump_error then
 			if p2_is_on_hitfreeze() then
 				initial_dist=getDistanceBetweenPlayers()
 				inc_state()
@@ -516,6 +539,11 @@ local function sako_logic()
 		if not(p1_is_attacking()) then --T.Hawk Jab animation is complete, if you didnt passed to the next state yet, something is wrong
 			reset_state()
 			sako_update_msg(3)
+			return
+		elseif jab_framecount >= 9 and isPressed(gamestate.P1, "up") and not permissive then
+			reset_state()
+			sako_update_msg(31)
+			jump_error = true
 			return
 		elseif ((p1_is_on_left_side()) and (p1_typhoon_input_code() == 8)) then -- If the player already did the Typhoon
 			if p1_super_input_direction_code() == 5 or (p1_super_input_direction_code() == 0 and permissive) then --if first direction was up and the second was left
