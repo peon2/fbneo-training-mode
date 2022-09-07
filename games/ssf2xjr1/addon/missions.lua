@@ -137,7 +137,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	tf.string = ""	-- stocks the string
 	tf.edition_index = 1 -- trace wich character will be modified
 	tf.in_edition = false
-	
+
 	local _available_characters = {}
 	if characters_set then
 		_available_characters = characters_set
@@ -755,7 +755,7 @@ input.registerhotkey(5, function() -- Hotkey to open the popup saving a mission
 				interactivegui.page = "save_mission"
 				interactivegui.previouspage = "save_mission"
 				interactivegui.selection = 1
-				toggleInteractiveGuiEnabled(true, {})
+				toggleInteractiveGUI(true, {})
 			else
 				msg1 = "In order to create a mission you have to record an action."
 				msg2 = "Double tap coin or go to Replay Editor"
@@ -774,7 +774,7 @@ local function closePopUp()
 	for i = 1, #slot_buttons do
 		slot_buttons[i].checked = false
 	end
-	toggleInteractiveGuiEnabled(false, {})
+	toggleInteractiveGUI(false, {})
 	if backup_page ~= nil then
 		interactivegui.page = backup_page
 	else
@@ -915,7 +915,7 @@ local function deleteMission()
 			dofile("games/ssf2xjr1/addon/missions_saved/"..characters[i].."/missions_list.lua")
 			insertMissionsButtons(characters[i])
 		end
-		toggleInteractiveGuiEnabled(false, {})
+		toggleInteractiveGUI(false, {})
 		formatGuiTables()
 		local s = ""
 		if #missions_checked_deletion > 1 then
