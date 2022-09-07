@@ -4,4 +4,5 @@ addons_run = {
 	"blankaOS.lua",
 	"triggerBoxerDashes.lua",
 	"missions.lua",
+	"mashing.lua",
 }

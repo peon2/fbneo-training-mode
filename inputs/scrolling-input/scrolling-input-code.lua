@@ -282,12 +282,12 @@ end
 
 togglescrollinginputsplayer()
 
---[[
-
-local function clear()
-	inp = { [1] = {}, [2] = {} }
-	emu.message("Cleared screen.")
+function scrollingInputClear()
+	allinputcounters[1] = {}
+	allinputcounters[2] = {}
 end
+
+--[[
 
 local function resize()
 	if icon_size < maximum_tile_size then
