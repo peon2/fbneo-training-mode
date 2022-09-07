@@ -33,7 +33,7 @@ local draw_hitboxes = 1
 
 local profile = {
 	{
-		games = {"ssf2t", "ssf2xj", "ssf2xjr1"},
+		games = {"ssf2t", "ssf2xj", "ssf2xjr1", "ssf2tnl"},
 		status_type = "normal",
 		address = {
 			player           = 0xFF844E,

@@ -20,10 +20,11 @@ local p2elem2 = 0x109379
 local stall = 0
 local stallmax = 7
 
-print "Known Issues: with ragnagrd"
-print "GUI not working"
-print "Life Bar does not accurately reflect life when not set to max"
-
+function gamemsg()
+	print "Known issues with ragnagrd:"
+	print "GUI not working"
+	print "Life Bar does not accurately reflect life when not set to max"
+end
 
 translationtable = {
 	"left",

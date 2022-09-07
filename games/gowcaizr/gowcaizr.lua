@@ -9,10 +9,11 @@ local p2health = 0x1035Bf
 local p1direction = 0x100186
 local p2direction = 0x100187
 
-print "Known issues with gowcaizr:"
-print "Inconsistent combos"
-print "Note that gowcaizr has no meter"
-print ""
+function gamemsg()
+	print "Known issues with gowcaizr:"
+	print "Inconsistent combos"
+	print "Note that gowcaizr has no meter"
+end
 
 translationtable = {
 	"left",

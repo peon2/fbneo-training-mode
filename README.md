@@ -1,9 +1,9 @@
-# fbneo-training-mode
+﻿# fbneo-training-mode
 A simple training mode for multiple games on the fbneo platform
 
 Written to allow easy incorporation of more games
 
-You can use this script by launching a fc game with 'TEST GAME'
+You can use this script by launching a fbneo game
 
 Go into Game>Lua Scripting>New Lua Script Window>Browse
 
@@ -14,7 +14,7 @@ Be sure to be playing against P2.
 Get the newest version here: https://github.com/peon2/fbneo-training-mode
 
 Video showing usage of the simple options: https://www.youtube.com/watch?v=sWxGWU1npm0
-Latest overview video: https://youtu.be/PrslzOKwi34
+Latest overview video: https://youtu.be/GkP0BTuqiCU
 
 
 Currently supports:
@@ -35,7 +35,11 @@ Avengers in Galactic Storm
 
 Breakers Revenge
 
-Cyberbots
+Breakers Revenge - Extra Mode
+
+Cyberbots - Fullmetal Madness
+
+Cyberbots - Fullmetal Madness Unlock Hack
 
 Dan-Ku-Ga
 
@@ -48,6 +52,8 @@ Dragonball Z 2 - Super Battle
 Double Dragon (Neo-Geo)
 
 Fatal Fury
+
+Fatal Fury 2 - Arata-Naru Tatakai
 
 Fatal Fury 3 - Road to the Final Victory
 
@@ -123,6 +129,8 @@ Rabbit
 
 Rage of the Dragons
 
+Ragnagard
+
 Red Earth
 
 Real Bout Fatal Fury
@@ -146,6 +154,10 @@ Samurai Shodown 5
 Samurai Shodown 5 Special
 
 Saturday Night Slam Masters
+
+SNK vs. Capcom: SVC Chaos
+
+SNK vs. Capcom: SVC Chaos Super Plus
 
 Street Fighter
 
@@ -173,7 +185,11 @@ Super Gem Fighter
 
 Super Street Fighter 2X - Grand Master Challenge
 
+Super Street Fighter 2 Turbo - New Legacy
+
 Tōkidenshō Angel Eyes
+
+Ultimate Mortal Kombat 3
 
 Darkstalkers: The Night Warriors
 
@@ -182,6 +198,8 @@ Vampire Hunter: Darkstalkers' Revenge
 Vampire Hunter 2: Darkstalkers' Revenge
 
 Vampire Savior: The Lord of Vampire
+
+Vampire Savior: The Lord of Vampire (Aesthetic Edition)
 
 Vampire Savior 2: The Lord of Vampire
 
