@@ -1,14 +1,15 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
---p1maxhealth = 0x90
+p1maxhealth = 0x90
 p2maxhealth = 0x90
 
 p1maxmeter = 0x03
 p2maxmeter = 0x03
 
-print "Known Issues: with msh"
-print "GUI noting working"
-print ""
+function gamemsg()
+	print "Known issues with msh:"
+	print "No combo counter"
+end
 
 translationtable = {
 	"left",
@@ -39,20 +40,17 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=180,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=22,
+		p1healthx=18,
 		p1healthy=16,
 		p1healthenabled=true,
-		p2healthx=288,
+		p2healthx=355,
 		p2healthy=16,
 		p2healthenabled=true,
-		p1meterx=22,
-		p1metery=223,
+		p1meterx=31,
+		p1metery=26,
 		p1meterenabled=true,
-		p2meterx=288,
-		p2metery=223,
+		p2meterx=350,
+		p2metery=26,
 		p2meterenabled=true,
 	},
 }

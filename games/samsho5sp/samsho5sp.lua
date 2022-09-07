@@ -1,16 +1,17 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
---p1maxhealth = 0x7D
+p1maxhealth = 0x7D
 p2maxhealth = 0x7D
 
 p1maxmeter = 0x40
 p2maxmeter = 0x40
 
-print "Known Issues: with samsh5sp"
-print "gui does not show up"
-print "no hitboxes currently"
-print "only way to toggle p1 health is to edit code"
-print ""
+function gamemsg()
+	print "Known issues with samsh5sp:"
+	print "gui does not show up"
+	print "no hitboxes currently"
+	print "only way to toggle p1 health is to edit code"
+end
 
 translationtable = {
 	"left",

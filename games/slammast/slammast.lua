@@ -6,11 +6,12 @@ p2maxhealth = 0xFF
 local p1health = 0xFF9157
 local p2health = 0xFF9357
 
-print "Known issues with slammast:"
-print "Doesn't track combos"
-print "Note that slammast doesn't have meter"
-print "Only supports P1 and P2"
-print ""
+function gamemsg()
+	print "Known issues with slammast:"
+	print "Doesn't track combos"
+	print "Note that slammast doesn't have meter"
+	print "Only supports P1 and P2"
+end
 
 translationtable = {
 	"left",

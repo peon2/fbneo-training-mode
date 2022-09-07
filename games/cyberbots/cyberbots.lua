@@ -7,10 +7,10 @@ p2maxhealth = 152
 p1maxmeter = 63
 p2maxmeter = 63
 
-
-print "Known Issues: with cybots"
-print "Inconsistent combo counter"
-print ""
+function gamemsg()
+	print "Known issues with cybots:"
+	print "Inconsistent combo counter"
+end
 
 translationtable = {
 	"left",

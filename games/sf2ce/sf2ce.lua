@@ -3,10 +3,11 @@ assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being r
 p1maxhealth = 0x90
 p2maxhealth = 0x90
 
-print "Known issues with sf2ce:"
-print "Combos not tracked"
-print "Note sf2ce has no meter"
-print ""
+function gamemsg()
+	print "Known issues with sf2ce:"
+	print "Combos not tracked"
+	print "Note sf2ce has no meter"
+end
 
 local p1health = 0xFF83E9
 local p1redhealth = 0xFF83EB

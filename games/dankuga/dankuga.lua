@@ -1,8 +1,9 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known issues with dankuga:"
-print "Combos are inconsistent"
-print ""
+function gamemsg()
+	print "Known issues with dankuga:"
+	print "Combos are inconsistent"
+end
 
 
 p1maxhealth = 0x64

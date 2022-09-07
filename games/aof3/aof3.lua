@@ -15,10 +15,11 @@ local p2meter = 0x10056A
 local p1direction = 0x10048c
 local p2direction = 0x10058c
 
-print "Known Issues: with aof3"
-print "Hitstun detector can update a few frames after actually losing health for inconsistent combos"
-print "No hitboxes"
-print ""
+function gamemsg()
+	print "Known issues with aof3:"
+	print "Hitstun detector can update a few frames after actually losing health for inconsistent combos"
+	print "No hitboxes"
+end
 
 translationtable = {
 	"left",

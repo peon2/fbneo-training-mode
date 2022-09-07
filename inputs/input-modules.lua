@@ -39,7 +39,7 @@ local games,x,dx,y,dy,i
 --Capcom 6-button fighters (CPS systems)
 
 games = {"sf2","sf2ce","sf2hf",
-	"ssf2","ssf2t","hsf2","sfa","sfa2","sfa3","sfz2al",
+	"ssf2","ssf2t","ssf2tnl","hsf2","sfa","sfa2","sfa3","sfz2al",
 	"sfiii","sfiii2","sfiii3","redearth",
 	"xmcota","xmvsf","msh","mshvsf","mvsc","dstlk","nwarr","vsav","vhunt2","vsav2"}
 x,dx = 0x8,0x128

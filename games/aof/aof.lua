@@ -12,10 +12,11 @@ local p2health = 0x1093cd
 local p1meter = 0x1094a4
 local p2meter = 0x1095a4
 
-print "Known Issues: with aof"
-print "Hitstun detector can be inconsistent"
-print "No sideswap on replays"
-print ""
+function gamemsg()
+	print "Known issues with aof:"
+	print "Hitstun detector can be inconsistent"
+	print "No sideswap on replays"
+end
 
 translationtable = {
 	"left",

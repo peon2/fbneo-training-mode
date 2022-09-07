@@ -9,9 +9,10 @@ p2maxmeter = 0x80
 local p1direction = 0x100458
 local p2direction = 0x100558
 
-print "Known Issues: with garou"
-print "hitboxes don't currently work"
-print ""
+function gamemsg()
+	print "Known issues with garou:"
+	print "hitboxes don't currently work"
+end
 
 translationtable = {
 	"left",
