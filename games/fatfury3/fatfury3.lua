@@ -9,7 +9,7 @@ local p2health = 0x100589
 local p1direction = 0x100471
 local p2direction = 0x100571
 
-print "Note that fatfury3 has no meter"
+-- Note that fatfury3 has no meter
 
 translationtable = {
 	"left",

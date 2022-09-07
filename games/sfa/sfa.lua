@@ -19,9 +19,10 @@ local p2direction = 0xff880b
 local p1combocounter = 0xFF8857
 local p2combocounter = 0xFF8457
 
-print "Known issues with sfa:"
-print "Combos can be inconsistent"
-print ""
+function gamemsg()
+	print "Known issues with sfa:"
+	print "Combos can be inconsistent"
+end
 
 translationtable = {
 	"left",

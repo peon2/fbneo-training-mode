@@ -6,6 +6,10 @@ p2maxhealth = 0x1E00
 p1maxmeter = 0x3
 p2maxmeter = 0x3
 
+function gamemsg() 
+	print "In breakrev, hitboxes will only appear if the script is started at character select"
+end
+
 local p1health = 0x10734E
 local p2health = 0x1078AE
 
@@ -17,6 +21,27 @@ local p2direction = 0x107365
 
 local p1combocounter = 0x107943
 local p2combocounter = 0x1073E3
+
+local debugaddress = 0x10007D
+-- some flags only work if applied before a match starts
+
+--[[
+
+8 flags that can be seemingly mixed and matched
+
+0x00000000: N/A
+0x00000001: Miscellanious positional data
+0x00000010: Select(?), can't seem to get it to do anything 
+0x00000100: Pushbox display
+0x00001000: Hitbox/Hurtbox display
+0x00010000: Infinite meter
+0x00100000: Regenerating Health + Infinite time
+0x01000000: ???
+0x10000000: Shows some numbers at the top of the screen
+
+--]]
+
+wb(debugaddress, 0xC) -- only needs to be applied once, Pushbox display + Hitbox/Hurtbox display
 
 translationtable = {
 	"left",
@@ -104,11 +129,11 @@ function writePlayerOneMeter(meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(p1meter)
+	return rb(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p1meter, meter)
+	wb(p2meter, meter)
 end
 
 function infiniteTime()

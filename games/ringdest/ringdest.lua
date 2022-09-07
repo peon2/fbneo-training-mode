@@ -11,10 +11,11 @@ local p2redhealth = 0xFF842E
 local p1direction = 0xFF8038
 local p2direction = 0xFF8438
 
-print "Known issues with ringdest:"
-print "Doesn't track combos"
-print "Note that slammast doesn't have meter"
-print ""
+function gamemsg()
+	print "Known issues with ringdest:"
+	print "Doesn't track combos"
+	print "Note that slammast doesn't have meter"
+end
 
 translationtable = {
 	"left",

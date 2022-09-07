@@ -1,8 +1,9 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with samsho"
-print "Issues with reading/writing health and meter"
-print ""
+function gamemsg()
+	print "Known issues with samsho:"
+	print "Issues with reading/writing health and meter"
+end
 
 --p1maxhealth = 0x80
 --p2maxhealth = 0x80

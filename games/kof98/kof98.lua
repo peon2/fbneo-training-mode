@@ -1,9 +1,10 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known issues with kof98:"
-print "Doesn't activate MAX properly"
-print "Only partial support for advance with refilling max meter"
-print ""
+function gamemsg()
+	print "Known issues with kof98:"
+	print "Doesn't activate MAX properly"
+	print "Only partial support for advance with refilling max meter"
+end
 
 p1maxhealth = 0x68
 p2maxhealth = 0x68

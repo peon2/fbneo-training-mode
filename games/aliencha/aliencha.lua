@@ -9,11 +9,12 @@ local p2health = 0x2010a7
 local p1direction = 0x200f7a
 local p2direction = 0x20105C
 
-print "Known Issues with aliencha:"
-print "No hitstun detector"
-print "Health display doesn't update"
-print "Note that aliencha has no meter"
-print ""
+function gamemsg()
+	print "Known issues with aliencha:"
+	print "No hitstun detector"
+	print "Health display doesn't update"
+	print "Note that aliencha has no meter"
+end
 
 translationtable = {
 	"left",

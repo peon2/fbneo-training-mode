@@ -58,12 +58,46 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 						this.fillpercent = (inputs.properties.coinleniency-10)/5
 					end,
 	},
+	inputdelay = {
+		text = "Delay leniency",
+		x = 72,
+		olcolour = "black",
+		info = "This controls how many frames you have between each coin input.10 frames allows for faster usage but 15 might be easier.",
+		func = 		function()
+						CIG("inputdelay", 1+delayinputcount)
+					end,
+		autofunc = 	function(this)
+						this.text = "Input delay "..(delayinputcount).."f"
+					end,
+	},
 	savestate = {
 		text = "Savestate",
 		x = 92,
 		olcolour = "black",
 		info = "Make or load a savestate",
 		func = 	function() CIG("savestate", 1) end,
+	},
+	directionset = {
+		text = "Set the direction P2 is holding",
+		info = "Allows you to set the direction P2 is holding",
+		func = function() CIG("setdirectionp2", 1) end,
+		olcolour = "black",
+		autofunc = 	function(this)
+						local str = "P2 holding "
+						for i, v in pairs(inputs.properties.p2hold) do
+							if v then
+								str = str .. i .. " "
+							end
+						end
+						str = str:sub(1, #str-1)
+						if #str > 11 then
+							this.text = str -- 124
+							this.x = 4 + (31-#str)*4
+						else
+							this.text = "Set the direction P2 is holding"
+							this.x = 4
+						end
+					end,
 	},
 	hitboxsettings = {
 		text = "Change hitbox settings",
@@ -78,6 +112,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		y = 50,
 		func = 	function()
 			changeConfig("hitbox", "enabled", not hitboxes.enabled, hitboxes)
+			hitboxes.prev = hitboxes.enabled
 		end,
 		info = "Toggles hitboxes on and off",
 		autofunc = 	function(this)
@@ -90,34 +125,6 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 			end
 		end
 	},
-	scrollinginputsettings = {
-		text = "Change scrolling input settings",
-		x = 4,
-		olcolour = "black",
-		info = "Change scrolling input settings",
-		func = 	function() CIG("scrollingtextsettings", 2) end,
-	},
-	scrollinginputframestoggle = {
-		text = "Display scrolling input frame numbers",
-		x = 76,
-		y = 90,
-		info = "Toggles frame numbers displayed along with scrolling inputs",
-		olcolour = "black",
-		func = function()
-					inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
-					changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
-					scrollingInputReload()
-				end,
-		autofunc =	function(this)
-					if inputs.properties.scrollinginput.frames then
-						this.text = "Frame number display on"
-						this.x = 20
-					else
-						this.text = "Frame number display off"
-						this.x = 16
-					end
-				end,
-	},
 	p1health = {
 		text = "Health settings",
 		x = 40,
@@ -125,7 +132,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		olcolour = "black",
 		info = "Controls how P1 health is handled",
 		func = 	function()
-					CIG("p1health", inputs.properties.scrollinginput.state)			-- SHOULDNT BE LIKE THIS???
+					CIG("p1health", 1)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillhealthenabled then
@@ -163,7 +170,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		olcolour = "black",
 		info = "Controls how P1 meter is handled",
 		func = 	function()
-					CIG("p1meter", inputs.properties.scrollinginput.state)
+					CIG("p1meter", 1)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p1.refillmeterenabled then
@@ -201,7 +208,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		olcolour = "black",
 		info = "Controls how P2 health is handled",
 		func = 	function()
-					CIG("p2health", inputs.properties.scrollinginput.state)
+					CIG("p2health", 1)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p2.refillhealthenabled then
@@ -239,7 +246,7 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		olcolour = "black",
 		info = "Controls how P2 meter is handled",
 		func = 	function()
-					CIG("p2meter", inputs.properties.scrollinginput.state)
+					CIG("p2meter", 1)
 				end,
 		autofunc = 	function(this)
 						if not combovars.p2.refillmeterenabled then
@@ -363,7 +370,8 @@ guipages = { -- interactiveguipages
 		guielements.rightarrow,
 		guielements.hudsettings,
 		guielements.coininputleniency,
-		guielements.savestate
+		guielements.inputdelay,
+		guielements.savestate,
 	},
 	{ -- Players
 		title = {
@@ -382,39 +390,6 @@ guipages = { -- interactiveguipages
 			text = "P2",
 			x = 2,
 			y = 95,
-		},
-	},
-	{ -- Dummy
-		title = {
-			text = "Dummy Settings",
-			x = interactivegui.boxxlength/2 - 30,
-			y = 1,
-		},
-		guielements.leftarrow,
-		guielements.rightarrow,
-		{
-			text = "Set the direction P2 is holding",
-			x = 12,
-			y = 70,
-			info = "Allows you to set the direction P2 is holding",
-			func = function() CIG("setdirectionp2", 1) end,
-			olcolour = "black",
-			autofunc = 	function(this)
-							local str = "P2 holding "
-							for i, v in pairs(inputs.properties.p2hold) do
-								if v then
-									str = str .. i .. " "
-								end
-							end
-							str = str:sub(1, #str-1)
-							if #str > 11 then
-								this.text = str -- 124
-								this.x = 12 + (31-#str)*4
-							else
-								this.text = "Set the direction P2 is holding"
-								this.x = 12
-							end
-						end,
 		},
 	},
 	{ -- Recording
@@ -476,6 +451,24 @@ guipages = { -- interactiveguipages
 						end,
 		},
 		{
+			text = "Randomise recording playback",
+			x = 1,
+			info = "Random the timing playback starts at",
+			olcolour = "black",
+			func =	function()
+						CIG("replaystartingtime")
+					end,
+			autofunc = 	function(this)
+							if recording.maxstarttime~=0 then
+								this.text = "Maximum "..recording.maxstarttime.."f delayed start"
+								this.x = 1
+							else
+								this.text = "Randomise recording playback"
+								this.x = 1
+							end
+						end,
+		},
+		{
 			text = "Snipping Replays", -- clean this up in future
 			x = 5,
 			olcolour = "black",
@@ -520,11 +513,11 @@ guipages = { -- interactiveguipages
 					end,
 			autofunc = 	function(this)
 							if recording.replayP1 and recording.replayP2 then
-								this.text = "Replay P1 and P2"
+								this.text = "Record P1 and P2"
 							elseif recording.replayP1 then
-								this.text = "Replay P1"
+								this.text = "Record P1"
 							elseif recording.replayP2 then
-								this.text = "Replay P2"
+								this.text = "Record P2"
 							end
 							this.x = 65 - #this.text*4
 						end,
@@ -535,14 +528,9 @@ guipages = { -- interactiveguipages
 		left = guielements.falseleftarrow,
 		right = guielements.falserightarrow,
 		title = {
-			text = "Dummy Settings",
+			text = "Basic Settings",
 			x = interactivegui.boxxlength/2 - 30,
 			y = 1,
-		},
-		button = {
-			text = "Set the direction P2 is holding",
-			x = 12,
-			y = 70,
 		},
 		{
 			text = "",
@@ -554,37 +542,8 @@ guipages = { -- interactiveguipages
 							setDirection(2, dir)
 							CIG(interactivegui.previouspage, interactivegui.previousselection)
 						end,
-			autofunc = 	function() displayStick(interactivegui.boxx + 140, interactivegui.boxy + 55) end,
+			autofunc = 	function() displayStick(interactivegui.boxx + interactivegui.boxxlength/2 - 16, interactivegui.boxy + 55) end,
 		},
-	},
-	scrollingtextsettings = {
-		title = {
-			text = "Scrolling Input Settings",
-			x = interactivegui.boxxlength/2 - 48,
-			y = 1,
-		},
-		{
-			text = "<",
-			olcolour = "black",
-			info = "Back",
-			func =	function() CIG(1,3) end,
-		},
-		{
-			text = "Scrolling input text size ",
-			x = 4,
-			y = 70,
-			info = "Sets the size of the scrolling input text images",
-			fillpercent = 0,
-			olcolour = "black",
-			func = 		function()
-							CIG("scrollingtextsettingssizepopup", inputs.properties.scrollinginput.iconsize-7)
-						end,
-			autofunc = 	function(this)
-							this.text = "Scrolling input text size "..(inputs.properties.scrollinginput.iconsize-7)
-							this.fillpercent = (inputs.properties.scrollinginput.iconsize-8)/12
-						end,
-		},
-		guielements.scrollinginputframestoggle,
 	},
 	hitboxsettings = {
 		title = {
@@ -601,9 +560,9 @@ guipages = { -- interactiveguipages
 		guielements.hitboxstate,
 	},
 }
-
-if scrollingInputReg then -- if scrolling-input-display.lua is loaded
-	table.insert(guipages[1], guielements.scrollinginputsettings)
+-- All guipages elements should be enum'd
+if translationtable then -- if inputs can be processed
+	table.insert(guipages[1], guielements.directionset)
 end
 
 if hitboxesReg then -- if a hitbox file is loaded
@@ -633,19 +592,19 @@ if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer an
 end
 
 if availablefunctions.playertwofacingleft then
-	table.insert(guipages[4], guielements.replayautoturn)
+	table.insert(guipages[3], guielements.replayautoturn)
 end
 
 if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
-	table.insert(guipages[4], guielements.hitplayback.main)
+	table.insert(guipages[3], guielements.hitplayback.main)
 end
 
 if availablefunctions.tablesave and availablefunctions.tableload then
-	table.insert(guipages[4], guielements.replaysaveload)
+	table.insert(guipages[3], guielements.replaysaveload)
 end
 
 if modulevars.constants.translationtable then -- replay editor
-	table.insert(guipages[4], guielements.replayeditortoggle)
+	table.insert(guipages[3], guielements.replayeditortoggle)
 end
 
 
@@ -848,7 +807,24 @@ do -- coininputleniency
 		{text = "15"},
 	}
 	local sf = function(n) return function() changeConfig("inputs", "coinleniency", n+9, inputs.properties) end end
-	guipages.coininputleniency = createPopUpMenu(guipages[1], nil, sf, nil, Elements, 136, 30, nil)
+	guipages.coininputleniency = createPopUpMenu(guipages[1], nil, sf, nil, Elements, 136, guielements.coininputleniency.y, nil)
+end
+
+do -- inputdelay
+	local Elements = {
+		{text = "0"},
+		{text = "1"},
+		{text = "2"},
+		{text = "3"},
+		{text = "4"},
+		{text = "5"},
+		{text = "6"},
+		{text = "7"},
+		{text = "8"},
+		{text = "9"},
+	}
+	local sf = function(n) return function() delayinputcount=n-1 end end
+	guipages.inputdelay = createPopUpMenu(guipages[1], nil, sf, nil, Elements, 136, guielements.inputdelay.y)
 end
 
 if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then -- hitslot
@@ -870,7 +846,7 @@ if availablefunctions.readplayertwohealth and availablefunctions.playertwoinhits
 			end
 		end
 	end
-	guipages.hitslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, guielements.hitplayback.main.y+10, nil)
+	guipages.hitslot = createPopUpMenu(guipages[3], rf, nil, af, Elements, 72, guielements.hitplayback.main.y+10, nil)
 end
 
 do -- savestateslot
@@ -892,7 +868,7 @@ do -- savestateslot
 			end
 		end
 	end
-	guipages.savestateslot = createPopUpMenu(guipages[4], rf, nil, af, Elements, 72, guielements.savestateplayback.y+10, nil)
+	guipages.savestateslot = createPopUpMenu(guipages[3], rf, nil, af, Elements, 72, guielements.savestateplayback.y+10, nil)
 end
 
 do -- replaysaveload
@@ -900,7 +876,7 @@ do -- replaysaveload
 		{text = "Save", releasefunc = function() return function() replaySave() CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
 		{text = "Load", releasefunc = function() return function() replayLoad() CIG(interactivegui.previouspage, interactivegui.previousselection) end end},
 	}
-	guipages.replaysaveload = createPopUpMenu(guipages[4], nil, nil, nil, Elements, 72, 135)
+	guipages.replaysaveload = createPopUpMenu(guipages[3], nil, nil, nil, Elements, 72, 135)
 end
 
 do -- recordingslot
@@ -914,33 +890,26 @@ do -- recordingslot
 			end
 		end
 	end
-	guipages.recordingslot = createPopUpMenu(guipages[4], rf, nil, af, nil, 72, guipages[4][4].y, 5)
+	guipages.recordingslot = createPopUpMenu(guipages[3], rf, nil, af, nil, 72, guipages[3][4].y, 5)
 end
 
-if scrollingInputReg then -- scrollingtextsettingsinputpopup
-	local Elements = {
-		{text = "P1 inputs"},
-		{text = "P2 inputs"},
-		{text = "P1 & P2 inputs"},
-		{text = "Off"},
-	}
-	local rf = function(n) return function()
-		changeConfig("inputs","state",n,inputs.properties.scrollinginput)
-		scrollingInputReload()
-		CIG("scrollingtextsettings",2)
-		end 
+do -- random starting time
+	local uf = 	function(n) 
+		if n then
+			recording.maxstarttime = recording.maxstarttime+n
+		end
+		return recording.maxstarttime
 	end
-	guipages.scrollingtextsettingsinputpopup = createPopUpMenu(guipages.scrollingtextsettings, rf, nil, nil, Elements, 120, 30, nil)
-	local rf = function() return function() CIG("scrollingtextsettings", 2) end end
-	local sf = function(n) return function() changeConfig("inputs", "iconsize", n+7, inputs.properties.scrollinginput) scrollingInputReload() end end
-	guipages.scrollingtextsettingssizepopup = createPopUpMenu(guipages.scrollingtextsettings, rf, sf, nil, nil, 120, 10, 13)
+	guipages.replaystartingtime = createScrollingBar(guipages[3], 145, guipages[3][7].y, 0, 180, uf, interactivegui.boxxlength/2) -- up to 180f of delay
 end
 
-local playerrecelements = {
-					{text = "P1", selectfunc = function() return function() recording.replayP1=true recording.replayP2=false end end},
-					{text = "P2", selectfunc = function() return function() recording.replayP1=false recording.replayP2=true end end},
-					{text = "P1&P2", selectfunc = function() return function() recording.replayP1=true recording.replayP2=true end end},
-				}
-guipages.playerrecording = createPopUpMenu(guipages[4], nil, nil, nil, playerrecelements, 144, 55, nil)
+do -- which player(s) to replay
+	local playerrecelements = {
+						{text = "P1", selectfunc = function() return function() recording.replayP1=true recording.replayP2=false end end},
+						{text = "P2", selectfunc = function() return function() recording.replayP1=false recording.replayP2=true end end},
+						{text = "P1&P2", selectfunc = function() return function() recording.replayP1=true recording.replayP2=true end end},
+					}
+	guipages.playerrecording = createPopUpMenu(guipages[3], nil, nil, nil, playerrecelements, 144, 55, nil)
+end
 
 formatGuiTables()

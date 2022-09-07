@@ -1,9 +1,10 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-print "Known Issues: with mwarr"
-print "Messing with player inputs (recording, replaying, opening the menu) freezes the game"
-print "Game unfreezes when controls are returned back to normal"
-print ""
+function gamemsg()
+	print "Known issues with mwarr:"
+	print "Messing with player inputs (recording, replaying, opening the menu) freezes the game"
+	print "Game unfreezes when controls are returned back to normal"
+end
 
 p1maxhealth = 0x0100 -- word
 p2maxhealth = 0x0100

@@ -1,19 +1,13 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-p1maxhealth = 0x80
-p2maxhealth = 0x80
+p1maxhealth = 0x60
+p2maxhealth = 0x60
 
-p1maxmeter = 0x20
-p2maxmeter = 0x20
+local p1health = 0x1003CB
+local p2health = 0x1004CB
 
-local p1health = rdw(0x100a46) + 0xbb
-local p2health = rdw(0x100a4a) + 0xbb
-
-local p1meter = rdw(0x100a46) + 0xf0
-local p2meter = rdw(0x100a4a) + 0xf0
-
-local p1direction = 0x10105c
-local p2direction = 0x100ad0
+local p1direction = 0x100367
+local p2direction = 0x100467
 
 translationtable = {
 	"left",
@@ -41,24 +35,33 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=180,
+	hud = {
+		combotextx=144,
 		combotexty=42,
+		comboenabled=true,
+		p1healthx=49,
+		p1healthy=17,
+		p1healthenabled=true,
+		p2healthx=264,
+		p2healthy=17,
+		p2healthenabled=true,
 	},
 }
 
 function playerOneFacingLeft()
-	return rb(p1direction)==1
+	return rb(p1direction)==0
 end
 
 function playerTwoFacingLeft()
 	return rb(p2direction)==0
 end
 
-function _playerOneInHitstun()
+function playerOneInHitstun()
+	return rb(0x1003A9)~=0 -- damage animation
 end
 
-function _playerTwoInHitstun()
+function playerTwoInHitstun()
+	return rb(0x1004A9)~=0 -- damage animation?
 end
 
 function readPlayerOneHealth()
@@ -77,26 +80,10 @@ function writePlayerTwoHealth(health)
 	wb(p2health, health)
 end
 
-function readPlayerOneMeter()
-	return rb(p1meter)
-end
-
-function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
-end
-
-function readPlayerTwoMeter()
-	return rb(p2meter)
-end
-
-function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
-end
-
 function infiniteTime()
-	memory.writebyte(0x100Ac6, 0x98)
+	ww(0x10092A, 0x6000)
 end
 
-function Run()
+function Run() -- runs every frame
 	infiniteTime()
 end

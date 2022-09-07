@@ -15,9 +15,10 @@ local p2meter = 0x1095a4
 local p1direction = 0x1080bd
 local p2direction = 0x10847d
 
-print "Known Issues: with aof2"
-print "Hitstun detector can be inconsistent"
-print ""
+function gamemsg()
+	print "Known issues with aof2:"
+	print "Hitstun detector can be inconsistent"
+end
 
 translationtable = {
 	"left",

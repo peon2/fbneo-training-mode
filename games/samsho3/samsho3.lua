@@ -6,9 +6,10 @@ p2maxhealth = 0x80
 p1maxmeter = 0x40
 p2maxmeter = 0x40
 
-print "Known Issues: with samsho3"
-print "Inconsistent combo counter"
-print ""
+function gamemsg()
+	print "Known issues with samsho3:"
+	print "Inconsistent combo counter"
+end
 
 translationtable = {
 	"left",
