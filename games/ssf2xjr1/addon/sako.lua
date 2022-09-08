@@ -300,7 +300,7 @@ local function sako_update_msg(er_code)
 		sako_msg1 = "You must be walking after the Jab's last frame, and "
 		sako_msg2 = "only stop when the opponent gets out of hitstun."
 	elseif er_code == 81 then
-		sako_msg1 = "One or more punch buttons were released too soon. "
+		sako_msg1 = "Two punch buttons were released too soon. "
 		sako_msg2 = "The opponent is still in hitstun, this also means that "
 		sako_msg3 = "is invulnerable to throws."
 	elseif er_code == 82 then
