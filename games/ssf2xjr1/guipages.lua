@@ -22,16 +22,16 @@ guicustompage = {
 		},
 		func =	function()
 				draw_hud = draw_hud + 1
-				if draw_hud > 2 then
-					draw_hud = 0
+				if draw_hud > 1 then
+					draw_hud = -1
 				end
 			end,
 		autofunc = function(this)
-				if draw_hud == 0 then
+				if draw_hud == -1 then
 					this.text = "Toggle ST HUD: Off"
-				elseif draw_hud == 1 then
+				elseif draw_hud == 0 then
 					this.text = "Toggle ST HUD: On (Complete)"
-				elseif draw_hud == 2 then
+				elseif draw_hud == 1 then
 					this.text = "Toggle ST HUD: On (Simplified)"
 				end
 			end,
@@ -267,7 +267,7 @@ function makeReversalSettingsButtons()
 					if character_specific[character].specials[i].strength_set ~= -1 then -- Not Dhalsim TP not Boxer TAP
 						horizontal_length = 85 + 20*k
 					elseif character == "dhalsim" then -- Dhalsim TP
-						horizontal_length = 65 + 30*k
+						horizontal_length = 77 + 24*k
 					elseif character == "boxer" then -- Boxer TAP
 						horizontal_length = 95 + 15*k
 					end
@@ -597,19 +597,19 @@ character_specific_settings = {
 	projectile_frequence = {
 		text = "Fire : ",
 		x = 8,
-		y = 100,
+		y = 155,
 		olcolour = "black",
 		info = "Controls when a projectile should be thrown",
 		func =	function()
 				projectile_frequence_selector = projectile_frequence_selector + 1
-				if projectile_frequence_selector > 1 then
-					projectile_frequence_selector = 0
+				if projectile_frequence_selector > 0 then
+					projectile_frequence_selector = -1
 				end
 			end,
 		autofunc = function(this)
-				if projectile_frequence_selector == 0 then
+				if projectile_frequence_selector == -1 then
 					this.text = "Fire : When able"
-				elseif projectile_frequence_selector == 1 then
+				elseif projectile_frequence_selector == 0 then
 					this.text = "Fire : Randomly"
 				end
 			end,
@@ -634,7 +634,7 @@ function makeProjectileSettingsButtons()
 		special_id = {3}
 	elseif character == "dhalsim" then
 		table.insert(guicustompage, character_specific_settings["throw_projectiles"])
-		special_id = {1}
+		special_id = {1,2,3,7}
 	elseif character == "guile" then
 		table.insert(guicustompage, character_specific_settings["throw_projectiles"])
 		special_id = {1}
@@ -643,7 +643,7 @@ function makeProjectileSettingsButtons()
 		special_id = {1}
 	elseif character == "ryu" then
 		table.insert(guicustompage, character_specific_settings["throw_projectiles"])
-		special_id = {1,4}
+		special_id = {1,4,5}
 	elseif character == "sagat" then
 		table.insert(guicustompage, character_specific_settings["throw_projectiles"])
 		special_id = {1,2}
@@ -651,34 +651,40 @@ function makeProjectileSettingsButtons()
 
 	for k = 1, #special_id do
 		for i = 1, #character_specific[character].specials[special_id[k]].input_variations do
-		n = n + 1
-			if i == 1 then
-				projectile_name = character_specific[character].specials[special_id[k]].name
-				horizontal_length = 8
-			else
-				projectile_name = ""
-				horizontal_length = 40 + 20*i
+			if character_specific[character].specials[special_id[k]].strength_set ~= 0 or (character_specific[character].specials[special_id[k]].strength_set == 0 and i == 1) then
+				n = n + 1
+				if i == 1 then
+					projectile_name = character_specific[character].specials[special_id[k]].name
+					horizontal_length = 8
+				else
+					projectile_name = ""
+					horizontal_length = 40 + 23*i
+				end
+				vertical_length = 35+15*k
+				if character_specific[character].specials[special_id[k]].strength_set == 0 then -- no variations
+					projectile_variation = ""
+				else
+					projectile_variation = character_specific[character].specials[special_id[k]].input_variations[i][1]
+				end
+				projectile_options[n] = {
+					text = projectile_name.." "..projectile_variation,
+					x = horizontal_length,
+					y = vertical_length,
+					olcolour = "black",
+					fillpercent = 0,
+					checked = false,
+					projectile_id = {special_id[k], i},
+					func = function() end,
+					autofunc = function(this)
+							if this.checked then
+								this.fillpercent = 1
+							elseif not this.checked then
+								this.fillpercent = 0
+							end
+						end,
+				}
+				table.insert(guipages.specificsettings, projectile_options[n])
 			end
-			vertical_length = 30+20*k
-			projectile_variation = character_specific[character].specials[special_id[k]].input_variations[i][1]
-			projectile_options[n] = {
-				text = projectile_name.." "..projectile_variation,
-				x = horizontal_length,
-				y = vertical_length,
-				olcolour = "black",
-				fillpercent = 0,
-				checked = false,
-				projectile_id = {special_id[k], i},
-				func = function() end,
-				autofunc = function(this)
-						if this.checked then
-							this.fillpercent = 1
-						elseif not this.checked then
-							this.fillpercent = 0
-						end
-					end,
-			}
-			table.insert(guipages.specificsettings, projectile_options[n])
 		end
 	end
 end
@@ -709,6 +715,22 @@ function insertProjectileSettingsFunctions() -- Maybe there's a cleaner way ?
 		elseif i == 6 then
 			newfunction = function()
 				projectile_options[6].checked = not projectile_options[6].checked
+				end
+		elseif i == 7 then
+			newfunction = function()
+				projectile_options[7].checked = not projectile_options[7].checked
+				end
+		elseif i == 8 then
+			newfunction = function()
+				projectile_options[8].checked = not projectile_options[8].checked
+				end
+		elseif i == 9 then
+			newfunction = function()
+				projectile_options[9].checked = not projectile_options[9].checked
+				end
+		elseif i == 10 then
+			newfunction = function()
+				projectile_options[10].checked = not projectile_options[10].checked
 				end
 		end
 		projectile_options[i].func = newfunction
@@ -796,8 +818,8 @@ advanced_settings = {
 			y = 30,
 			olcolour = "black",
 			info = {
-				"Counts the number of frames your character is free to move",
-				"while the dummy is not"
+				"Counts the number of frames the attacker is free to move",
+				"while the defender is not"
 			},
 			func =	function()
 					frame_advantage_selector = frame_advantage_selector + 1
@@ -821,7 +843,7 @@ advanced_settings = {
 			y = 50,
 			olcolour = "black",
 			info = {
-				"When the dummy goes out of blockstun/hitstun, counts",
+				"When the defender goes out of blockstun/hitstun, counts",
 				"the number of frames before a second hit happens"
 			},
 			func =	function()
@@ -872,18 +894,18 @@ advanced_settings = {
 			y = 70,
 			olcolour = "black",
 			info = {
-				"Checks if a crossup did flip the dummy's guard",
+				"Checks if a crossup did flip a character's guard",
 			},
 			func =	function()
 					crossup_display_selector = crossup_display_selector + 1
-					if crossup_display_selector > 1 then
-						crossup_display_selector = 0
+					if crossup_display_selector > 0 then
+						crossup_display_selector = -1
 					end
 				end,
 			autofunc = function(this)
-					if crossup_display_selector == 0 then
+					if crossup_display_selector == -1 then
 						this.text = "Display Crossups: Off"
-					elseif crossup_display_selector == 1 then
+					elseif crossup_display_selector == 0 then
 						this.text = "Display Crossups: On"
 					end
 				end,
@@ -895,18 +917,18 @@ advanced_settings = {
 			olcolour = "black",
 			info = {
 				"Display throw range and print informations about",
-				"your tick throws attempts"
+				"tick throws attempts"
 			},
 			func =	function()
 					tick_throw_display_selector = tick_throw_display_selector + 1
-					if tick_throw_display_selector > 1 then
-						tick_throw_display_selector = 0
+					if tick_throw_display_selector > 0 then
+						tick_throw_display_selector = -1
 					end
 				end,
 			autofunc = function(this)
-					if tick_throw_display_selector == 0 then
+					if tick_throw_display_selector == -1 then
 						this.text = "Display Throws Infos: Off"
-					elseif tick_throw_display_selector == 1 then
+					elseif tick_throw_display_selector == 0 then
 						this.text = "Display Throws Infos: On"
 					end
 				end,
@@ -1023,7 +1045,7 @@ addonpage = {
 		olcolour = "black",
 		info = "Back",
 		func =  function() 
-			interactivegui.page = 5
+			interactivegui.page = 4
 			interactivegui.selection = 1 
 		end,
 	},
