@@ -42,6 +42,7 @@ for i = 1, 2 do
   addresses.players[i].life_backup    		= addresses.players[i].base + 0x2C  -- word
   addresses.players[i].hitbox_ptr     		= addresses.players[i].base + 0x34  -- dword
   addresses.players[i].hitfreeze_counter  	= addresses.players[i].base + 0x47  -- byte
+  addresses.players[i].cornered_flag		= addresses.players[i].base + 0x48  -- byte
   addresses.players[i].stun_counter         = addresses.players[i].base + 0x5D  -- word
   addresses.players[i].stun_meter          	= addresses.players[i].base + 0x5F  -- byte
   addresses.players[i].destun_meter         = addresses.players[i].base + 0x60  -- word

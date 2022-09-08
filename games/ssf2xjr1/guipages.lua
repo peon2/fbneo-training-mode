@@ -15,7 +15,10 @@ guicustompage = {
 		olcolour = "black",
 		handle = 1,
 		info = {
-			"Display ST specific informations"
+			"Display ST specific informations",
+			"Complete : Display distance between players, special moves buffers,",
+			"stun bar, projectile, cancel and grab infos",
+			"Simplified : doesn't display special moves buffers to save screen space"
 		},
 		func =	function()
 				draw_hud = draw_hud + 1
@@ -66,15 +69,12 @@ guicustompage = {
 				end
 			end,
 	},
-	----{
-	-- See below for the contextual reversal button
-	----}
 	{
 		text = "Stun/Dizzy",
 		x = 8,
 		y = 70,
 		olcolour = "black",
-		handle = 4,
+		handle = 3,
 		info = {
 			"Control Stun/Dizzy",
 			"Can be normal, off (never dizzy) or on (always dizzy)"
@@ -100,8 +100,10 @@ guicustompage = {
 		x = 8,
 		y = 90,
 		olcolour = "black",
-		handle = 2,
-		info = {},
+		handle = 4,
+		info = {
+			"Make the dummy tech your throws"
+		},
 		func =	function()
 				tech_throw_selector = tech_throw_selector + 1
 				if tech_throw_selector > 0 then
@@ -117,6 +119,63 @@ guicustompage = {
 			end,
 	},
 	----{
+	-- See below for the contextual reversal button
+	----}
+	{
+		text = "Select stage",
+		x = 160,
+		y = 30,
+		olcolour = "black",
+		handle = 6,
+		info = {
+			"Background stage selection",
+			"Must be changed on player select screen, before selecting character."
+		},
+		func =	function()
+				stage_selector = stage_selector + 1
+				if stage_selector > 0xf then
+					stage_selector=-1
+				end
+			end,
+		autofunc = 	function(this)
+						if stage_selector == -1 then
+							this.text = "Select stage: Disabled"
+						elseif stage_selector == 0 then
+							this.text = "Stage: Japan (Ryu)"
+						elseif stage_selector == 1 then
+							this.text = "Stage: Japan (Honda)"
+						elseif stage_selector == 2 then
+							this.text = "Stage: Brazil (Blanka)"
+						elseif stage_selector == 3 then
+							this.text = "Stage: USA (Guile)"
+						elseif stage_selector == 4 then
+							this.text = "Stage: USA (Ken)"
+						elseif stage_selector == 5 then
+							this.text = "Stage: China (Chun-Li)"
+						elseif stage_selector == 6 then
+							this.text = "Stage: USSR (Zangief)"
+						elseif stage_selector == 7 then
+							this.text = "Stage: India (Dhalsim)"
+						elseif stage_selector == 8 then
+							this.text = "Stage: Thailand (Dictator)"
+						elseif stage_selector == 9 then
+							this.text = "Stage: Thailand (Sagat)"
+						elseif stage_selector == 0xa then
+							this.text = "Stage: USA (Boxer)"
+						elseif stage_selector == 0xb then
+							this.text = "Stage: Spain (Claw)"
+						elseif stage_selector == 0xc then
+							this.text = "Stage: England (Cammy)"
+						elseif stage_selector == 0xd then
+							this.text = "Stage: Mexico (T.Hawk)"
+						elseif stage_selector == 0xe then
+							this.text = "Stage: HongKong (Fei-Long)"
+						elseif stage_selector == 0xf then
+							this.text = "Stage: Jamaica (DeeJay)"
+						end
+					end
+	},
+	----{
 	-- See below for the character specific button
 	----}
 	{
@@ -124,8 +183,8 @@ guicustompage = {
 			x = 8,
 			y = 150,
 			olcolour = "black",
-			handle = 6,
-			func = 	function() CIG("advancedsettings", 1) end, -- "advancedsettings" has been placed in "fbneo-training-mode/guipages.lua(l.588)", maybe there's a way to place it in this file ?
+			handle = 8,
+			func = 	function() CIG("advancedsettings", 1) end,
 	}
 }
 
@@ -166,7 +225,7 @@ guipages.specificsettings = specificsettings
 local advancedsettings = {
 	title = {
 		text = "Advanced settings",
-		x = interactivegui.boxxlength/2 - 48,
+		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
 	{
@@ -191,16 +250,18 @@ function makeReversalSettingsButtons()
 	local n = 0 -- count the number of reversal options
 	local s = 0 -- count the number of unique special moves a character can reversal
 	local character = readCharacterName(gamestate.P2)
+	local old = gamestate.P2.is_old
+	updateForOldChar(gamestate.P2) -- Uses the correct values for old characters
 	-- Specials
 	for i = 1, #character_specific[character].specials do
-		if character_specific[character].specials[i].reversal then
+		if character_specific[character].specials[i].reversal and ((not old) or (old and not character_specific[character].specials[i].new_only)) then
 			s = s + 1
 			for k = 1, #character_specific[character].specials[i].input_variations do
 			 if (character_specific[character].specials[i].strength_set ~= 0) or (character_specific[character].specials[i].strength_set == 0 and k == 1) then -- Don't display variations for super moves or moves that don't have variations
 				n = n + 1
 				if k == 1 then
 					special_name = character_specific[character].specials[i].name
-					horizontal_length = 4
+					horizontal_length = 8
 				else
 					special_name = ""
 					if character_specific[character].specials[i].strength_set ~= -1 then -- Not Dhalsim TP not Boxer TAP
@@ -249,9 +310,9 @@ function makeReversalSettingsButtons()
 				throw_name = character_specific[character].throw[i]
 			end
 			if i > 1 then
-				horizontal_length = 11 + 17*i
+				horizontal_length = 15 + 17*i
 			else
-				horizontal_length = 4
+				horizontal_length = 8
 			end
 		reversal_options[n] = {
 				text = throw_name,
@@ -397,9 +458,13 @@ end
 
 do_not_reversal = { -- If checked, the dummy won't reversal, randomly
 				text = "Nothing",
-				x = 4,
+				x = 8,
 				y = 155,
 				olcolour = "black",
+				info = {
+					"If this option is checked, the dummy won't reversal, randomly",
+					"Useful if you want the dummy to mix between reversal and guard"
+				},
 				fillpercent = 0,
 				checked = false,
 				func =	function()
@@ -417,9 +482,12 @@ table.insert(guipages.reversalsettings, do_not_reversal)
 
 custom_sequence = { -- When the dummy goes out of blockstun/hitsun or lands on his feet,plays a sequence defined in the Replay Editor
 				text = "Custom Sequence",
-				x = 40,
+				x = 44,
 				y = 155,
 				olcolour = "black",
+				info = {
+				"Try to reversal the sequence defined in the replay slot"
+				},
 				fillpercent = 0,
 				checked = false,
 				func =	function()
@@ -440,6 +508,9 @@ reversal_frequence = { -- When the dummy goes out of blockstun/hitsun or lands o
 				x = 165,
 				y = 155,
 				olcolour = "black",
+				info = {
+					"Controls when a reversal should be performed"
+				},
 				fillpercent = 0,
 				checked = false,
 				func =	function()
@@ -470,7 +541,7 @@ customPageConfiguration = { -- Two different buttons depending on whether the ga
 		x = 8,
 		y = 110,
 		olcolour = "black",
-		handle = 3,
+		handle = 5,
 		info = {
 			"Control reversal on P2",
 			"Use the Replay Editor in the Recording menu to program the desired reversal action."
@@ -494,9 +565,9 @@ customPageConfiguration = { -- Two different buttons depending on whether the ga
 			x = 8,
 			y = 110,
 			olcolour = "black",
-			handle = 3,
+			handle = 5,
 			info = {
-				"Control reversal on P2",
+				"In this menu, you can choose the moves you want to get as reversals",
 			},
 			func = 	function() CIG("reversalsettings", 1) end, -- "reversalsettings" has been placed in "fbneo-training-mode/guipages.lua(l.588)", maybe there's a way to place it in this file ?
 	}
@@ -514,21 +585,21 @@ character_specific_settings = {
 	throw_projectiles =
 	{
 			text = "Throw Projectiles",
-			x = 8,
-			y = 130,
+			x = 160,
+			y = 50,
 			olcolour = "black",
-			handle = 5,
+			handle = 7,
 			info = {
-				"Make the dummy throw a projectile when able",
+				"In this menu you can choose the projectiles you want to be thrown",
 			},
 			func = 	function() CIG("specificsettings", 1) end, -- "specifcsettings" has been placed in "fbneo-training-mode/guipages.lua(l.588)", maybe there's a way to place it in this file ?
 	},
 	projectile_frequence = {
 		text = "Fire : ",
-		x = 3,
+		x = 8,
 		y = 100,
 		olcolour = "black",
-		info = "",
+		info = "Controls when a projectile should be thrown",
 		func =	function()
 				projectile_frequence_selector = projectile_frequence_selector + 1
 				if projectile_frequence_selector > 1 then
@@ -583,7 +654,7 @@ function makeProjectileSettingsButtons()
 		n = n + 1
 			if i == 1 then
 				projectile_name = character_specific[character].specials[special_id[k]].name
-				horizontal_length = 4
+				horizontal_length = 8
 			else
 				projectile_name = ""
 				horizontal_length = 40 + 20*i
@@ -647,64 +718,15 @@ end
 -- Advanced Settings
 ------------------------------------
 advanced_settings = {
-	select_stage = {
-			text = "Select stage",
-			x = 8,
+		frameskip = {
+			text = "Disable Frameksip",
+			x = 150,
 			y = 30,
 			olcolour = "black",
 			info = {
-				"Background stage selection",
-				"Must be changed on player select screen, before selecting character."
+				"Disable frameskip",
+				"The game will run slower than Turbo 0"
 			},
-			func =	function()
-					stage_selector = stage_selector + 1
-					if stage_selector > 0xf then
-						stage_selector=-1
-					end
-				end,
-			autofunc = 	function(this)
-							if stage_selector == -1 then
-								this.text = "Select stage: Disabled"
-							elseif stage_selector == 0 then
-								this.text = "Stage: Japan (Ryu)"
-							elseif stage_selector == 1 then
-								this.text = "Stage: Japan (Honda)"
-							elseif stage_selector == 2 then
-								this.text = "Stage: Brazil (Blanka)"
-							elseif stage_selector == 3 then
-								this.text = "Stage: USA (Guile)"
-							elseif stage_selector == 4 then
-								this.text = "Stage: USA (Ken)"
-							elseif stage_selector == 5 then
-								this.text = "Stage: China (Chun-Li)"
-							elseif stage_selector == 6 then
-								this.text = "Stage: USSR (Zangief)"
-							elseif stage_selector == 7 then
-								this.text = "Stage: India (Dhalsim)"
-							elseif stage_selector == 8 then
-								this.text = "Stage: Thailand (Dictator)"
-							elseif stage_selector == 9 then
-								this.text = "Stage: Thailand (Sagat)"
-							elseif stage_selector == 0xa then
-								this.text = "Stage: USA (Boxer)"
-							elseif stage_selector == 0xb then
-								this.text = "Stage: Spain (Claw)"
-							elseif stage_selector == 0xc then
-								this.text = "Stage: England (Cammy)"
-							elseif stage_selector == 0xd then
-								this.text = "Stage: Mexico (T.Hawk)"
-							elseif stage_selector == 0xe then
-								this.text = "Stage: HongKong (Fei-Long)"
-							elseif stage_selector == 0xf then
-								this.text = "Stage: Jamaica (DeeJay)"
-							end
-						end
-		},
-		frameskip = {
-			text = "Disable Frameksip",
-			x = 8,
-			y = 150,
-			olcolour = "black",
 			func =	function()
 					frameskip_selector = frameskip_selector + 1
 					if frameskip_selector > 0 then
@@ -721,9 +743,12 @@ advanced_settings = {
 		},
 		slowdown = {
 			text = "Disable Impact Slowdown",
-			x = 110,
-			y = 150,
+			x = 150,
+			y = 50,
 			olcolour = "black",
+			info = {
+				"Disable the slowdown when a projectile hits"
+			},
 			func =	function()
 					slowdown_selector = slowdown_selector + 1
 					if slowdown_selector > 0 then
@@ -741,10 +766,10 @@ advanced_settings = {
 		easy_charge_moves = {
 			text = "Easy Charge Moves",
 			x = 8,
-			y = 90,
+			y = 130,
 			olcolour = "black",
 			info = {
-				"When this option is checked, charge moves can be triggered",
+				"When this option is used, charge moves can be triggered",
 				"using only one frame of charge"
 			},
 			func =	function()
@@ -768,11 +793,15 @@ advanced_settings = {
 		frame_advantage = {
 			text = "Display Frame Advantage",
 			x = 8,
-			y = 110,
+			y = 30,
 			olcolour = "black",
+			info = {
+				"Counts the number of frames your character is free to move",
+				"while the dummy is not"
+			},
 			func =	function()
 					frame_advantage_selector = frame_advantage_selector + 1
-					if frame_advantage_selector > 0 then
+					if frame_advantage_selector > 1 then
 						frame_advantage_selector = -1
 					end
 				end,
@@ -780,15 +809,21 @@ advanced_settings = {
 					if frame_advantage_selector == -1 then
 						this.text = "Display Frame Advantage: Off"
 					elseif frame_advantage_selector == 0 then
-						this.text = "Display Frame Advantage: On"
+						this.text = "Display Frame Advantage: P1"
+					elseif frame_advantage_selector == 1 then
+						this.text = "Display Frame Advantage: P2"
 					end
 				end,
 		},
 		frame_trap = {
-			text = "Display Free Frames between two hits",
+			text = "Display Gap",
 			x = 8,
-			y = 130,
+			y = 50,
 			olcolour = "black",
+			info = {
+				"When the dummy goes out of blockstun/hitstun, counts",
+				"the number of frames before a second hit happens"
+			},
 			func =	function()
 					frame_trap_selector = frame_trap_selector + 1
 					if frame_trap_selector > 0 then
@@ -797,16 +832,16 @@ advanced_settings = {
 				end,
 			autofunc = function(this)
 					if frame_trap_selector == -1 then
-						this.text = "Display Free Frames between two hits: Off"
+						this.text = "Display Gap: Off"
 					elseif frame_trap_selector == 0 then
-						this.text = "Display Free Frames between two hits: On"
+						this.text = "Display Gap: On"
 					end
 				end,
 		},
 		round_start = {
 		text = "Round start action",
 		x = 8,
-		y = 50,
+		y = 110,
 		olcolour = "black",
 		info = {
 			"Control round start action on P2",
@@ -832,10 +867,13 @@ advanced_settings = {
 			end,
 		},
 		crossup = {
-			text = "Display Crossup Infos",
+			text = "Display Crossups",
 			x = 8,
 			y = 70,
 			olcolour = "black",
+			info = {
+				"Checks if a crossup did flip the dummy's guard",
+			},
 			func =	function()
 					crossup_display_selector = crossup_display_selector + 1
 					if crossup_display_selector > 1 then
@@ -844,17 +882,21 @@ advanced_settings = {
 				end,
 			autofunc = function(this)
 					if crossup_display_selector == 0 then
-						this.text = "Display Crossup Infos: Off"
+						this.text = "Display Crossups: Off"
 					elseif crossup_display_selector == 1 then
-						this.text = "Display Crossup Infos: On"
+						this.text = "Display Crossups: On"
 					end
 				end,
 		},
 		tick_throws = {
-			text = "Display Tick Throws Infos",
-			x = 120,
-			y = 70,
+			text = "Display Throws Infos",
+			x = 8,
+			y = 90,
 			olcolour = "black",
+			info = {
+				"Display throw range and print informations about",
+				"your tick throws attempts"
+			},
 			func =	function()
 					tick_throw_display_selector = tick_throw_display_selector + 1
 					if tick_throw_display_selector > 1 then
@@ -863,14 +905,13 @@ advanced_settings = {
 				end,
 			autofunc = function(this)
 					if tick_throw_display_selector == 0 then
-						this.text = "Display Tick Throws Infos: Off"
+						this.text = "Display Throws Infos: Off"
 					elseif tick_throw_display_selector == 1 then
-						this.text = "Display Tick Throws Infos: On"
+						this.text = "Display Throws Infos: On"
 					end
 				end,
 		},
 }
-table.insert(guipages.advancedsettings, advanced_settings["select_stage"])
 table.insert(guipages.advancedsettings, advanced_settings["frameskip"])
 table.insert(guipages.advancedsettings, advanced_settings["slowdown"])
 table.insert(guipages.advancedsettings, advanced_settings["easy_charge_moves"])
@@ -905,7 +946,7 @@ makeReversalSettings = function(_patched) -- Display "Select Reversal" if the ga
 			interactivegui.selection = 1
 			deleteReversalSettings()
 			for i = 1, #guicustompage do
-				if guicustompage[i].handle == 3 then
+				if guicustompage[i].handle == 5 then
 					table.remove(guicustompage,i)
 					break
 				end
@@ -917,7 +958,7 @@ makeReversalSettings = function(_patched) -- Display "Select Reversal" if the ga
 		if custom_page_setting == 1 then -- The game wasn't patched previously : reinitialize the GUI
 			autoreversal_selector = -1
 			for i = 1, #guicustompage do
-				if guicustompage[i].handle == 3 then
+				if guicustompage[i].handle == 5 then
 					table.remove(guicustompage,i)
 					break
 				end
@@ -947,7 +988,7 @@ deleteProjectileSettings = function()
 		projectile_options[i] = nil
 	end
 	for i = 1, #guicustompage do
-		if guicustompage[i].handle == 5 then
+		if guicustompage[i].handle == 7 then
 			table.remove(guicustompage,i)
 			return
 		end
@@ -994,7 +1035,7 @@ addonbutton = {
 		x = 86,
 		y = 150,
 		olcolour = "black",
-		handle = 7,
+		handle = 9,
 		func = 	function() CIG("addonpage", 1) end,
 		}
 
@@ -1007,7 +1048,7 @@ end
 
 function determineButtonYPos(_guipage)
 	if #_guipage == 1 then 
-		return 40
+		return 30
 	else
 		return _guipage[#_guipage].y+20
 	end

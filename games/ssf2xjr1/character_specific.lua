@@ -3,24 +3,24 @@
 -----------------------------------------------------------------------------
 character_specific = {}
 characters =
-    {
-      "ryu",
-      "ehonda",
-      "blanka",
-      "guile",
-      "ken",
-      "chunli",
-      "zangief",
-      "dhalsim",
-      "dictator",
-      "sagat",
-      "boxer",
-      "claw",
-      "cammy",
-      "thawk",
-      "feilong",
-      "deejay",
-    }
+{
+	"blanka",
+	"boxer",
+	"cammy",
+	"chunli",
+	"claw",
+	"deejay",
+	"dhalsim",
+	"dictator",
+	"ehonda",
+	"feilong",
+	"guile",
+	"ken",
+	"ryu",
+	"sagat",
+	"thawk",
+	"zangief",
+}
 	
 for i = 1, #characters do
   character_specific[characters[i]] = { specials = {}, throw = {}, infos = {}}
@@ -37,6 +37,7 @@ character_specific.blanka.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -50,6 +51,7 @@ character_specific.blanka.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -63,6 +65,7 @@ character_specific.blanka.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -78,6 +81,7 @@ character_specific.blanka.specials = {
 	strength_set = 1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -89,6 +93,7 @@ character_specific.blanka.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"forward"} },
     input_variations = {{"LK", "MK", "HK"}},
   },
@@ -100,6 +105,7 @@ character_specific.blanka.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"back"} },
     input_variations = {{"LK", "MK", "HK"}},
   },
@@ -113,6 +119,7 @@ character_specific.blanka.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -141,6 +148,7 @@ character_specific.boxer.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -157,6 +165,7 @@ character_specific.boxer.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -170,6 +179,7 @@ character_specific.boxer.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "v_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -186,6 +196,7 @@ character_specific.boxer.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward", "down"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -202,6 +213,7 @@ character_specific.boxer.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward", "down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -214,6 +226,7 @@ character_specific.boxer.specials = {
 	strength_set = -1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}},
     input_variations = {{"1"},{"2"},{"3"},{"4"},{"5"},{"6"},{"7"},{"Final"}},
    },
@@ -225,6 +238,7 @@ character_specific.boxer.specials = {
 	id = 0x04,
 	strength_set = -1,
 	reversal = false,
+	new_only = false,
 	charge_move = false,
     input = {{}},
     input_variations = {{"LP", "MP", "HP"}},
@@ -238,6 +252,7 @@ character_specific.boxer.specials = {
 	strength_set = -1,
 	charge_move = false,
 	reversal = false,
+	new_only = false,
     input = {{}},
     input_variations = {{"LK", "MK", "HK"}},
    },
@@ -260,13 +275,14 @@ character_specific.boxer.specials = {
 	strength_set = 0,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}, {"LK"}, {"MK"}, {"HK"}},
   }
 }
 character_specific.boxer.throw = {"MP","HP"}
 character_specific.boxer.hitboxes = {
-throw = {{"MP",51},{"HP",41}},
+throw = {}, -- may vary, see below getBoxerThrowDistance()
 throwable = 27,
 }
 character_specific.boxer.infos = {
@@ -284,6 +300,7 @@ character_specific.cammy.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -296,6 +313,7 @@ character_specific.cammy.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"forward", "down"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -308,6 +326,7 @@ character_specific.cammy.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"back"}, {"back", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }, 
@@ -320,6 +339,7 @@ character_specific.cammy.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"back"}, {"down"}, {"forward", "down"}, {"up", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -332,6 +352,7 @@ character_specific.cammy.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"down"}, {"forward", "down"}, {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
@@ -357,6 +378,7 @@ character_specific.chunli.specials = {
 	strength_set = 1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -372,6 +394,7 @@ character_specific.chunli.specials = {
 	strength_set = 1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}},
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -388,6 +411,7 @@ character_specific.chunli.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -401,6 +425,7 @@ character_specific.chunli.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -414,6 +439,7 @@ character_specific.chunli.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
@@ -439,6 +465,7 @@ character_specific.claw.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -452,6 +479,7 @@ character_specific.claw.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -465,6 +493,7 @@ character_specific.claw.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -478,6 +507,7 @@ character_specific.claw.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"down", "back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -489,6 +519,7 @@ character_specific.claw.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input_variations = {{"LP", "MP", "HP"}},
   },  
   {
@@ -499,6 +530,7 @@ character_specific.claw.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input_variations = {{"LK", "MK", "HK"}},
   },
   {
@@ -511,6 +543,7 @@ character_specific.claw.specials = {
 	strength_set = 0,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"down", "h_charge"}, {"forward"}, {"back"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
@@ -536,6 +569,7 @@ character_specific.deejay.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }, 
@@ -549,6 +583,7 @@ character_specific.deejay.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -562,6 +597,7 @@ character_specific.deejay.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -575,6 +611,7 @@ character_specific.deejay.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -588,6 +625,7 @@ character_specific.deejay.specials = {
 	strength_set = 0,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
@@ -612,6 +650,7 @@ character_specific.dhalsim.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"forward", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -623,6 +662,7 @@ character_specific.dhalsim.specials = {
 	id = 0x02,
 	strength_set = 2,
 	reversal = true,
+	new_only = false,
 	charge_move = false,
     input = { {"back"}, {"back", "down"}, {"down"}, {"forward", "down"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
@@ -636,6 +676,7 @@ character_specific.dhalsim.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"back"}, {"forward", "down"}, {"down"}, { "forward", "down"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -648,6 +689,7 @@ character_specific.dhalsim.specials = {
 	strength_set = -1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input_variations = {{"F+P"},{"F+K"},{"B+P"},{"B+K"}},
   },
   {
@@ -659,6 +701,7 @@ character_specific.dhalsim.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = false,
+	new_only = false,
     input = { {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LP", "MP", "HP"},{"LK", "MK", "HK"}},
   },
@@ -671,6 +714,7 @@ character_specific.dhalsim.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = false,
+	new_only = false,
     input = { {"back"}, {"down"}, {"back", "down"} },
     input_variations = {{"LP", "MP", "HP"},{"LK", "MK", "HK"}},
   },
@@ -683,6 +727,7 @@ character_specific.dhalsim.specials = {
     strength_set = 0,
 	charge_move = false,
 	reversal = false,
+	new_only = true,
     input = { {"back"},{"back", "down"},{"down"},{"forward", "down"},{"back"},{"back", "down"},{"down"},{"forward", "down"},{"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -708,6 +753,7 @@ character_specific.dictator.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -721,6 +767,7 @@ character_specific.dictator.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -734,6 +781,7 @@ character_specific.dictator.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -747,6 +795,7 @@ character_specific.dictator.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -760,6 +809,7 @@ character_specific.dictator.specials = {
 	strength_set = 0,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
@@ -785,6 +835,7 @@ character_specific.feilong.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -805,6 +856,7 @@ character_specific.feilong.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"back"}, {"down"}, {"down", "back"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -817,6 +869,7 @@ character_specific.feilong.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"back"}, {"down"}, {"forward", "down"}, {"forward", "up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}} -- only lk works
   },
@@ -829,6 +882,7 @@ character_specific.feilong.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
      input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -854,6 +908,7 @@ character_specific.guile.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -867,6 +922,7 @@ character_specific.guile.specials = {
 	strength_set = 1,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "v_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -880,6 +936,7 @@ character_specific.guile.specials = {
 	strength_set = 0,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"down", "v_charge"}, {"forward"}, {"back"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   }
@@ -905,6 +962,7 @@ character_specific.ehonda.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
      input = { {"back", "h_charge"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -920,6 +978,7 @@ character_specific.ehonda.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -933,6 +992,7 @@ character_specific.ehonda.specials = {
 	strength_set = 2,
 	charge_move = true,
 	reversal = true,
+	new_only = false,
     input = { {"down", "h_charge"}, {"up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -945,6 +1005,7 @@ character_specific.ehonda.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"forward"}, {"forward", "down"}, {"down"}, {"back"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -958,6 +1019,7 @@ character_specific.ehonda.specials = {
 	strength_set = 0,
 	charge_move = true,
 	reversal = true,
+	new_only = true,
     input = { {"back", "h_charge"}, {"forward"}, {"back"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -979,9 +1041,10 @@ character_specific.thawk.specials = {
       {0x8D, 0x04}
     },
 	id = 0x00,
-	strength_set = 2, -- Bug
+	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
 	input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -997,6 +1060,7 @@ character_specific.thawk.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{"back"}}, -- fixme
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1008,6 +1072,7 @@ character_specific.thawk.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -1032,6 +1097,7 @@ character_specific.ken.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },  
@@ -1044,6 +1110,7 @@ character_specific.ken.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "back"}, {"back"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1056,6 +1123,7 @@ character_specific.ken.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1068,6 +1136,7 @@ character_specific.ken.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1080,6 +1149,7 @@ character_specific.ken.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"forward"}, {"down", "forward"}, {"down"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1092,6 +1162,7 @@ character_specific.ken.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1104,6 +1175,7 @@ character_specific.ken.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = false,
+	new_only = true,
     input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -1128,6 +1200,7 @@ character_specific.ryu.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1140,6 +1213,7 @@ character_specific.ryu.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "back"}, {"back"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1152,6 +1226,7 @@ character_specific.ryu.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1164,6 +1239,7 @@ character_specific.ryu.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"back"}, {"back", "forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1176,6 +1252,7 @@ character_specific.ryu.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"down"}, {"down", "forward"}, {"forward"}, {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -1200,6 +1277,7 @@ character_specific.sagat.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1212,6 +1290,7 @@ character_specific.sagat.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"down", "forward"}, {"forward"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1224,7 +1303,8 @@ character_specific.sagat.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
-   input = { {"forward"}, {"down"}, {"down", "forward"} },
+	new_only = false,
+	input = { {"forward"}, {"down"}, {"down", "forward"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
   {
@@ -1236,6 +1316,7 @@ character_specific.sagat.specials = {
 	strength_set = 2,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = { {"down"}, {"forward"}, {"forward", "up"} },
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1248,6 +1329,7 @@ character_specific.sagat.specials = {
     strength_set = 0,
 	charge_move = false,
 	reversal = false,
+	new_only = true,
     input = { {"down"}, {"forward", "down"}, {"forward"}, {"down"}, {"forward", "down"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}, {"LK"}, {"MK"}, {"HK"}},
   }
@@ -1275,6 +1357,7 @@ character_specific.zangief.specials = {
 	strength_set = 1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}}, -- fixme
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1290,6 +1373,7 @@ character_specific.zangief.specials = {
 	strength_set = 1,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{"back"}}, -- fixme
     input_variations = {{"LK"}, {"MK"}, {"HK"}},
   },
@@ -1303,6 +1387,7 @@ character_specific.zangief.specials = {
 	strength_set = 1,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = { {"forward"}, {"forward", "down"}, {"down"} },
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   },
@@ -1313,6 +1398,7 @@ character_specific.zangief.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}},
     input_variations = {{"LP","MP","HP"}, {"LK","MK","HK"}},
   },
@@ -1323,6 +1409,7 @@ character_specific.zangief.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = false,
     input = {{}},
     input_variations = {{"LP","MP","HP"}, {"LK","MK","HK"}},
   },
@@ -1335,6 +1422,7 @@ character_specific.zangief.specials = {
 	strength_set = 0,
 	charge_move = false,
 	reversal = true,
+	new_only = true,
     input = {{}},
     input_variations = {{"LP"}, {"MP"}, {"HP"}},
   }
@@ -1397,6 +1485,28 @@ function determineStrengthValue(_variation, _strength_set)
 			return 0x07
 		end 
 	end
+end
+
+function getBoxerThrowDistance(opponent)
+	local throw = {}
+	if opponent == Dhalsim then
+		throw = {{"MP",40},{"HP",30}}
+	elseif opponent == Zangief then
+		throw = {{"MP",41},{"HP",31}}
+	elseif opponent == Guile then
+		throw = {{"MP",50},{"HP",40}}
+	elseif opponent == Chun or opponent == Cammy or opponent == Fei or opponent == Hawk or opponent == Ken or opponent == Ryu then
+		throw = {{"MP",51},{"HP",41}}
+	elseif opponent == Claw or opponent == Deejay or opponent == Dictator or opponent == Sagat then
+		throw = {{"MP",52},{"HP",42}}
+	elseif opponent == Boxer then
+		throw = {{"MP",53},{"HP",43}}
+	elseif opponent == Blanka then
+		throw = {{"MP",63},{"HP",53}}
+	elseif opponent == Honda then
+		throw = {{"MP",64},{"HP",58}}
+	end
+	character_specific.boxer.hitboxes.throw = throw
 end 
 
 function determineThrowInput(_throw)
@@ -1409,7 +1519,28 @@ function determineThrowInput(_throw)
 	elseif _throw == "HK" then 
 		return "Strong Kick"
 	end 
-end 
+end
+
+function updateForOldChar(_player_obj)
+	local character = _player_obj.character
+	if _player_obj.is_old then
+		if character == Dictator then
+			character_specific.dictator.specials[4].reversal = false -- Devil's Reverse 
+		elseif character == Honda then
+			for i = 1, 3 do
+				character_specific.ehonda.specials[i].strength_set = 1
+			end
+		end
+	else
+		if character == Dictator then
+			character_specific.dictator.specials[4].reversal = true
+		elseif character == Honda then
+			for i = 1, 3 do
+				character_specific.ehonda.specials[i].strength_set = 2
+			end
+		end
+	end
+end
 
 local player_keys = {
 	"Up",
@@ -1532,8 +1663,7 @@ function modifyInputSet(player, ...)
 	setInputs()
 end
 
-function do_special_move (_player_obj, _special, _variation, easy_special_status)
-	--print(_special.name)
+function do_special_move(_player_obj, _special, _variation, easy_special_status)
 	local dir1 = 5 -- numpad neutral
 	local dir2 = 5
 	local button1 = ""
@@ -1557,7 +1687,6 @@ function do_special_move (_player_obj, _special, _variation, easy_special_status
 			dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
 		end 
 	end
-
 	for i, _button in pairs(_special.input_variations[_variation]) do
 		if i == 1 then 
 			button1 = sequence_input_to_key(_button, _player_obj.flip_input)

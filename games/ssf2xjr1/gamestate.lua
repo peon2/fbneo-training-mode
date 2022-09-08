@@ -141,6 +141,7 @@ function gamestate.read_player_vars(_player_obj)
 	_player_obj.pos_x  				= rw(_player_obj.addresses.pos_x)
 	_player_obj.pos_y  				= rw(_player_obj.addresses.pos_y)
 	_player_obj.flip_input 			= (rb(_player_obj.addresses.flip_x) == 0x01)
+	_player_obj.is_cornered			= (rb(_player_obj.addresses.cornered_flag) == 0x01 or rb(_player_obj.addresses.cornered_flag) == 0x02)
 	-----------------
 	-- Character
 	-----------------
@@ -166,7 +167,7 @@ function gamestate.read_player_vars(_player_obj)
 	--------------------
 	-- Reversal related
 	--------------------
-	if rb(_player_obj.character) ~= 0x0A then 
+	if _player_obj.character ~= 0x0A then
 	_player_obj.reversal_flag 		= rb(_player_obj.addresses.reversal_flag)
 	else
 	_player_obj.reversal_flag 		= rb(_player_obj.addresses.reversal_flag_boxer)
@@ -176,7 +177,7 @@ function gamestate.read_player_vars(_player_obj)
 	-----------------
 	-- Animation
 	-----------------
-	-- _player_obj.animation_id 		= memory.readdword(_player_obj.addresses.animation_ptr)
+	_player_obj.animation_id 			= memory.readdword(_player_obj.addresses.animation_ptr)
 	_player_obj.animation_frames_left	= rb(_player_obj.addresses.animation_frames_left)
 	-- _player_obj.hitbox_id	 		= memory.readdword(_player_obj.addresses.hitbox_ptr )
 	_player_obj.is_attacking			= isAttacking(_player_obj)
@@ -214,6 +215,7 @@ function gamestate.stock_player_vars(_player_obj)
 	pos_x							= _player_obj.pos_x,
 	pos_y							= _player_obj.pos_y,
 	flip_input						= _player_obj.flip_input,
+	--is_cornered						= _player_obj.is_cornered,
 	-----------------
 	-- Character
 	-----------------

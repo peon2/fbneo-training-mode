@@ -1305,11 +1305,11 @@ end
 
 local swapInputs = function()
 	if not inputs.properties.enableinputswap then return end
-	
+
 	local t = inputs.p1
 	inputs.p1 = inputs.p2
 	inputs.p2 = t
-	
+
 	inputs.setinputs = combinePlayerInputs(inputs.p1, inputs.p2, inputs.other)
 end
 
@@ -2011,7 +2011,7 @@ local drawHelp = function()
 	end
 end
 
-local toggleInteractiveGUI = function(bool, vargs)
+toggleInteractiveGUI = function(bool, vargs)
 	if vargs then vargs.interactiveguienabled = false end
 	toggleStates(vargs)
 	recording[recording.recordingslot] = recording[recording.recordingslot] or {}

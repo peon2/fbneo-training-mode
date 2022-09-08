@@ -273,18 +273,26 @@ function isPressed(_player_obj, _input)
 		bitmask = 0x0004
 	elseif _input == "up" then
 		bitmask = 0x0008
+	elseif _input == "direction" then
+		bitmask = 0x000F
 	elseif _input == "LP" then
 		bitmask = 0x0010
 	elseif _input == "MP" then
 		bitmask = 0x0020
 	elseif _input == "HP" then
 		bitmask = 0x0040
+	elseif _input == "punch" then
+		bitmask = 0x00F0
 	elseif _input == "LK" then
 		bitmask = 0x0100
 	elseif _input == "MK" then
 		bitmask = 0x0200
 	elseif _input == "HK" then
 		bitmask = 0x0400
+	elseif _input == "kick" then
+		bitmask = 0x0F00
+	elseif _input == "button" then
+		bitmask = 0x0FF0
 	end
 	if _player_obj.prev.curr_input == _player_obj.prev_input then
 		return bit.band(_player_obj.curr_input, bitmask) > 0
@@ -299,22 +307,42 @@ function wasPressed(_player_obj, _input)
 		bitmask = 0x0001
 	elseif _input == "right" then
 		bitmask = 0x0002
+	elseif _input == "forward" then
+		if _player_obj.flip_input then
+			bitmask = 0x0001
+		else
+			bitmask = 0x0002
+		end
+	elseif _input == "back" then
+		if _player_obj.flip_input then
+			bitmask = 0x0002
+		else
+			bitmask = 0x0001
+		end
 	elseif _input == "down" then
 		bitmask = 0x0004
 	elseif _input == "up" then
 		bitmask = 0x0008
+	elseif _input == "direction" then
+		bitmask = 0x000F
 	elseif _input == "LP" then
 		bitmask = 0x0010
 	elseif _input == "MP" then
 		bitmask = 0x0020
 	elseif _input == "HP" then
 		bitmask = 0x0040
+	elseif _input == "punch" then
+		bitmask = 0x00F0
 	elseif _input == "LK" then
 		bitmask = 0x0100
 	elseif _input == "MK" then
 		bitmask = 0x0200
 	elseif _input == "HK" then
 		bitmask = 0x0400
+	elseif _input == "kick" then
+		bitmask = 0x0F00
+	elseif _input == "button" then
+		bitmask = 0x0FF0
 	end
 	if _player_obj.prev.curr_input == _player_obj.prev_input then
 		return bit.band(_player_obj.prev.curr_input, bitmask) > 0
@@ -331,6 +359,15 @@ function characterChanged(_player_obj)
 	else
 		return false
 	end
+end
+
+function oldStatusChanged(_player_obj)
+	if _player_obj.prev.is_old ~= _player_obj.is_old then
+		return true
+	else
+		return false
+	end
+
 end
 ------------------------------------------------------------
 --	 Messages -- Borrowed from sako.lua by Born2SPD
@@ -787,185 +824,292 @@ local function determine_char(_player_obj)
 	local text
 	if _player_obj.id == 1 then
 		if gamestate.P1.character == Boxer then
-			gui.text(2,65,"Ground Straight: ".. rb(0xFF84CE))
-			gui.text(2,73,"Ground Upper: " ..rb(0xFF84D6))
-			gui.text(2,81,"Straight: " .. rb(0xFF852B))
-			gui.text(80,65,"Upper Dash: " .. rb(0xFF8524))
-			gui.text(80,73,"Buffalo Headbutt: " .. rb(0xFF850E))
-			gui.text(80,81,"Crazy Buffalo: " .. rb(0xFF8522))
+			gui.text(2,65,"Buffalo Headbutt: " .. rb(0xFF850E))
+			gui.text(50,56,"TAP: " .. display_taplevel(1))
+			if gamestate.P1.is_old then
+				gui.text(2,73,"Straight: " .. rb(0xFF84CE))
+				gui.text(2,81,"Upper Dash: " .. rb(0xFF84D6))
+			else
+				gui.text(2,73,"Straight: " .. rb(0xFF852B))
+				gui.text(2,81,"Upper Dash: " .. rb(0xFF8524))
+				gui.text(83,65,"Ground Straight: ".. rb(0xFF84CE))
+				gui.text(83,73,"Ground Upper: " ..rb(0xFF84D6))
+				gui.text(83,81,"Crazy Buffalo: " .. rb(0xFF8522))
+			end
 		elseif gamestate.P1.character == Blanka then
 			gui.text(2,65,"Normal Roll: " .. rb(0xFF8507))
 			gui.text(2,73,"Vertical Roll: " .. rb(0xFF84FE))
-			gui.text(2,81,"Ground Shave Roll: " .. rb(0xFF850F))
+			gui.text(2,81,"Rainbow Roll: " .. rb(0xFF8507))
+			gui.text(80,65,"Electricity: " .. rb(0xFF84E8)%6 .. ", " .. rb(0xFF84EA)%6 .. ", " .. rb(0xFF84EC)%6) -- this way you know when you reached the 5 inputs needed
+			if not gamestate.P1.is_old then
+				gui.text(80,73,"Ground Shave Roll: " .. rb(0xFF850F))
+			end
 		elseif gamestate.P1.character == Cammy then
 			gui.text(2,65,"Spin Knuckle: " .. rb(0xFF84F0))
 			gui.text(2,73,"Cannon Spike: " .. rb(0xFF84E0))
 			gui.text(2,81,"Spiral Arrow: ".. rb(0xFF84E4))
-			gui.text(80,65,"Hooligan Combination: " .. rb(0xFF84F7))
-			gui.text(80,73,"Spin Drive Smasher: " .. rb(0xFF84F4))
+			if not gamestate.P1.is_old then
+				gui.text(80,65,"Hooligan Combination: " .. rb(0xFF84F7))
+				gui.text(80,73,"Spin Drive Smasher: " .. rb(0xFF84F4))
+			end
 		elseif gamestate.P1.character == Chun then
-			gui.text(2,65,"Kikouken: ".. rb(0xFF84CE))
-			gui.text(2,73,"Up Kicks: " .. rb(0xFF8508))
-			gui.text(2,81,"Spinning Bird Kick: " .. rb(0xFF84FE))
-			gui.text(80,65,"Senretsu Kyaku: " .. rb(0xFF850D))
+			gui.text(2,73,"Spinning Bird Kick: " .. rb(0xFF84FE))
+			gui.text(2,81,"Hyakuretsu Kyaku: " .. rb(0xFF84E8)%6 .. ", " .. rb(0xFF84EA)%6 .. ", " .. rb(0xFF84EC)%6)
+			if gamestate.P1.is_old then
+				gui.text(2,65,"Kikouken: ".. rb(0xFF84FE))
+			else
+				gui.text(2,65,"Kikouken: ".. rb(0xFF84CE))
+				gui.text(92,65,"Up Kicks: " .. rb(0xFF8508))
+				gui.text(92,73,"Senretsu Kyaku: " .. rb(0xFF850D))
+			end
 		elseif gamestate.P1.character == Deejay then
 			gui.text(2,65,"Air Slasher: " .. rb(0xFF84E0))
 			gui.text(2,73,"Sovat Kick: " .. rb(0xFF84F4))
-			gui.text(2,81,"Jack Knife: ".. rb(0xFF84E4))
-			gui.text(80,65,"Machine Gun Upper: " .. rb(0xFF84F9))
-			gui.text(80,73,"Sovat Carnival: " .. rb(0xFF84FD))
+			if gamestate.P1.is_old then
+				gui.text(2,81,"Machine Gun Upper: " .. rb(0xFF84E4))
+			else
+				gui.text(2,81,"Machine Gun Upper: " .. rb(0xFF84F9))
+				gui.text(80,65,"Jack Knife: ".. rb(0xFF84E4))
+				gui.text(80,73,"Sovat Carnival: " .. rb(0xFF84FD))
+			end
 		elseif gamestate.P1.character == Dhalsim then
-			gui.text(2,65,"Yoga Blast: " .. rb(0xFF84D2))
-			gui.text(2,73,"Yoga Flame: " .. rb(0xFF84E8))
+			gui.text(2,65,"Yoga Teleport: ".. rb(0xFF84D6))
 			gui.text(2,81,"Yoga Fire: " .. rb(0xFF84CE))
-			gui.text(80,65,"Yoga Teleport: ".. rb(0xFF84D6))
-			gui.text(80,73,"Yoga Inferno: " .. rb(0xFF84E4))
+			if gamestate.P1.is_old then
+				gui.text(2,73,"Yoga Flame: " .. rb(0xFF84D2))
+			else
+				gui.text(2,73,"Yoga Flame: " .. rb(0xFF84E8))
+				gui.text(80,65,"Yoga Blast: " .. rb(0xFF84D2))
+				gui.text(80,73,"Yoga Inferno: " .. rb(0xFF84E4))
+			end
 		elseif gamestate.P1.character == Honda then
-			gui.text(2,65,"Flying Headbutt: " .. rb(0xFF84D6))
-			gui.text(2,73,"Butt Drop: " .. rb(0xFF84DE))
-			gui.text(2,81,"Oichio Throw: " .. rb(0xFF84E4))
-			gui.text(80,65, "Double Headbutt" .. rb(0xFF84E2))
+			if gamestate.P1.is_old then
+				gui.text(2,65,"Flying Headbutt: " .. rb(0xFF84CE))
+				gui.text(2,73,"Butt Drop: " .. rb(0xFF84F8))
+				gui.text(2,81,"Hundred Hands Slap: " .. rb(0xFF84E8)%6 .. ", " .. rb(0xFF84EA)%6 .. ", " .. rb(0xFF84EC)%6)
+			else
+				gui.text(2,65,"Flying Headbutt: " .. rb(0xFF84D6))
+				gui.text(2,73,"Butt Drop: " .. rb(0xFF84DE))
+				gui.text(2,81,"Hundred Hands Slap: " .. rb(0xFF8514)%6 .. ", " .. rb(0xFF8516)%6 .. ", " .. rb(0xFF8518)%6)
+				gui.text(80,65,"Oichio Throw: " .. rb(0xFF84E4))
+				gui.text(80,73, "Double Headbutt: " .. rb(0xFF84E2))
+			end
 		elseif gamestate.P1.character == Fei then
 			gui.text(2,65,"Rekka: " .. rb(0xFF84DE))
 			gui.text(2,73,"Rekka 2: " .. rb(0xFF84EE))
 			gui.text(2,81,"Flame Kick: " .. rb(0xFF84E2))
-			gui.text(80,65,"Chicken Wing: " .. rb(0xFF8502))
-			gui.text(80,73,"Rekka Sinken: " .. rb(0xFF84FE))
+			if not gamestate.P1.is_old then
+				gui.text(80,65,"Chicken Wing: " .. rb(0xFF8502))
+				gui.text(80,73,"Rekka Sinken: " .. rb(0xFF84FE))
+			end
 		elseif gamestate.P1.character == Guile then
 			gui.text(2,65,"Sonic Boom: " .. rb(0xFF84CE))
 			gui.text(2,73,"Flash Kick: " .. rb(0xFF84D4))
-			gui.text(2,81,"Double Somersault: " .. rb(0xFF84E2))
+			if not gamestate.P1.is_old then
+				gui.text(2,81,"Double Somersault: " .. rb(0xFF84E2))
+			end
 		elseif gamestate.P1.character == Ken then
 			gui.text(2,65, "Hadouken: ".. rb(0xFF84E2))
 			gui.text(2,73, "Shoryuken: " .. rb(0xFF84E6))
 			gui.text(2,81, "Hurricane Kick: " .. rb(0xFF84DE))
-			gui.text(42,89, "Shoryureppa: " .. rb(0xFF84EE))
-			gui.text(80,65, "Crazy Kick 1: " .. rb(0xFF8534))
-			gui.text(80,73, "Crazy Kick 2: " .. rb(0xFF8536))
-			gui.text(80,81, "Crazy Kick 3: " .. rb(0xFF8538))
+			if not gamestate.P1.is_old then
+				gui.text(42,89, "Shoryureppa: " .. rb(0xFF84EE))
+				gui.text(80,65, "Crazy Kick 1: " .. rb(0xFF8534))
+				gui.text(80,73, "Crazy Kick 2: " .. rb(0xFF8536))
+				gui.text(80,81, "Crazy Kick 3: " .. rb(0xFF8538))
+			end
 		elseif gamestate.P1.character == Dictator then
 			gui.text(2,65,"Scissor Kick: " .. rb(0xFF84D6))
 			gui.text(2,73,"Head Stomp: ".. rb(0xFF84DF))
 			gui.text(2,81,"Devil's Reverse: " .. rb(0xFF84FA))
 			gui.text(80,65,"Psycho Crusher: " .. rb(0xFF84CE))
-			gui.text(80,73,"Knee Press Knightmare: " .. rb(0xFF8513))
+			if not gamestate.P1.is_old then
+				gui.text(80,73,"Knee Press Knightmare: " .. rb(0xFF8513))
+			end
 		elseif gamestate.P1.character == Ryu then
 			gui.text(2,65,"Hadouken: " .. rb(0xFF84E2))
 			gui.text(2,73,"Shoryuken: " .. rb(0xFF84E6))
 			gui.text(2,81, "Hurricane Kick: " .. rb(0xFF84DE))
 			gui.text(80,65, "Red Hadouken: " .. rb(0xFF852E))
-			gui.text(80,73, "Shinku Hadouken: " .. rb(0xFF84EE))
+			if not gamestate.P1.is_old then
+				gui.text(80,73, "Shinku Hadouken: " .. rb(0xFF84EE))
+			end
 		elseif gamestate.P1.character == Sagat then
 			gui.text(2,65,"Tiger Shot: " .. rb(0xFF84DA))
 			gui.text(2,73,"Tiger Knee: " .. rb(0xFF84D2))
 			gui.text(2,81,"Tiger Uppercut: " .. rb(0xFF84CE))
-			gui.text(80,65, "Tiger Genocide: " .. rb(0xFF84EC))
+			if not gamestate.P1.is_old then
+				gui.text(80,65, "Tiger Genocide: " .. rb(0xFF84EC))
+			end
 		elseif gamestate.P1.character == Hawk then
-			gui.text(2,65,"Mexican Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84E1))
-			gui.text(2,73,"Tomahawk: " .. rb(0xFF84DB))
-			gui.text(2,81,"Double Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84ED))
+			if gamestate.P1.is_old then
+				gui.text(2,65,"Mexican Typhoon: " .. rb(0xFF84E8))
+				gui.text(2,73,"Tomahawk: " .. rb(0xFF84E0))
+			else
+				gui.text(2,65,"Mexican Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84E1))
+				gui.text(2,73,"Tomahawk: " .. rb(0xFF84DB))
+				gui.text(2,81,"Double Typhoon: " .. rb(0xFF84E0) .. ", " .. rb(0xFF84ED))
+			end
 		elseif gamestate.P1.character == Claw then
 			gui.text(2,65,"Wall Dive (Kick): " .. rb(0xFF84DA))
 			gui.text(2,73,"Wall Dive (Punch): " .. rb(0xFF84DE))
 			gui.text(2,81,"Crystal Flash: " .. rb(0xFF84D6))
-			gui.text(90,65,"Flip Kick: " .. rb(0xFF84EB))
-			gui.text(90,73,"Rolling Izuna Drop: " .. rb(0xFF84E7))
+			if not gamestate.P1.is_old then
+				gui.text(2,81,"Crystal Flash: " .. rb(0xFF84D6))
+				gui.text(90,65,"Flip Kick: " .. rb(0xFF84EB))
+				gui.text(90,73,"Rolling Izuna Drop: " .. rb(0xFF84E7))
+			end
 		elseif gamestate.P1.character == Zangief then
 			gui.text(2,65, "Bear Grab: " .. rb(0xFF84E9) .. ", " .. rb(0xFF84EA))
 			gui.text(2,73, "Spinning Pile Driver: " .. rb(0xFF84CE) .. ", " .. rb(0xFF84CF))
-			gui.text(2,81, "Banishing Flat: " .. rb(0xFF8501))
-			gui.text(2,89, "Final Atomic Buster: " .. rb(0xFF84FA) .. ", " .. rb(0xFF84FB))
+			if not gamestate.P1.is_old then
+				gui.text(2,81, "Banishing Flat: " .. rb(0xFF8501))
+				gui.text(2,89, "Final Atomic Buster: " .. rb(0xFF84FA) .. ", " .. rb(0xFF84FB))
+			end
 		end
 	else
 		if gamestate.P2.character == Boxer then
-			gui.text(230,65,"Ground Straight: " .. rb(0xFF84CE+p2))
-			gui.text(230,73,"Ground Upper: " ..rb(0xFF84D6+p2))
-			gui.text(230,81,"Straight: " .. rb(0xFF852B+p2))
-			gui.text(307,65,"Upper Dash: " .. rb(0xFF8524+p2))
-			gui.text(307,73,"Buffalo Headbutt: " .. rb(0xFF850E+p2))
-			gui.text(307,81,"Crazy Buffalo: " .. rb(0xFF8522+p2))
+			gui.text(227,65,"Buffalo Headbutt: " .. rb(0xFF850E+p2))
+			gui.text(266,56,"TAP: " .. display_taplevel(2))
+			if gamestate.P2.is_old then
+				gui.text(227,73,"Straight: " .. rb(0xFF84CE+p2))
+				gui.text(227,81,"Upper Dash: " .. rb(0xFF84D6+p2))
+			else
+				gui.text(227,73,"Straight: " .. rb(0xFF852B+p2))
+				gui.text(227,81,"Upper Dash: " .. rb(0xFF8524+p2))
+				gui.text(307,65,"Ground Straight: " .. rb(0xFF84CE+p2))
+				gui.text(307,73,"Ground Upper: " ..rb(0xFF84D6+p2))
+				gui.text(307,81,"Crazy Buffalo: " .. rb(0xFF8522+p2))
+			end
 		elseif gamestate.P2.character == Blanka then
-			gui.text(302,65,"Normal Roll: " .. rb(0xFF8507+p2))
-			gui.text(302,73,"Vertical Roll: " .. rb(0xFF84FE+p2))
-			gui.text(302,81,"Ground Shave Roll: " .. rb(0xFF850F+p2))
+			gui.text(225,65,"Normal Roll: " .. rb(0xFF8507+p2))
+			gui.text(225,73,"Vertical Roll: " .. rb(0xFF84FE+p2))
+			gui.text(225,81,"Rainbow Roll: " .. rb(0xFF8507+p2))
+			gui.text(302,65,"Electricity: " .. rb(0xFF84E8+p2)%6 .. ", " .. rb(0xFF84EA+p2)%6 .. ", " .. rb(0xFF84EC+p2)%6)
+			if not gamestate.P2.is_old then
+				gui.text(302,73,"Ground Shave Roll: " .. rb(0xFF850F+p2))
+			end
 		elseif gamestate.P2.character == Cammy then
 			gui.text(218,65,"Spin Knuckle: " .. rb(0xFF84F0+p2))
 			gui.text(218,73,"Cannon Spike: " .. rb(0xFF84E0+p2))
 			gui.text(218,81,"Spiral Arrow: " .. rb(0xFF84E4+p2))
-			gui.text(290,65,"Hooligan Combination: " .. rb(0xFF84F7+p2))
-			gui.text(290,73,"Spin Drive Smasher: " .. rb(0xFF84F4+p2))
+			if not gamestate.P2.is_old then
+				gui.text(290,65,"Hooligan Combination: " .. rb(0xFF84F7+p2))
+				gui.text(290,73,"Spin Drive Smasher: " .. rb(0xFF84F4+p2))
+			end
 		elseif gamestate.P2.character == Chun then
-			gui.text(233,65,"Kikouken: " .. rb(0xFF84CE+p2))
-			gui.text(233,73,"Up Kicks: " .. rb(0xFF8508+p2))
-			gui.text(233,81,"Spinning Bird Kick: " .. rb(0xFF84FE+p2))
-			gui.text(313,65,"Senretsu Kyaku: " .. rb(0xFF850D+p2))
+			gui.text(233,73,"Spinning Bird Kick: " .. rb(0xFF84FE+p2))
+			gui.text(233,81,"Hyakuretsu Kyaku: " .. rb(0xFF84E8+p2)%6 .. ", " .. rb(0xFF84EA+p2)%6 .. ", " .. rb(0xFF84EC+p2)%6)
+			if gamestate.P2.is_old then
+				gui.text(233,65,"Kikouken: " .. rb(0xFF84FE+p2))
+			else
+				gui.text(233,65,"Kikouken: " .. rb(0xFF84CE+p2))
+				gui.text(313,65,"Up Kicks: " .. rb(0xFF8508+p2))
+				gui.text(313,73,"Senretsu Kyaku: " .. rb(0xFF850D+p2))
+			end
 		elseif gamestate.P2.character == Deejay then
 			gui.text(223,65,"Air Slasher: " .. rb(0xFF84E0+p2))
 			gui.text(223,73,"Sovat Kick: " .. rb(0xFF84F4+p2))
-			gui.text(223,81,"Jack Knife: " .. rb(0xFF84E4+p2))
-			gui.text(303,65,"Machine Gun Upper: " .. rb(0xFF84F9+p2))
-			gui.text(303,73,"Sovat Carnival: " .. rb(0xFF84FD+p2))
+			if gamestate.P2.is_old then
+				gui.text(223,81,"Machine Gun Upper: " .. rb(0xFF84E4+p2))
+			else
+				gui.text(223,81,"Machine Gun Upper: " .. rb(0xFF84F9+p2))
+				gui.text(303,65,"Jack Knife: " .. rb(0xFF84E4+p2))
+				gui.text(303,73,"Sovat Carnival: " .. rb(0xFF84FD+p2))
+			end
 		elseif gamestate.P2.character == Dhalsim then
-			gui.text(223,65,"Yoga Blast: " .. rb(0xFF84D2+p2))
-			gui.text(223,73,"Yoga Flame: " .. rb(0xFF84E8+p2))
+			gui.text(223,65,"Yoga Teleport: ".. rb(0xFF84D6+p2))
 			gui.text(223,81,"Yoga Fire: " .. rb(0xFF84CE+p2))
-			gui.text(303,65,"Yoga Teleport: ".. rb(0xFF84D6+p2))
-			gui.text(303,73,"Yoga Inferno: " .. rb(0xFF84E4+p2))
+			if gamestate.P2.is_old then
+				gui.text(223,73,"Yoga Flame: " .. rb(0xFF84D2+p2))
+			else
+				gui.text(223,73,"Yoga Flame: " .. rb(0xFF84E8+p2))
+				gui.text(303,65,"Yoga Blast: " .. rb(0xFF84D2+p2))
+				gui.text(303,73,"Yoga Inferno: " .. rb(0xFF84E4+p2))
+			end
 		elseif gamestate.P2.character == Honda then
-			gui.text(223,65,"Flying Headbutt: " .. rb(0xFF84D6+p2))
-			gui.text(223,73,"Butt Drop: " .. rb(0xFF84DE+p2))
-			gui.text(223,81,"Oichio Throw: " .. rb(0xFF84E4+p2))
-			gui.text(303,65, "Double Headbutt: " .. rb(0xFF84E2+p2))
+			if gamestate.P2.is_old then
+				gui.text(223,65,"Flying Headbutt: " .. rb(0xFF84CE+p2))
+				gui.text(223,73,"Butt Drop: " .. rb(0xFF84F8+p2))
+				gui.text(223,81,"Hundred Hands Slap: " .. rb(0xFF84E8+p2)%6 .. ", " .. rb(0xFF84EA+p2)%6 .. ", " .. rb(0xFF84EC+p2)%6)
+			else
+				gui.text(223,65,"Flying Headbutt: " .. rb(0xFF84D6+p2))
+				gui.text(223,73,"Butt Drop: " .. rb(0xFF84DE+p2))
+				gui.text(223,81,"Hundred Hands Slap: " .. rb(0xFF8514+p2)%6 .. ", " .. rb(0xFF8516+p2)%6 .. ", " .. rb(0xFF8518+p2)%6)
+				gui.text(303,65,"Oichio Throw: " .. rb(0xFF84E4+p2))
+				gui.text(303,73, "Double Headbutt: " .. rb(0xFF84E2+p2))
+			end
 		elseif gamestate.P2.character == Fei then
 			gui.text(242,65,"Rekka: " .. rb(0xFF84DE+p2))
 			gui.text(242,73,"Rekka 2: "	.. rb(0xFF84EE+p2))
 			gui.text(242,81,"Flame Kick: " .. rb(0xFF84E2+p2))
-			gui.text(322,65, "Chicken Wing: " .. rb(0xFF8502+p2))
-			gui.text(322,73, "Rekka Sinken: " .. rb(0xFF84FE+p2))
+			if not gamestate.P2.is_old then
+				gui.text(322,65, "Chicken Wing: " .. rb(0xFF8502+p2))
+				gui.text(322,73, "Rekka Sinken: " .. rb(0xFF84FE+p2))
+			end
 		elseif gamestate.P2.character == Guile then
 			gui.text(302,65,"Sonic Boom: " .. rb(0xFF84CE+p2))
 			gui.text(302,73,"Flash Kick: " .. rb(0xFF84D4+p2))
-			gui.text(302,81,"Double Somersault: " .. rb(0xFF84E2+p2))
+			if not gamestate.P2.is_old then
+				gui.text(302,81,"Double Somersault: " .. rb(0xFF84E2+p2))
+			end
 		elseif gamestate.P2.character == Ken then
 			gui.text(223,65, "Hadouken: " .. rb(0xFF84E2+p2))
 			gui.text(223,73, "Shoryuken: " .. rb(0xFF84E6+p2))
 			gui.text(223,81, "Hurricane Kick: " .. rb(0xFF84DE+p2))
-			gui.text(322,65, "Crazy Kick 1: " .. rb(0xFF8534+p2))
-			gui.text(322,73, "Crazy Kick 2: " .. rb(0xFF8536+p2))
-			gui.text(322,81, "Crazy Kick 3: " .. rb(0xFF8538+p2))
-			gui.text(272,89, "Shoryureppa: " .. rb(0xFF84EE+p2))
+			if not gamestate.P2.is_old then
+				gui.text(322,65, "Crazy Kick 1: " .. rb(0xFF8534+p2))
+				gui.text(322,73, "Crazy Kick 2: " .. rb(0xFF8536+p2))
+				gui.text(322,81, "Crazy Kick 3: " .. rb(0xFF8538+p2))
+				gui.text(272,89, "Shoryureppa: " .. rb(0xFF84EE+p2))
+			end
 		elseif gamestate.P2.character == Dictator then
 			gui.text(217,65,"Scissor Kick: " .. rb(0xFF84D6+p2))
 			gui.text(217,73,"Headstomp: " .. rb(0xFF84DF+p2))
 			gui.text(217,81,"Devil's Reverse: " .. rb(0xFF84FA+p2))
 			gui.text(290,65,"Psycho Crusher: " .. rb(0xFF84CE+p2))
-			gui.text(290,73,"Knee Press Nightmare: " .. rb(0xFF8513+p2))
+			if not gamestate.P2.is_old then
+				gui.text(290,73,"Knee Press Nightmare: " .. rb(0xFF8513+p2))
+			end
 		elseif gamestate.P2.character == Ryu then
 			gui.text(210,65,"Hadouken: " .. rb(0xFF84E2+p2))
 			gui.text(210,73,"Shoryuken: " .. rb(0xFF84E6+p2))
 			gui.text(210,81, "Hurricane Kick: " .. rb(0xFF84DE+p2))
 			gui.text(310,65, "Red Hadouken: " .. rb(0xFF852E+p2))
-			gui.text(310,73, "Shinku Hadouken: " .. rb(0xFF84EE+p2))
+			if not gamestate.P2.is_old then
+				gui.text(310,73, "Shinku Hadouken: " .. rb(0xFF84EE+p2))
+			end
 		elseif gamestate.P2.character == Sagat then
 			gui.text(214,65,"Tiger Shot: " .. rb(0xFF84DA+p2))
 			gui.text(214,73,"Tiger Knee: " .. rb(0xFF84D2+p2))
 			gui.text(214,81,"Tiger Uppercut: " .. rb(0xFF84CE+p2))
-			gui.text(314,65, "Tiger Genocide: " .. rb(0xFF84EC+p2))
+			if not gamestate.P2.is_old then
+				gui.text(314,65, "Tiger Genocide: " .. rb(0xFF84EC+p2))
+			end
 		elseif gamestate.P2.character == Hawk then
-			gui.text(294,65,"Mexican Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84E1+p2))
-			gui.text(294,73,"Tomahawk: " .. rb(0xFF84DB+p2))
-			gui.text(294,81,"Double Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84ED+p2))
+			if gamestate.P2.is_old then
+				gui.text(294,65,"Mexican Typhoon: " .. rb(0xFF84E8+p2))
+				gui.text(294,73,"Tomahawk: " .. rb(0xFF84E0+p2))
+			else
+				gui.text(294,65,"Mexican Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84E1+p2))
+				gui.text(294,73,"Tomahawk: " .. rb(0xFF84DB+p2))
+				gui.text(294,81,"Double Typhoon: " .. rb(0xFF84E0+p2) .. ", " .. rb(0xFF84ED+p2))
+			end
 		elseif gamestate.P2.character == Claw then
 			gui.text(210,65,"Wall Dive (Kick): " .. rb(0xFF84DA+p2))
 			gui.text(210,73,"Wall Dive (Punch): " .. rb(0xFF84DE+p2))
 			gui.text(210,81,"Crystal Flash: " .. rb(0xFF84D6+p2))
-			gui.text(298,65,"Flip Kick: " .. rb(0xFF84EB+p2))
-			gui.text(298,73,"Rolling Izuna Drop: " .. rb(0xFF84E7+p2))
+			if not gamestate.P2.is_old then
+				gui.text(298,65,"Flip Kick: " .. rb(0xFF84EB+p2))
+				gui.text(298,73,"Rolling Izuna Drop: " .. rb(0xFF84E7+p2))
+			end
 		elseif gamestate.P2.character == Zangief then
 			gui.text(275,65, "Bear Grab: " .. rb(0xFF84E9+p2) .. ", " .. rb(0xFF84EA+p2))
 			gui.text(275,73, "Spinning Pile Driver: " .. rb(0xFF84CE+p2) .. ", " .. rb(0xFF84CF+p2))
-			gui.text(275,81, "Banishing Flat: " .. rb(0xFF8501+p2))
-			gui.text(275,89, "Final Atomic Buster: " .. rb(0xFF84FA+p2) .. ", " .. rb(0xFF84FB+p2))
+			if not gamestate.P2.is_old then
+				gui.text(275,81, "Banishing Flat: " .. rb(0xFF8501+p2))
+				gui.text(275,89, "Final Atomic Buster: " .. rb(0xFF84FA+p2) .. ", " .. rb(0xFF84FB+p2))
+			end
 		end
 	end
 end
@@ -1098,14 +1242,14 @@ end
 --------------------------
 --Grab meters
 --------------------------
-local p_a = 0
-local p1_hg = gamestate.P1.grab_strength
-local p2_hg = gamestate.P2.grab_strength
-
 local p1_grab_drawn = false
 local p2_grab_drawn = false
 
 local function draw_grab(player,p1_char,p2_char,p_gc)
+
+	local p_a = 0
+	local p1_hg = gamestate.P1.grab_strength
+	local p2_hg = gamestate.P2.grab_strength
 
 	if player == 0 then
 
@@ -1533,12 +1677,6 @@ local function render_st_hud()
 		gui.text(310,216,"Cancel: " .. check_cancel(gamestate.P2))
 
 		-- Character specific HUD
-		if gamestate.P1.character == Boxer then
-			gui.text(34,56,"TAP: " .. display_taplevel(1))
-		end
-		if gamestate.P2.character == Boxer then
-			gui.text(266,56,"TAP: " .. display_taplevel(2))
-		end
 		if character_specific[readCharacterName(gamestate.P1)].infos.has_projectile then
 			gui.text(34,56,"Projectile: " .. projectile_onscreen(gamestate.P1))
 		end
@@ -1646,10 +1784,17 @@ local function setReversal(_player_obj, reversal)
 	wb(_player_obj.addresses.reversal_id, reversal[1])
 	wb(_player_obj.addresses.reversal_strength, reversal[2])
 	-- just a little fix
-	if _player_obj.character == Hawk then -- Voir si ça marche pour le P1 aussi
-		if reversal[1] == 0x00 then -- DP
-			wb(0xFF84DE,reversal[2])
-			wb(0xFF84DD,reversal[2])
+	if _player_obj.character == Hawk then
+		if not _player_obj.is_old then
+			if reversal[1] == 0x00 then -- DP
+				wb(0xFF88DE,reversal[2])
+				wb(0xFF88DD,reversal[2])
+			end
+		else
+			if reversal[1] == 0x00 then
+				wb(0xFF88F0,reversal[2])
+				wb(0xFF88F1,reversal[2])
+			end
 		end
 	end
 end
@@ -2139,9 +2284,12 @@ local forceblock = false
 local inputs_at_jumpstart = 0
 local autoblock_skip_counter = 60
 local canblock = false
+local canblock_counter = 0
+local canblock_length = 20
+
 local autoBlock = function()
 
-	if autoblock_selector == -1 then
+	if autoblock_selector == -1 or gamestate.P1.throw_flag == 0x01 then -- If P2 is thrown we return, this way the dummy can tech a throw
 		return
 	end
 
@@ -2152,7 +2300,11 @@ local autoBlock = function()
 		setDirection(2,5)
 		forceblock = false
 		if autoblock_selector == 2 and canblock == true then
-			canblock = false
+			canblock_counter = countFrames(canblock_counter)
+			if canblock_counter >= canblock_length then
+				canblock = false
+				canblock_counter = 0
+			end
 		end
 		return
 	end
@@ -2434,6 +2586,7 @@ local function techThrowControl()
 	if tech_throw_selector == 0 then
 		if gamestate.P1.throw_flag == 0x01 then
 			modifyInputSet(2,6,5,3)
+			wb(gamestate.P2.addresses.grab_break, 0x00) -- will now automatically escape hold throws
 		end
 	end
 end
@@ -2615,6 +2768,9 @@ end
 
 frame_advantage_selector = customconfig.frame_advantage_selector
 
+local fa_attacker = nil
+local fa_defender = nil
+local fa_player = ""
 local step = 0
 local calculation_end = false
 local frame_advantage = 0
@@ -2643,13 +2799,23 @@ local function frameAdvantageDisplay()
 		return
 	end
 
-	if frame_advantage_selector == 0 then
+	if frame_advantage_selector > -1 then
 		local DEBUG = false
+		
+		if frame_advantage_selector == 0 then
+			fa_attacker = gamestate.P1
+			fa_defender = gamestate.P2
+			fa_player = "P1"
+		elseif frame_advantage_selector == 1 then
+			fa_attacker = gamestate.P2
+			fa_defender = gamestate.P1
+			fa_player = "P2"
+		end
 		-------------------
 		-- Reset (new hit)
 		-------------------
 		 -- not a projectile
-		if gamestate.P1.in_hitfreeze and gamestate.P2.in_hitfreeze and not throw_exception then
+		if fa_attacker.in_hitfreeze and fa_defender.in_hitfreeze and not throw_exception and not fa_defender.is_attacking then
 			--
 			frame_advantage = 0
 			frame_disadvantage = 0
@@ -2662,8 +2828,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2671,7 +2837,7 @@ local function frameAdvantageDisplay()
 			step = 1
 		end
 		-- projectile
-		if not gamestate.P1.projectile_ready and not gamestate.P1.in_hitfreeze and gamestate.P2.in_hitfreeze then -- projectile
+		if not fa_attacker.projectile_ready and not fa_attacker.in_hitfreeze and fa_defender.in_hitfreeze then -- projectile
 			--
 			frame_advantage = 0
 			frame_disadvantage = 0
@@ -2684,8 +2850,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2693,8 +2859,8 @@ local function frameAdvantageDisplay()
 			step = 1
 		end
 
-		if not gamestate.P1.prev.projectile_ready and not gamestate.P2.prev.projectile_ready then
-			if gamestate.P1.projectile_ready and gamestate.P2.projectile_ready then
+		if not fa_attacker.prev.projectile_ready and not fa_defender.prev.projectile_ready then -- Sometimes it won't trigger because of the frameskip, maybe we'll have to find a fix
+			if fa_attacker.projectile_ready and fa_defender.projectile_ready then
 			--
 			frame_advantage = 0
 			frame_disadvantage = 0
@@ -2707,8 +2873,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2717,17 +2883,17 @@ local function frameAdvantageDisplay()
 			end
 		end
 		-- throw
-		if gamestate.P1.throw_flag == 0x01 then
-			if gamestate.P1.character == Guile or gamestate.P1.character == Cammy or gamestate.P1.character == Zangief then
+		if fa_attacker.throw_flag == 0x01 then
+			if fa_attacker.character == Guile or fa_attacker.character == Cammy or fa_attacker.character == Zangief or fa_attacker.character == Hawk then
 				throw_exception = true -- Those characters can trigger hitfreeze with their throws
 			end
 		end
-		if gamestate.P1.prev.throw_flag == 0x01 and gamestate.P1.throw_flag == 0x00 then
-			if gamestate.P2.state == being_thrown and gamestate.P2.prev.state ~= being_thrown then
+		if fa_attacker.prev.throw_flag == 0x01 and fa_attacker.throw_flag == 0x00 then
+			if fa_defender.state == being_thrown and fa_defender.prev.state ~= being_thrown then
 				if DEBUG then print("Reset : throw (successful)") end
 				successful_throw = true
 				teched_throw = false
-			elseif gamestate.P2.state == being_hit and gamestate.P2.prev.state ~= being_hit then
+			elseif fa_defender.state == being_hit and fa_defender.prev.state ~= being_hit then
 				if DEBUG then print("Reset : throw (teched)") end
 				teched_throw = true
 				successful_throw = false
@@ -2742,8 +2908,8 @@ local function frameAdvantageDisplay()
 			--
 			general_sequence_ended = false
 			projectile_move_ended = false
-			attacker_duel_projectile_move_ended = false
-			defender_duel_projectile_move_ended = false
+			fa_attacker_duel_projectile_move_ended = false
+			fa_defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
 			--
@@ -2771,29 +2937,29 @@ local function frameAdvantageDisplay()
 		----------------------
 			-- Projectile : We'll add hitfreeze to frame advantage
 			if projectile_hit then
-				if not gamestate.P1.is_attacking and gamestate.P2.state == being_hit then -- problem : if P1 performs an attack right when the hitfreeze begins the count won't be exact
+				if not fa_attacker.is_attacking and fa_defender.state == being_hit then -- problem : if P1 performs an attack right when the hitfreeze begins the count won't be exact
 					projectile_move_ended = true
 				end
-				if gamestate.P2.in_hitfreeze and projectile_move_ended then
+				if fa_defender.in_hitfreeze and projectile_move_ended then
 					if DEBUG then print("Advantage + "..frame_addition.." (Hitfreeze)") end
 					frame_advantage = countFrames(frame_advantage)
 				end
 			end
 			if projectile_duel then
-				if not gamestate.P1.is_attacking then
-					attacker_duel_projectile_move_ended = true
+				if not fa_attacker.is_attacking then
+					fa_attacker_duel_projectile_move_ended = true
 				end
-				if not gamestate.P2.is_attacking then
-					defender_duel_projectile_move_ended = true
+				if not fa_defender.is_attacking then
+					fa_defender_duel_projectile_move_ended = true
 				end
-				if attacker_duel_projectile_move_ended and not defender_duel_projectile_move_ended then
+				if fa_attacker_duel_projectile_move_ended and not fa_defender_duel_projectile_move_ended then
 					if DEBUG then print("Advantage + "..frame_addition.." (Projectile Duel)") end
 					frame_advantage = countFrames(frame_advantage)
 				end
 			end
 			-- Throw
 			if successful_throw or teched_throw then
-				if gamestate.P1.throw_flag == 0x00 and gamestate.P1.state ~= 0x0A and gamestate.P1.substate ~= 0x04 then
+				if fa_attacker.throw_flag == 0x00 and fa_attacker.state ~= 0x0A and fa_attacker.state ~= doing_special_move and fa_attacker.substate ~= 0x04 then
 					throw_ended = true
 				end
 				if throw_ended then
@@ -2802,11 +2968,11 @@ local function frameAdvantageDisplay()
 				end
 			end
 			-- Knockdown / Air recovery
-			if gamestate.P2.air_state == 255 then -- Knockdown or Air recovery
+			if fa_defender.air_state == 255 then -- Knockdown or Air recovery
 				knockdown = true
 			end
 			if not teched_throw and knockdown then
-				if not gamestate.P1.is_attacking then
+				if not fa_attacker.is_attacking then
 					knockdown_sequence_ended = true
 				end
 				if knockdown_sequence_ended then
@@ -2815,8 +2981,8 @@ local function frameAdvantageDisplay()
 				end
 			end
 			-- Normal moves / Non-projectile specials / Projectiles (when P2 hitfreeze ends)
-			if gamestate.P2.in_hitstun then
-				if not knockdown and not gamestate.P1.is_attacking then
+			if fa_defender.in_hitstun then
+				if not knockdown and not fa_attacker.is_attacking then
 					general_sequence_ended = true
 				end
 				if general_sequence_ended or projectile_move_ended then
@@ -2827,16 +2993,16 @@ local function frameAdvantageDisplay()
 			-------------------------
 			-- Frame Disadvantage
 			-------------------------
-			if not gamestate.P2.in_hitstun then
+			if not fa_defender.in_hitstun then
 				if not successful_throw and not teched_throw and not knockdown and not projectile_move_ended and not projectile_duel and not general_sequence_ended then
-					if gamestate.P1.is_attacking and not gamestate.P2.in_hitfreeze then
+					if fa_attacker.is_attacking and not fa_defender.in_hitfreeze then
 						if DEBUG then print("Disadvantage + "..frame_addition) end
 						frame_disadvantage = countFrames(frame_disadvantage)
 					end
 				end
 			end
 			if projectile_duel then
-				if not attacker_duel_projectile_move_ended and defender_duel_projectile_move_ended then
+				if not fa_attacker_duel_projectile_move_ended and fa_defender_duel_projectile_move_ended then
 					if DEBUG then print("Disadvantage + "..frame_addition) end
 					frame_disadvantage = countFrames(frame_disadvantage)
 				end
@@ -2845,28 +3011,28 @@ local function frameAdvantageDisplay()
 			-- Knowing when to end
 			--------------------------
 			if projectile_duel then
-				if attacker_duel_projectile_move_ended and defender_duel_projectile_move_ended then
-					if DEBUG then print("End (Projectile duel) : Both player have finished their moves") end
+				if fa_attacker_duel_projectile_move_ended and fa_defender_duel_projectile_move_ended then
+					if DEBUG then print("End (Projectile duel) : Both players have finished their moves") end
 					calculation_end = true
 				end
 			elseif not knockdown and not successful_throw and not teched_throw then
-				if not gamestate.P1.is_attacking and not gamestate.P2.in_hitfreeze and not gamestate.P2.in_hitstun then
-					if DEBUG then print("End (General) : P2 is not in hitfreeze/hitstun/blockstun anymore") end
+				if not fa_attacker.is_attacking and not fa_defender.in_hitfreeze and not fa_defender.in_hitstun then
+					if DEBUG then print("End (General) : Defender is not in hitfreeze/hitstun/blockstun anymore") end
 					calculation_end = true
 				end
 			elseif knockdown then
-				if gamestate.P2.prev.state == being_hit and gamestate.P2.state ~= being_hit then
-					if DEBUG then print("End (Knockdown/Air recovery) : P2 has landed on his feet") end
+				if fa_defender.prev.state == being_hit and fa_defender.state ~= being_hit then
+					if DEBUG then print("End (Knockdown/Air recovery) : Defender has landed on his feet") end
 					calculation_end = true
 				end
 			elseif successful_throw then
-				if gamestate.P2.prev.state == being_thrown and gamestate.P2.state ~= being_thrown then
-					if DEBUG then print("End (Successful Throw) : P2 has recovered from the throw") end
+				if fa_defender.prev.state == being_thrown and fa_defender.state ~= being_thrown then
+					if DEBUG then print("End (Successful Throw) : Defender has recovered from the throw") end
 					calculation_end = true
 				end
 			elseif teched_throw then
-				if gamestate.P2.prev.state == being_hit and gamestate.P2.state ~= being_hit then
-					if DEBUG then print("End (Teched Throw) : P2 has recovered from the throw") end
+				if fa_defender.prev.state == being_hit and fa_defender.state ~= being_hit then
+					if DEBUG then print("End (Teched Throw) : Defender has recovered from the throw") end
 					calculation_end = true
 				end
 			end
@@ -2888,7 +3054,7 @@ local function frameAdvantageDisplay()
 			defender_duel_projectile_move_ended = false
 			knockdown_sequence_ended = false
 			throw_ended = false
-			exception = false
+			throw_exception = false
 			--------------------------------
 			if frame_disadvantage > 0 then
 				frame_advantage_result = "-"..frame_disadvantage
@@ -2906,22 +3072,22 @@ local function frameAdvantageDisplay()
 		elseif frame_advantage_msg_fcount > 0 then
 			frame_advantage_msg_fcount = countFrames(frame_advantage_msg_fcount)
 		end
-		gui.text(153,216,"Frame Advantage : "..frame_advantage_result)
+		gui.text(140,216,"Frame Advantage ("..fa_player..") : "..frame_advantage_result)
 
 		if DEBUG then
-			gui.text(210,50,"Frame advantage : "..frame_advantage)
-			gui.text(210,60,"Frame disadvantage : "..frame_disadvantage)
+			gui.text(230,50,"Frame advantage : "..frame_advantage)
+			gui.text(230,60,"Frame disadvantage : "..frame_disadvantage)
 
-			gui.text(10,50,"P1 state : "..gamestate.P1.state)
-			gui.text(10,60,"P1 substate : "..gamestate.P1.substate)
-			gui.text(10,70,"P1 attacking : "..str(gamestate.P1.is_attacking))
-			gui.text(10,80,"P1 throw : "..gamestate.P1.throw_flag)
+			gui.text(10,50,"Att. state : "..fa_attacker.state)
+			gui.text(10,60,"Att. substate : "..fa_attacker.substate)
+			gui.text(10,70,"Att. attacking : "..str(fa_attacker.is_attacking))
+			gui.text(10,80,"Att. throw : "..fa_attacker.throw_flag)
 
 
-			gui.text(100,50,"P2 state : "..gamestate.P2.state)
-			gui.text(100,60,"P2 substate : "..gamestate.P2.substate)
-			gui.text(100,70,"P2 hitfreeze : "..str(gamestate.P2.in_hitfreeze))
-			gui.text(100,80,"P2 hitstun : "..str(gamestate.P2.in_hitstun))
+			gui.text(120,50,"Def. state : "..fa_defender.state)
+			gui.text(120,60,"Def. substate : "..fa_defender.substate)
+			gui.text(120,70,"Def. hitfreeze : "..str(fa_defender.in_hitfreeze))
+			gui.text(120,80,"Def. hitstun : "..str(fa_defender.in_hitstun))
 		end
 	end
 end
@@ -3086,7 +3252,7 @@ local function tickAnalysis()
 		tick_timer = 0
 	end
 	if tick_step == 1 then
-		if gamestate.P2.state ~= being_hit then
+		if (gamestate.P2.state ~= being_hit) then
 			tick_timer = countFrames(tick_timer)
 		end
 		if tick_timer > 12 then
@@ -3106,8 +3272,16 @@ local p1_throw_range = {}
 local p2_throw_range = {}
 local could_have_been_throw = false
 local begin_throw_display = false
+local buffersize_modified = false
 
 local function resetThrowDisplay(_player_obj)
+	-- Display the correct Boxer throw distance
+	if gamestate.P1.character == Boxer then
+		getBoxerThrowDistance(gamestate.P2.character)
+	elseif gamestate.P2.character == Boxer then
+		getBoxerThrowDistance(gamestate.P1.character)
+	end
+	-- Reset throw range values
 	local character = readCharacterName(_player_obj)
 	if _player_obj.id == 1 then
 		for i = 1, #p1_throw_range do
@@ -3126,9 +3300,25 @@ local function resetThrowDisplay(_player_obj)
 			p2_throw_range[i][1] = character_specific[character].hitboxes.throw[i][1]
 		end
 	end
+	-- Modify buffersize in scrolling-input-display, this way inputs won't overlap with the informations drawn
+	if gamestate.P1.character == Zangief or gamestate.P2.character == Zangief then
+		buffersize = 9
+		scrollingInputClear()
+		buffersize_modified = true
+	else
+		buffersize = 13
+	end
 end
 
 local function tickThrow()
+	if tick_throw_display_selector < 1 then
+		begin_throw_display = false
+		if buffersize_modified then -- Can I simply write "buffersize = 13" every frame ? What is the most efficient ?
+			buffersize = 13
+			buffersize_modified = false
+		end
+	end
+
 	if tick_throw_display_selector > 0 then
 	-- needs to be outside of is_in_match to update data when we press F2 or reset to change char
 		if characterChanged(gamestate.P1) then
@@ -3143,11 +3333,11 @@ local function tickThrow()
 		local p1character = readCharacterName(gamestate.P1)
 		local p2character = readCharacterName(gamestate.P2)
 		
-		if not begin_throw_display then
+		if not begin_throw_display and tick_throw_display_selector > 0 then
 			resetThrowDisplay(gamestate.P1)
 			resetThrowDisplay(gamestate.P2)
 			begin_throw_display = true
-		end 
+		end
 		if tick_throw_display_selector > 0 then
 		-- Tick analysis
 			tickAnalysis()
@@ -3185,7 +3375,7 @@ local function tickThrow()
 				for i = 1, #p2_throw_range do
 					if p2_throw_range[i][2] >= 0 then 
 						p2_throw_range[i][3] = true
-						if (tick_step == 1) and (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt or gamestate.P2.state == doing_normal_move or gamestate.P2.state == doing_special_move) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
+						if (tick_step == 1) and (gamestate.P2.state == standing or gamestate.P2.state == blocking_attempt or gamestate.P2.state == doing_normal_move or gamestate.P2.state == doing_special_move or gamestate.P2.state == 0x06) and (gamestate.P1.state ~= being_hit or gamestate.P1.state ~= being_thrown) then
 							throwable_timer = countFrames(throwable_timer)
 						end
 					else
@@ -3199,6 +3389,13 @@ local function tickThrow()
 							could_have_been_throw = true
 						end
 					end
+					if could_have_been_throw then
+						if throwable_timer == 0 then
+							throwable_timer = 1
+						else
+							throwable_timer = countFrames(throwable_timer)
+						end
+					end
 					if (not could_have_been_throw) and (throwable_timer > 0) then
 						msg2 = "P2 could've thrown for "..throwable_timer.." frames, but you threw outside of P2 range."
 					elseif (not could_have_been_throw) or (throwable_timer == 0) then
@@ -3208,12 +3405,13 @@ local function tickThrow()
 					elseif could_have_been_throw and (throwable_timer < tick_timer) then
 						msg2 = "However P2 could have thrown you during "..throwable_timer.." frames :("
 					end
-					msg_fcount = MSG_FRAMELIMIT-220
+					msg_fcount = MSG_FRAMELIMIT-300
 					could_have_been_throw = false
 				end 
 			end
 			-- Informations at the bottom of the screen
 			-- P1
+			gui.text(85,165,"P1")
 			for i = 1, #p1_throw_range do
 			
 				local column = 1
@@ -3233,6 +3431,7 @@ local function tickThrow()
 				end
 			end
 			-- P2
+			gui.text(265,165,"P2")
 			for i=1, #p2_throw_range do
 			
 				local column = 1
@@ -3262,15 +3461,18 @@ crossup_display_selector = customconfig.crossup_display_selector
 local begin_crossup_display = false
 local jump_crossup_attempt = false
 local ground_crossup_attempt = false
+local special_crossup_attempt = false
 local prev_flip_value = nil
 local prev_p1_left_side = false
-local DEBUG = false
+local did_not_crossup = false
+local block_direction = ""
 
 local function isP1Left()
 	return gamestate.P2.pos_x-gamestate.P1.pos_x > 0
 end
 
 local function crossupDisplay()
+	local DEBUG = false
 	if crossup_display_selector > 0 then
 		if gamestate.is_in_match then 
 			if DEBUG then
@@ -3284,7 +3486,19 @@ local function crossupDisplay()
 			end
 			if gamestate.frame_number ~= gamestate.prev.frame_number then
 				if begin_crossup_display then
-					if jump_crossup_attempt and gamestate.P1.prev.airborn and not gamestate.P1.airborn then
+					-- Correcting some attemps mislabeled
+					if ground_crossup_attempt and (gamestate.P1.character == Claw and gamestate.P1.state == doing_special_move and gamestate.P1.airborn) then 
+						if DEBUG then
+							print("Claw Flying move -> Correcting : Special crossup attempt")
+						end
+						begin_crossup_display = false
+						prev_flip_value = nil
+						jump_crossup_attempt = false
+						ground_crossup_attempt = false
+						special_crossup_attempt = true
+					end
+					-- Reseting
+					if jump_crossup_attempt and ((gamestate.P1.prev.state == jumping and gamestate.P1.state ~= jumping) or (gamestate.P2.prev.state == jumping and (gamestate.P2.state == being_hit or gamestate.P2.state == being_thrown))) then
 						if DEBUG then
 							print("Reset (Jump)")
 						end
@@ -3292,6 +3506,7 @@ local function crossupDisplay()
 						prev_flip_value = nil
 						jump_crossup_attempt = false
 						ground_crossup_attempt = false
+						special_crossup_attempt = false
 					elseif ground_crossup_attempt and not gamestate.P1.is_attacking then
 						if DEBUG then
 							print("Reset (Ground)")
@@ -3300,21 +3515,41 @@ local function crossupDisplay()
 						prev_flip_value = nil
 						jump_crossup_attempt = false
 						ground_crossup_attempt = false
+						special_crossup_attempt = false
+					elseif special_crossup_attempt and gamestate.P1.prev.state == doing_special_move and gamestate.P1.state ~= doing_special_move then
+						if DEBUG then
+							print("Reset (Special)")
+						end
+						begin_crossup_display = false
+						prev_flip_value = nil
+						jump_crossup_attempt = false
+						ground_crossup_attempt = false
+						special_crossup_attempt = false
 					end
 				end
 				
 				if not begin_crossup_display then
-					if gamestate.P1.state == jumping and gamestate.P1.prev.state ~= jumping then
+					if special_crossup_attempt then
+						if gamestate.P1.character == Claw then
+							if gamestate.P1.prev.is_attacking and not gamestate.P1.is_attacking then -- Claw did bounce against a wall
+								begin_crossup_display = true
+								prev_p1_left_side = isP1Left()
+								did_not_crossup = false
+							end
+						end
+					elseif gamestate.P1.state == jumping and gamestate.P1.prev.state ~= jumping then
 						jump_crossup_attempt = true
 						begin_crossup_display = true
 						prev_p1_left_side = isP1Left()
+						did_not_crossup = false
 						if DEBUG then
 							print("Jump crossup attempt")
 						end
-					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping then
+					elseif gamestate.P1.is_attacking and gamestate.P1.prev.state ~= jumping and gamestate.P1.throw_flag ~= 0x01 and gamestate.P2.state ~= being_thrown then
 						ground_crossup_attempt = true -- slides etc.
 						begin_crossup_display = true
 						prev_p1_left_side = isP1Left()
+						did_not_crossup = false
 						if DEBUG then
 							print("Ground crossup attempt")
 						end
@@ -3323,19 +3558,40 @@ local function crossupDisplay()
 				
 				if begin_crossup_display then
 					if prev_flip_value == nil then
-						if jump_crossup_attempt and (gamestate.P2.state == standing or gamestate.P2.state == blocking or gamestate.P2.state == landing or gamestate.P2.is_attacking) then
-							prev_flip_value = gamestate.P2.flip_input
+						if jump_crossup_attempt or special_crossup_attempt then
+							prev_flip_value = not isP1Left()
 							if DEBUG then
-								print("Saving flip value (jump crossup attempt) : P2 flip = "..str(gamestate.P2.flip_input))
+								local side = ""
+								if prev_p1_left_side then
+									side = "Left"
+								else
+									side = "Right"
+								end
+								if jump_crossup_attempt then
+									print("Saving jump original side (jump crossup attempt) : "..side)
+								elseif special_crossup_attempt then
+									print("Saving special move original side (special crossup attempt) : "..side)
+								end
 							end
 						elseif ground_crossup_attempt then
-							prev_flip_value = gamestate.P2.flip_input
+							prev_flip_value = not isP1Left()
 							if DEBUG then
-								print("Saving flip value (ground crossup attempt) : P2 flip = "..str(gamestate.P2.flip_input))
+								local side = ""
+								if prev_p1_left_side then
+									side = "Left"
+								else
+									side = "Right"
+								end
+								print("Saving attack original side (ground crossup attempt) : "..side)
 							end
 						end
 					end
-					if gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter then
+					if DEBUG then
+						if (gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter) and gamestate.P2.state == jumping then
+							print("Air-to-Air : This is not a crossup")
+						end
+					end
+					if (gamestate.P2.hitfreeze_counter > gamestate.P2.prev.hitfreeze_counter) and gamestate.P2.state ~= jumping then
 						if DEBUG then 
 							print("Hit. gamestate prev/curr flip input : "..str(gamestate.P2.prev.flip_input).."/"..str(gamestate.P2.flip_input))
 							print("Hit happened at :"..getDistanceBetweenPlayers())
@@ -3376,9 +3632,21 @@ local function crossupDisplay()
 								player_msg_fcount = MSG_FRAMELIMIT-120
 								print("> Non Crossup : should have been blocked "..block_direction)
 							end
+							did_not_crossup = true
 						end
 					end
 				end
+			end
+			if special_crossup_attempt and (did_not_crossup and isP1Left() ~= prev_p1_left_side) then -- If Claw did a Barcelona over his opponent we want to display a message even if the special hit from front
+				if DEBUG then
+					print("> Fake Crossup : should have been blocked "..block_direction)
+				end
+				msg_p1 = "Fake crossup"
+				if DEBUG then
+					msg_p1 = "Fake crossup : should block "..block_direction
+				end
+				player_msg_fcount = MSG_FRAMELIMIT-120
+				did_not_crossup = false
 			end
 		end
 	end
@@ -3529,7 +3797,7 @@ function displayReversalSettings()
 		makeReversalSettings(gamestate.patched)
 	end
 	if gamestate.patched then
-		if characterChanged(gamestate.P2) then
+		if characterChanged(gamestate.P2) or oldStatusChanged(gamestate.P2) then
 			if #reversal_options_checked > 0 then
 				for k in pairs(reversal_options_checked) do
 				reversal_options_checked[k] = nil
