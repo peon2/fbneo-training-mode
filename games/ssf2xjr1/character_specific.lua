@@ -227,7 +227,7 @@ character_specific.boxer.specials = {
 	charge_move = false,
 	reversal = true,
 	new_only = false,
-    input = {{}},
+    input = {{"LP", "MP", "HP"}},
     input_variations = {{"1"},{"2"},{"3"},{"4"},{"5"},{"6"},{"7"},{"Final"}},
    },
    {
@@ -657,7 +657,7 @@ character_specific.dhalsim.specials = {
   {
     name = "Yoga Flame",
     memory_map = {
-      {0x9A, 0x04}
+      {0x84, 0x08}
     },
 	id = 0x02,
 	strength_set = 2,
@@ -670,7 +670,7 @@ character_specific.dhalsim.specials = {
   {
     name = "Yoga Blast",
     memory_map = {
-      {0x84, 0x08}
+      {0x9A, 0x08}
     },
 	id = 0x08,
 	strength_set = 2,
@@ -1680,20 +1680,32 @@ function do_special_move(_player_obj, _special, _variation, easy_special_status)
   -- Cancel all input
 	clearInputSet(_player_obj.id)
 
-	for i, _stick in pairs(_special.input[#_special.input]) do
-		if i == 1 then 
-			dir1 = sequence_input_to_key(_stick, _player_obj.flip_input)
-		elseif i == 2 then 
-			dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
-		end 
-	end
-	for i, _button in pairs(_special.input_variations[_variation]) do
-		if i == 1 then 
-			button1 = sequence_input_to_key(_button, _player_obj.flip_input)
-		elseif i == 2 then 
-			button2 = sequence_input_to_key(_button, _player_obj.flip_input)
-		elseif i == 3 then 
-			button3 = sequence_input_to_key(_button, _player_obj.flip_input)
+	if #_special.input ~= 1 then -- If not PPP or KKK then
+		for i, _stick in pairs(_special.input[#_special.input]) do
+			if i == 1 then
+				dir1 = sequence_input_to_key(_stick, _player_obj.flip_input)
+			elseif i == 2 then
+				dir2 = sequence_input_to_key(_stick, _player_obj.flip_input)
+			end
+		end
+		for i, _button in pairs(_special.input_variations[_variation]) do
+			if i == 1 then
+				button1 = sequence_input_to_key(_button, _player_obj.flip_input)
+			elseif i == 2 then
+				button2 = sequence_input_to_key(_button, _player_obj.flip_input)
+			elseif i == 3 then
+				button3 = sequence_input_to_key(_button, _player_obj.flip_input)
+			end
+		end
+	else
+		for i, _button in pairs(_special.input[1]) do
+			if i == 1 then
+				button1 = sequence_input_to_key(_button, _player_obj.flip_input)
+			elseif i == 2 then
+				button2 = sequence_input_to_key(_button, _player_obj.flip_input)
+			elseif i == 3 then
+				button3 = sequence_input_to_key(_button, _player_obj.flip_input)
+			end
 		end
 	end
 	modifyInputSet(_player_obj.id, dir1, dir2, button1, button2, button3)
