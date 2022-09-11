@@ -112,6 +112,7 @@ local function readimages()
 		for n, key in ipairs(module) do
 			key.img = gd.createFromPngStr(blank_img_string)
 			gd.copyResampled(key.img, sourceimg, 0, 0, 0,(n-1)*image_icon_size, scaled_width, icon_size, image_icon_size, image_icon_size)
+			collectgarbage()
 			key.img = key.img:gdStr()
 		end
 	end
