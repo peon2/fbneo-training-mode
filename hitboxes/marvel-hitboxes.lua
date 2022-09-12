@@ -394,10 +394,7 @@ local profile = {
 		["mvscar1"] = -0x34, ["mvscr1"] = -0x34, ["mvscjr1"] = -0x34, --980112
 		["mvsc"] = 0, ["mvsca"] = 0, ["mvscb"] = 0, ["mvsch"] = 0, ["mvscj"] = 0, ["mvscud"] = 0, ["mvscu"] = 0, --980123
 		func = function()
-			a2 = memory.getregister("m68000.a2")
-			a3 = memory.getregister("m68000.a3")
-			print("A2: "..a2.." A3: "..a3)
-			update_push(a2, a3, 0x115)
+			update_push(memory.getregister("m68000.a2"), memory.getregister("m68000.a3"), 0x105)
 		end,
 	},
 	throw_check = { base = 0x0D75E8, 
