@@ -753,6 +753,7 @@ local whatgame = function()
 			else
 				--print("Unrecognized version [" .. emu.romname() .. "]: cannot draw pushboxes")
 			end
+			--[[
 			if not emu.registerfuncs then
 				return
 			end
@@ -770,6 +771,7 @@ local whatgame = function()
 			else
 				--print("Unrecognized version [" .. emu.romname() .. "]: cannot draw active throwboxes")
 			end
+			]]--
 			return
 		end
 	end
