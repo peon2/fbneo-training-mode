@@ -3349,7 +3349,7 @@ end
 local p1_throw_range = {}
 local p2_throw_range = {}
 local could_have_been_thrown = {false,false}
-local begin_throw_display = {false,false}
+local begin_throw_display = false
 local buffersize_modified = false
 msg_tick_throw = true
 
