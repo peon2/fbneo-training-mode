@@ -547,11 +547,23 @@ local function insertMissionsButtons(character) -- should be modified to allow m
 	end
 end
 
-for i = 1, #characters do
-	if fexists("games/ssf2xjr1/addon/missions_saved/"..characters[i].."/missions_list.lua") then
-		dofile("games/ssf2xjr1/addon/missions_saved/"..characters[i].."/missions_list.lua")
-		insertMissionsButtons(characters[i])
+local function createMissionsFile(character)
+	-- Create empty missions_list.lua file if one does not exist
+	if not fexists("games/ssf2xjr1/addon/missions_saved/"..character.."/missions_list.lua") then
+		local file = io.open("games/ssf2xjr1/addon/missions_saved/"..character.."/missions_list.lua", "w")
+		file:write("missions_list[\""..character.."\"] = {}\n---------------------------------------------------------")
+		if character=="ryu" then
+			-- chreate the "demo" mission for ryu
+			file:write("\nWHIFF_PUNISH_CRHK = {\n\t\ttext = \"WHIFF_PUNISH_CRHK\",\n\t\tolcolour = \"black\",\n\t\tfillpercent = 0,\n\t\tchecked = false,\n\t\tslots_nb = 3,\n\t\tframe_delay = 0,\n\t\tautoblock = -1,\n\t\tmission_text = \"Use low roundhouse to hit ken's sweep recovery\",\n\t\tfunc = function() WHIFF_PUNISH_CRHK.checked = not WHIFF_PUNISH_CRHK.checked end,\n\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\"ryu\"], WHIFF_PUNISH_CRHK)\n--END")
+		end
+		file:close()
 	end
+end
+
+for i = 1, #characters do
+	createMissionsFile(characters[i])
+	dofile("games/ssf2xjr1/addon/missions_saved/"..characters[i].."/missions_list.lua")
+	insertMissionsButtons(characters[i])
 end
 -------------------------------
 --	Save pop-up
@@ -856,6 +868,7 @@ local function saveMission()
 			os.rename("./"..mission_name.."_"..i..".lua","./"..mission_path..character.."/"..mission_name.."_"..i..".lua")
 		end
 		-- A new button is written in the lua file
+		createMissionsFile(character)
 		local file = io.open("./"..mission_path..character.."/missions_list.lua", "a")
 		file:write(makeMissionButton(mission_name, mission_frame_delay))
 		file:close()
