@@ -111,12 +111,12 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		x = 76,
 		y = 50,
 		func = 	function()
-			changeConfig("hitbox", "enabled", not hitboxes.enabled, hitboxes)
+			changeConfig("hitbox", "enabled", not hitboxes.prev, hitboxes)
 			hitboxes.prev = hitboxes.enabled
 		end,
 		info = "Toggles hitboxes on and off",
 		autofunc = 	function(this)
-			if hitboxes.enabled then
+			if hitboxes.prev then
 				this.text = "Hitboxes On"
 				this.x = 76
 			else
