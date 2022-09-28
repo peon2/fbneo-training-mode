@@ -785,6 +785,28 @@ advanced_settings = {
 					end
 				end,
 		},
+		nomusic = {
+			text = "Disable Background Music",
+			x = 150,
+			y = 70,
+			olcolour = "black",
+			info = {
+				"Disable background music"
+			},
+			func =	function()
+					nomusic_selector = nomusic_selector + 1
+					if nomusic_selector > 0 then
+						nomusic_selector = -1
+					end
+				end,
+			autofunc = function(this)
+					if nomusic_selector == -1 then
+						this.text = "Disable Background Music: Off"
+					elseif nomusic_selector == 0 then
+						this.text = "Disable Background Music: On"
+					end
+				end,
+		},
 		easy_charge_moves = {
 			text = "Easy Charge Moves",
 			x = 8,
@@ -936,6 +958,7 @@ advanced_settings = {
 }
 table.insert(guipages.advancedsettings, advanced_settings["frameskip"])
 table.insert(guipages.advancedsettings, advanced_settings["slowdown"])
+table.insert(guipages.advancedsettings, advanced_settings["nomusic"])
 table.insert(guipages.advancedsettings, advanced_settings["easy_charge_moves"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_advantage"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_trap"])

@@ -21,6 +21,7 @@ else
 		reversal_trigger_selector = -1,
 		roundstart_selector = -1,
 		slowdown_selector = - 1,
+		nomusic_selector = -1,
 		stage_selector = -1,
 		tech_throw_selector = -1,
 		crossup_display_selector = -1,
@@ -2652,6 +2653,22 @@ local slowdownControl = function()
 	end
 end
 -----------------------------
+-- Enable/Disable background music
+-----------------------------
+nomusic_selector = customconfig.nomusic_selector
+
+local nomusicControl = function()
+	if nomusic_selector == -1 then
+		memory.writeword_audio(addresses.global.bgmusic,0xE378)
+	end
+	if nomusic_selector == 0 then
+		local value = memory.readword_audio(addresses.global.bgmusic)
+		print("AUDIO VALUE: " .. value)
+		memory.writeword_audio(addresses.global.bgmusic,0)
+	end
+end
+
+-----------------------------
 -- Enable/Disable easy charge
 -----------------------------
 local easyCharge = function(_player_obj)
@@ -4002,6 +4019,7 @@ local function ST_Training_advanced_settings()
 	lockCharacters()
 	frameskipControl()
 	slowdownControl()
+	nomusicControl()
 	easyChargeControl()
 	frameAdvantageDisplay()
 	frameTrapDisplay()
