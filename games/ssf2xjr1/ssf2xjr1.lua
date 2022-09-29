@@ -2662,8 +2662,6 @@ local nomusicControl = function()
 		memory.writeword_audio(addresses.global.bgmusic,0xE378)
 	end
 	if nomusic_selector == 0 then
-		local value = memory.readword_audio(addresses.global.bgmusic)
-		print("AUDIO VALUE: " .. value)
 		memory.writeword_audio(addresses.global.bgmusic,0)
 	end
 end
