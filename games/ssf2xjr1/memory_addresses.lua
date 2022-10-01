@@ -9,6 +9,7 @@ addresses = {
 	curr_gamestate 	= 0xFF8008,
     frame_number 	= 0xFF801D,    
 	slowdown 		= 0xFF82F2,	
+	bgmusic 		= 0xF018,
 	turbo			= 0xFF83A9,
 	match_state	    = 0xFF847F,   
 	stage_select 	= 0xFF8C4F,
