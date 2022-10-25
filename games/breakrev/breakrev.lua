@@ -41,8 +41,6 @@ local debugaddress = 0x10007D
 
 --]]
 
-wb(debugaddress, 0xC) -- only needs to be applied once, Pushbox display + Hitbox/Hurtbox display
-
 translationtable = {
 	"left",
 	"right",
@@ -142,4 +140,5 @@ end
 
 function Run() -- runs every frame
 	infiniteTime()
+	if (hitboxes.enabled) then wb(debugaddress, 0xC) end -- Pushbox display + Hitbox/Hurtbox display
 end

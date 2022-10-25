@@ -115,8 +115,8 @@ function readPlayerTwoMeter()
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter/0x48)
-	wb(p2meterbar, meter%0x48)
+	wb(p2meter+0x4, meter/0x48)
+	wb(p2meter, meter%0x48)
 end
 
 function infiniteTime()

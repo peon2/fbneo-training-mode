@@ -3,7 +3,6 @@ assert(rb,"Run fbneo-training-mode.lua")
 function gamemsg()
 	print "Known issues with svc:"
 	print "Doesn't activate MAX properly"
-	print "Only partial support for advance with refilling max meter"
 end
 
 p1maxhealth = 0xE1 -- offset 1 for magic pixel
@@ -16,7 +15,7 @@ local p1health = 0x10A239
 local p2health = 0x10A4B9
 
 local p1meter = 0x10A1E8
-local p2meter = 0x10A3E8
+local p2meter = 0x10A468
 
 local p1direction = 0x10A131
 local p2direction = 0x10A3B1

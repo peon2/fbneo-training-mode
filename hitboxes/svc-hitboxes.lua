@@ -1,4 +1,4 @@
--- peon2: don't know the original author of this script
+-- peon2: don't know the original author of this script, but I think it's Mountainmanjed
 
 --SVC script
 local rb, rbs, rw, rws, rd, rds = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword, memory.readdwordsigned
@@ -23,7 +23,7 @@ boxes = {
 function main()
 padr = 0x10A100
 
-camx = rw(0x10B4CE)
+camx = rw(0x10B4CE) + 8
 camy = rw(0x10B4D6)
 
 for test = 0,15,1 do

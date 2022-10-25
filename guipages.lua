@@ -109,7 +109,8 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 	hitboxstate = {
 		text = "Hitboxes On",
 		x = 76,
-		y = 50,
+		--y = 50,
+		olcolour = "black",
 		func = 	function()
 			changeConfig("hitbox", "enabled", not hitboxes.prev, hitboxes)
 			hitboxes.prev = hitboxes.enabled
@@ -118,10 +119,10 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		autofunc = 	function(this)
 			if hitboxes.prev then
 				this.text = "Hitboxes On"
-				this.x = 76
+				this.x = 84
 			else
 				this.text = "Hitboxes Off"
-				this.x = 72
+				this.x = 80
 			end
 		end
 	},
@@ -566,7 +567,7 @@ if translationtable then -- if inputs can be processed
 end
 
 if hitboxesReg then -- if a hitbox file is loaded
-	table.insert(guipages[1], guielements.hitboxsettings)
+	table.insert(guipages[1], guielements.hitboxstate)
 end
 
 -- if health is set up in file
@@ -697,7 +698,7 @@ end
 if availablefunctions.writeplayeronehealth and modulevars.p1.constants.maxhealth then -- p1maxhealth
 	local uf = 	function(n) 
 		if n then
-			modulevars.p1.maxhealth = modulevars.p1.maxhealth+n
+			changeConfig("p1", "maxhealth", modulevars.p1.maxhealth+n, modulevars.p1)
 		end
 		return modulevars.p1.maxhealth
 	end
@@ -728,7 +729,7 @@ end
 if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter then-- p1maxmeter
 	local uf = 	function(n) 
 		if n then
-			modulevars.p1.maxmeter = modulevars.p1.maxmeter+n
+			changeConfig("p1", "maxmeter", modulevars.p1.maxmeter+n, modulevars.p1)
 		end
 		return modulevars.p1.maxmeter
 	end
@@ -759,7 +760,7 @@ end
 if availablefunctions.writeplayertwohealth and modulevars.p2.constants.maxhealth then-- p2healthmax
 	local uf = 	function(n) 
 		if n then
-			modulevars.p2.maxhealth = modulevars.p2.maxhealth+n
+			changeConfig("p2", "maxhealth", modulevars.p2.maxhealth+n, modulevars.p2)
 		end
 		return modulevars.p2.maxhealth
 	end
@@ -790,7 +791,7 @@ end
 if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer and availablefunctions.writeplayertwometer then-- p2metermax
 	local uf = 	function(n) 
 		if n then
-			modulevars.p2.maxmeter = modulevars.p2.maxmeter+n
+			changeConfig("p2", "maxmeter", modulevars.p2.maxmeter+n, modulevars.p2)
 		end
 		return modulevars.p2.maxmeter
 	end
@@ -890,7 +891,7 @@ do -- recordingslot
 			end
 		end
 	end
-	guipages.recordingslot = createPopUpMenu(guipages[3], rf, nil, af, nil, 72, guipages[3][4].y, 5)
+	guipages.recordingslot = createPopUpMenu(guipages[3], rf, nil, af, nil, 72, guipages[3][4].y-20, 5)
 end
 
 do -- random starting time

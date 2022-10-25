@@ -476,6 +476,8 @@ modulevars = {
 		previoushealth = 0,
 		meter = 0,
 		constants = {},
+		maxhealth = config.p1.maxhealth,
+		maxmeter = config.p1.maxmeter,
 	},
 	p2 = {
 		inhitstun = false,
@@ -483,6 +485,8 @@ modulevars = {
 		meter = 0,
 		previoushealth = 0,
 		constants = {},
+		maxhealth = config.p2.maxhealth,
+		maxmeter = config.p2.maxmeter,
 	},
 	constants = {},
 }
@@ -490,19 +494,19 @@ modulevars = {
 setAvailableConstants = function()  -- SETUP modulevars CONSTANTS TABLES
 	if p1maxhealth then 
 		modulevars.p1.constants.maxhealth = p1maxhealth
-		modulevars.p1.maxhealth = p1maxhealth
+		modulevars.p1.maxhealth = modulevars.p1.maxhealth or p1maxhealth
 	end
 	if p2maxhealth then 
 		modulevars.p2.constants.maxhealth = p2maxhealth
-		modulevars.p2.maxhealth = p2maxhealth 
+		modulevars.p2.maxhealth = modulevars.p2.maxhealth or p2maxhealth 
 	end
 	if p1maxmeter then 
 		modulevars.p1.constants.maxmeter = p1maxmeter
-		modulevars.p1.maxmeter = p1maxmeter
+		modulevars.p1.maxmeter = modulevars.p1.maxmeter or p1maxmeter
 	end
 	if p2maxmeter then 
 		modulevars.p2.constants.maxmeter = p2maxmeter
-		modulevars.p2.maxmeter = p2maxmeter
+		modulevars.p2.maxmeter = modulevars.p2.maxmeter or p2maxmeter
 	end
 	if translationtable then modulevars.constants.translationtable = translationtable end
 end
@@ -911,12 +915,16 @@ drawReplayInfo = function()
 end
 
 replaySave = function()
-	assert(table.save(recording[recording.recordingslot],"replay.lua")==nil, "Can't save replay file")
+	if dirname~="" then assert(table.save(recording[recording.recordingslot],configpath:sub(1,-11).."replay.lua")==nil, "Can't save replay file")
+	else assert(table.save(recording[recording.recordingslot],configpath:sub(1,-5).."_replay.lua")==nil, "Can't save replay file")
+	end
 end
 
 replayLoad = function()
-	if fexists("replay.lua") then
-		recording[recording.recordingslot]=table.load("replay.lua")
+	local path = configpath:sub(1,-5).."_replay.lua"
+	if dirname~="" then path = configpath:sub(1,-11).."replay.lua" end
+	if fexists(path) then
+		recording[recording.recordingslot]=table.load(path)
 	end
 end
 
@@ -979,12 +987,20 @@ function orTable(tab) -- or a table (check if not empty), this should be replace
 end
 
 function changeConfig(tab, index, value, otherlocation, otherindex) -- table in config (false or nil for base), index of variable to change, new value, otherlocation to change if necessary, otherindex if the index is different
+	
+	if value==nil then print("Tried to write a nil config value to "..index) end
+	
 	local c = {}
 
 	if not tab then c = config
 	else c = config[tab] end
 
-	if type(value)~= type(c[index]) and type(c[index])~=nil then print("Tried to write a bad config value to "..index) return end -- make sure the right type is being passed
+	if type(value)~= type(c[index]) and c[index]~=nil then -- make sure the right type is being passed
+		print("Tried to write a bad config value to "..index) 
+		print(type(c[index]).." expected, "..type(value).." given") 
+		return 
+	end
+	
 	config.changed = true
 	c[index] = nil -- just to be sure
 	c[index] = value
@@ -1523,20 +1539,22 @@ local toggleRecording = function(bool, vargs)
 	else
 		for j = 1, #recording do -- try to serialise everything that has a new input
 			local recordslot = recording[j]
-			if not recordslot[1] or not recordslot[1].raw or not recordslot[1].raw.p1 or not recordslot[1].raw.p2 then return end -- nothing to do past here
-			if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
-				recording[recording.recordingslot] = {}
+			if not recordslot[1] or not recordslot[1].raw or not recordslot[1].raw.p1 or not recordslot[1].raw.p2 then -- nothing to do past here
 			else
-				recordslot.p1start = recordslot.p1start or #recordslot
-				recordslot.p2start = recordslot.p2start or #recordslot
-				for i=#recordslot,recordslot.p1start,-1 do
-					if recordslot[i].raw.p1 then recordslot[i].raw.p1.Coin = false end -- clear coin
+				if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
+					recording[j] = {}
+				else
+					recordslot.p1start = recordslot.p1start or #recordslot
+					recordslot.p2start = recordslot.p2start or #recordslot
+					for i=#recordslot,recordslot.p1start,-1 do
+						if recordslot[i].raw.p1 then recordslot[i].raw.p1.Coin = false end -- clear coin
+					end
+					for i=#recordslot,recordslot.p2start,-1 do
+						if recordslot[i].raw.p2 then recordslot[i].raw.p2.Coin = false end -- clear coin
+					end
+					serialiseInit(recordslot)
+					serialise(recordslot)
 				end
-				for i=#recordslot,recordslot.p2start,-1 do
-					if recordslot[i].raw.p2 then recordslot[i].raw.p2.Coin = false end -- clear coin
-				end
-				serialiseInit(recordslot)
-				serialise(recordslot)
 			end
 		end
 	end
@@ -1708,7 +1726,7 @@ local playBack = function()
 		end
 		return
 	end
-	
+
 	Unserialise(recordslot[fc - recordslot.framestart + start], recordslot._stable, recordslot.constants)
 	local raw = recordslot[fc - recordslot.framestart + start].raw
 

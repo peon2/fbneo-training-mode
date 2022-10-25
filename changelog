@@ -1,3 +1,23 @@
+v0.22.10.28
+
+General Usage:
+Max health and max meter are now saved
+The hitbox menu button has been replaced with just the hitbox toggle
+
+Replays:
+Replays are now saved/loaded based on game config path
+Fixed crashing bug related to replaying inputs in certain ways
+
+breakrev:
+Added saving toggle for breakrev hitboxes
+
+kof2003:
+Fixed misnamed variable crashing the script
+
+svc:
+Fixed writing/reading P2 meter
+Adjusted the alignment of hitboxes
+
 v0.22.09
 
 General Usage:
