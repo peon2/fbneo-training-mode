@@ -14,7 +14,7 @@ guicustompage = {
 		y = 40,
 		olcolour = "black",
 		info = {
-			"",
+			"Must be changed at character select to take effect",
 		},
 		func =	function() 
 			changeConfig("hitbox", "enabled", not hitboxes.prev, hitboxes) 

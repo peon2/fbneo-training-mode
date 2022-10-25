@@ -7,7 +7,7 @@ p1maxmeter = 0x3
 p2maxmeter = 0x3
 
 function gamemsg() 
-	print "In breakrev, hitboxes will only appear if the script is started at character select"
+	print "In breakrev, changes to the hitboxes will only take effect if they're set at character select"
 end
 
 local p1health = 0x10734E
@@ -140,5 +140,5 @@ end
 
 function Run() -- runs every frame
 	infiniteTime()
-	if (hitboxes.enabled) then wb(debugaddress, 0xC) end -- Pushbox display + Hitbox/Hurtbox display
+	if (hitboxes.enabled) then wb(debugaddress, 0xC) else wb(debugaddress, 0) end -- Pushbox display + Hitbox/Hurtbox display
 end
