@@ -14,7 +14,7 @@ rdw = memory.readdword
 
 require "gd"
 
-FBNEO_TRAINING_MODE_VERSION = "v0.22.09"
+FBNEO_TRAINING_MODE_VERSION = "v0.22.10.28"
 
 --- wait 3 frames to allow for emu.screenwidth() and emu.screenheight() to be obtained properly
 emu.frameadvance()
