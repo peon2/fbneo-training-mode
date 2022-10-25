@@ -162,7 +162,7 @@ end)
 --]]
 
 function hitboxesReg()
-	if rb(0x10B4B7) ~= 0 then
+	if rb(0x10B4B7) ~= 0 and hitboxes.enabled then
 		main()
 	end
 end

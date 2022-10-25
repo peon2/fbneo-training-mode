@@ -157,9 +157,11 @@ function hex(val)
 end
 
 function hitboxesReg()
-	players()
-	projectiles()
-	--hitedit()
+	if hitboxes.enabled then
+		players()
+		projectiles()
+		--hitedit()
+	end
 end
 
 function hitboxesRegAfter() end

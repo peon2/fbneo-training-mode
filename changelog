@@ -11,12 +11,16 @@ Fixed crashing bug related to replaying inputs in certain ways
 breakrev:
 Added saving toggle for breakrev hitboxes
 
+karnovr:
+Hitboxes now toggle on and off correctly
+
 kof2003:
 Fixed misnamed variable crashing the script
 
 svc:
 Fixed writing/reading P2 meter
 Adjusted the alignment of hitboxes
+Hitboxes now toggle on and off correctly
 
 v0.22.09
 
