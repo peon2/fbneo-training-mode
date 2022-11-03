@@ -3519,7 +3519,7 @@ local function throwInformationsDisplay()
 			-- P2 throw range
 			if gamestate.P2.flip_input then
 				for i = 1, #character_specific[p2character].hitboxes.throw do
-					p2_throw_range[i][2] = (gamestate.P2.pos_x + character_specific[p2character].hitboxes.throw[1][2]) - (gamestate.P1.pos_x - character_specific[p1character].hitboxes.throwable)
+					p2_throw_range[i][2] = (gamestate.P2.pos_x + character_specific[p2character].hitboxes.throw[i][2]) - (gamestate.P1.pos_x - character_specific[p1character].hitboxes.throwable)
 				end
 			else
 				for i = 1, #character_specific[p2character].hitboxes.throw do

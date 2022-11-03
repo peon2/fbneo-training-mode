@@ -816,7 +816,7 @@ character_specific.dictator.specials = {
 }
 character_specific.dictator.throw = {"MP","HP"}
 character_specific.dictator.hitboxes = {
-throw = {{"All Throws",62}},
+throw = {{"All Throws",52}},
 throwable = 28,
 }
 character_specific.dictator.infos = {
