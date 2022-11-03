@@ -810,7 +810,7 @@ advanced_settings = {
 		easy_charge_moves = {
 			text = "Easy Charge Moves",
 			x = 8,
-			y = 130,
+			y = 150,
 			olcolour = "black",
 			info = {
 				"When this option is used, charge moves can be triggered",
@@ -885,7 +885,7 @@ advanced_settings = {
 		round_start = {
 		text = "Round start action",
 		x = 8,
-		y = 110,
+		y = 130,
 		olcolour = "black",
 		info = {
 			"Control round start action on P2",
@@ -932,10 +932,32 @@ advanced_settings = {
 					end
 				end,
 		},
+		safe_jump = {
+			text = "Display Safe jumps",
+			x = 8,
+			y = 90,
+			olcolour = "black",
+			info = {
+				"Checks if a jump would have been safe from a reversal attempt",
+			},
+			func =	function()
+					safe_jump_display_selector = safe_jump_display_selector + 1
+					if safe_jump_display_selector > 0 then
+						safe_jump_display_selector = -1
+					end
+				end,
+			autofunc = function(this)
+					if safe_jump_display_selector == -1 then
+						this.text = "Display Safe jumps: Off"
+					elseif safe_jump_display_selector == 0 then
+						this.text = "Display Safe jumps: On"
+					end
+				end,
+		},
 		tick_throws = {
 			text = "Display Throws Infos",
 			x = 8,
-			y = 90,
+			y = 110,
 			olcolour = "black",
 			info = {
 				"Display throw range and print informations about",
@@ -964,6 +986,7 @@ table.insert(guipages.advancedsettings, advanced_settings["frame_advantage"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_trap"])
 table.insert(guipages.advancedsettings, advanced_settings["round_start"])
 table.insert(guipages.advancedsettings, advanced_settings["crossup"])
+table.insert(guipages.advancedsettings, advanced_settings["safe_jump"])
 table.insert(guipages.advancedsettings, advanced_settings["tick_throws"])
 
 ------------------------------------------
