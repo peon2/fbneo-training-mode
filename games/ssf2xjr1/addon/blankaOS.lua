@@ -26,43 +26,6 @@ blanka_os_button = {
 	}
 table.insert(addonpage, blanka_os_button)
 
-local function printName(_player_obj)
-	local character = _player_obj.character
-	if character == Ryu then
-		return "Ryu"
-	elseif character == Honda then
-		return "Honda"
-	elseif character == Blanka then
-		return "Blanka"
-	elseif character == Guile then
-		return "Guile"
-	elseif character == Ken then
-		return "Ken"
-	elseif character == Chun then
-		return "Chun-Li"
-	elseif character == Zangief then
-		return "Zangief"
-	elseif character == Dhalsim then
-		return "Dhalsim"
-	elseif character == Dictator then
-		return "Dictator"
-	elseif character == Sagat then
-		return "Sagat"
-	elseif character == Boxer then
-		return "Boxer"
-	elseif character == Claw then
-		return "Claw"
-	elseif character == Cammy then
-		return "Cammy"
-	elseif character == Hawk then
-		return "T-Hawk"
-	elseif character == Fei then
-		return "Fei Long"
-	elseif character == Deejay then
-		return "Deejay"
-	end
-end
-
 local function throwAttemptHP()
 	local p1 = gamestate.P1
 	local p2 = gamestate.P2

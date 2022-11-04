@@ -6,4 +6,5 @@ addons_run = {
 	"mashing.lua",
 	"walkSuper.lua",
 	"missions.lua",
+	"frameDataBar.lua"
 }
