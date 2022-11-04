@@ -470,7 +470,7 @@ function update_msg(code)
 		player_msg1_fcount[2] = 0
 	elseif code == -22 then
 		player_msg2[2] = ""
-		player_msgZ_fcount[2] = 0
+		player_msg2_fcount[2] = 0
 	end
 end
 
