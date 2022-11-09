@@ -338,7 +338,7 @@ local missions_hub = {
 		y = 1,
 	},
 	infos = {
-		text = "In-game press Alt+5 to create a new mission",
+		text = "In-game press Alt+6 to create a new mission",
 		x = 55,
 		y = 110,
 	},
@@ -725,7 +725,7 @@ local ERROR_MSG_FRAMELIMIT = 600
 local error_msg_fcount = 0
 
 local function resetErrorMsg()
-	guipages.missions_hub.infos.text = "In-game press Alt+5 to create a new mission"
+	guipages.missions_hub.infos.text = "In-game press Alt+6 to create a new mission"
 	guipages.save_mission.infos.text = ""
 	error_msg_fcount = 0
 end
@@ -750,32 +750,6 @@ local backup_page = 1
 local backup_previouspage = 1
 local backup_selection = 1
 local backup_previousselection = 1
-
-input.registerhotkey(5, function() -- Hotkey to open the popup saving a mission
-	if gamestate.is_in_match then
-		if not interactivegui.enabled then
-			local mission_savestate = savestate.create("new_savestate")
-			savestate.save(mission_savestate)
-			insertSlotButtons()
-			if #save_mission > 3 then -- at least one slot button has been inserted
-				-- backup
-				backup_page = interactivegui.page
-				backup_selection = interactivegui.selection
-				backup_previouspage = interactivegui.previouspage
-				backup_previousselection = interactivegui.previousselection
-				-- Opening the popup
-				interactivegui.page = "save_mission"
-				interactivegui.previouspage = "save_mission"
-				interactivegui.selection = 1
-				toggleInteractiveGUI(true, {})
-			else
-				msg1 = "In order to create a mission you have to record an action."
-				msg2 = "Double tap coin or go to Replay Editor"
-				msg_fcount = MSG_FRAMELIMIT-240
-			end
-		end
-	end
-end)
 
 local function closePopUp()
 	guipages.save_name[1]:clear()
@@ -893,6 +867,60 @@ local function saveMission()
 	end
 end
 guipages.save_mission[3].func = saveMission
+
+local r_frame = 0
+input.registerhotkey(6, function()
+	if (not REPLAY) then
+		--open the popup saving a mission
+		if not interactivegui.enabled then
+			local mission_savestate = savestate.create("new_savestate")
+			savestate.save(mission_savestate)
+			insertSlotButtons()
+			if #save_mission > 3 then -- at least one slot button has been inserted
+				-- backup
+				backup_page = interactivegui.page
+				backup_selection = interactivegui.selection
+				backup_previouspage = interactivegui.previouspage
+				backup_previousselection = interactivegui.previousselection
+				-- Opening the popup
+				interactivegui.page = "save_mission"
+				interactivegui.previouspage = "save_mission"
+				interactivegui.selection = 1
+				toggleInteractiveGUI(true, {})
+			else
+				msg1 = "In order to create a mission you have to record an action."
+				msg2 = "Double tap coin or go to Replay Editor"
+				msg_fcount = MSG_FRAMELIMIT-240
+			end
+		end
+		return
+
+	else
+		-- auto-save a mission from a replay
+		if (r_frame == 0) then
+			local mission_savestate = savestate.create("new_savestate")
+			savestate.save(mission_savestate)
+			recording.replayP1 = true
+			toggleRecording(nil, {})
+			recording.replayP1 = false
+			msg1 = "RECORDING STARTED"
+			msg_fcount = MSG_FRAMELIMIT-150
+			r_frame = emu.framecount()
+		else
+			toggleRecording(nil, {})
+			frame_end = emu.framecount()
+			local recorded = frame_end - r_frame
+			msg1 = "RECORDED "..recorded.." frames."
+			msg_fcount = MSG_FRAMELIMIT-120
+			guipages.save_mission.frame.text = 150
+			guipages.save_mission.name.text = "REPLAY_"..r_frame
+			slot_buttons[1].text=1
+			slot_buttons[1].checked = true
+			saveMission()
+			r_frame = 0
+		end
+	end
+end)
 
 local missions_checked = {} -- for loading
 local missions_checked_deletion = {} -- for deleting. Maybe I'm being overcautious for not merging the two tables though

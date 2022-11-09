@@ -4,6 +4,9 @@ DISABLE_SCROLLING_INPUT = false
 -- true, do use it
 -- false, don't use it
 
+-- watch replay mode (no health refill, etc..)
+REPLAY = false
+
 -- memory macros
 wb = memory.writebyte
 ww = memory.writeword
@@ -1504,7 +1507,7 @@ local Unserialise = function(inputs, _stable, constants) -- takes inputs (record
 	end
 end
 
-local toggleRecording = function(bool, vargs)
+toggleRecording = function(bool, vargs)
 
 	if interactivegui.movehud.enabled then return end
 
@@ -2378,8 +2381,19 @@ input.registerhotkey(1, toggleInteractiveGUI)
 input.registerhotkey(2, callGUISelectionFunc)
 input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
+input.registerhotkey(5, function()
+	-- toggle replay mode
+	REPLAY = not REPLAY
+	if (REPLAY) then
+		msg1="REPLAY MODE"
+	else
+		msg1="TRAINING MODE"
+	end
+	msg_fcount = MSG_FRAMELIMIT-120
+end)
 
 local processGUIInputs = function()
+	if REPLAY then return end
 	--inspired by grouflons and crystal_cubes menus
 
 	-- some general input stuff put at the start, could be put in its own function

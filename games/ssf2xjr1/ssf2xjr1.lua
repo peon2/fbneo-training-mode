@@ -625,6 +625,7 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerOneHealth(health)
+	if REPLAY then return end
 	if not combovars.p1.refillhealthenabled then
 		return
 	end
@@ -648,6 +649,7 @@ function writePlayerOneHealth(health)
 end
 
 function writePlayerTwoHealth(health)
+	if REPLAY then return end
 	if not combovars.p2.refillhealthenabled then
 		return
 	end
@@ -687,12 +689,14 @@ function readPlayerTwoMeter()
 end
 
 function writePlayerOneMeter(meter)
+	if REPLAY then return end
 	if gamestate.curr_state == in_match then
 		wb(gamestate.P1.addresses.special_meter, meter)
 	end
 end
 
 function writePlayerTwoMeter(meter)
+	if REPLAY then return end
 	if gamestate.curr_state == in_match then
 		wb(gamestate.P2.addresses.special_meter, meter)
 	end
@@ -703,12 +707,14 @@ end
 ------------------------
 
 local infiniteTime = function()
+	if REPLAY then return end
 	if (gamestate.round_timer < 0x98) then
 		ww(addresses.global.round_timer,0x9928)
 	end
 end
 
 local neverEnd_p1 = function()
+	if REPLAY then return end
 
 	local DEBUG=false
 	local p1scaledhealth = p1maxhealth
@@ -770,6 +776,7 @@ local neverEnd_p1 = function()
 end
 
 local neverEnd_p2 = function()
+	if REPLAY then return end
 
 	local DEBUG=false
 	local p2scaledhealth = p2maxhealth
@@ -830,6 +837,7 @@ local neverEnd_p2 = function()
 end
 
 local neverEnd = function()
+	if REPLAY then return end
 	if not gamestate.is_in_match then
 		return
 	end
@@ -1924,6 +1932,7 @@ local function menuSelection()  -- Just a little fix : without it the cursor in 
 end
 
 local function fixPreviousInputDetection(_fixed_inputs) -- Restores the previous input detection / Disables the autofire
+	if REPLAY then return end
 	if _fixed_inputs then
 		ww(gamestate.P2.addresses.prev_input, gamestate.P2.prev.curr_input)
 	end
@@ -2190,6 +2199,7 @@ local reversal_executed_at = -1
 local framesleft = -1
 local reversal_guessed = 0
 local autoReversal = function()
+	if REPLAY then return end
 	local DEBUG=false
 	if gamestate.patched then
 		patchedAutoReversal()
@@ -2398,6 +2408,7 @@ local canblock_counter = 0
 local canblock_length = 20
 
 local autoBlock = function()
+	if REPLAY then return end
 
 	if autoblock_selector == -1 or gamestate.P1.throw_flag == 0x01 then -- If P2 is thrown we return, this way the dummy can tech a throw
 		return
@@ -2520,6 +2531,7 @@ end
 --------------------------
 stage_selector = customconfig.stage_selector
 local stageSelect = function()
+	if REPLAY then return end
 	if stage_selector == -1 then
 		return
 	end
@@ -2534,6 +2546,7 @@ end
 ---------------------------
 dizzy_selector = customconfig.dizzy_selector
 local p2DizzyControl = function()
+	if REPLAY then return end
 	local dizzy = 0
 	if dizzy_selector == -1 then
 		return
@@ -2555,6 +2568,7 @@ local round_state=-1
 local fight_anim = 123
 local roundstart_played=false
 local roundStart = function()
+	if REPLAY then return end
 
 	local DEBUG=false
 
@@ -2630,6 +2644,7 @@ local start_input = false
 local prev_start_input = false
 
 local function lockCharacters()
+	if REPLAY then return end
 	if first_load then
 		print("Lock the characters with Start")
 	end
@@ -2693,6 +2708,7 @@ end
 tech_throw_selector = customconfig.tech_throw_selector
 
 local function techThrowControl()
+	if REPLAY then return end
 	if tech_throw_selector == 0 then
 		if gamestate.P1.throw_flag == 0x01 then
 			modifyInputSet(2,6,5,3)
@@ -2720,6 +2736,7 @@ end
 slowdown_selector = customconfig.slowdown_selector
 
 local slowdownControl = function()
+	if REPLAY then return end
 	if slowdown_selector == -1 then
 		return
 	end
@@ -2844,6 +2861,7 @@ end
 easy_charge_moves_selector = customconfig.easy_charge_moves_selector
 
 local easyChargeControl = function ()
+	if REPLAY then return end
 	if easy_charge_moves_selector == 0 or easy_charge_moves_selector == 2 then
 		easyCharge(gamestate.P1)
 	end
@@ -4323,6 +4341,7 @@ local function throwProjectilesLogic()
 end
 
 local function projectileTraining()
+	if REPLAY then return end
 	stockProjectilesChecked()
 	throwProjectilesLogic()
 end
@@ -4370,6 +4389,7 @@ function displayProjectileSettings()
 end
 
 function displayContextualSettings()
+	if REPLAY then return end
 	displayReversalSettings()
 	displayProjectileSettings()
 end
@@ -4398,6 +4418,7 @@ local function updateGamestate()
 end
 
 local function ST_Training_basic_settings()
+	if REPLAY then return end
 	neverEnd()
 	autoBlock()
 	autoReversal()
@@ -4423,6 +4444,7 @@ local function ST_Training_advanced_settings()
 end
 
 local function ST_Training_misc()
+	if REPLAY then return end
 	displayContextualSettings()
 	fixPreviousInputDetection(fixed_inputs)
 	if first_load then
