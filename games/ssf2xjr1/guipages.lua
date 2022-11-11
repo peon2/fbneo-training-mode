@@ -1080,7 +1080,7 @@ end
 ------------------------------------------
 -- Add-on
 ------------------------------------------
-addonpage = {
+local addonpage1 = {
 	title = {
 		text = "Add-On",
 		x = interactivegui.boxxlength/2 - 10,
@@ -1096,28 +1096,78 @@ addonpage = {
 		end,
 	},
 }
-guipages.addonpage = addonpage
+guipages.addonpage1 = addonpage1
 
-addonbutton = {
+local addonbutton = {
 		text = "Add-On",
 		x = 86,
 		y = 150,
 		olcolour = "black",
 		handle = 9,
-		func = 	function() CIG("addonpage", 1) end,
+		func = 	function() CIG("addonpage1", 1) end,
 		}
 
-function insertAddonButton()
-	if #addonpage > 1 then
-		table.insert(guicustompage, addonbutton)
-		formatGuiTables()
-	end
-end
+-- Is there a way to create new pages on the fly ?
+local addonpage2 = {
+	title = {
+		text = "Add-On",
+		x = interactivegui.boxxlength/2 - 10,
+		y = 1,
+	},
+	{
+		text = "<<",
+		olcolour = "black",
+		info = "Back",
+		func = function() CIG("addonpage1", 1) end,
+	},
+}
+guipages.addonpage2 = addonpage2
 
-function determineButtonYPos(_guipage)
-	if #_guipage == 1 then 
+local addonnextpage = {
+		text = ">>",
+		olcolour = "black",
+		info = "Back",
+		x = 276,
+		y = 15,
+		func =  function() CIG("addonpage2", 1) end,
+}
+
+local addon_nb = 0
+
+local function determineButtonYPos(_guipage)
+	if #_guipage%7 == 1 then
 		return 30
 	else
 		return _guipage[#_guipage].y+20
 	end
+end
+
+local function determineButtonXPos(_guipage)
+	if #_guipage < 8 then
+		return 8
+	else
+		return 150
+	end
+end
+
+function insertAddonButton(addon_button) -- Could be improved to create as many pages as is necessary, I don't know if ther's a way to create new pages on the fly
+	local _addonpage = nil
+	addon_nb = addon_nb + 1
+
+	if addon_nb == 1 then
+		table.insert(guicustompage, addonbutton)
+	elseif addon_nb == 15 then
+		table.insert(addonpage1, addonnextpage)
+	end
+
+	if addon_nb <= 14 then
+		_addonpage = addonpage1
+	else
+		_addonpage = addonpage2
+	end
+
+	addon_button.x = determineButtonXPos(_addonpage)
+	addon_button.y = determineButtonYPos(_addonpage)
+	table.insert(_addonpage, addon_button)
+	formatGuiTables()
 end

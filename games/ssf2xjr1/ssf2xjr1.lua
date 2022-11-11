@@ -4465,7 +4465,6 @@ local function loadAddons()
 				dofile("games/ssf2xjr1/addon/"..addons_run[i])
 			end
 		end
-		insertAddonButton()
 		addons_charged = true
 	end
 end

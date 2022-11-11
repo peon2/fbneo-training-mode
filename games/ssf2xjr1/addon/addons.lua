@@ -3,8 +3,10 @@ addons_run = {
 	"sako.lua",
 	"blankaOS.lua",
 	"triggerBoxerDashes.lua",
-	"mashing.lua",
+	"boxerStandingDownChargeGlitch.lua",
 	"walkSuper.lua",
+	"mashing.lua",
 	"missions.lua",
-	"frameDataBar.lua"
+	"frameDataBar.lua",
+	"inGameHitboxViewer.lua",
 }

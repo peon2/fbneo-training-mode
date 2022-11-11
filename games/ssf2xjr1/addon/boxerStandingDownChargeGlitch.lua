@@ -3,8 +3,6 @@
 boxerglitch_button = {
 		text = "Boxer Glitch Training",
 		info = { "Train boxer glitch to have down charge while doing standing LP", },
-		x = 160,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		func =	function()
 				boxerglitch_selector = boxerglitch_selector + 1
@@ -21,7 +19,7 @@ boxerglitch_button = {
 				end
 			end,
 	}
-table.insert(addonpage, boxerglitch_button)
+insertAddonButton(boxerglitch_button)
 
 boxerglitch_selector = 0
 

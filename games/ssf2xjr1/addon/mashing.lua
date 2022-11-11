@@ -1,7 +1,5 @@
 mashing_button = {
 		text = "Mashing Training",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		func =	function()
 				mashing_selector = mashing_selector + 1
@@ -18,7 +16,7 @@ mashing_button = {
 				end
 			end,
 	}
-table.insert(addonpage, mashing_button)
+insertAddonButton(mashing_button)
 
 mashing_selector = 0
 

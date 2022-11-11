@@ -3,8 +3,6 @@ local begin = false
 
 blanka_os_button = {
 		text = "Blanka - OS Training",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		func =	function()
 				blanka_os_selector = blanka_os_selector + 1
@@ -24,7 +22,7 @@ blanka_os_button = {
 				end
 			end,
 	}
-table.insert(addonpage, blanka_os_button)
+insertAddonButton(blanka_os_button)
 
 local function throwAttemptHP()
 	local p1 = gamestate.P1
