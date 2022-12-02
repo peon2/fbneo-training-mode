@@ -15,6 +15,11 @@ rw = memory.readword
 rws = memory.readwordsigned
 rdw = memory.readdword
 
+if not memory.writeword_audio then -- writeword_audio is defined on fightcade, stub otherwise
+	memory.writeword_audio = function() end
+	print "memory.writeword_audio not defined"
+end
+
 require "gd"
 
 FBNEO_TRAINING_MODE_VERSION = "v0.22.10.28"
