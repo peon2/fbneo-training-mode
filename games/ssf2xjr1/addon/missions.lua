@@ -319,8 +319,6 @@ end
 -----------------------------
 local missions_button = {
 		text = "Missions",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		info = {
 			"A mission is a savestate coupled with one or more replay files.",
@@ -329,7 +327,7 @@ local missions_button = {
 		},
 		func = 	function() CIG("missions_hub", 1) end,
 	}
-table.insert(addonpage, missions_button)
+insertAddonButton(missions_button)
 ------------------------------------------
 local missions_hub = {
 	title = {
@@ -346,7 +344,7 @@ local missions_hub = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG("addonpage",1) end,
+		func =  function() CIG("addonpage1",1) end,
 	},
 	{
 		text = "Delete the selected missions",

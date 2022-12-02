@@ -4,30 +4,40 @@ require("games/ssf2xjr1/character_specific")
 require("games/ssf2xjr1/gamestate")
 require("games/ssf2xjr1/constants")
 
--- use a custom config file if one exists, otherwise load defaults
-if fexists("games/ssf2xjr1/customconfig.lua") then
-	dofile("games/ssf2xjr1/customconfig.lua")
-else
-	customconfig = {
-		draw_hud = -1,
-		autoblock_selector = -1,
-		autoreversal_selector = -1,
-		dizzy_selector = -1,
-		easy_charge_moves_selector = -1,
-		frame_advantage_selector = -1,
-		frame_trap_selector = -1,
-		frameskip_selector = -1,
-		projectile_frequence_selector = -1,
-		reversal_trigger_selector = -1,
-		roundstart_selector = -1,
-		slowdown_selector = - 1,
-		nomusic_selector = -1,
-		stage_selector = -1,
-		tech_throw_selector = -1,
-		crossup_display_selector = -1,
-		safe_jump_display_selector = -1,
-		tick_throw_display_selector = -1,
-	}
+-- create a custom config file for training mode
+if not fexists("games/ssf2xjr1/customconfig.lua") then
+	local file = io.open("games/ssf2xjr1/customconfig.lua", "w")
+	file:write("customconfig = {\n\tdraw_hud = -1,\n\tautoblock_selector = -1,\n\tautoreversal_selector = -1,\n\tdizzy_selector = -1,\n\teasy_charge_moves_selector = -1,\n\tframe_advantage_selector = -1,\n\tframe_trap_selector = -1,\n\tframeskip_selector = -1,\n\tprojectile_frequence_selector = -1,\n\treversal_trigger_selector = -1,\n\troundstart_selector = -1,\n\tslowdown_selector = - 1,\n\tnomusic_selector = -1,\n\tstage_selector = -1,\n\ttech_throw_selector = -1,\n\tcrossup_display_selector = -1,\n\tsafe_jump_display_selector = -1,\n\ttick_throw_display_selector = -1,\n}")
+	file:close()
+end
+dofile("games/ssf2xjr1/customconfig.lua")
+-- create a custom config file for replay mode
+local replay_config = false
+
+if not fexists("games/ssf2xjr1/customconfig_replay.lua") then
+	local file = io.open("games/ssf2xjr1/customconfig_replay.lua", "w")
+	file:write("draw_hud = -1\nframe_advantage_selector = -1\nframe_trap_selector = -1\nnomusic_selector = -1\ncrossup_display_selector = -1\nsafe_jump_display_selector = -1\ntick_throw_display_selector = -1")
+	file:close()
+end
+
+local function loadReplayConfig()
+	if REPLAY then
+		if not replay_config then
+			dofile("games/ssf2xjr1/customconfig_replay.lua")
+			replay_config = true
+		end
+	else
+		if replay_config then
+			draw_hud = customconfig.draw_hud
+			frame_advantage_selector = customconfig.frame_advantage_selector
+			frame_trap_selector = customconfig.frame_trap_selector
+			nomusic_selector = customconfig.nomusic_selector
+			crossup_display_selector = customconfig.crossup_display_selector
+			safe_jump_display_selector = customconfig.safe_jump_display_selector
+			tick_throw_display_selector = customconfig.tick_throw_display_selector
+			replay_config = false
+		end
+	end
 end
 
 translationtable = {
@@ -4444,6 +4454,7 @@ local function ST_Training_advanced_settings()
 end
 
 local function ST_Training_misc()
+	loadReplayConfig()
 	if REPLAY then return end
 	displayContextualSettings()
 	fixPreviousInputDetection(fixed_inputs)
@@ -4455,18 +4466,17 @@ local function ST_Training_misc()
 	end
 end
 
-local addons_charged = false
+local addons_loaded = false
 
 local function loadAddons()
-	if not addons_charged then
+	if not addons_loaded then
 		dofile("games/ssf2xjr1/addon/addons.lua")
 		for i = 1, #addons_run do
 			if fexists("games/ssf2xjr1/addon/"..addons_run[i]) then
 				dofile("games/ssf2xjr1/addon/"..addons_run[i])
 			end
 		end
-		insertAddonButton()
-		addons_charged = true
+		addons_loaded = true
 	end
 end
 

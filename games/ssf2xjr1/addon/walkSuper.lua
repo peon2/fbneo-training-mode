@@ -2,8 +2,6 @@
 -- Nov 2022 - @pof
 walksuper_button = {
 		text = "Walk Super Training",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		func =	function()
 				walksuper_selector = walksuper_selector + 1
@@ -20,7 +18,7 @@ walksuper_button = {
 				end
 			end,
 	}
-table.insert(addonpage, walksuper_button)
+insertAddonButton(walksuper_button)
 
 walksuper_selector = 0
 

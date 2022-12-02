@@ -3,8 +3,6 @@
 ------------------------------------------
 boxer_dashes_button = {
 		text = "Trigger Boxer Dashes",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		handle = 1,
 		info = {
@@ -13,7 +11,7 @@ boxer_dashes_button = {
 		},
 		func = 	function() CIG("boxer_dashes_page", 1) end,
 	}
-table.insert(addonpage, boxer_dashes_button)
+insertAddonButton(boxer_dashes_button)
 
 local boxer_dashes_page = {
 	title = {

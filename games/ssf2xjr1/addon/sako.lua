@@ -43,8 +43,6 @@ local backup_comboenabled = hud.comboenabled
 
 local sako_training_button = {
 		text = "Sako Training",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		info = {
 			"Script by Born2SPD - Print instructions on screen",
@@ -74,7 +72,7 @@ local sako_training_button = {
 				end
 			end,
 	}
-table.insert(addonpage, sako_training_button)
+insertAddonButton(sako_training_button)
 
 
 --## Constants ##--
