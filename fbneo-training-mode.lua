@@ -4,9 +4,6 @@ DISABLE_SCROLLING_INPUT = false
 -- true, do use it
 -- false, don't use it
 
--- watch replay mode (no health refill, etc..)
-REPLAY = false
-
 -- memory macros
 wb = memory.writebyte
 ww = memory.writeword
@@ -18,6 +15,13 @@ rdw = memory.readdword
 if not memory.writeword_audio then -- writeword_audio is defined on fightcade, stub otherwise
 	memory.writeword_audio = function() end
 	print "memory.writeword_audio not defined"
+end
+
+-- watch replay mode (no health refill, etc..)
+if not emu.isreplay then
+	REPLAY = false
+else
+	REPLAY = emu.isreplay()
 end
 
 require "gd"
