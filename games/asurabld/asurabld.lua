@@ -107,11 +107,11 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0x40000A,0x99)
+	wb(0x40000A,0x99)
 end
 
 function maxCredits()
-	memory.writebyte(0x40655D, 0x09)
+	wb(0x40655D, 0x09)
 end
 
 function Run() -- runs every frame

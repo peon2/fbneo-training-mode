@@ -71,8 +71,8 @@ gamedefaultconfig = {
 }
 
 function Hitboxes()
-	memory.writebyte(0x412B4A,0x3B)
-	memory.writebyte(0x412B4B,0xE4)
+	wb(0x412B4A,0x3B)
+	wb(0x412B4B,0xE4)
 end
 
 function playerOneFacingLeft()
@@ -124,12 +124,12 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0x409737,0x09)
-    memory.writebyte(0x409733,0x09)
+	wb(0x409737,0x09)
+    wb(0x409733,0x09)
 end
 
 function maxCredits()
-	memory.writebyte(0x40E175, 0x09)
+	wb(0x40E175, 0x09)
 end
 
 

@@ -121,7 +121,7 @@ local function stunMeter()
 end
 
 function infiniteTime()
-	memory.writeword(0x106B11, 0x3CFF)
+	ww(0x106B11, 0x3CFF)
 end
 
 function Run() -- runs every frame

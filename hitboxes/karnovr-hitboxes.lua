@@ -12,7 +12,7 @@ camx = rw(0x103424)
 camy = 8 - rw(0x106924)
 
 --Timercheat
-wb(0x103A70,0x63)
+-- wb(0x103A70,0x63)
 
 adr = 0x103670 - 0x200
 for pl = 0,1,1 do
@@ -35,10 +35,10 @@ for pl = 0,1,1 do
 	--gui.text(26+pl*236,30,"Life: " .. life)
 
 --Health Cheat
-if rb(plife) <= 32 then
-wb(plife,0xFF)
-wb(plifegfx,0xFF)
-end
+-- if rb(plife) <= 32 then
+-- wb(plife,0xFF)
+-- wb(plifegfx,0xFF)
+-- end
 	
 --Boxes
 	boxadr = ((cell* 0x30)+boxtable) - 0x04

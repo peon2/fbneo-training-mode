@@ -7,6 +7,7 @@ DISABLE_SCROLLING_INPUT = false
 -- memory macros
 wb = memory.writebyte
 ww = memory.writeword
+wdw = memory.writedword
 rb = memory.readbyte
 rw = memory.readword
 rws = memory.readwordsigned
@@ -28,8 +29,10 @@ if REPLAY then
 	-- we don't want to write memory when watching a replay
 	wb = function() end
 	ww = function() end
-	memory.writebyte = function() end
-	memory.writeword = function() end
+	-- this breaks throw hitboxes on some games
+	-- memory.writebyte = function() end
+	-- memory.writeword = function() end
+	-- memory.writedword = function() end
 end
 
 require "gd"

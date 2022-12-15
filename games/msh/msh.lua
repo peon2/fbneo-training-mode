@@ -88,16 +88,16 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0xFF4808, 0x99)
+	wb(0xFF4808, 0x99)
 end
 
 function gemsPlayerOne()
-    memory.writebyte(0xFF41B6, 0x00)	--Power
-    memory.writebyte(0xFF41B7, 0x02)	--Time
-    memory.writebyte(0xFF41B8, 0x04)	--Space
-    memory.writebyte(0xFF41B9, 0x06)	--Soul
-    memory.writebyte(0xFF41BA, 0x08)	--Reality
-    memory.writebyte(0xFF41BB, 0x0A)	--Mind
+    wb(0xFF41B6, 0x00)	--Power
+    wb(0xFF41B7, 0x02)	--Time
+    wb(0xFF41B8, 0x04)	--Space
+    wb(0xFF41B9, 0x06)	--Soul
+    wb(0xFF41BA, 0x08)	--Reality
+    wb(0xFF41BB, 0x0A)	--Mind
 
 end
 

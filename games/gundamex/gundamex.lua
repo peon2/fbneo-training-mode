@@ -82,12 +82,12 @@ function writePlayerTwoHealth(health)
 end
 
 function infiniteTime()
-	memory.writebyte(0x2035A3,0x9B)
-	memory.writebyte(0x2035A2,0x0B)
+	wb(0x2035A3,0x9B)
+	wb(0x2035A2,0x0B)
 end
 
 function maxCredits()
-	memory.writebyte(0x2034EF, 0xFF)
+	wb(0x2034EF, 0xFF)
 end
 
 function Run() -- runs every frame

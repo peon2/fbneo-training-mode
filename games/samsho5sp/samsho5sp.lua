@@ -88,27 +88,27 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0x10836B, 0x3C)
+	wb(0x10836B, 0x3C)
 end
 
 function longSwordGague() -- Longest sword gauge/rage explode length
-    memory.writebyte(0x108554, 0x82)
-    memory.writebyte(0x108764, 0x82)
+    wb(0x108554, 0x82)
+    wb(0x108764, 0x82)
 end
 
 function maxSwordGuageCharge() -- Can confirm this is max sword guage
-    memory.writebyte(0x1085F8, 0x78)
-    memory.writebyte(0x108808, 0x78)
+    wb(0x1085F8, 0x78)
+    wb(0x108808, 0x78)
 end
 
 function maxTimeSlow() -- Full Time Slow
-    memory.writebyte(0x1085FE, 0x7C)
-    memory.writebyte(0x10880E, 0x7C)
+    wb(0x1085FE, 0x7C)
+    wb(0x10880E, 0x7C)
 end
 
 -- function maxRage() -- Full Rage
---     memory.writebyte(0x10844E, 0x40)
---     memory.writebyte(0x10865E, 0x40)
+--     wb(0x10844E, 0x40)
+--     wb(0x10865E, 0x40)
 -- end
 
 function Run() -- runs every frame
