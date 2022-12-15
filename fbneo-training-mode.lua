@@ -138,7 +138,8 @@ local games = {
 }
 
 local usage = function()
-		print ("Beta for fbneo-training-script ("..FBNEO_TRAINING_MODE_VERSION..")")
+	print ("Beta for fbneo-training-script ("..FBNEO_TRAINING_MODE_VERSION..")")
+	if not REPLAY then
 		print "Replay with 1 coin press"
 		print "Record with 2 coin presses"
 		print "Swap inputs with 3 coin presses"
@@ -148,6 +149,7 @@ local usage = function()
 		print "Select a function with P1 Button 1"
 		print "Read function info with P1 Button 2"
 		print "Return to the previous menu with P1 Button 3"
+	end
 end
 
 -- locals
@@ -3475,8 +3477,5 @@ local function loadAddons()
 	end
 end
 
-if availablefunctions.run then
-	table.insert(registers.guiregister, loadAddons)
-end
-
+table.insert(registers.guiregister, loadAddons)
 ----------------------------------------------

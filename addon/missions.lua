@@ -33,12 +33,18 @@
 ------------------------------------------
 local DEBUG = false
 
+if REPLAY then print "For replay takeover, record a mission with ALT+5" end
+
 function back() -- Should be modified since "back" could be mapped to another button
 	if guiinputs.P1["button6"] and not guiinputs.P1.previousinputs["button6"] then
 		return true
 	else
 		return false
 	end
+end
+
+if dirname == "" then
+	dirname = emu.romname()
 end
 
 --------------------------------------------------
@@ -1189,4 +1195,5 @@ local function missions()
 	drawTxt()
 	playMissionLogic()
 end
+
 table.insert(registers.registerbefore, missions)
