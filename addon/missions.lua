@@ -339,24 +339,163 @@ local missions_hub = {
 		olcolour = "black",
 		func =  function() end,
 	},
-	{
-		text = dirname,
-		x = 35,
-		y = 35,
-		olcolour = "black",
-		handle = 1,
-		func = 	function() CIG("game_missions_page", 1) end,
-	},
-
 }
+
+local missions_hub_characters = {}
+if (emu.romname() == 'ssf2xjr1') then
+	missions_hub_characters = {
+		{
+			text = "Blanka",
+			x = 35,
+			y = 35,
+			olcolour = "black",
+			handle = 1,
+			func = 	function() CIG("blanka_missions_page", 1) end,
+		},
+		{
+			text = "Boxer",
+			x = 35,
+			y = 50,
+			olcolour = "black",
+			handle = 2,
+			func = 	function() CIG("boxer_missions_page", 1) end,
+		},
+		{
+			text = "Cammy",
+			x = 35,
+			y = 65,
+			olcolour = "black",
+			handle = 3,
+			func = 	function() CIG("cammy_missions_page", 1) end,
+		},
+		{
+			text = "Chun Li",
+			x = 35,
+			y = 80,
+			olcolour = "black",
+			handle = 4,
+			func = 	function() CIG("chunli_missions_page", 1) end,
+		},
+		{
+			text = "Claw",
+			x = 95,
+			y = 35,
+			olcolour = "black",
+			handle = 5,
+			func = 	function() CIG("claw_missions_page", 1) end,
+		},
+		{
+			text = "Dhalsim",
+			x = 95,
+			y = 50,
+			olcolour = "black",
+			handle = 6,
+			func = 	function() CIG("dhalsim_missions_page", 1) end,
+		},
+		{
+			text = "Dictator",
+			x = 95,
+			y = 65,
+			olcolour = "black",
+			handle = 7,
+			func = 	function() CIG("dictator_missions_page", 1) end,
+		},
+		{
+			text = "Dee Jay",
+			x = 95,
+			y = 80,
+			olcolour = "black",
+			handle = 8,
+			func = 	function() CIG("deejay_missions_page", 1) end,
+		},
+		{
+			text = "Fei Long",
+			x = 155,
+			y = 35,
+			olcolour = "black",
+			handle = 9,
+			func = 	function() CIG("feilong_missions_page", 1) end,
+		},
+		{
+			text = "Guile",
+			x = 155,
+			y = 50,
+			olcolour = "black",
+			handle = 10,
+			func = 	function() CIG("guile_missions_page", 1) end,
+		},
+		{
+			text = "Honda",
+			x = 155,
+			y = 65,
+			olcolour = "black",
+			handle = 11,
+			func = 	function() CIG("ehonda_missions_page", 1) end,
+		},
+		{
+			text = "Ken",
+			x = 155,
+			y = 80,
+			olcolour = "black",
+			handle = 12,
+			func = 	function() CIG("ken_missions_page", 1) end,
+		},
+		{
+			text = "Ryu",
+			x = 215,
+			y = 35,
+			olcolour = "black",
+			handle = 13,
+			func = 	function() CIG("ryu_missions_page", 1) end,
+		},
+		{
+			text = "Sagat",
+			x = 215,
+			y = 50,
+			olcolour = "black",
+			handle = 14,
+			func = 	function() CIG("sagat_missions_page", 1) end,
+		},
+		{
+			text = "T-Hawk",
+			x = 215,
+			y = 65,
+			olcolour = "black",
+			handle = 15,
+			func = 	function() CIG("thawk_missions_page", 1) end,
+		},
+		{
+			text = "Zangief",
+			x = 215,
+			y = 80,
+			olcolour = "black",
+			handle = 16,
+			func = 	function() CIG("zangief_missions_page", 1) end,
+		},
+	}
+else
+	missions_hub_characters = {
+		{
+			text = dirname,
+			x = 35,
+			y = 35,
+			olcolour = "black",
+			handle = 1,
+			func = 	function() CIG("game_missions_page", 1) end,
+		},
+	}
+end
+for i = 1, #missions_hub_characters do
+	table.insert(missions_hub, missions_hub_characters[i])
+end
 guipages.missions_hub = missions_hub
 -------------------------------
 --	Characters' folders
 -------------------------------
-local function makeGamePage(game)
+local function makeCharacterPage(character)
 	return {
 		title = {
-			text = "Missions for "..game,
+			text = "Missions for "..character,
 			x = interactivegui.boxxlength/2 - 25,
 			y = 1,
 		},
@@ -369,46 +508,114 @@ local function makeGamePage(game)
 	}
 end
 
+local characters_name = { dirname };
+local characters = characters_name;
+if (emu.romname() == 'ssf2xjr1') then
+	characters =
+	{
+		"blanka",
+		"boxer",
+		"cammy",
+		"chunli",
+		"claw",
+		"deejay",
+		"dhalsim",
+		"dictator",
+		"ehonda",
+		"feilong",
+		"guile",
+		"ken",
+		"ryu",
+		"sagat",
+		"thawk",
+		"zangief",
+	}
+	characters_name = {
+		"Blanka",
+		"Boxer",
+		"Cammy",
+		"Chun Li",
+		"Claw",
+		"Dee Jay",
+		"Dhalsim",
+		"Dictator",
+		"Honda",
+		"Fei Long",
+		"Guile",
+		"Ken",
+		"Ryu",
+		"Sagat",
+		"T-hawk",
+		"Zangief",
+	}
+end
+
 local missions_page = {}
-missions_page[dirname] = makeGamePage(dirname)
-guipages.game_missions_page = missions_page[dirname]
+for i = 1, #characters do
+	missions_page[characters[i]] = makeCharacterPage(characters_name[i])
+end
+
+-- Inserting character specific pages
+if (emu.romname() == 'ssf2xjr1') then
+	guipages.blanka_missions_page = missions_page["blanka"]
+	guipages.boxer_missions_page = missions_page["boxer"]
+	guipages.cammy_missions_page = missions_page["cammy"]
+	guipages.chunli_missions_page = missions_page["chunli"]
+	guipages.claw_missions_page = missions_page["claw"]
+	guipages.deejay_missions_page = missions_page["deejay"]
+	guipages.dhalsim_missions_page = missions_page["dhalsim"]
+	guipages.dictator_missions_page = missions_page["dictator"]
+	guipages.feilong_missions_page = missions_page["feilong"]
+	guipages.guile_missions_page = missions_page["guile"]
+	guipages.ehonda_missions_page = missions_page["ehonda"]
+	guipages.ken_missions_page = missions_page["ken"]
+	guipages.ryu_missions_page = missions_page["ryu"]
+	guipages.sagat_missions_page = missions_page["sagat"]
+	guipages.thawk_missions_page = missions_page["thawk"]
+	guipages.zangief_missions_page = missions_page["zangief"]
+else
+	guipages.game_missions_page = missions_page[dirname]
+end
 
 -- Inserting buttons in those pages
 missions_list = {}
-local function insertMissionsButtons(game) -- should be modified to allow more than 30 missions
-	table.sort(missions_list[game], function(a,b) return a["text"] < b["text"] end)
+local function insertMissionsButtons(character) -- should be modified to allow more than 30 missions
+	table.sort(missions_list[character], function(a,b) return a["text"] < b["text"] end)
 	local _x = 20
 	local _y = 20
-	for k in pairs(missions_list[game]) do
+	for k in pairs(missions_list[character]) do
 		if k == 11 then
 			_x = 110
 		elseif k == 21 then
 			_x = 200
 		end
-		missions_list[game][k].x = _x
+		missions_list[character][k].x = _x
 		if k > 1 and k ~= 11 and k ~= 21 then
-			missions_list[game][k].y = missions_list[game][k-1].y+15
+			missions_list[character][k].y = missions_list[character][k-1].y+15
 		else
-			missions_list[game][k].y = _y
+			missions_list[character][k].y = _y
 		end
-		table.insert(missions_page[game], missions_list[game][k])
+		table.insert(missions_page[character], missions_list[character][k])
 	end
 end
 
-local function createMissionsFile(game)
+local function createMissionsFile(character)
 	-- Create empty missions_list.lua file if one does not exist
-	if not fexists("games/"..game.."/missions_saved/missions_list.lua") then
-		os.execute("mkdir games\\"..game.."\\missions_saved") -- windows
-		os.execute("mkdir games/"..game.."/missions_saved") -- posix
-		local file = io.open("games/"..game.."/missions_saved/missions_list.lua", "w")
-		file:write("missions_list[\""..game.."\"] = {}\n---------------------------------------------------------")
+	if not fexists("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua") then
+		os.execute("mkdir games\\"..dirname.."\\missions_saved\\"..character) -- windows
+		os.execute("mkdir games/"..dirname.."/missions_saved/"..character) -- posix
+		local file = io.open("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua", "w")
+		file:write("missions_list[\""..character.."\"] = {}\n---------------------------------------------------------")
 		file:close()
 	end
 end
 
-createMissionsFile(dirname)
-dofile("games/"..dirname.."/missions_saved/missions_list.lua")
-insertMissionsButtons(dirname)
+for i = 1, #characters do
+	createMissionsFile(characters[i])
+	dofile("games/"..dirname.."/missions_saved/"..characters[i].."/missions_list.lua")
+	insertMissionsButtons(characters[i])
+end
+
 -------------------------------
 --	Save pop-up
 -------------------------------
@@ -675,12 +882,19 @@ end
 local mission_path = "games/"..dirname.."/missions_saved/"
 
 local function makeMissionButton(_mission_name, _mission_frame_delay)
-	return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n"..
-	"\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..dirname.."\"], ".._mission_name..")".."\n--END"
+	if (emu.romname() == 'ssf2xjr1') then
+		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tautoblock = "..autoblock_selector..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..readCharacterName(gamestate.P1).."\"], ".._mission_name..")".."\n--END"
+	else
+		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..dirname.."\"], ".._mission_name..")".."\n--END"
+	end
 end
 
 local function saveMission()
 	-- reading the save popup inputs
+	local character = dirname
+	if (emu.romname() == 'ssf2xjr1') then
+		character = readCharacterName(gamestate.P1)
+	end
 	local mission_name = guipages.save_mission.name.text
 	if guipages.save_mission.frame.text == "" then
 		guipages.save_mission.frame.text = 0
@@ -704,30 +918,30 @@ local function saveMission()
 			assert(table.save(recording[slots_checked[i]], mission_name.."_"..i..".lua")==nil, "Can't save replay file")
 		end
 		-- Both savestate and lua files are moved in the correct folder
-		os.rename("./new_savestate","./"..mission_path.."/"..mission_name..".fs")
+		os.rename("./new_savestate","./"..mission_path..character.."/"..mission_name..".fs")
 		for i = 1, #slots_checked do
-			os.rename("./"..mission_name.."_"..i..".lua","./"..mission_path.."/"..mission_name.."_"..i..".lua")
+			os.rename("./"..mission_name.."_"..i..".lua","./"..mission_path..character.."/"..mission_name.."_"..i..".lua")
 		end
 		-- A new button is written in the lua file
-		createMissionsFile(dirname)
-		local file = io.open("./"..mission_path.."/missions_list.lua", "a")
+		createMissionsFile(character)
+		local file = io.open("./"..mission_path..character.."/missions_list.lua", "a")
 		file:write(makeMissionButton(mission_name, mission_frame_delay))
 		file:close()
 		-- Success : we display a message onscreen
 		local debug_msg = ""
 		if DEBUG then
-			debug_msg = "(./"..mission_path.."/"..mission_name..".fs)"
+			debug_msg = "(./"..mission_path..character.."/"..mission_name..".fs)"
 		end
 		showTxt(480, "    Mission succesfully saved", debug_msg)
 		-- We reload the missions
-		for i = 1, #missions_page[dirname]-1 do
-			table.remove(missions_page[dirname])
+		for i = 1, #missions_page[character]-1 do
+			table.remove(missions_page[character])
 		end
-		for i = 1, #missions_list[dirname] do
-			missions_list[dirname][i] = nil
+		for i = 1, #missions_list[character] do
+			missions_list[character][i] = nil
 		end
-		dofile("games/"..dirname.."/missions_saved/missions_list.lua")
-		insertMissionsButtons(dirname)
+		dofile("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua")
+		insertMissionsButtons(character)
 		formatGuiTables()
 		closePopUp()
 	end
@@ -796,32 +1010,34 @@ local missions_checked_deletion = {} -- for deleting. Maybe I'm being overcautio
 local function deleteMission()
 	if #missions_checked_deletion > 0 then
 		for i = 1, #missions_checked_deletion do
-			if fexists(mission_path.."/"..missions_checked_deletion[i].name..".fs") then
-				os.remove(mission_path.."/"..missions_checked_deletion[i].name..".fs")
+			if fexists(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name..".fs") then
+				os.remove(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name..".fs")
 			end
 			for j = 1, missions_checked_deletion[i].slots_nb do
-				if fexists(mission_path.."/"..missions_checked_deletion[i].name.."_"..j..".lua") then
-					os.remove(mission_path.."/"..missions_checked_deletion[i].name.."_"..j..".lua")
+				if fexists(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name.."_"..j..".lua") then
+					os.remove(mission_path..missions_checked_deletion[i].character.."/"..missions_checked_deletion[i].name.."_"..j..".lua")
 				end
 			end
-			local in_file = io.open("./"..mission_path.."/missions_list.lua", "r")
+			local in_file = io.open("./"..mission_path..missions_checked_deletion[i].character.."/missions_list.lua", "r")
 			local file_text = in_file:read("*a")
 			in_file:close()
 
 			local out_text = string.gsub(file_text, "(\n"..missions_checked_deletion[i].name.." = {.-%-%-END)", "")
-			local out_file = io.open("./"..mission_path.."/missions_list.lua", "w+")
+			local out_file = io.open("./"..mission_path..missions_checked_deletion[i].character.."/missions_list.lua", "w+")
 			out_file:write(out_text)
 			out_file:close()
 		end
 		-- We reload the missions
-		for j = 1, #missions_page[dirname]-1 do
-			table.remove(missions_page[dirname])
+		for i = 1, #characters do
+			for j = 1, #missions_page[characters[i]]-1 do
+				table.remove(missions_page[characters[i]])
+			end
+			for j = 1, #missions_list[characters[i]] do
+				missions_list[characters[i]][j] = nil
+			end
+			dofile("games/"..dirname.."/missions_saved/"..characters[i].."/missions_list.lua")
+			insertMissionsButtons(characters[i])
 		end
-		for j = 1, #missions_list[dirname] do
-			missions_list[dirname][j] = nil
-		end
-		dofile("games/"..dirname.."/missions_saved/missions_list.lua")
-		insertMissionsButtons(dirname)
 		toggleInteractiveGUI(false, {})
 		formatGuiTables()
 		local s = ""
@@ -847,10 +1063,12 @@ end
 
 local function stockMissionsCheckedForDeletion()
 	clearMissionsCheckedForDeletion()
-	if missions_list[dirname] ~= nil then
-		for k in pairs(missions_list[dirname]) do
-			if missions_list[dirname][k].checked then
-				table.insert(missions_checked_deletion, {dirname = dirname, name = missions_list[dirname][k].text, slots_nb = missions_list[dirname][k].slots_nb})
+	for i = 1, #characters do
+		if missions_list[characters[i]] ~= nil then
+			for k in pairs(missions_list[characters[i]]) do
+				if missions_list[characters[i]][k].checked then
+					table.insert(missions_checked_deletion, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb})
+				end
 			end
 		end
 	end
@@ -891,14 +1109,14 @@ local function playMission(mission) -- mission[1] = dirname / [2] = mission's na
 		timer = timer + 1
 	end
 	if timer > frame_delay then
-		savestate.load(mission_path.."/"..mission.name..".fs") -- savestate
+		savestate.load(mission_path..mission.character.."/"..mission.name..".fs") -- savestate
 		if mission.mission_text then
 			local txt1 = mission.mission_text
 			showTxt(900, txt1, "")
 		end
 		random_slot = math.random(1, mission.slots_nb)
-		if fexists(mission_path.."/"..mission.name.."_"..random_slot..".lua") then -- replay
-			recording[recording.recordingslot]=table.load(mission_path.."/"..mission.name.."_"..random_slot..".lua")
+		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
+			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
 		end
 		togglePlayBack(nil, {})
 		timer = 0
@@ -920,10 +1138,12 @@ local function stockMissionsChecked()
 		listenMissionsSettingsModfications = true
 	end
 	if not interactivegui.enabled and listenMissionsSettingsModfications then
-		if missions_list[dirname] ~= nil then
-			for k in pairs(missions_list[dirname]) do
-				if missions_list[dirname][k].checked then
-					table.insert(missions_checked, {dirname = dirname, name = missions_list[dirname][k].text, slots_nb = missions_list[dirname][k].slots_nb, frame_delay = missions_list[dirname][k].frame_delay, block = missions_list[dirname][k].autoblock, mission_text = missions_list[dirname][k].mission_text})
+		for i = 1, #characters do
+			if missions_list[characters[i]] ~= nil then
+				for k in pairs(missions_list[characters[i]]) do
+					if missions_list[characters[i]][k].checked then
+						table.insert(missions_checked, {character = characters[i], name = missions_list[characters[i]][k].text, slots_nb = missions_list[characters[i]][k].slots_nb, frame_delay = missions_list[characters[i]][k].frame_delay, block = missions_list[characters[i]][k].autoblock, mission_text = missions_list[characters[i]][k].mission_text})
+					end
 				end
 			end
 		end
