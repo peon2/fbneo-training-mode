@@ -4466,25 +4466,10 @@ local function ST_Training_misc()
 	end
 end
 
-local addons_loaded = false
-
-local function loadAddons()
-	if not addons_loaded then
-		dofile("games/ssf2xjr1/addon/addons.lua")
-		for i = 1, #addons_run do
-			if fexists("games/ssf2xjr1/addon/"..addons_run[i]) then
-				dofile("games/ssf2xjr1/addon/"..addons_run[i])
-			end
-		end
-		addons_loaded = true
-	end
-end
-
 ST_functions = {updateGamestate, ST_Training_misc, ST_Training_basic_settings, ST_Training_advanced_settings, draw_messages}
 
 function Run() -- runs every frame
 	for i = 1, #ST_functions do
 		ST_functions[i]()
 	end
-	loadAddons()
 end

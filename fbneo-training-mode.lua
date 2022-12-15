@@ -2390,16 +2390,6 @@ input.registerhotkey(1, toggleInteractiveGUI)
 input.registerhotkey(2, callGUISelectionFunc)
 input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
-input.registerhotkey(5, function()
-	-- toggle replay mode
-	REPLAY = not REPLAY
-	if (REPLAY) then
-		msg1="REPLAY MODE"
-	else
-		msg1="TRAINING MODE"
-	end
-	msg_fcount = MSG_FRAMELIMIT-120
-end)
 
 local processGUIInputs = function()
 	if REPLAY then return end
@@ -2698,7 +2688,7 @@ local moveHUDInteract = function()
 	buttonHandler(t)
 end
 
-local registers = {
+registers = {
 	registerbefore = {},
 	guiregister = {},
 	registerafter = {},
@@ -3445,3 +3435,37 @@ savestate.registerload(loadprocedure)
 emu.registerexit(exitprocedure)
 
 setRegisters()
+
+----------------------------------------------
+-- ADDONS
+----------------------------------------------
+
+local addons_loaded = false
+
+local function loadAddons()
+	if not addons_loaded then
+		-- generic addons
+		dofile("addon/addons.lua")
+		for i = 1, #addons_run do
+			if fexists("addon/"..addons_run[i]) then
+				dofile("addon/"..addons_run[i])
+			end
+		end
+		-- game specific addons
+		if fexists("games/"..dirname.."/addon/addons.lua") then
+			dofile("games/"..dirname.."/addon/addons.lua")
+			for i = 1, #addons_run do
+				if fexists("games/"..dirname.."/addon/"..addons_run[i]) then
+					dofile("games/"..dirname.."/addon/"..addons_run[i])
+				end
+			end
+		end
+		addons_loaded = true
+	end
+end
+
+if availablefunctions.run then
+	table.insert(registers.guiregister, loadAddons)
+end
+
+----------------------------------------------

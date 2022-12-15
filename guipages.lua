@@ -77,6 +77,13 @@ guielements = { -- some shorthands/parts of interactiveguipages that can be move
 		info = "Make or load a savestate",
 		func = 	function() CIG("savestate", 1) end,
 	},
+	addonbutton = {
+		text = "Add-On",
+		x = 104,
+		--y = 150,
+		olcolour = "black",
+		func = 	function() CIG("addonpage1", 1) end,
+	},
 	directionset = {
 		text = "Set the direction P2 is holding",
 		info = "Allows you to set the direction P2 is holding",
@@ -373,6 +380,7 @@ guipages = { -- interactiveguipages
 		guielements.coininputleniency,
 		guielements.inputdelay,
 		guielements.savestate,
+		guielements.addonbutton,
 	},
 	{ -- Players
 		title = {
@@ -914,3 +922,89 @@ do -- which player(s) to replay
 end
 
 formatGuiTables()
+
+------------------------------------------
+-- Add-on
+------------------------------------------
+local addonpage1 = {
+	title = {
+		text = "Add-On",
+		x = interactivegui.boxxlength/2 - 10,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function()
+			interactivegui.page = 1
+			interactivegui.selection = 7
+		end,
+	},
+}
+guipages.addonpage1 = addonpage1
+
+-- Is there a way to create new pages on the fly ?
+local addonpage2 = {
+	title = {
+		text = "Add-On",
+		x = interactivegui.boxxlength/2 - 10,
+		y = 1,
+	},
+	{
+		text = "<<",
+		olcolour = "black",
+		info = "Back",
+		func = function() CIG("addonpage1", 1) end,
+	},
+}
+guipages.addonpage2 = addonpage2
+
+local addonnextpage = {
+		text = ">>",
+		olcolour = "black",
+		info = "Back",
+		x = 276,
+		y = 15,
+		func =  function() CIG("addonpage2", 1) end,
+}
+
+local addon_nb = 0
+
+local function determineButtonYPos(_guipage)
+	if #_guipage%7 == 1 then
+		return 30
+	else
+		return _guipage[#_guipage].y+20
+	end
+end
+
+local function determineButtonXPos(_guipage)
+	if #_guipage < 8 then
+		return 8
+	else
+		return 150
+	end
+end
+
+function insertAddonButton(addon_button) -- Could be improved to create as many pages as is necessary, I don't know if ther's a way to create new pages on the fly
+	local _addonpage = nil
+	addon_nb = addon_nb + 1
+
+	if addon_nb == 1 then
+		table.insert(addonpage1, addonbutton)
+	elseif addon_nb == 15 then
+		table.insert(addonpage1, addonnextpage)
+	end
+
+	if addon_nb <= 14 then
+		_addonpage = addonpage1
+	else
+		_addonpage = addonpage2
+	end
+
+	addon_button.x = determineButtonXPos(_addonpage)
+	addon_button.y = determineButtonYPos(_addonpage)
+	table.insert(_addonpage, addon_button)
+	formatGuiTables()
+end
