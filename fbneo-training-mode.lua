@@ -24,6 +24,14 @@ else
 	REPLAY = emu.isreplay()
 end
 
+if REPLAY then
+	-- we don't want to write memory when watching a replay
+	wb = function() end
+	ww = function() end
+	memory.writebyte = function() end
+	memory.writeword = function() end
+end
+
 require "gd"
 
 FBNEO_TRAINING_MODE_VERSION = "v0.22.10.28"
@@ -427,13 +435,13 @@ checkAvailableFunctions = function() -- SETUP availablefunctions TABLE
 	if playerOneInHitstun then availablefunctions.playeroneinhitstun = true end
 	if playerTwoInHitstun then availablefunctions.playertwoinhitstun = true end
 	if readPlayerOneHealth then availablefunctions.readplayeronehealth = true end
-	if writePlayerOneHealth then availablefunctions.writeplayeronehealth = true end
+	if writePlayerOneHealth and not REPLAY then availablefunctions.writeplayeronehealth = true end
 	if readPlayerTwoHealth then availablefunctions.readplayertwohealth = true end
-	if writePlayerTwoHealth then availablefunctions.writeplayertwohealth = true end
+	if writePlayerTwoHealth and not REPLAY then availablefunctions.writeplayertwohealth = true end
 	if readPlayerOneMeter then availablefunctions.readplayeronemeter = true end
-	if writePlayerOneMeter then availablefunctions.writeplayeronemeter = true end
+	if writePlayerOneMeter and not REPLAY then availablefunctions.writeplayeronemeter = true end
 	if readPlayerTwoMeter then availablefunctions.readplayertwometer = true end
-	if writePlayerTwoMeter then availablefunctions.writeplayertwometer = true end
+	if writePlayerTwoMeter and not REPLAY then availablefunctions.writeplayertwometer = true end
 	if playerOneFacingLeft then availablefunctions.playeronefacingleft = true end
 	if playerTwoFacingLeft then availablefunctions.playertwofacingleft = true end
 	-- 
