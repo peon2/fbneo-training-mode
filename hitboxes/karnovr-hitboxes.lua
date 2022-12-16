@@ -8,7 +8,7 @@ local wb, ww, wd = memory.writebyte, memory.writeword, memory.writedword
 axis_length = 8
 function players()
 if rb(0x101003) == 0x03 then 
-camx = rw(0x103424)
+camx = 8 + rw(0x103424)
 camy = 8 - rw(0x106924)
 
 --Timercheat
