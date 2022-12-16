@@ -617,6 +617,8 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
+	if not gamestate.is_in_match then return 0 end
+	if REPLAY then return gamestate.P1.life end
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
 	if p1maxhealth == trainingmaxhealth then
 		return gamestate.P1.life_backup-(trainingmaxhealth-144)
@@ -626,6 +628,8 @@ function readPlayerOneHealth()
 end
 
 function readPlayerTwoHealth()
+	if not gamestate.is_in_match then return 0 end
+	if REPLAY then return gamestate.P2.life end
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
 	if p2maxhealth == trainingmaxhealth then
 		return gamestate.P2.life_backup-(trainingmaxhealth-144)

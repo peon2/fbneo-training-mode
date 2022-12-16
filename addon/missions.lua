@@ -33,7 +33,7 @@
 ------------------------------------------
 local DEBUG = false
 
-if REPLAY then print "For replay takeover, record a mission with ALT+5" end
+if REPLAY then print "For replay takeover, press Alt+5 to record a mission" end
 
 function back() -- Should be modified since "back" could be mapped to another button
 	if guiinputs.P1["button6"] and not guiinputs.P1.previousinputs["button6"] then
@@ -818,6 +818,7 @@ local function drawTxt()
 	gui.text(92,84,mission_text2)
 end
 
+if REPLAY then showTxt(240, "For replay takeover, press Alt+5 to record a mission", "") end
 -----------------------------------
 -----------------------------------
 --		Main
