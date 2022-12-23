@@ -896,6 +896,15 @@ local function makeMissionButton(_mission_name, _mission_frame_delay)
 	end
 end
 
+local r_frame = 0
+local function loadMissionTakeover()
+	local character = dirname
+	if (emu.romname() == 'ssf2xjr1') then
+		character = readCharacterName(gamestate.P1)
+	end
+	return {character = character, name = "REPLAY_"..r_frame, slots_nb = 1, frame_delay = 150, block = -1, mission_text = ''}
+end
+
 local function saveMission()
 	-- reading the save popup inputs
 	local character = dirname
@@ -955,7 +964,37 @@ local function saveMission()
 end
 guipages.save_mission[3].func = saveMission
 
-local r_frame = 0
+-------------------------------
+--	Play a mission
+-------------------------------
+local frame_delay = 0
+local timer = 0
+local random_slot = 1
+
+local function playMission(mission) -- mission[1] = dirname / [2] = mission's name
+	if frame_delay < 3 then frame_delay = 3 end -- to be sure that we can reroll a mission
+	if not recording.playback then
+		timer = timer + 1
+	end
+	if timer > frame_delay then
+		savestate.load(mission_path..mission.character.."/"..mission.name..".fs") -- savestate
+		if mission.mission_text then
+			local txt1 = mission.mission_text
+			showTxt(900, txt1, "")
+		end
+		random_slot = math.random(1, mission.slots_nb)
+		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
+			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
+		end
+		togglePlayBack(nil, {})
+		timer = 0
+		frame_delay = mission.frame_delay
+	end
+end
+
+local missions_checked = {} -- for loading
+local mission_selector = 0
+
 input.registerhotkey(5, function()
 	if (not REPLAY) then
 		--open the popup saving a mission
@@ -1003,15 +1042,19 @@ input.registerhotkey(5, function()
 			slot_buttons[1].text=1
 			slot_buttons[1].checked = true
 			saveMission()
+			emu.takeover()
+			REPLAY=false
+			mission_selector = 1
+			missions_checked[1] = loadMissionTakeover()
+			playMission(missions_checked[1])
 			local txt1 = "RECORDED "..recorded.." frames."
 			local txt2 = "To take over load: Add-On > Missions > REPLAY_"..r_frame
 			showTxt(480, txt1, txt2)
-			r_frame = 0
+			--r_frame = 0
 		end
 	end
 end)
 
-local missions_checked = {} -- for loading
 local missions_checked_deletion = {} -- for deleting. Maybe I'm being overcautious for not merging the two tables though
 
 local function deleteMission()
@@ -1103,35 +1146,11 @@ guipages.missions_hub[2].func = function()
 		CIG("delete",1)
 	end
 end
--------------------------------
---	Play a mission
--------------------------------
-local frame_delay = 0
-local timer = 0
-local random_slot = 1
 
-local function playMission(mission) -- mission[1] = dirname / [2] = mission's name
-	if frame_delay < 3 then frame_delay = 3 end -- to be sure that we can reroll a mission
-	if not recording.playback then
-		timer = timer + 1
-	end
-	if timer > frame_delay then
-		savestate.load(mission_path..mission.character.."/"..mission.name..".fs") -- savestate
-		if mission.mission_text then
-			local txt1 = mission.mission_text
-			showTxt(900, txt1, "")
-		end
-		random_slot = math.random(1, mission.slots_nb)
-		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
-			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
-		end
-		togglePlayBack(nil, {})
-		timer = 0
-		frame_delay = mission.frame_delay
-	end
-end
+-------------------------------
+--	Mission selector
+-------------------------------
 
-local mission_selector = 0
 local listenMissionsSettingsModfications = false
 local mission_reroll = true
 
