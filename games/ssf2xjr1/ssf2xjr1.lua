@@ -4162,10 +4162,12 @@ local function detectSafeJump(_player_obj)
 			recovery_count[defender.id] = countFrames(recovery_count[defender.id])
 		else
 			if jump_duration[attacker.id] >= recovery_count[defender.id] then -- If the attacker lands (or would have landed) after the defender recovered
-				if jump_duration[attacker.id]-recovery_count[defender.id] <= getReversalStartup(defender) then -- Check if the attacker lands (or would have landed) before the reversal's active frames
-					player_msg2[attacker.id] = "Safe jump"
-				else
-					player_msg2[attacker.id] = "Too late ("..jump_duration[attacker.id]-recovery_count[defender.id].."f)"
+				if getReversalStartup(defender) ~= nil then
+					if jump_duration[attacker.id]-recovery_count[defender.id] <= getReversalStartup(defender) then -- Check if the attacker lands (or would have landed) before the reversal's active frames
+						player_msg2[attacker.id] = "Safe jump"
+					else
+						player_msg2[attacker.id] = "Too late ("..jump_duration[attacker.id]-recovery_count[defender.id].."f)"
+					end
 				end
 			else -- If the attacker lands before the defender recovers
 				player_msg2[attacker.id] = "Too soon ("..recovery_count[defender.id]-jump_duration[attacker.id].."f)"
