@@ -29,6 +29,7 @@ if REPLAY then
 	-- we don't want to write memory when watching a replay
 	wb = function() end
 	ww = function() end
+	wdw = function() end
 	-- this breaks throw hitboxes on some games
 	-- memory.writebyte = function() end
 	-- memory.writeword = function() end
