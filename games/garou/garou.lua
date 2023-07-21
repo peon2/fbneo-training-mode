@@ -1,4 +1,4 @@
-assert(rb,"Run fbneo-training-mode.lua")
+assert(rb, "Run fbneo-training-mode.lua")
 
 p1maxhealth = 0x78
 p2maxhealth = 0x78
@@ -11,7 +11,7 @@ local p2direction = 0x100558
 
 function gamemsg()
 	print "Known issues with garou:"
-	print "hitboxes don't currently work"
+	print "may make the game crash on replays"
 end
 
 translationtable = {
@@ -41,38 +41,38 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=145,
-		combotexty=40,
-		comboenabled=true,
-		p1healthx=6,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=303,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=90,
-		p1metery=208,
-		p1meterenabled=true,
-		p2meterx=222,
-		p2metery=208,
-		p2meterenabled=true,
+		combotextx = 145,
+		combotexty = 40,
+		comboenabled = true,
+		p1healthx = 6,
+		p1healthy = 16,
+		p1healthenabled = true,
+		p2healthx = 303,
+		p2healthy = 16,
+		p2healthenabled = true,
+		p1meterx = 90,
+		p1metery = 208,
+		p1meterenabled = true,
+		p2meterx = 222,
+		p2metery = 208,
+		p2meterenabled = true,
 	},
 }
 
 function playerOneFacingLeft()
-	return rb(p1direction)==0
+	return rb(p1direction) == 0
 end
 
 function playerTwoFacingLeft()
-	return rb(p2direction)==0
+	return rb(p2direction) == 0
 end
 
 function playerOneInHitstun()
-	return rb(0x10a39D)~=0
+	return rb(0x10a39D) ~= 0
 end
 
 function playerTwoInHitstun()
-	return rb(0x10a39C)~=0 
+	return rb(0x10a39C) ~= 0
 end
 
 function readPlayerOneHealth()
@@ -108,7 +108,7 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writebyte(0x107490,0x99)
+	memory.writebyte(0x107490, 0x99)
 end
 
 function maxCredits()
