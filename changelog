@@ -1,0 +1,323 @@
+v0.22.10.28
+
+General Usage:
+Max health and max meter are now saved
+The hitbox menu button has been replaced with just the hitbox toggle
+
+Replays:
+Replays are now saved/loaded based on game config path
+Fixed crashing bug related to replaying inputs in certain ways
+
+breakrev:
+Added saving toggle for breakrev hitboxes
+
+karnovr:
+Hitboxes now toggle on and off correctly
+
+kof2003:
+Fixed misnamed variable crashing the script
+
+svc:
+Fixed writing/reading P2 meter
+Adjusted the alignment of hitboxes
+Hitboxes now toggle on and off correctly
+
+v0.22.09
+
+General Usage:
+Added an emergency toggle at the head of the fbneo-training-mode.lua file to hopefully avoid incessant crashing
+When leaving a menu through 'Coin' or 'Back' the input is no longer processed when the menu closes
+'Coin' now consistently returns to the game from any menu and 'Back' returns to the main menu if in a sub-menu
+Added an input delay option
+Adjusted sliding menu options to increment/decrement more smoothly
+If a game without health refill options is launched, it's ensured health refill isn't enabled
+Moved the set direction option to the 'Basic Settings' page
+Warning messages are spaced out to not be visible to the user unless text output is scrolled back up
+Extraneous hud/information is now not drawn to the screen while in a menu
+Memory size in the main menu now updates slower to be more visible
+
+Scrolling Inputs:
+Reduced the load of adjusting scrolling input to hopefully avoid more crashes
+Removed scrolling input option in the main menu, scrolling inputs can now be adjusted through HUD Settings
+
+HUD Settings:
+Moving a HUD element underneath the help display now hides help
+Adjusted HUD elements movement to be more smooth
+
+Replays:
+Replays can have a random delayed added to their start now
+Reduced the size of replays to reduce memory size/file size
+Replay Editor now better preserves the start and end of the inputs of a replay and displays such
+Replay Editor now better preserves direction of the input of a frame of replay and displays such with an option to change it
+Adjusted spacing of the frame count in the Replay Editor
+Fixed crashing issue related to switching slots in Replay Editor
+
+Added support for Breakers Revenge - Extra Mode (brkrevext)
+Added support for Cyberbots - Fullmetal Madness Unlock Hack (cybotsam)
+Added support for Fatal Fury 2 - Arata-Naru Tatakai (fatfury2)
+Added support for Super Street Fighter 2 Turbo - New Legacy (ssf2tnl)
+Added support for SNK vs. Capcom: SVC Chaos (svc)
+Added support for SNK vs. Capcom: SVC Chaos Super Plus (svcsplus)
+Added support for Ultimate Mortal Kombat 3 (umk3) (Thanks to Ausuri)
+Added support for Vampire Savior: The Lord of Vampire (Aesthetic Edition) (vsavae)
+
+breakrev:
+Added hitboxes through in-game debugger
+Fixed writing/reading P2 meter
+
+kof2003:
+Added hitboxes
+
+msh:
+Adjusted default HUD
+
+sfa3:
+Added support for crouch cancels and air techs (Thanks to Asunaro)
+
+ssf2xjr1:
+Numerous fixes, features, and refactors (Thanks to Pof and Asunaro)
+Introduction of 'Addons' system with many different modules to help players practice techniques such as sako ticks or boxer dash punches (Thanks to Asunaro)
+
+svc:
+Added hitboxes
+
+v0.22.04.08
+
+Added replay on savestate load
+Fixed some bugs with replay on hit
+Fixed a small bug in input-display.lua for unsupported games
+More generic icons added for unsupported 6 button games
+
+Replay Editor changes:
+Aligned better
+Set (SET) now moves down after copying
+Copy (COPY) now moves every other input down before copying the input
+Blank Input (BLNK) is a new command that inserts a blank input after the cursor
+Delete (DEL) is a new command that deletes the input at the cursor
+Decrement Slot (<NUM) changed from (<SLT) to (<NUM)
+Increment Slot (>NUM) changed from (>SLT) to (>NUM)
+A red line is now drawn to mark where the replay ends
+
+ssfxjr1:
+Many new features/fixes added by poliva and Asunaro such as:
+stage select, auto reversal, auto block, dizzy control, round start action, crash fixes, combo counter adjusting
+
+hsf2:
+Many new features adapted from by ssfxjr1 by PopovMark such as:
+stage select, auto reversal, auto block, dizzy control
+
+Myriad of fixes to lb2 (Thanks to Ivy-IV)
+
+Added support for Darkstalkers: The Night Warriors (dstlk)
+Added support for Vampire Hunter 2: Darkstalkers' Revenge (vhunt2)
+Added support for Vampire Savior 2: The Lord of Vampire (vsav2)
+
+Added support for Street Fighter III: New Generation (sfiii)
+Added support for Street Fighter III: 2nd Impact (sfiii2) (Thanks to Ivy-IV) 
+Added support for Street Fighter III: 3rd Strike (sfiii3)
+
+v0.22
+
+Simple Input display is now controllable through the HUD Settings.
+Added KB display that can be controlled through HUD settings.
+Added Hotkeys.
+Adjustments to the GUI to stop some things clipping so much.
+GUI can now be controlled using Left/Right/Up/Down.
+Help is now drawn in the GUI in-bounds dynamically.
+
+Fixed issue with swapping inputs (3 coin inputs) not working correctly.
+
+Adjusted the kof series (94,95,95sp,96,97,98,kof98cb,99,99ae,2000,2001,2002,2003,kf2k5uni) to range between 0 health to max health (magic pixel).
+Myriad of fixes to Last Blade 2 (lastbld2)
+Added support for Last Blade (lastblad)
+
+Myriad of fixes to ssfxjr1, new hitboxes handling added and adjustments to button icons (Thanks to poliva)
+Myriad of fixes to doubledr (Thanks to Ivy-IV)
+Added support for Hyper Street Fighter 2 (hsf2) (Thanks to PopovMark)
+Added support for Vampire Savior: The Lord of Vampire (vsav) (Thanks to DatGrey)
+
+v0.21.10.29
+
+Fixed crash issues related to inputs with daraku, dbz2 and martmast.
+
+Added support for Fatal Fury (fatfury1)
+Added support for Street Fighter (sf)
+Added support for Street Fighter 2: The World Warrior (sf2)
+Added support for Street Fighter 2: Champion Edition (sf2ce rainbow)
+Added support for Street Fighter 2 Turbo: Hyper Fighting (sf2hf)
+
+v0.21.09
+
+Many bug fixes/crash fixes.
+More features added to the replay editor.
+Fixes to garou.
+
+Looping recordings will now properly randomise.
+Fixed bug not setting input properly in the replay editor.
+
+v0.21.08.13
+
+Many bug fixes.
+Button info should be more accurate.
+Fixed some save/load state issues.
+
+v0.21.08.06
+
+Small replay fixes and inner tune-ups.
+Added a new proof of concept Save and Load system for replays: 
+	Save outputs whichever slot is selected to "replay.lua" in your training mode folder. 
+	Load will copy in "replay.lua" to your selected slot.
+
+v0.21.08
+
+Added a replay editor.
+More replay fixes and general efficiency upgrades.
+
+Fixed some issues with the following games: (Thanks to Bee-chan)
+gundamex
+rabbit
+rotd
+tkdensho
+
+v0.21.07.23
+
+More general improvements to efficiency for replays.
+Added recording and playback for both players.
+Improvement to randomise system.
+Visual display added to the replay menu for the state of the replay slots.
+
+Added support for Toukidenshou - Angel Eyes (tkdensho) (Thanks to Bee-Chan)
+Added support for Asura Blade (asurabld) (Thanks to Bee-Chan)
+Added support for Kizuna Encounter (kizuna) (Thanks to Bee-Chan)
+Added support for Martial Masters (martmast) (Thanks to Bee-Chan)
+Added support for Mobile Suit Gundam Ex Revue (gundamex) (Thanks to Bee-Chan)
+Added support for Rabbit (rabbit) (Thanks to Bee-Chan)
+
+v0.21.07.09
+
+Reduced memory footprint with replays and fixed some bugs.
+
+Added support for Street Fighter Alpha (sfa)
+Added support for Street Fighter Alpha 3 (sfa3)
+Added support for Saturday Night Slam Masters (slammast)
+Added support for Ring of Destruction - slammasters II (ringdest)
+
+v0.21.07
+
+Fixed some issues with the help overlay.
+
+The King of Fighters '98:
+Added combo tracking and sideswitch tracking
+The King of Fighters 2002:
+Added combo tracking and sideswitch tracking
+
+Added support for The King Of Fighters '95 Special (kof95sp)
+Added support for The King of Fighters '96 (kof96)
+Added support for The King of Fighters '97 (kof97)
+Added support for The King Of Fighters '98 Combo Hack (kof98cb)
+Added support for The King of Fighters '99 (kof99)
+Added support for The King Of Fighters '99 Anniversary Edition (kof99ae)
+Added support for The King of Fighters 2000 (kof2000)
+Added support for The King of Fighters 2001 (kof2001)
+Added support for The King of Fighters 2003 (kof2003)
+Added support for The King of Fighters 2003 (kof2003)
+Added support for The King of Fighters 10th Anniversary 2005 Unique (kf2k5uni)
+
+v0.21.06.25
+
+Scrolling input displays are now moveable
+Added help overlay to the interactive gui
+Fixed some replay functionality
+Updated setting dummy direction
+
+Added support for Alien Challenge (aliencha)
+
+v0.21.06.18
+
+Improved performance
+Added basic automatic support for some games not set up.
+
+Added support for Galaxy Fight (galaxyfg) (Thanks to Bee-Chan)
+Added support for Karnov's Revenge (karnovr)
+Added support for Street Fighter II' - Champion Edition (sf2ce)
+
+v0.21.06.11
+
+Fixed some back button functionality.
+Added a 'Player Page' with options for controlling P1&P2 Health and Meter.
+Added a 'HUD Settings' option for moving around/hiding HUD elements.
+
+Daraku Tenshi:
+Fixed meter issue properly.
+
+Added support for breakrev
+Added support for gowcaizr
+Added support for Asura Buster (thanks to Smoke)
+
+v0.21.06.04
+
+Made some gui functionality fit in the page better
+
+Daraku Tenshi:
+Fixed meter issue.
+
+Added support for Rage of the Dragons (rotd)
+
+v0.21.06
+
+Daraku Tenshi:
+Finished support.
+
+Ninja Masters:
+Finished support. (Thanks to Ivy-IV)
+
+Added support for Waku Waku 7 Boss Hack (wakuwak7bh)
+Added support for Fatal Fury 3 (fatfury3)
+
+v0.21.05.28
+
+Added setting P1 meter.
+Added setting P2 health.
+
+Added fillable bars you can adjust with left/right.
+
+Bound button 3 to be 'back' in menus.
+
+Cleaned up some menu items.
+
+JoJo's Bizarre Adventure: Heritage for the Future:
+Made hitboxes scale better at fullscreen.
+
+Added partial support for Daraku Tenshi (daraku)
+Added support for Fatal Fury Special (fatfursp)
+Added support for Real Bout Fatal Fury (rbff1)
+Added support for Real Bout Fatal Fury 2 (rbff2h)
+Added support for Real Bout Fatal Fury Special (rbffspec)
+
+v0.21.05.21
+
+Removed config.lua files.
+Added gamedefaultconfig for each game, these can be used to set default game config options.
+Added fillable backgrounds to some buttons for visual indication.
+
+Marvel Super Heroes vs Street Fighter:
+Cleaned up some code and completed functionality.
+
+X-Men vs. Street Fighter:
+Cleaned up some code and completed functionality.
+
+Added support for Art of Fighting (aof)
+
+Added support for Art of Fighting 2 (aof2)
+
+v0.21.05.14
+
+Refactored some internal code.
+Changed some gui options to select on button release for quicker menu usage.
+Added support for game-specific guipages [see Red Earth]
+
+X-Men Children of the Atom:
+Added some missing features and fixed existing ones
+Added xmcotabh (Boss Hack) as a recognised rom.
+
+Added support for Kabuki Klash (kabukikl)

@@ -1,0 +1,4 @@
+games/*/config.lua
+games/*/missions_saved/
+games/ssf2xjr1/customconfig.lua
+games/ssf2xjr1/customconfig_replay.lua
