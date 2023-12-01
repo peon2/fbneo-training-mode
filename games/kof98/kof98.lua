@@ -27,6 +27,18 @@ local p2combocounter = 0x1082b0
 local p1hitstatus = 0x108172
 local p2hitstatus = 0x108372
 
+local training_config = {
+	["dummy_crouching"] = false,
+	["dummy_guard"] = true
+}
+
+local reversal = false
+--local reversal_move =0x62 -- 0x63 --standing punch
+--local p2move_adress = 0x108373
+local p2blockstun_address = 0x1083E3
+local p2blockstun_value = 0xA0
+local reversalState = 1
+local trigger_reversal = false
 translationtable = {
 	"left",
 	"right",
@@ -142,29 +154,32 @@ end
 function infiniteTime()
 	ww(0x10A83a, 0x6000)
 end
-local reversal = false
-local reversal_move =0x62 -- 0x63 --standing punch
-local p2move_adress = 0x108373
-local p2blockstun_address = 0x1083E3
-local p2blockstun_value = 0xA0
+
 function playerTwoInBlockstun()
 	return rb(p2blockstun_address) == p2blockstun_value
 end
-function playerTwoReversalActive()
-	return rb(p2move_adress) == reversal_move
-end
+
+--function playerTwoReversalActive()
+--	return rb(p2move_adress) == reversal_move
+--end
 --emu.registerbefore(reverSal)
-reversalState = 1
+function getFacingDirection()
+	if playerTwoFacingLeft() then
+		return "P2 Left"
+	end
+	return "P2 Right"
+end
 function doReversal()
+	
 	if reversalState  == 1 then 
 		local tbl = {}
-		tbl["P2 Left"] = 1		
+		tbl[getFacingDirection()] = 1		
 		joypad.set(tbl)
 		reversalState = reversalState + 1
 		return
 	elseif reversalState == 2 then
 		local tbl = {}
-		tbl["P2 Left"] = 1		
+		tbl[getFacingDirection()] = 1		
 		joypad.set(tbl)
 		reversalState = reversalState + 1
 		return
@@ -183,7 +198,7 @@ function doReversal()
 	elseif reversalState == 5 then
 		local tbl = {}
 		tbl["P2 Down"] = 1	
-		tbl["P2 Left"] = 1	
+		tbl[getFacingDirection()] = 1	
 		tbl["P2 Button C"] = 1
 		joypad.set(tbl)
 		reversalState = reversalState + 1
@@ -191,7 +206,7 @@ function doReversal()
 	elseif reversalState == 6 then
 		local tbl = {}
 		tbl["P2 Down"] = 1	
-		tbl["P2 Left"] = 1	
+		tbl[getFacingDirection()] = 1	
 		tbl["P2 Button C"] = 1
 		joypad.set(tbl)
 		reversalState = reversalState + 1
@@ -205,17 +220,17 @@ function doReversal()
 	else
 		reversalState = 1
 		reversal = false		
-		reversalframestarter = 0
-		
 	end
 end
 function p2Block()
 	local tbl = {}
-	tbl["P2 Right"] = 1
-	-- make it crouching block randomly...
-	--if(randomGen()) then tbl["P2 Down"] = 1 end
-	tbl["P2 Down"] = 1
-	
+	if playerTwoFacingLeft() then		
+		tbl["P2 Right"] = 1
+		tbl["P2 Down"] = 1
+	else		
+		tbl["P2 Left"] = 1
+		tbl["P2 Down"] = 1
+	end	
 	joypad.set(tbl)
 	print("p2 block!")
 end
@@ -230,8 +245,8 @@ function randomGen()
 	print(emu.framecount().." : "..os.time().." "..c)
 	return b
 end
-reversalframestarter = 0
-blocking =  true
+
+
 function Run() -- runs every frame
 	
 	--if playerTwoIsBeingHit() then
@@ -239,7 +254,7 @@ function Run() -- runs every frame
 	--wb(0x108102,44)
 	--wb(0x108103,46)
 	--wb(0x10DA5E,0x0A))
-	if blocking == true then
+	if training_config["dummy_guard"] == true then
 		p2Block()
 	end
 	if playerTwoInBlockstun()   then
