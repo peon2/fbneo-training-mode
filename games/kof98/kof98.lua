@@ -33,24 +33,27 @@ moves = {
 		{ 'forward'},
 		{ 'forward'},
 		{'_'},
+		{'_'},
 		{'down'},
 		{'down'},
-		{'down', 'forward','c'},
-		{'down', 'forward','c'},
-		{'c'}
+		{'down', 'forward','a'},
+		{'down', 'forward','a'},
+		{'a'}
 
 	},
 	['THROW_C']={
-		{'back'},
+		{'back', 'c'},
+		{'back', 'c'},
+		{'back', 'c'},
 		{'back', 'c'},
 		{'back', 'c'}
 	}
 }
 
 local training_config = {
-	["dummy_random_guard"] = true,
-	["dummy_guard"] = true,
-	['reversal_move'] = moves['THROW_C']
+	["dummy_random_guard"] = false,
+	["dummy_guard"] = false,
+	['reversal_move'] = moves['DPC']
 }
 
 local reversal = false
@@ -58,8 +61,10 @@ local reversal = false
 --local p2move_adress = 0x108373
 local p2blockstun_address = 0x1083E3
 local p2blockstun_value = 0xA0
-local reversalState = 1
+local blockstun_frame_counter = 0
 local trigger_reversal = false
+local can_block = true
+local current_input_index = 1
 translationtable = {
 	"left",
 	"right",
@@ -192,11 +197,10 @@ function getBlockingDirection()
 	end
 	return "P2 Left"
 end
-current_input_index = 1
 function getCurrentInput()
 	local res = training_config['reversal_move'][current_input_index]
-	print("this is the value of  reversal move")
-	print(training_config['reversal_move'][current_input_index])
+	print("this is the value of  counter")
+	print(blockstun_frame_counter)
 	current_input_index = current_input_index +1
 	return res
 end
@@ -204,7 +208,9 @@ function doReversal()
 	local tbl = {}
 	if current_input_index > #training_config['reversal_move']  then
 		current_input_index = 1
+		blockstun_frame_counter=0
 		reversal = false
+		can_block = true
 		return
 	end
 	for index, value in ipairs(getCurrentInput()) do
@@ -250,8 +256,12 @@ function randomGen()
 	--print(emu.framecount().." : "..os.time().." "..c)
 	return b
 end
-
-
+function startBlockstunAction()	
+	blockstun_frame_counter = blockstun_frame_counter +1
+	if blockstun_frame_counter == 5 then
+		trigger_reversal = true
+	end
+end
 function Run() -- runs every frame
 	
 	--if playerTwoIsBeingHit() then
@@ -259,7 +269,20 @@ function Run() -- runs every frame
 	--wb(0x108102,44)
 	--wb(0x108103,46)
 	--wb(0x10DA5E,0x0A))
-	if training_config["dummy_guard"] == true then
+	
+	if playerTwoInBlockstun()   then
+		
+		can_block = false
+		startBlockstunAction()
+	elseif (playerTwoInBlockstun() == false) and trigger_reversal == true then
+		reversal = true
+		trigger_reversal = false
+	end
+	
+	if reversal == true then
+		doReversal()
+	end
+	if (training_config["dummy_guard"] == true) and  can_block == true then
 		if training_config["dummy_random_guard"] == true then
 			if(randomGen() == true)then
 				 p2Block() 
@@ -269,16 +292,6 @@ function Run() -- runs every frame
 		else
 			p2Block()
 		end
-	end
-	if playerTwoInBlockstun()   then
-		trigger_reversal = true
-	elseif (playerTwoInBlockstun() == false) and trigger_reversal == true then
-		reversal = true
-		trigger_reversal = false
-	end
-	
-	if reversal == true then
-		doReversal()
 	end
 
 	
