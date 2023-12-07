@@ -27,9 +27,30 @@ local p2combocounter = 0x1082b0
 local p1hitstatus = 0x108172
 local p2hitstatus = 0x108372
 
+
+moves = {
+	['DPC'] = {
+		{ 'forward'},
+		{ 'forward'},
+		{'_'},
+		{'down'},
+		{'down'},
+		{'down', 'forward','c'},
+		{'down', 'forward','c'},
+		{'c'}
+
+	},
+	['THROW_C']={
+		{'back'},
+		{'back', 'c'},
+		{'back', 'c'}
+	}
+}
+
 local training_config = {
 	["dummy_random_guard"] = true,
-	["dummy_guard"] = true
+	["dummy_guard"] = true,
+	['reversal_move'] = moves['THROW_C']
 }
 
 local reversal = false
@@ -159,10 +180,6 @@ function playerTwoInBlockstun()
 	return rb(p2blockstun_address) == p2blockstun_value
 end
 
---function playerTwoReversalActive()
---	return rb(p2move_adress) == reversal_move
---end
---emu.registerbefore(reverSal)
 function getFacingDirection()
 	if playerTwoFacingLeft() then
 		return "P2 Left"
@@ -175,58 +192,41 @@ function getBlockingDirection()
 	end
 	return "P2 Left"
 end
+current_input_index = 1
+function getCurrentInput()
+	local res = training_config['reversal_move'][current_input_index]
+	print("this is the value of  reversal move")
+	print(training_config['reversal_move'][current_input_index])
+	current_input_index = current_input_index +1
+	return res
+end
 function doReversal()
-	
-	if reversalState  == 1 then 
-		local tbl = {}
-		tbl[getFacingDirection()] = 1		
-		joypad.set(tbl)
-		reversalState = reversalState + 1
+	local tbl = {}
+	if current_input_index > #training_config['reversal_move']  then
+		current_input_index = 1
+		reversal = false
 		return
-	elseif reversalState == 2 then
-		local tbl = {}
-		tbl[getFacingDirection()] = 1		
-		joypad.set(tbl)
-		reversalState = reversalState + 1
-		return
-	elseif reversalState == 3 then
-		local tbl = {}
-		tbl["P2 Down"] = 1	
-		joypad.set(tbl)
-		reversalState = reversalState + 1
-		return
-	elseif reversalState == 4 then
-		local tbl = {}
-		tbl["P2 Down"] = 1
-		joypad.set(tbl)
-		reversalState = reversalState + 1
-		return
-	elseif reversalState == 5 then
-		local tbl = {}
-		tbl["P2 Down"] = 1	
-		tbl[getFacingDirection()] = 1	
-		tbl["P2 Button C"] = 1
-		joypad.set(tbl)
-		reversalState = reversalState + 1
-		return
-	elseif reversalState == 6 then
-		local tbl = {}
-		tbl["P2 Down"] = 1	
-		tbl[getFacingDirection()] = 1	
-		tbl["P2 Button C"] = 1
-		joypad.set(tbl)
-		reversalState = reversalState + 1
-		return
-	elseif reversalState == 7 then
-		local tbl = {}
-		tbl["P2 Button C"] = 1
-		joypad.set(tbl)
-		reversalState = reversalState + 1
-		return
-	else
-		reversalState = 1
-		reversal = false		
 	end
+	for index, value in ipairs(getCurrentInput()) do
+		if value == 'forward' then
+			tbl[getFacingDirection()] = 1
+		elseif value == 'back' then
+			tbl[getBlockingDirection()] = 1
+		elseif value == 'down' then
+			tbl["P2 Down"] = 1
+		elseif value == 'up' then
+			tbl["P2 Up"] = 1
+		elseif value == 'a' then
+			tbl["P2 Button A"] = 1
+		elseif value == 'b' then
+			tbl["P2 Button B"] = 1
+		elseif value == 'c' then
+			tbl["P2 Button C"] = 1
+		elseif value == 'd' then
+			tbl["P2 Button D"] = 1
+		end
+	end	
+	joypad.set(tbl)
 end
 function p2Block()
 	local tbl = {}	
@@ -280,8 +280,6 @@ function Run() -- runs every frame
 	if reversal == true then
 		doReversal()
 	end
-	
-		--reversal = false
 
 	
 	infiniteTime()
