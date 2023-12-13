@@ -29,37 +29,43 @@ local p2hitstatus = 0x108372
 
 local in_air = 0x108322
 
+local currentState = "start"
 function isInAir()
 	 return rb(in_air)~=0
 end
 moves = {
 	['DPC'] = {
-		{ 'forward'},
-		{ 'forward'},
-		{'_'},
-		{'_'},
-		{'down'},
-		{'down'},
-		{'down', 'forward','a'},
-		{'down', 'forward','a'},
-		{'a'},
-		{'a'},
-		{'a'}
-
+		["sequence"] = {
+			{'_'},
+			{'_'},
+			{ 'forward'},
+			{ 'forward'},
+			{'_'},
+			{'_'},
+			{'down'},
+			{'down'},
+			{'down', 'forward','a'},
+			{'down', 'forward','a'},
+			{'a'},
+			{'a'},
+			{'a'}},
+			times = 13
 	},
 	['THROW_C']={
-		{'back', 'c'},
-		{'back', 'c'},
-		{'back', 'c'},
-		{'back', 'c'},
-		{'back', 'c'}
+		["sequence"] = {		
+			{'_'},
+			{'_'},
+			{'back', 'c'} 
+		},
+		times = 50
 	}
 }
 
 local training_config = {
 	["dummy_random_guard"] = false,
-	["dummy_guard"] = false,
-	['reversal_move'] = moves['DPC']
+	["dummy_guard"] = true,
+	['reversal'] = true,
+	['reversal_move'] = moves['DPC'],
 }
 
 local reversal = false
@@ -67,13 +73,8 @@ local reversal = false
 --local p2move_adress = 0x108373
 local p2blockstun_address = 0x1083E3
 local p2blockstun_value = 0xA0
-local blockstun_frame_counter = 0
-local trigger_reversal = false
+local trigger_reversal = true
 local can_block = true
-local current_input_index = 1
-
-local reversal_blockstun_stage = { ["WEAK"]= 9, ["STRONG"]= 17, ["HARD"]= 21} --frames needed to execute move
-local current_blockstun_stage = reversal_blockstun_stage["WEAK"]
 translationtable = {
 	"left",
 	"right",
@@ -206,38 +207,34 @@ function getBlockingDirection()
 	end
 	return "P2 Left"
 end
-function getCurrentInput()
-	local res = training_config['reversal_move'][current_input_index]
-	print("this is the value of  counter")
-	print(blockstun_frame_counter)
-	current_input_index = current_input_index +1
-	return res
-end
+
 function doRecovery()
 	local tbl = {}
 	tbl["P2 Button A"] = 1
 	tbl["P2 Button B"] = 1
 	joypad.set(tbl)
 end
-function doReversal()
+
+local current_move_index_counter = 1
+local current_move_time_counter = 1
+function doMove(move)
+	local seq = move.sequence
+	local times = move.times
+	can_block = false
 	local tbl = {}
-	if current_input_index > #training_config['reversal_move']  then
-		current_input_index = 1
-		blockstun_frame_counter=0
-		trigger_reversal = false
+	print(times)
+	print(current_move_time_counter)
+	if current_move_time_counter > times then
+		current_move_time_counter =0
 		can_block = true
-		
-		if current_blockstun_stage == reversal_blockstun_stage["WEAK"] then
-			current_blockstun_stage = reversal_blockstun_stage["STRONG"] 
-		elseif current_blockstun_stage == reversal_blockstun_stage["STRONG"] then
-			current_blockstun_stage = reversal_blockstun_stage["HARD"] 
-		elseif current_blockstun_stage == reversal_blockstun_stage["HARD"] then
-			current_blockstun_stage = reversal_blockstun_stage["WEAK"]
-		end
-		
-		return
+		currentState = "start" 	
+		return false
 	end
-	for index, value in ipairs(getCurrentInput()) do
+	if current_move_index_counter > #seq  then
+		current_move_index_counter = 1
+	end
+	print(seq)
+	for index, value in ipairs(seq[current_move_index_counter]) do
 		if value == 'forward' then
 			tbl[getFacingDirection()] = 1
 		elseif value == 'back' then
@@ -255,8 +252,17 @@ function doReversal()
 		elseif value == 'd' then
 			tbl["P2 Button D"] = 1
 		end
-	end	
+	end
+	current_move_index_counter = current_move_index_counter +1
+	current_move_time_counter = current_move_time_counter +1
+	print(tbl)
 	joypad.set(tbl)
+	return true
+end
+function doReversal()
+	if doMove(training_config['reversal_move']) == false then
+		trigger_reversal = false		
+	end
 end
 function p2Block()
 	local tbl = {}	
@@ -280,12 +286,7 @@ function randomGen()
 	--print(emu.framecount().." : "..os.time().." "..c)
 	return b
 end
-function startBlockstunAction()	
-	blockstun_frame_counter = blockstun_frame_counter +1
-	if blockstun_frame_counter == current_blockstun_stage then
-		trigger_reversal = true	
-	end
-end
+
 function Run() -- runs every frame
 	
 	--if playerTwoIsBeingHit() then
@@ -293,19 +294,32 @@ function Run() -- runs every frame
 	--wb(0x108102,44)
 	--wb(0x108103,46)
 	--wb(0x10DA5E,0x0A))
-
+	--[[ detect which state is the dummy on ]]
 	if isInAir() then
-		doRecovery()
+		if training_config["recovery"] == true then			
+			currentState = "recovery"
+		end		
+	elseif playerTwoInBlockstun()   then		
+		if training_config["reversal"] == true then			
+			currentState = "reversal"
+		end	
+	elseif playerTwoInBlockstun() and trigger_reversal == false   then
+		if currentState == "reversal" then
+			currentState = "start"
+		end
 	end
+	--[[ execute things based on the current state]]
 	
-	if playerTwoInBlockstun()   then
-		
-		can_block = false
-		startBlockstunAction()
+	--[[ print("current state is "..currentState) ]]
+	if currentState == "reversal" then			
+			doReversal()
+	elseif currentState == "recovery" then				
+		doRecovery()
+	elseif currentState == "start" then
+		can_block = true
+		trigger_reversal = true
 	end
-	if trigger_reversal == true then
-		doReversal()
-	end
+	--[[ this applies the guard or the random guard ]]
 	if (training_config["dummy_guard"] == true) and  can_block == true then
 		if training_config["dummy_random_guard"] == true then
 			if(randomGen() == true)then

@@ -3448,10 +3448,6 @@ savestate.registerload(loadprocedure)
 emu.registerexit(exitprocedure)
 
 setRegisters()
-----------------------------------------------
--- MACROS
-----------------------------------------------
-dofile("macro/macro.lua")
 
 ----------------------------------------------
 -- ADDONS
