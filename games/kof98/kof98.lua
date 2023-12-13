@@ -27,7 +27,11 @@ local p2combocounter = 0x1082b0
 local p1hitstatus = 0x108172
 local p2hitstatus = 0x108372
 
+local in_air = 0x108322
 
+function isInAir()
+	 return rb(in_air)~=0
+end
 moves = {
 	['DPC'] = {
 		{ 'forward'},
@@ -38,6 +42,8 @@ moves = {
 		{'down'},
 		{'down', 'forward','a'},
 		{'down', 'forward','a'},
+		{'a'},
+		{'a'},
 		{'a'}
 
 	},
@@ -65,6 +71,9 @@ local blockstun_frame_counter = 0
 local trigger_reversal = false
 local can_block = true
 local current_input_index = 1
+
+local reversal_blockstun_stage = { ["WEAK"]= 9, ["STRONG"]= 17, ["HARD"]= 21} --frames needed to execute move
+local current_blockstun_stage = reversal_blockstun_stage["WEAK"]
 translationtable = {
 	"left",
 	"right",
@@ -204,13 +213,28 @@ function getCurrentInput()
 	current_input_index = current_input_index +1
 	return res
 end
+function doRecovery()
+	local tbl = {}
+	tbl["P2 Button A"] = 1
+	tbl["P2 Button B"] = 1
+	joypad.set(tbl)
+end
 function doReversal()
 	local tbl = {}
 	if current_input_index > #training_config['reversal_move']  then
 		current_input_index = 1
 		blockstun_frame_counter=0
-		reversal = false
+		trigger_reversal = false
 		can_block = true
+		
+		if current_blockstun_stage == reversal_blockstun_stage["WEAK"] then
+			current_blockstun_stage = reversal_blockstun_stage["STRONG"] 
+		elseif current_blockstun_stage == reversal_blockstun_stage["STRONG"] then
+			current_blockstun_stage = reversal_blockstun_stage["HARD"] 
+		elseif current_blockstun_stage == reversal_blockstun_stage["HARD"] then
+			current_blockstun_stage = reversal_blockstun_stage["WEAK"]
+		end
+		
 		return
 	end
 	for index, value in ipairs(getCurrentInput()) do
@@ -258,8 +282,8 @@ function randomGen()
 end
 function startBlockstunAction()	
 	blockstun_frame_counter = blockstun_frame_counter +1
-	if blockstun_frame_counter == 5 then
-		trigger_reversal = true
+	if blockstun_frame_counter == current_blockstun_stage then
+		trigger_reversal = true	
 	end
 end
 function Run() -- runs every frame
@@ -269,17 +293,17 @@ function Run() -- runs every frame
 	--wb(0x108102,44)
 	--wb(0x108103,46)
 	--wb(0x10DA5E,0x0A))
+
+	if isInAir() then
+		doRecovery()
+	end
 	
 	if playerTwoInBlockstun()   then
 		
 		can_block = false
 		startBlockstunAction()
-	elseif (playerTwoInBlockstun() == false) and trigger_reversal == true then
-		reversal = true
-		trigger_reversal = false
 	end
-	
-	if reversal == true then
+	if trigger_reversal == true then
 		doReversal()
 	end
 	if (training_config["dummy_guard"] == true) and  can_block == true then
