@@ -6,6 +6,8 @@ function gamemsg()
 	print "Only partial support for advance with refilling max meter"
 end
 
+
+
 p1maxhealth = 0x68
 p2maxhealth = 0x68
 
@@ -40,6 +42,9 @@ local moves = {
 		["sequence"] = {
 			{'_'},
 			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
 			{ 'forward'},
 			{ 'forward'},
 			{'_'},
@@ -51,7 +56,7 @@ local moves = {
 			{'c'},
 			{'c'},
 			{'c'}},
-			times = 13
+			times = 5
 	},
 	['DPA'] = {
 		["sequence"] = {
@@ -79,13 +84,31 @@ local moves = {
 		},
 		times = 50
 	},
-	['THROW_C']={
-		["sequence"] = {		
-			{'_'},
-			{'_'},
-			{'back', 'c'} 
+	['GUARD']={
+		["sequence"] = {
+			{'back','down'},
+			{'back','down'},
+			{'back','down'},
+			{'back','down'},
+			{'back','down'},
+
 		},
-		times = 50
+		times = 10
+	},
+	['THROW_C']={
+		["sequence"] = {
+			{'back'},
+			{'back'},
+			{'back'},
+			{'back'},
+			{'back', 'c'},
+			{'back', 'c'},				
+			{'back'},
+			{'back'},
+			{'back'},
+			{'back'},
+		},
+		times = 10
 	},
 	['CD']={
 		["sequence"] = {		
@@ -96,12 +119,12 @@ local moves = {
 		times = 10
 	},
 	['AB']={
-		["sequence"] = {		
+		["sequence"] = {
 			{'_'},
 			{'_'},
 			{'a', 'b'} 
 		},
-		times = 10
+		times = 20
 	},
 	['FAB']={
 		["sequence"] = {
@@ -122,8 +145,10 @@ local training_config = {
 	["dummy_random_guard"] = false,
 	["dummy_guard"] = true,
 	['reversal'] = true,
-	["recovery"] = true,
-	['reversal_move'] = moves['DOWN_C'],
+	['reversal_on_recovery'] = false,
+	["recovery"] = false,
+	['reversal_move'] = {moves['THROW_C'],moves['GUARD']}, --[[ if reversal random is false it will execute the first element of this table, if it is true it will pick one of them randomly ]]
+	['reversal_random'] = true
 }
 
 local reversal = false
@@ -267,8 +292,9 @@ function getBlockingDirection()
 end
 
 function doRecovery()
-	if doMove(moves['AB'],5)== false then
-		trigger_recovery = false		
+	if doMove(moves['AB'],12)== false then
+		trigger_recovery = false
+		currentState = "reversal"	
 	end
 end
 
@@ -278,10 +304,10 @@ function doMove(move, times)
 	local seq = move.sequence
 	times = times or  move.times
 	can_block = false
-	local tbl = {}
-	print("current_move_time_counter: "..current_move_time_counter)
+	local tbl = {}--[[ 
+	print("current_move_time_counter: "..current_move_time_counter) ]]
 	if current_move_time_counter > times then
-	print("last time")
+	--[[ print("last time") ]]
 		
 	
 		current_move_time_counter =1
@@ -289,7 +315,7 @@ function doMove(move, times)
 		currentState = "start" 	
 		return false
 	end
-	print(joypad.get()["P1 Button B"])
+--[[ 	print(joypad.get()["P1 Button B"]) ]]
 	if current_move_index_counter > #seq  then
 		current_move_index_counter = 1		
 		current_move_time_counter = current_move_time_counter +1
@@ -317,9 +343,22 @@ function doMove(move, times)
 	joypad.set(tbl)
 	return true
 end
+local CURRENT_REVERSAL_MOVE = {}
+function getCurrentReversalMove()
+	local next = next
+	if next(CURRENT_REVERSAL_MOVE) == nil then		
+		if training_config['reversal_random'] then
+			CURRENT_REVERSAL_MOVE =training_config['reversal_move'][math.random(1,  #training_config['reversal_move'])]
+		else
+			CURRENT_REVERSAL_MOVE = training_config['reversal_move'][1]
+		end
+	end
+	return CURRENT_REVERSAL_MOVE
+end
 function doReversal()
-	if doMove(training_config['reversal_move'], 10) == false then
-		trigger_reversal = false		
+	if doMove(getCurrentReversalMove()) == false then
+		trigger_reversal = false
+		CURRENT_REVERSAL_MOVE = {}			
 	end
 end
 function p2Block()
@@ -333,7 +372,6 @@ function p2Crouch()
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
-
 function PlayerOnePressedButtons()
 	local tbl = joypad.get()
 	if (tbl["P1 Button A"] == true) or (tbl["P1 Button B"] == true)  or (tbl["P1 Button C"] == true)  or (tbl["P1 Button D"] == true) then
@@ -359,16 +397,15 @@ function Run() -- runs every frame
 	--wb(0x10DA5E,0x0A))
 	--[[ detect which state is the dummy on ]]
 	if isInAir() then
-		if training_config["recovery"] == true then			
+		if (training_config["recovery"] == true) and trigger_recovery == true --[[ and (not currentState =="reversal") ]] then			
 			currentState = "recovery"
 		end		
 	elseif isInAir() and trigger_recovery == false  then
-		if currentState == "recovery" then
 			currentState = "start"
-		end	
-	elseif (PlayerOnePressedButtons() and playerTwoInBlockstun()) and trigger_reversal == true then		
+	elseif  playerTwoInBlockstun() and trigger_reversal == true then		
 		if training_config["reversal"] == true then			
-			currentState = "reversal"
+			currentState = "reversal"			
+			trigger_recovery = false
 		end	
 	elseif playerTwoInBlockstun() and trigger_reversal == false  then
 			currentState = "start"
@@ -385,14 +422,19 @@ function Run() -- runs every frame
 		if not playerTwoInBlockstun() and trigger_reversal == false then
 			trigger_reversal = true
 		end
+		if not isInAir() and trigger_recovery == false then
+			trigger_recovery = true
+		end
 	end
 	--[[ this applies the guard or the random guard ]]
 	if (training_config["dummy_guard"] == true) and  can_block == true then
 		if training_config["dummy_random_guard"] == true then
-			if(randomGen() == true)then
-				 p2Block() 
-			else
+			local percentage_of_down = 50
+			local randomNumber = math.random(1, 100)
+			if(randomNumber <= percentage_of_down )then
 				p2Crouch()
+			else
+				p2Block() 
 			end
 		else
 			p2Block()
