@@ -10,7 +10,7 @@ guicustompage = {
 	guielements.leftarrow,
 	guielements.rightarrow,
 	{
-		text = "Toggle Auto Counter Hit",
+		text = "Toggle Guard",
 		x = 8,
 		y = 30,
 		olcolour = "black",
@@ -18,21 +18,21 @@ guicustompage = {
 		info = {
 		},
 		func =	function()
-				counter_hit_selector = counter_hit_selector + 1
-				if counter_hit_selector > 1 then
-					counter_hit_selector = 0
+				dummy_guard = dummy_guard + 1
+				if dummy_guard > 1 then
+					dummy_guard = 0
 				end
 			end,
 		autofunc = function(this)
-				if counter_hit_selector == 0 then
-					this.text = "Toggle Auto Counter Hit: Off"
-				elseif counter_hit_selector == 1 then
-					this.text = "Toggle Auto Counter Hit: On"
+				if dummy_guard == 0 then
+					this.text = "Toggle Guard: Off"
+				elseif dummy_guard == 1 then
+					this.text = "Toggle Guard: On"
 				end
 			end,
 	},
 	{
-		text = "Toggle Auto Air Tech",
+		text = "Toggle Random Guard (works only if guard is on)",
 		x = 8,
 		y = 50,
 		olcolour = "black",
@@ -40,69 +40,111 @@ guicustompage = {
 		info = {
 		},
 		func =	function()
-				air_tech_selector = air_tech_selector + 1
-				if air_tech_selector > 1 then
-					air_tech_selector = 0
+				dummy_random_guard = dummy_random_guard + 1
+				if dummy_random_guard > 1 then
+					dummy_random_guard = 0
 				end
 			end,
 		autofunc = function(this)
-				if air_tech_selector == 0 then
-					this.text = "Toggle Auto Air Tech: Off"
-				elseif air_tech_selector == 1 then
-					this.text = "Toggle Auto Air Tech: On"
+				if dummy_random_guard == 0 then
+					this.text = "Toggle Random Guard: Off"
+				elseif dummy_random_guard == 1 then
+					this.text = "Toggle Random Guard: On"
 				end
 			end,
 	},
 	{
-		text = "Air tech",
-		x = 170,
-		y = 50,
-		olcolour = "black",
-		handle = 3,
-		info = {
-		},
-		func =	function()
-				tech_type_selector = tech_type_selector + 1
-				if tech_type_selector > 2 then
-					tech_type_selector = 0
-				end
-			end,
-		autofunc = function(this)
-				if tech_type_selector == 0 then
-					this.text = "Air Tech: Neutral"
-				elseif tech_type_selector == 1 then
-					this.text = "Air Tech: Backward"
-				elseif tech_type_selector == 2 then
-					this.text = "Air Tech: Forward"
-				end
-			end,
-	},
-	{
-		text = "Crouch Cancel Training",
+		text = "Toggle Reversal",
 		x = 8,
 		y = 70,
 		olcolour = "black",
-		handle = 4,
+		handle = 2,
 		info = {
 		},
 		func =	function()
-				crouch_cancel_training_selector = crouch_cancel_training_selector + 1
-				if crouch_cancel_training_selector > 1 then
-					crouch_cancel_training_selector = 0
+				dummy_reversal = dummy_reversal + 1
+				if dummy_reversal > 1 then
+					dummy_reversal = 0
 				end
-				counter_hit_selector = 1
-				air_tech_selector = 1
 			end,
 		autofunc = function(this)
-				if crouch_cancel_training_selector == 0 then
-					this.text = "Crouch Cancel Training: Off"
-				elseif crouch_cancel_training_selector == 1 then
-					this.text = "Crouch Cancel Training: On"
+				if dummy_reversal == 0 then
+					this.text = "Toggle Reversal: Off"
+				elseif dummy_reversal == 1 then
+					this.text = "Toggle Reversal: On"
+				end
+			end,
+	},
+	{
+		text = "Toggle Reversal Random",
+		x = 8,
+		y = 90,
+		olcolour = "black",
+		handle = 2,
+		info = {
+		},
+		func =	function()
+				dummy_reversal_random = dummy_reversal_random + 1
+				if dummy_reversal_random > 1 then
+					dummy_reversal_random = 0
+				end
+			end,
+		autofunc = function(this)
+				if dummy_reversal_random == 0 then
+					this.text = "Toggle Reversal Random: Off"
+				elseif dummy_reversal_random == 1 then
+					this.text = "Toggle Reversal Random: On"
+				end
+			end,
+	},
+	----{
+	-- See below for the character specific button
+	----}
+	{
+			text = "Reversal Move Active Settings",
+			x = 8,
+			y = 110,
+			olcolour = "black",
+			handle = 8,
+			func = 	function() CIG("reversal_move_active_settings", 1) end,
+	},
+	{
+		text = "Toggle Recovery",
+		x = 8,
+		y = 130,
+		olcolour = "black",
+		handle = 2,
+		info = {
+		},
+		func =	function()
+				dummy_recovery = dummy_recovery + 1
+				if dummy_recovery > 1 then
+					dummy_recovery = 0
+				end
+			end,
+		autofunc = function(this)
+				if dummy_recovery == 0 then
+					this.text = "Toggle Recovery: Off"
+				elseif dummy_recovery == 1 then
+					this.text = "Toggle Recovery: On"
 				end
 			end,
 	},
 }
-
+local reversal_move_active_settings = {
+	title = {
+		text = "Reversal Move Active Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.reversal_move_active_settings = reversal_move_active_settings
 ------------------------------------------
 -- Add-on
 ------------------------------------------

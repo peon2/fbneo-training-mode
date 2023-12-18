@@ -150,8 +150,19 @@ local training_config = {
 	['reversal_move'] = {moves['THROW_C'],moves['GUARD']}, --[[ if reversal random is false it will execute the first element of this table, if it is true it will pick one of them randomly ]]
 	['reversal_random'] = true
 }
+customconfig = {
+	dummy_guard = 0,
+	dummy_random_guard = 0,
+	dummy_reversal = 0,
+	dummy_recovery = 0,
+	dummy_reversal_random = 0,
+	}
 
-local reversal = false
+dummy_guard = customconfig.dummy_guard
+dummy_random_guard = customconfig.dummy_random_guard
+dummy_recovery = customconfig.dummy_recovery
+dummy_reversal = customconfig.dummy_reversal
+dummy_reversal_random = customconfig.dummy_reversal_random
 --local reversal_move =0x62 -- 0x63 --standing punch
 --local p2move_adress = 0x108373
 local p2blockstun_address = 0x1083E3
@@ -294,7 +305,9 @@ end
 function doRecovery()
 	if doMove(moves['AB'],12)== false then
 		trigger_recovery = false
-		currentState = "reversal"	
+		if dummy_reversal == 1 then
+			currentState = "reversal"
+		end 
 	end
 end
 
@@ -347,7 +360,7 @@ local CURRENT_REVERSAL_MOVE = {}
 function getCurrentReversalMove()
 	local next = next
 	if next(CURRENT_REVERSAL_MOVE) == nil then		
-		if training_config['reversal_random'] then
+		if dummy_reversal_random == 1 then
 			CURRENT_REVERSAL_MOVE =training_config['reversal_move'][math.random(1,  #training_config['reversal_move'])]
 		else
 			CURRENT_REVERSAL_MOVE = training_config['reversal_move'][1]
@@ -388,6 +401,7 @@ function randomGen()
 	--print(emu.framecount().." : "..os.time().." "..c)
 	return b
 end
+
 function Run() -- runs every frame
 	
 	--if playerTwoIsBeingHit() then
@@ -397,13 +411,13 @@ function Run() -- runs every frame
 	--wb(0x10DA5E,0x0A))
 	--[[ detect which state is the dummy on ]]
 	if isInAir() then
-		if (training_config["recovery"] == true) and trigger_recovery == true --[[ and (not currentState =="reversal") ]] then			
+		if (dummy_recovery == 1) and trigger_recovery == true --[[ and (not currentState =="reversal") ]] then			
 			currentState = "recovery"
 		end		
 	elseif isInAir() and trigger_recovery == false  then
 			currentState = "start"
 	elseif  playerTwoInBlockstun() and trigger_reversal == true then		
-		if training_config["reversal"] == true then			
+		if dummy_reversal == 1 then			
 			currentState = "reversal"			
 			trigger_recovery = false
 		end	
@@ -427,8 +441,8 @@ function Run() -- runs every frame
 		end
 	end
 	--[[ this applies the guard or the random guard ]]
-	if (training_config["dummy_guard"] == true) and  can_block == true then
-		if training_config["dummy_random_guard"] == true then
+	if (dummy_guard == 1) and  can_block == true then
+		if dummy_random_guard == 1 then
 			local percentage_of_down = 50
 			local randomNumber = math.random(1, 100)
 			if(randomNumber <= percentage_of_down )then
