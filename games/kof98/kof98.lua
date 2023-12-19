@@ -37,119 +37,10 @@ local trigger_recovery = true
 function isInAir()
 	 return rb(in_air)~=0
 end
-local moves = {
-	['DPC'] = {
-		["sequence"] = {
-			{'_'},
-			{'_'},
-			{'_'},
-			{'_'},
-			{'_'},
-			{ 'forward'},
-			{ 'forward'},
-			{'_'},
-			{'_'},
-			{'down'},
-			{'down'},
-			{'down', 'forward','c'},
-			{'down', 'forward','c'},
-			{'c'},
-			{'c'},
-			{'c'}},
-			times = 5
-	},
-	['DPA'] = {
-		["sequence"] = {
-			{'_'},
-			{'_'},
-			{ 'forward'},
-			{ 'forward'},
-			{'_'},
-			{'_'},
-			{'down'},
-			{'down'},
-			{'down', 'forward','a'},
-			{'down', 'forward','a'},
-			{'a'},
-			{'a'},
-			{'a'}},
-			times = 13
-	},
-	['DOWN_C']={
-		["sequence"] = {
-			{'down'},
-			{'down'},
-			{'down', 'c'},
-			{'down', 'c'},
-		},
-		times = 50
-	},
-	['GUARD']={
-		["sequence"] = {
-			{'back','down'},
-			{'back','down'},
-			{'back','down'},
-			{'back','down'},
-			{'back','down'},
 
-		},
-		times = 10
-	},
-	['THROW_C']={
-		["sequence"] = {
-			{'back'},
-			{'back'},
-			{'back'},
-			{'back'},
-			{'back', 'c'},
-			{'back', 'c'},				
-			{'back'},
-			{'back'},
-			{'back'},
-			{'back'},
-		},
-		times = 10
-	},
-	['CD']={
-		["sequence"] = {		
-			{'_'},
-			{'_'},
-			{'c', 'd'} 
-		},
-		times = 10
-	},
-	['AB']={
-		["sequence"] = {
-			{'_'},
-			{'_'},
-			{'a', 'b'} 
-		},
-		times = 20
-	},
-	['FAB']={
-		["sequence"] = {
-			{'_'},		
-			{'_'},		
-			{'forward'},
-			{'forward'},
-			{'forward','a', 'b'},
-			{'forward','a', 'b'},
-			{'a', 'b'},
-			{'a', 'b'},
-		},
-		times = 10
-	},
-}
 
-local training_config = {
-	["dummy_random_guard"] = false,
-	["dummy_guard"] = true,
-	['reversal'] = true,
-	['reversal_on_recovery'] = false,
-	["recovery"] = false,
-	['reversal_move'] = {moves['THROW_C'],moves['GUARD']}, --[[ if reversal random is false it will execute the first element of this table, if it is true it will pick one of them randomly ]]
-	['reversal_random'] = true
-}
+
+
 customconfig = {
 	dummy_guard = 0,
 	dummy_random_guard = 0,
@@ -163,6 +54,7 @@ dummy_random_guard = customconfig.dummy_random_guard
 dummy_recovery = customconfig.dummy_recovery
 dummy_reversal = customconfig.dummy_reversal
 dummy_reversal_random = customconfig.dummy_reversal_random
+
 --local reversal_move =0x62 -- 0x63 --standing punch
 --local p2move_adress = 0x108373
 local p2blockstun_address = 0x1083E3
@@ -358,14 +250,18 @@ function doMove(move, times)
 end
 local CURRENT_REVERSAL_MOVE = {}
 function getCurrentReversalMove()
+	print("dummy_reversal_moves")
+	print(dummy_reversal_moves)
 	local next = next
 	if next(CURRENT_REVERSAL_MOVE) == nil then		
 		if dummy_reversal_random == 1 then
-			CURRENT_REVERSAL_MOVE =training_config['reversal_move'][math.random(1,  #training_config['reversal_move'])]
+			CURRENT_REVERSAL_MOVE =moves[dummy_reversal_moves[math.random(1,  #dummy_reversal_moves)]]
 		else
-			CURRENT_REVERSAL_MOVE = training_config['reversal_move'][1]
+			CURRENT_REVERSAL_MOVE = moves[dummy_reversal_moves[1]]
 		end
 	end
+	print("CURRENT_REVERSAL_MOVE")
+	print(CURRENT_REVERSAL_MOVE)
 	return CURRENT_REVERSAL_MOVE
 end
 function doReversal()

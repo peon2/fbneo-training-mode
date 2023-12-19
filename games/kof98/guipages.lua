@@ -109,9 +109,35 @@ guicustompage = {
 			func = 	function() CIG("reversal_move_active_settings", 1) end,
 	},
 	{
-		text = "Toggle Recovery",
+		text = "Current Reversal Move(s)",
 		x = 8,
 		y = 130,
+		olcolour = "black",
+		handle = 2,
+		info = {
+            "the first one is the default"
+		},
+		func =	function()
+				
+			end,
+		autofunc = function(this)
+            local txt = ""
+            local i = 1
+                for index, value in ipairs(dummy_reversal_moves) do
+                    if i == 1 then
+                        txt = txt..value
+                        i = 1 + 1
+                    else
+                        txt = txt..", "..value
+                    end
+                end   
+                this.text =  "Current Reversal Move(s): ("..txt..")"
+			end,
+	},
+	{
+		text = "Toggle Recovery",
+		x = 8,
+		y = 150,
 		olcolour = "black",
 		handle = 2,
 		info = {
@@ -189,3 +215,158 @@ function determineButtonYPos(_guipage)
 		return _guipage[#_guipage].y+20
 	end
 end
+
+--[[ REVERSAL MOVE ACTIVE SETTINGS  ]]
+
+moves = {
+	['DPC'] = {
+		["sequence"] = {
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{ 'forward'},
+			{ 'forward'},
+			{'_'},
+			{'_'},
+			{'down'},
+			{'down'},
+			{'down', 'forward','c'},
+			{'down', 'forward','c'},
+			{'c'},
+			{'c'},
+			{'c'}},
+			times = 5
+	},
+	['DPA'] = {
+		["sequence"] = {
+			{'_'},
+			{'_'},
+			{ 'forward'},
+			{ 'forward'},
+			{'_'},
+			{'_'},
+			{'down'},
+			{'down'},
+			{'down', 'forward','a'},
+			{'down', 'forward','a'},
+			{'a'},
+			{'a'},
+			{'a'}},
+			times = 13
+	},
+	['DOWN_C']={
+		["sequence"] = {
+			{'down'},
+			{'down'},
+			{'down', 'c'},
+			{'down', 'c'},
+		},
+		times = 50
+	},
+	['GUARD']={
+		["sequence"] = {
+			{'back','down'},
+			{'back','down'},
+			{'back','down'},
+			{'back','down'},
+			{'back','down'},
+
+		},
+		times = 10
+	},
+	['THROW_C']={
+		["sequence"] = {
+			{'back'},
+			{'back'},
+			{'back'},
+			{'back'},
+			{'back', 'c'},
+			{'back', 'c'},				
+			{'back'},
+			{'back'},
+			{'back'},
+			{'back'},
+		},
+		times = 10
+	},
+	['CD']={
+		["sequence"] = {		
+			{'_'},
+			{'_'},
+			{'c', 'd'} 
+		},
+		times = 10
+	},
+	['AB']={
+		["sequence"] = {
+			{'_'},
+			{'_'},
+			{'a', 'b'} 
+		},
+		times = 20
+	},
+	['FAB']={
+		["sequence"] = {
+			{'_'},		
+			{'_'},		
+			{'forward'},
+			{'forward'},
+			{'forward','a', 'b'},
+			{'forward','a', 'b'},
+			{'a', 'b'},
+			{'a', 'b'},
+		},
+		times = 10
+	},
+}
+local reversalmoveactivesettings = {}
+local iterator = 1
+moves_var_names = {}
+for index, value in pairs(moves) do
+   if index == "DPC" then
+    moves_var_names[index] = 1
+   else
+    moves_var_names[index] = 0
+   end
+    reversalmoveactivesettings[index] = {
+        text = "Enable "..index,
+        x = 8,
+        y = 10 + (iterator * 20),
+        olcolour = "black",
+        info = {
+        },
+        func =	function()
+                 moves_var_names[index] = moves_var_names[index]  + 1
+                if  moves_var_names[index]   > 1 then
+                     moves_var_names[index]  = 0
+                end
+                dummy_reversal_moves = getCurrentReversalMoves()
+            end,
+        autofunc = function(this)
+                if  moves_var_names[index]  == 0 then
+                    this.text = "Disable "..index..": Off"
+                elseif  moves_var_names[index]   == 1 then
+                    this.text = "Disable "..index..": On"
+                end
+            end,
+    }
+   iterator = iterator+1 
+table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[index])
+end
+
+
+function getCurrentReversalMoves()
+	local tabl = {}
+	for index, value in pairs(moves_var_names) do
+		if moves_var_names[index] == 1 then
+			table.insert(tabl, index)
+		end
+	end
+	return tabl
+end
+
+dummy_reversal_moves = getCurrentReversalMoves()
+print("settings: ")
+print(dummy_reversal_moves)
