@@ -171,50 +171,7 @@ local reversal_move_active_settings = {
 	},
 }
 guipages.reversal_move_active_settings = reversal_move_active_settings
-------------------------------------------
--- Add-on
-------------------------------------------
-addonpage = {
-	title = {
-		text = "Add-On",
-		x = interactivegui.boxxlength/2 - 10,
-		y = 1,
-	},
-	{
-		text = "<",
-		olcolour = "black",
-		info = "Back",
-		func =  function() 
-			interactivegui.page = 5
-			interactivegui.selection = 1 
-		end,
-	},
-}
-guipages.addonpage = addonpage
 
-addonbutton = {
-		text = "Add-On",
-		x = 210,
-		y = 150,
-		olcolour = "black",
-		handle = 7,
-		func = 	function() CIG("addonpage", 1) end,
-		}
-
-function insertAddonButton()
-	if #addonpage > 1 then
-		table.insert(guicustompage, addonbutton)
-		formatGuiTables()
-	end
-end
-
-function determineButtonYPos(_guipage)
-	if #_guipage == 1 then 
-		return 40
-	else
-		return _guipage[#_guipage].y+20
-	end
-end
 
 --[[ REVERSAL MOVE ACTIVE SETTINGS  ]]
 
@@ -258,12 +215,12 @@ moves = {
 	},
 	['DOWN_C']={
 		["sequence"] = {
-			{'down'},
-			{'down'},
-			{'down', 'c'},
-			{'down', 'c'},
+			{'down', 'forward'},
+			{'down', 'forward'},
+			{'down', 'forward', 'c'},
+			{'down', 'forward', 'c'},
 		},
-		times = 50
+		times = 10
 	},
 	['GUARD']={
 		["sequence"] = {
@@ -320,40 +277,63 @@ moves = {
 		},
 		times = 10
 	},
+	['MASH_CRB']={
+		["sequence"] = {	
+			{'down'},
+			{'down'},
+			{'down'},
+			{'down'},
+			{'down'},
+			{'down'},
+			{'down','b'},
+			{'down', 'b'},
+		},
+		times = 17,
+		default = true
+	},
 }
 local reversalmoveactivesettings = {}
+local moves_var_names = {}
+local elementsPerColumn = 8  -- Elements per column
+local xSpacing = 100  -- Spacing between columns
+local xPosition = 8
+local yPosition = 10
 local iterator = 1
-moves_var_names = {}
+
 for index, value in pairs(moves) do
-   if index == "DPC" then
-    moves_var_names[index] = 1
-   else
-    moves_var_names[index] = 0
-   end
+    if moves[index].default == true then
+        moves_var_names[index] = 1
+    else
+        moves_var_names[index] = 0
+    end
+
+    local column = math.floor((iterator - 1) / elementsPerColumn) + 1
+    local columnElement = (iterator - 1) % elementsPerColumn + 1
+    
+    xPosition = 8 + (column - 1) * xSpacing
+    
+    if columnElement == 1 then
+        yPosition = 10
+    else
+        yPosition = yPosition + 20
+    end
+
     reversalmoveactivesettings[index] = {
-        text = "Enable "..index,
-        x = 8,
-        y = 10 + (iterator * 20),
+        text = "Enable " .. index,
+        x = xPosition,
+        y = yPosition,
         olcolour = "black",
-        info = {
-        },
-        func =	function()
-                 moves_var_names[index] = moves_var_names[index]  + 1
-                if  moves_var_names[index]   > 1 then
-                     moves_var_names[index]  = 0
-                end
-                dummy_reversal_moves = getCurrentReversalMoves()
-            end,
+        info = {},
+        func = function()
+            moves_var_names[index] = (moves_var_names[index] + 1) % 2
+            dummy_reversal_moves = getCurrentReversalMoves()
+        end,
         autofunc = function(this)
-                if  moves_var_names[index]  == 0 then
-                    this.text = "Disable "..index..": Off"
-                elseif  moves_var_names[index]   == 1 then
-                    this.text = "Disable "..index..": On"
-                end
-            end,
+            this.text = "Enable " .. index .. ": " .. ((moves_var_names[index] == 0) and "Off" or "On")
+        end,
     }
-   iterator = iterator+1 
-table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[index])
+    table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[index])
+    iterator = iterator + 1
 end
 
 

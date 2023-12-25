@@ -6,8 +6,15 @@ function gamemsg()
 	print "Only partial support for advance with refilling max meter"
 end
 
-
-
+-------------------------------------------------
+--- POSIBBLE MEMORIE ADRESSES ----
+-------------------------------------------------
+--108477 dizzy timer- it stops counting when the oponent is dizzy
+--1084b0 combo counter
+--1084bb dummy has been grabbed
+--1081a6 Player1 is in air = c0, d8 = standing, e0 = crouching
+--108318 - 108319 Dummy stage position from 0020 (left corner) to 02e0  (right corner)
+--if rb(0x10837E) == 1  then player 2 is in proximity block
 p1maxhealth = 0x68
 p2maxhealth = 0x68
 
@@ -178,7 +185,10 @@ function infiniteTime()
 end
 
 function playerTwoInBlockstun()
-	return rb(p2blockstun_address) == p2blockstun_value
+	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
+		return true
+	end
+	return false
 end
 
 function getFacingDirection()
@@ -195,7 +205,7 @@ function getBlockingDirection()
 end
 
 function doRecovery()
-	if doMove(moves['AB'],12)== false then
+	if doMove(moves['AB'],10)== false then
 		trigger_recovery = false
 		if dummy_reversal == 1 then
 			currentState = "reversal"
@@ -250,8 +260,6 @@ function doMove(move, times)
 end
 local CURRENT_REVERSAL_MOVE = {}
 function getCurrentReversalMove()
-	print("dummy_reversal_moves")
-	print(dummy_reversal_moves)
 	local next = next
 	if next(CURRENT_REVERSAL_MOVE) == nil then		
 		if dummy_reversal_random == 1 then
@@ -260,14 +268,19 @@ function getCurrentReversalMove()
 			CURRENT_REVERSAL_MOVE = moves[dummy_reversal_moves[1]]
 		end
 	end
-	print("CURRENT_REVERSAL_MOVE")
-	print(CURRENT_REVERSAL_MOVE)
 	return CURRENT_REVERSAL_MOVE
 end
+
+local iddle_time = false
+local iddle_finish_time = 0
+
 function doReversal()
 	if doMove(getCurrentReversalMove()) == false then
 		trigger_reversal = false
-		CURRENT_REVERSAL_MOVE = {}			
+		trigger_recovery = false
+		CURRENT_REVERSAL_MOVE = {}
+		iddle_time = true
+		iddle_finish_time = emu.framecount() + 100
 	end
 end
 function p2Block()
@@ -299,20 +312,26 @@ function randomGen()
 end
 
 function Run() -- runs every frame
-	
-	--if playerTwoIsBeingHit() then
-	--if rb(0x10837E) == 1  then player 2 is in proximity block
-	--wb(0x108102,44)
-	--wb(0x108103,46)
-	--wb(0x10DA5E,0x0A))
-	--[[ detect which state is the dummy on ]]
-	if isInAir() then
-		if (dummy_recovery == 1) and trigger_recovery == true --[[ and (not currentState =="reversal") ]] then			
-			currentState = "recovery"
-		end		
+	-- detect which state is the dummy on 
+	if iddle_time == true then
+		if iddle_finish_time == emu.framecount() then
+			iddle_time = false
+			iddle_finish_time = 0
+		end
+	end
+	if isInAir() and trigger_recovery == true and iddle_time == false then		
+			print("is in air but recovery is true")
+			if currentState ~= "reversal" then
+				if (dummy_recovery == 1)  then	
+					print("recovery has been activated")		
+					currentState = "recovery"
+				end	
+			end	
 	elseif isInAir() and trigger_recovery == false  then
+		
+			print("is in air but recovery is false")
 			currentState = "start"
-	elseif  playerTwoInBlockstun() and trigger_reversal == true then		
+	elseif  playerTwoInBlockstun() and trigger_reversal == true then
 		if dummy_reversal == 1 then			
 			currentState = "reversal"			
 			trigger_recovery = false
@@ -320,10 +339,11 @@ function Run() -- runs every frame
 	elseif playerTwoInBlockstun() and trigger_reversal == false  then
 			currentState = "start"
 	end
-	--[[ execute things based on the current state]]
+	-- execute things based on the current state
 	
-	--[[ print("current state is "..currentState) ]]
-	if currentState == "reversal" then			
+	-- print("current state is "..currentState) 
+	if currentState == "reversal" then
+		print("in state of reversal")	
 			doReversal()
 	elseif currentState == "recovery" then				
 		doRecovery()
@@ -333,10 +353,12 @@ function Run() -- runs every frame
 			trigger_reversal = true
 		end
 		if not isInAir() and trigger_recovery == false then
+			print("current state equal start")
+			print("is not in the air and recovery has been reactivated")
 			trigger_recovery = true
 		end
 	end
-	--[[ this applies the guard or the random guard ]]
+	-- this applies the guard or the random guard 
 	if (dummy_guard == 1) and  can_block == true then
 		if dummy_random_guard == 1 then
 			local percentage_of_down = 50
