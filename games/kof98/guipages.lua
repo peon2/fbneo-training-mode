@@ -178,11 +178,6 @@ guipages.reversal_move_active_settings = reversal_move_active_settings
 moves = {
 	['DPC'] = {
 		["sequence"] = {
-			{'_'},
-			{'_'},
-			{'_'},
-			{'_'},
-			{'_'},
 			{ 'forward'},
 			{ 'forward'},
 			{'_'},
@@ -194,7 +189,8 @@ moves = {
 			{'c'},
 			{'c'},
 			{'c'}},
-			times = 5
+			times = 5,
+			default = true
 	},
 	['DPA'] = {
 		["sequence"] = {
@@ -260,7 +256,33 @@ moves = {
 		["sequence"] = {
 			{'_'},
 			{'_'},
-			{'a', 'b'} 
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'_'},
+			{'a', 'b'}, 
+			{'a', 'b'}, 
+			{'a', 'b'}, 
+			{'a', 'b'}, 
 		},
 		times = 20
 	},
@@ -289,7 +311,6 @@ moves = {
 			{'down', 'b'},
 		},
 		times = 17,
-		default = true
 	},
 }
 local reversalmoveactivesettings = {}

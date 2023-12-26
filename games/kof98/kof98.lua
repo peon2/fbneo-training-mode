@@ -40,8 +40,8 @@ local in_air = 0x108322
 
 local currentState = "start"
 
-local trigger_recovery = true
-function isInAir()
+--[[ local trigger_recovery = true ]]
+local function isInAir()
 	 return rb(in_air)~=0
 end
 
@@ -184,41 +184,60 @@ function infiniteTime()
 	ww(0x10A83a, 0x6000)
 end
 
-function playerTwoInBlockstun()
+local function playerTwoInBlockstun()
 	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
 		return true
 	end
 	return false
 end
 
-function getFacingDirection()
+local function getFacingDirection()
 	if playerTwoFacingLeft() then
 		return "P2 Left"
 	end
 	return "P2 Right"
 end
-function getBlockingDirection()
+local function getBlockingDirection()
 	if playerTwoFacingLeft() then
 		return "P2 Right"
 	end
 	return "P2 Left"
 end
 
-function doRecovery()
-	if doMove(moves['AB'],10)== false then
-		trigger_recovery = false
-		if dummy_reversal == 1 then
-			currentState = "reversal"
-		end 
-	end
+
+local function transitionToState(newState)
+    -- Logic for transitioning to a new state
+    currentState = newState
+    print("Transitioned to state:", newState)
+    -- Additional logic for state transition...
 end
+local iddle_time_running = false
+local iddle_finish_time = 0
+local iddle_time = 60
+local function recoveryEnabled()
+	if iddle_time_running then
+		print("current iddle Time is: "..(iddle_finish_time - emu.framecount()))
+		if iddle_finish_time == emu.framecount()  then
+			iddle_finish_time = 0
+			iddle_time_running = false
+			return true
+		end
+		return false
+	end	
+	return true
+end
+local function startRecoveryIddleTime()
+	iddle_time_running = true
+	iddle_finish_time = emu.framecount() + iddle_time
+end
+
 
 local current_move_index_counter = 1
 local current_move_time_counter = 1
-function doMove(move, times)
+local function doMove(move, times)
 	local seq = move.sequence
 	times = times or  move.times
-	can_block = false
+	--[[ can_block = false ]]
 	local tbl = {}--[[ 
 	print("current_move_time_counter: "..current_move_time_counter) ]]
 	if current_move_time_counter > times then
@@ -226,8 +245,7 @@ function doMove(move, times)
 		
 	
 		current_move_time_counter =1
-		can_block = true
-		currentState = "start" 	
+		--[[ can_block = true ]]	
 		return false
 	end
 --[[ 	print(joypad.get()["P1 Button B"]) ]]
@@ -259,7 +277,7 @@ function doMove(move, times)
 	return true
 end
 local CURRENT_REVERSAL_MOVE = {}
-function getCurrentReversalMove()
+local function getCurrentReversalMove()
 	local next = next
 	if next(CURRENT_REVERSAL_MOVE) == nil then		
 		if dummy_reversal_random == 1 then
@@ -271,19 +289,35 @@ function getCurrentReversalMove()
 	return CURRENT_REVERSAL_MOVE
 end
 
-local iddle_time = false
-local iddle_finish_time = 0
 
-function doReversal()
+
+local function doReversal()
 	if doMove(getCurrentReversalMove()) == false then
-		trigger_reversal = false
-		trigger_recovery = false
+		--[[ trigger_reversal = false
+		trigger_recovery = false ]]
 		CURRENT_REVERSAL_MOVE = {}
-		iddle_time = true
-		iddle_finish_time = emu.framecount() + 100
+		if dummy_guard == 1 then
+        	transitionToState("blocking")  -- Transition to the "blocking" state
+		else
+			transitionToState("start")
+			startRecoveryIddleTime()
+		end
 	end
 end
-function p2Block()
+local function doRecovery()
+	if doMove(moves['AB'],1)== false then
+		startRecoveryIddleTime()
+		--[[ trigger_recovery = false ]]
+		if dummy_reversal == 1 then
+			transitionToState("reversal")
+		elseif dummy_guard == 1 then
+			transitionToState("blocking")
+		else
+			transitionToState("start")
+		end
+	end
+end
+ function p2Block()
 	local tbl = {}	
 	tbl[getBlockingDirection()] = 1
 	tbl["P2 Down"] = 1
@@ -294,7 +328,7 @@ function p2Crouch()
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
-function PlayerOnePressedButtons()
+local function PlayerOnePressedButtons()
 	local tbl = joypad.get()
 	if (tbl["P1 Button A"] == true) or (tbl["P1 Button B"] == true)  or (tbl["P1 Button C"] == true)  or (tbl["P1 Button D"] == true) then
 		return true
@@ -311,15 +345,65 @@ function randomGen()
 	return b
 end
 
+
+
+function block()
+    -- Additional logic for blocking...
+	if dummy_random_guard == 1 then
+		-- Logic for blocking behavior
+		print("Random Blocking!")
+		local percentage_of_down = 50
+		local randomNumber = math.random(1, 100)
+		if(randomNumber <= percentage_of_down )then
+			p2Crouch()
+		else
+			p2Block() 
+		end
+	else
+		-- Logic for blocking behavior
+		print("Blocking!")
+		p2Block()
+	end
+end
+
+require('games.kof98.tests_kof98')
+testsRun = true
 function Run() -- runs every frame
+	--run tests once
+	runTests()
 	-- detect which state is the dummy on 
-	if iddle_time == true then
+	--[[ if iddle_time == true then
 		if iddle_finish_time == emu.framecount() then
 			iddle_time = false
 			iddle_finish_time = 0
 		end
-	end
-	if isInAir() and trigger_recovery == true and iddle_time == false then		
+	end ]]
+
+	 -- Check the current state and execute corresponding behavior
+	 if currentState == "start" then
+        -- Logic for the "start" state
+        -- Additional logic specific to the "start" state...
+		if dummy_guard == 1 then
+        	transitionToState("blocking")  -- Transition to the "blocking" state
+		elseif dummy_recovery == 1 then
+			if (recoveryEnabled()) then
+				if isInAir() then
+					transitionToState("recovery")
+				end
+			end
+		end
+	elseif currentState == "blocking" then
+		if  playerTwoInBlockstun() and dummy_reversal == 1 then
+			transitionToState("reversal")
+		end
+		block()
+	elseif currentState == "recovery" then
+		doRecovery()
+	elseif currentState == "reversal" then
+		doReversal()
+	 end
+
+	--[[ if isInAir() and trigger_recovery == true and iddle_time == false then		
 			print("is in air but recovery is true")
 			if currentState ~= "reversal" then
 				if (dummy_recovery == 1)  then	
@@ -360,18 +444,8 @@ function Run() -- runs every frame
 	end
 	-- this applies the guard or the random guard 
 	if (dummy_guard == 1) and  can_block == true then
-		if dummy_random_guard == 1 then
-			local percentage_of_down = 50
-			local randomNumber = math.random(1, 100)
-			if(randomNumber <= percentage_of_down )then
-				p2Crouch()
-			else
-				p2Block() 
-			end
-		else
-			p2Block()
-		end
-	end
+		
+	end ]]
 
 	
 	infiniteTime()
