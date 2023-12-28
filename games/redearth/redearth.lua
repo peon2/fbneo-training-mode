@@ -1,5 +1,7 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+REPLAY_SAVESTATE_INTERVAL = 300
+
 p1maxhealth = 124
 p2maxhealth = 124
 p1maxmeter = 3

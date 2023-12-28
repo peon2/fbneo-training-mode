@@ -1272,7 +1272,7 @@ local readGUIInputs = function()
 	
 	--kb
 	guiinputs.KB.previousinputs = nil
-	guiinputs.KB.previousinputs = copytable(guiinputs.KB)
+	guiinputs.KB.previousinputs = copytable(guiinputs.KB.inputs)
 	guiinputs.KB.inputs = {}
 	for i,v in pairs(input.get()) do -- check every button
 		if i~="xmouse" and i~="ymouse" then -- mouse not implemented correctly yet
@@ -1729,10 +1729,9 @@ local playBack = function()
 
 	if recording.skiptostart and recordslot.start then start = recordslot.start end
 	if recording.skiptofinish and recordslot.finish then finish = recordslot.finish end
-
-	gui.text(1,1,"Slot "..recording.playbackslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
 	
 	if recording.starttime > recording.startcounter then -- delay until replay starts
+		gui.text(1,1,"Slot "..recording.playbackslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
 		recording.startcounter = recording.startcounter+1
 		recordslot.framestart = recordslot.framestart+1
 		return
@@ -1741,17 +1740,18 @@ local playBack = function()
 	if recording.maxstarttime>0 then gui.text(72,1,"Delay: "..recording.starttime) end -- show delay
 
 	if fc - recordslot.framestart + start > finish then
-		recordslot.framestart = nil
 		if not recording.loop then -- finished replaying, reset everything
+			recordslot.framestart = nil
 			recording.playback = false
 			toggleSwapInputs(false)
 			recording.playbackslot = nil
+			return
 		else -- loop
-			recordslot.framestart = nil
-			togglePlayBack(true)
+			recordslot.framestart = fc-1
 		end
-		return
 	end
+
+	gui.text(1,1,"Slot "..recording.playbackslot.." ("..fc-recordslot.framestart.."/"..#recordslot..")")
 
 	Unserialise(recordslot[fc - recordslot.framestart + start], recordslot._stable, recordslot.constants)
 	local raw = recordslot[fc - recordslot.framestart + start].raw
@@ -2706,6 +2706,7 @@ registers = {
 	registerbefore = {},
 	guiregister = {},
 	registerafter = {},
+	emuexit = {},
 }
 
 local drawcomboHUD = function()
@@ -3429,6 +3430,13 @@ setRegisters = function() -- pre-calc stuff
 
 	usage()
 	if gamemsg then print() gamemsg() print() end
+
+	emu.registerexit(function()
+		saveConfig()
+		for _,v in ipairs(registers.emuexit) do
+			v()
+		end
+	end)
 end
 
 local saveprocedure = function()
@@ -3440,13 +3448,8 @@ local loadprocedure = function()
 	savestatePlayBack()
 end
 
-local exitprocedure = function()
-	saveConfig()
-end
-
 savestate.registersave(saveprocedure)
 savestate.registerload(loadprocedure)
-emu.registerexit(exitprocedure)
 
 setRegisters()
 

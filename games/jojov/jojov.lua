@@ -1,6 +1,8 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 --many of these values came from https://github.com/maximusmaxy/JoJoban-Training-Mode-Menu-FBNeo
 
+REPLAY_SAVESTATE_INTERVAL = 300
+
 p1maxhealth = 144
 p2maxhealth = 144
 
