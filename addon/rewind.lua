@@ -1,11 +1,12 @@
 -- https://github.com/peon2/Fightcade-Replay-Control/ with edits from Pof
 
---[[
-Pretty unstable, enable with the F key.
-Rewind with R, Fast-Forward with F, Pause with P.
-If you have Paused, R and F move back/forward a frame respectively instead.
-Especially unstable with games that have larger RAM sizes like the cps3 games. These games have a larger distance between each savestate.
---]]
+print "Rewind System for Fightcade:"
+print "Very unstable, enable with the F key."
+print "If you start rewinding/fast-forwarding/pausing, assume future inputs won't work. Any inputs already seen will work though."
+print "Rewind with R, Fast-Forward with F, Pause with P."
+print "If you have Paused, R and F move back/forward a frame respectively instead."
+print "Especially unstable with games that have larger RAM sizes like the cps3 games. These games have a larger distance between each savestate."
+print "Because Savestates cant be stored in RAM, a bunch of files are made which should be cleaned up."
 
 local REPLAY_SAVESTATE_INTERVAL = REPLAY_SAVESTATE_INTERVAL or 16 -- frames between each state being saved
 local SAVESTATE_INTERVAL = REPLAY_SAVESTATE_INTERVAL
@@ -79,7 +80,7 @@ local inputParse = function()
 		end
 		if pauseframe then
 			pausemove = true
-			newfc = fc-1
+			newfc = fc-2
 		end
 		if (sstable[newfc]) then -- if this savestate exists
 			savestate.load(sstable[newfc]) -- load
@@ -131,6 +132,7 @@ local function rewind()
 end
 
 local function exitprocedure()
+	if not enabled then return end
 	for i,_ in pairs(sstable) do
 		os.remove(i)
 	end
