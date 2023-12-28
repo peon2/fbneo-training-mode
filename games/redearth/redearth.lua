@@ -94,9 +94,9 @@ end
 function writePlayerOneMeter(meter)
 
 	if meter > 3 then meter = 3 end
-	memory.writebyte(0x206A8D5, meter)
+	wb(0x206A8D5, meter)
 	for i = 1,meter do
-		memory.writebyte(0x0206A8CD+i, 2)
+		wb(0x0206A8CD+i, 2)
 	end
 end
 
@@ -109,7 +109,7 @@ function _writePlayerTwoMeter(meter)
 end
 
 local function infiniteTime()
-	memory.writebyte(0x2060701,154)
+	wb(0x2060701,154)
 end
 
 stunMeterEnabled = true

@@ -21,10 +21,19 @@
 --	- Accept numbers in save_name only if they follow a character
 ---------------------------------------------------------------------
 
+---------------------------------------------------------------------
+-- 	Changes made by pof to make it generic for all games:
+-- 	- removed ssf2x character detection, paths...
+--	- added replay takeover (for P1 only so far)
+--	- changed ST specific stuff like gamestate, frameCount, etc.
+---------------------------------------------------------------------
+
 ------------------------------------------
 --	Initialization
 ------------------------------------------
 local DEBUG = false
+
+if REPLAY then print "For replay takeover, press Alt+5 to record a mission" end
 
 function back() -- Should be modified since "back" could be mapped to another button
 	if guiinputs.P1["button6"] and not guiinputs.P1.previousinputs["button6"] then
@@ -34,27 +43,10 @@ function back() -- Should be modified since "back" could be mapped to another bu
 	end
 end
 
-------------------------
---	Constants
-------------------------
-local characters_name = {
-	"Blanka",
-	"Boxer",
-	"Cammy",
-	"Chun Li",
-	"Claw",
-	"Dee Jay",
-	"Dhalsim",
-	"Dictator",
-	"Honda",
-	"Fei Long",
-	"Guile",
-	"Ken",
-	"Ryu",
-	"Sagat",
-	"T-hawk",
-	"Zangief",
-}
+if dirname == "" then
+	dirname = emu.romname()
+end
+
 --------------------------------------------------
 --	Textfield : adaptation of Grouflon's work
 -- 	https://github.com/Grouflon/3rd_training_lua
@@ -187,7 +179,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	function tf:draw()
 		local _c = 0xFFFF00FF
 		local _cycle = 100
-		if ((gamestate.frame_number % _cycle) / _cycle) < 0.5 then
+		if ((emu.framecount() % _cycle) / _cycle) < 0.5 then
 			gui.text(interactivegui.boxx + x - 3 + (#tf.content - 1) * 4, interactivegui.boxy + y + 4, "_", _c)
 		end
 		gui.text(interactivegui.boxx + x - 3, interactivegui.boxy + y + 2, tf.string, _c)
@@ -319,8 +311,6 @@ end
 -----------------------------
 local missions_button = {
 		text = "Missions",
-		x = 8,
-		y = determineButtonYPos(addonpage),
 		olcolour = "black",
 		info = {
 			"A mission is a savestate coupled with one or more replay files.",
@@ -329,7 +319,7 @@ local missions_button = {
 		},
 		func = 	function() CIG("missions_hub", 1) end,
 	}
-table.insert(addonpage, missions_button)
+insertAddonButton(missions_button)
 ------------------------------------------
 local missions_hub = {
 	title = {
@@ -346,7 +336,7 @@ local missions_hub = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG("addonpage",1) end,
+		func =  function() CIG("addonpage1",1) end,
 	},
 	{
 		text = "Delete the selected missions",
@@ -355,135 +345,155 @@ local missions_hub = {
 		olcolour = "black",
 		func =  function() end,
 	},
-	{
-		text = "Blanka",
-		x = 35,
-		y = 35,
-		olcolour = "black",
-		handle = 1,
-		func = 	function() CIG("blanka_missions_page", 1) end,
-	},
-	{
-		text = "Boxer",
-		x = 35,
-		y = 50,
-		olcolour = "black",
-		handle = 2,
-		func = 	function() CIG("boxer_missions_page", 1) end,
-	},
-	{
-		text = "Cammy",
-		x = 35,
-		y = 65,
-		olcolour = "black",
-		handle = 3,
-		func = 	function() CIG("cammy_missions_page", 1) end,
-	},
-	{
-		text = "Chun Li",
-		x = 35,
-		y = 80,
-		olcolour = "black",
-		handle = 4,
-		func = 	function() CIG("chunli_missions_page", 1) end,
-	},
-	{
-		text = "Claw",
-		x = 95,
-		y = 35,
-		olcolour = "black",
-		handle = 5,
-		func = 	function() CIG("claw_missions_page", 1) end,
-	},
-	{
-		text = "Dhalsim",
-		x = 95,
-		y = 50,
-		olcolour = "black",
-		handle = 6,
-		func = 	function() CIG("dhalsim_missions_page", 1) end,
-	},
-	{
-		text = "Dictator",
-		x = 95,
-		y = 65,
-		olcolour = "black",
-		handle = 7,
-		func = 	function() CIG("dictator_missions_page", 1) end,
-	},
-	{
-		text = "Dee Jay",
-		x = 95,
-		y = 80,
-		olcolour = "black",
-		handle = 8,
-		func = 	function() CIG("deejay_missions_page", 1) end,
-	},
-	{
-		text = "Fei Long",
-		x = 155,
-		y = 35,
-		olcolour = "black",
-		handle = 9,
-		func = 	function() CIG("feilong_missions_page", 1) end,
-	},
-	{
-		text = "Guile",
-		x = 155,
-		y = 50,
-		olcolour = "black",
-		handle = 10,
-		func = 	function() CIG("guile_missions_page", 1) end,
-	},
-	{
-		text = "Honda",
-		x = 155,
-		y = 65,
-		olcolour = "black",
-		handle = 11,
-		func = 	function() CIG("ehonda_missions_page", 1) end,
-	},
-	{
-		text = "Ken",
-		x = 155,
-		y = 80,
-		olcolour = "black",
-		handle = 12,
-		func = 	function() CIG("ken_missions_page", 1) end,
-	},
-	{
-		text = "Ryu",
-		x = 215,
-		y = 35,
-		olcolour = "black",
-		handle = 13,
-		func = 	function() CIG("ryu_missions_page", 1) end,
-	},
-	{
-		text = "Sagat",
-		x = 215,
-		y = 50,
-		olcolour = "black",
-		handle = 14,
-		func = 	function() CIG("sagat_missions_page", 1) end,
-	},
-	{
-		text = "T-Hawk",
-		x = 215,
-		y = 65,
-		olcolour = "black",
-		handle = 15,
-		func = 	function() CIG("thawk_missions_page", 1) end,
-	},
-	{
-		text = "Zangief",
-		x = 215,
-		y = 80,
-		olcolour = "black",
-		handle = 16,
-		func = 	function() CIG("zangief_missions_page", 1) end,
-	},
 }
+
+local missions_hub_characters = {}
+if (emu.romname() == 'ssf2xjr1') then
+	missions_hub_characters = {
+		{
+			text = "Blanka",
+			x = 35,
+			y = 35,
+			olcolour = "black",
+			handle = 1,
+			func = 	function() CIG("blanka_missions_page", 1) end,
+		},
+		{
+			text = "Boxer",
+			x = 35,
+			y = 50,
+			olcolour = "black",
+			handle = 2,
+			func = 	function() CIG("boxer_missions_page", 1) end,
+		},
+		{
+			text = "Cammy",
+			x = 35,
+			y = 65,
+			olcolour = "black",
+			handle = 3,
+			func = 	function() CIG("cammy_missions_page", 1) end,
+		},
+		{
+			text = "Chun Li",
+			x = 35,
+			y = 80,
+			olcolour = "black",
+			handle = 4,
+			func = 	function() CIG("chunli_missions_page", 1) end,
+		},
+		{
+			text = "Claw",
+			x = 95,
+			y = 35,
+			olcolour = "black",
+			handle = 5,
+			func = 	function() CIG("claw_missions_page", 1) end,
+		},
+		{
+			text = "Dhalsim",
+			x = 95,
+			y = 50,
+			olcolour = "black",
+			handle = 6,
+			func = 	function() CIG("dhalsim_missions_page", 1) end,
+		},
+		{
+			text = "Dictator",
+			x = 95,
+			y = 65,
+			olcolour = "black",
+			handle = 7,
+			func = 	function() CIG("dictator_missions_page", 1) end,
+		},
+		{
+			text = "Dee Jay",
+			x = 95,
+			y = 80,
+			olcolour = "black",
+			handle = 8,
+			func = 	function() CIG("deejay_missions_page", 1) end,
+		},
+		{
+			text = "Fei Long",
+			x = 155,
+			y = 35,
+			olcolour = "black",
+			handle = 9,
+			func = 	function() CIG("feilong_missions_page", 1) end,
+		},
+		{
+			text = "Guile",
+			x = 155,
+			y = 50,
+			olcolour = "black",
+			handle = 10,
+			func = 	function() CIG("guile_missions_page", 1) end,
+		},
+		{
+			text = "Honda",
+			x = 155,
+			y = 65,
+			olcolour = "black",
+			handle = 11,
+			func = 	function() CIG("ehonda_missions_page", 1) end,
+		},
+		{
+			text = "Ken",
+			x = 155,
+			y = 80,
+			olcolour = "black",
+			handle = 12,
+			func = 	function() CIG("ken_missions_page", 1) end,
+		},
+		{
+			text = "Ryu",
+			x = 215,
+			y = 35,
+			olcolour = "black",
+			handle = 13,
+			func = 	function() CIG("ryu_missions_page", 1) end,
+		},
+		{
+			text = "Sagat",
+			x = 215,
+			y = 50,
+			olcolour = "black",
+			handle = 14,
+			func = 	function() CIG("sagat_missions_page", 1) end,
+		},
+		{
+			text = "T-Hawk",
+			x = 215,
+			y = 65,
+			olcolour = "black",
+			handle = 15,
+			func = 	function() CIG("thawk_missions_page", 1) end,
+		},
+		{
+			text = "Zangief",
+			x = 215,
+			y = 80,
+			olcolour = "black",
+			handle = 16,
+			func = 	function() CIG("zangief_missions_page", 1) end,
+		},
+	}
+else
+	missions_hub_characters = {
+		{
+			text = dirname,
+			x = 35,
+			y = 35,
+			olcolour = "black",
+			handle = 1,
+			func = 	function() CIG("game_missions_page", 1) end,
+		},
+	}
+end
+for i = 1, #missions_hub_characters do
+	table.insert(missions_hub, missions_hub_characters[i])
+end
 guipages.missions_hub = missions_hub
 -------------------------------
 --	Characters' folders
@@ -491,7 +501,7 @@ guipages.missions_hub = missions_hub
 local function makeCharacterPage(character)
 	return {
 		title = {
-			text = character,
+			text = "Missions for "..character,
 			x = interactivegui.boxxlength/2 - 25,
 			y = 1,
 		},
@@ -504,27 +514,75 @@ local function makeCharacterPage(character)
 	}
 end
 
+local characters_name = { dirname };
+local characters = characters_name;
+if (emu.romname() == 'ssf2xjr1') then
+	characters =
+	{
+		"blanka",
+		"boxer",
+		"cammy",
+		"chunli",
+		"claw",
+		"deejay",
+		"dhalsim",
+		"dictator",
+		"ehonda",
+		"feilong",
+		"guile",
+		"ken",
+		"ryu",
+		"sagat",
+		"thawk",
+		"zangief",
+	}
+	characters_name = {
+		"Blanka",
+		"Boxer",
+		"Cammy",
+		"Chun Li",
+		"Claw",
+		"Dee Jay",
+		"Dhalsim",
+		"Dictator",
+		"Honda",
+		"Fei Long",
+		"Guile",
+		"Ken",
+		"Ryu",
+		"Sagat",
+		"T-hawk",
+		"Zangief",
+	}
+end
+
 local missions_page = {}
 for i = 1, #characters do
 	missions_page[characters[i]] = makeCharacterPage(characters_name[i])
 end
+
 -- Inserting character specific pages
-guipages.blanka_missions_page = missions_page["blanka"]
-guipages.boxer_missions_page = missions_page["boxer"]
-guipages.cammy_missions_page = missions_page["cammy"]
-guipages.chunli_missions_page = missions_page["chunli"]
-guipages.claw_missions_page = missions_page["claw"]
-guipages.deejay_missions_page = missions_page["deejay"]
-guipages.dhalsim_missions_page = missions_page["dhalsim"]
-guipages.dictator_missions_page = missions_page["dictator"]
-guipages.feilong_missions_page = missions_page["feilong"]
-guipages.guile_missions_page = missions_page["guile"]
-guipages.ehonda_missions_page = missions_page["ehonda"]
-guipages.ken_missions_page = missions_page["ken"]
-guipages.ryu_missions_page = missions_page["ryu"]
-guipages.sagat_missions_page = missions_page["sagat"]
-guipages.thawk_missions_page = missions_page["thawk"]
-guipages.zangief_missions_page = missions_page["zangief"]
+if (emu.romname() == 'ssf2xjr1') then
+	guipages.blanka_missions_page = missions_page["blanka"]
+	guipages.boxer_missions_page = missions_page["boxer"]
+	guipages.cammy_missions_page = missions_page["cammy"]
+	guipages.chunli_missions_page = missions_page["chunli"]
+	guipages.claw_missions_page = missions_page["claw"]
+	guipages.deejay_missions_page = missions_page["deejay"]
+	guipages.dhalsim_missions_page = missions_page["dhalsim"]
+	guipages.dictator_missions_page = missions_page["dictator"]
+	guipages.feilong_missions_page = missions_page["feilong"]
+	guipages.guile_missions_page = missions_page["guile"]
+	guipages.ehonda_missions_page = missions_page["ehonda"]
+	guipages.ken_missions_page = missions_page["ken"]
+	guipages.ryu_missions_page = missions_page["ryu"]
+	guipages.sagat_missions_page = missions_page["sagat"]
+	guipages.thawk_missions_page = missions_page["thawk"]
+	guipages.zangief_missions_page = missions_page["zangief"]
+else
+	guipages.game_missions_page = missions_page[dirname]
+end
+
 -- Inserting buttons in those pages
 missions_list = {}
 local function insertMissionsButtons(character) -- should be modified to allow more than 30 missions
@@ -549,22 +607,21 @@ end
 
 local function createMissionsFile(character)
 	-- Create empty missions_list.lua file if one does not exist
-	if not fexists("games/ssf2xjr1/addon/missions_saved/"..character.."/missions_list.lua") then
-		local file = io.open("games/ssf2xjr1/addon/missions_saved/"..character.."/missions_list.lua", "w")
+	if not fexists("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua") then
+		os.execute("mkdir games\\"..dirname.."\\missions_saved\\"..character) -- windows
+		os.execute("mkdir games/"..dirname.."/missions_saved/"..character) -- posix
+		local file = io.open("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua", "w")
 		file:write("missions_list[\""..character.."\"] = {}\n---------------------------------------------------------")
-		if character=="ryu" then
-			-- chreate the "demo" mission for ryu
-			file:write("\nWHIFF_PUNISH_CRHK = {\n\t\ttext = \"WHIFF_PUNISH_CRHK\",\n\t\tolcolour = \"black\",\n\t\tfillpercent = 0,\n\t\tchecked = false,\n\t\tslots_nb = 3,\n\t\tframe_delay = 0,\n\t\tautoblock = -1,\n\t\tmission_text = \"Use low roundhouse to hit ken's sweep recovery\",\n\t\tfunc = function() WHIFF_PUNISH_CRHK.checked = not WHIFF_PUNISH_CRHK.checked end,\n\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\"ryu\"], WHIFF_PUNISH_CRHK)\n--END")
-		end
 		file:close()
 	end
 end
 
 for i = 1, #characters do
 	createMissionsFile(characters[i])
-	dofile("games/ssf2xjr1/addon/missions_saved/"..characters[i].."/missions_list.lua")
+	dofile("games/"..dirname.."/missions_saved/"..characters[i].."/missions_list.lua")
 	insertMissionsButtons(characters[i])
 end
+
 -------------------------------
 --	Save pop-up
 -------------------------------
@@ -623,7 +680,7 @@ local save_mission = {
 			fillpercent = 0,
 			olcolour = "black",
 			info = {
-				"Saves your mission in your character's directory"
+				"Saves your mission in your game's directory"
 			},
 		},
 }
@@ -734,9 +791,34 @@ local function drawErrorMsg()
 	if error_msg_fcount >= ERROR_MSG_FRAMELIMIT then
 		resetErrorMsg()
 	elseif error_msg_fcount > 0 then
-		error_msg_fcount = countFrames(error_msg_fcount)
+		error_msg_fcount = error_msg_fcount + 1
 	end
 end
+
+local mission_text1=""
+local mission_text2=""
+local TXT_FRAMELIMIT = 600
+local txt_fcount = 0
+
+local function showTxt(frames, txt1, txt2)
+	mission_text1 = txt1
+	mission_text2 = txt2
+	txt_fcount = TXT_FRAMELIMIT-frames
+end
+
+local function drawTxt()
+        if txt_fcount >= TXT_FRAMELIMIT then
+		mission_text1=""
+		mission_text2=""
+		txt_fcount=0
+        elseif txt_fcount > 0 then
+                txt_fcount = txt_fcount + 1
+        end
+	gui.text(92,76,mission_text1)
+	gui.text(92,84,mission_text2)
+end
+
+if REPLAY then showTxt(240, "For replay takeover, press Alt+5 to record a mission", "") end
 -----------------------------------
 -----------------------------------
 --		Main
@@ -750,32 +832,6 @@ local backup_page = 1
 local backup_previouspage = 1
 local backup_selection = 1
 local backup_previousselection = 1
-
-input.registerhotkey(5, function() -- Hotkey to open the popup saving a mission
-	if gamestate.is_in_match then
-		if not interactivegui.enabled then
-			local mission_savestate = savestate.create("new_savestate")
-			savestate.save(mission_savestate)
-			insertSlotButtons()
-			if #save_mission > 3 then -- at least one slot button has been inserted
-				-- backup
-				backup_page = interactivegui.page
-				backup_selection = interactivegui.selection
-				backup_previouspage = interactivegui.previouspage
-				backup_previousselection = interactivegui.previousselection
-				-- Opening the popup
-				interactivegui.page = "save_mission"
-				interactivegui.previouspage = "save_mission"
-				interactivegui.selection = 1
-				toggleInteractiveGUI(true, {})
-			else
-				msg1 = "In order to create a mission you have to record an action."
-				msg2 = "Double tap coin or go to Replay Editor"
-				msg_fcount = MSG_FRAMELIMIT-240
-			end
-		end
-	end
-end)
 
 local function closePopUp()
 	guipages.save_name[1]:clear()
@@ -830,16 +886,31 @@ local function handlePopUp()
 	end
 end
 
-local mission_path = "games/ssf2xjr1/addon/missions_saved/"
+local mission_path = "games/"..dirname.."/missions_saved/"
 
 local function makeMissionButton(_mission_name, _mission_frame_delay)
-	return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tautoblock = "..autoblock_selector..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n"..
-	"\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..readCharacterName(gamestate.P1).."\"], ".._mission_name..")".."\n--END"
+	if (emu.romname() == 'ssf2xjr1') then
+		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tautoblock = "..autoblock_selector..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..readCharacterName(gamestate.P1).."\"], ".._mission_name..")".."\n--END"
+	else
+		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..dirname.."\"], ".._mission_name..")".."\n--END"
+	end
+end
+
+local r_frame = 0
+local function loadMissionTakeover()
+	local character = dirname
+	if (emu.romname() == 'ssf2xjr1') then
+		character = readCharacterName(gamestate.P1)
+	end
+	return {character = character, name = "REPLAY_"..r_frame, slots_nb = 1, frame_delay = 150, block = -1, mission_text = ''}
 end
 
 local function saveMission()
 	-- reading the save popup inputs
-	local character = readCharacterName(gamestate.P1)
+	local character = dirname
+	if (emu.romname() == 'ssf2xjr1') then
+		character = readCharacterName(gamestate.P1)
+	end
 	local mission_name = guipages.save_mission.name.text
 	if guipages.save_mission.frame.text == "" then
 		guipages.save_mission.frame.text = 0
@@ -877,8 +948,7 @@ local function saveMission()
 		if DEBUG then
 			debug_msg = "(./"..mission_path..character.."/"..mission_name..".fs)"
 		end
-		msg1 = "\t    Mission succesfully saved"..debug_msg
-		msg_fcount = MSG_FRAMELIMIT-120
+		showTxt(480, "    Mission succesfully saved", debug_msg)
 		-- We reload the missions
 		for i = 1, #missions_page[character]-1 do
 			table.remove(missions_page[character])
@@ -886,7 +956,7 @@ local function saveMission()
 		for i = 1, #missions_list[character] do
 			missions_list[character][i] = nil
 		end
-		dofile("games/ssf2xjr1/addon/missions_saved/"..character.."/missions_list.lua")
+		dofile("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua")
 		insertMissionsButtons(character)
 		formatGuiTables()
 		closePopUp()
@@ -894,7 +964,97 @@ local function saveMission()
 end
 guipages.save_mission[3].func = saveMission
 
+-------------------------------
+--	Play a mission
+-------------------------------
+local frame_delay = 0
+local timer = 0
+local random_slot = 1
+
+local function playMission(mission) -- mission[1] = dirname / [2] = mission's name
+	if frame_delay < 3 then frame_delay = 3 end -- to be sure that we can reroll a mission
+	if not recording.playback then
+		timer = timer + 1
+	end
+	if timer > frame_delay then
+		savestate.load(mission_path..mission.character.."/"..mission.name..".fs") -- savestate
+		if mission.mission_text then
+			local txt1 = mission.mission_text
+			showTxt(900, txt1, "")
+		end
+		random_slot = math.random(1, mission.slots_nb)
+		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
+			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
+		end
+		togglePlayBack(nil, {})
+		timer = 0
+		frame_delay = mission.frame_delay
+	end
+end
+
 local missions_checked = {} -- for loading
+local mission_selector = 0
+
+input.registerhotkey(5, function()
+	if (not REPLAY) then
+		--open the popup saving a mission
+		if not interactivegui.enabled then
+			local mission_savestate = savestate.create("new_savestate")
+			savestate.save(mission_savestate)
+			insertSlotButtons()
+			if #save_mission > 3 then -- at least one slot button has been inserted
+				-- backup
+				backup_page = interactivegui.page
+				backup_selection = interactivegui.selection
+				backup_previouspage = interactivegui.previouspage
+				backup_previousselection = interactivegui.previousselection
+				-- Opening the popup
+				interactivegui.page = "save_mission"
+				interactivegui.previouspage = "save_mission"
+				interactivegui.selection = 1
+				toggleInteractiveGUI(true, {})
+			else
+				local txt1 = "In order to create a mission you have to record an action."
+				local txt2 = "Double tap coin or go to Replay Editor"
+				showTxt(360, txt1, txt2)
+			end
+		end
+		return
+
+	else
+		-- auto-save a mission from a replay
+		if (r_frame == 0) then
+			local mission_savestate = savestate.create("new_savestate")
+			savestate.save(mission_savestate)
+			recording.replayP1 = true
+			toggleRecording(nil, {})
+			recording.replayP1 = false
+			local txt1 = "RECORDING STARTED..."
+			local txt2 = "Press Alt+5 to stop recording and save the mission."
+			showTxt(480, txt1, txt2)
+			r_frame = emu.framecount()
+		else
+			toggleRecording(nil, {})
+			frame_end = emu.framecount()
+			local recorded = frame_end - r_frame
+			guipages.save_mission.frame.text = 150
+			guipages.save_mission.name.text = "REPLAY_"..r_frame
+			slot_buttons[1].text=1
+			slot_buttons[1].checked = true
+			saveMission()
+			emu.takeover()
+			REPLAY=false
+			mission_selector = 1
+			missions_checked[1] = loadMissionTakeover()
+			playMission(missions_checked[1])
+			local txt1 = "RECORDED "..recorded.." frames."
+			local txt2 = "To take over load: Add-On > Missions > REPLAY_"..r_frame
+			showTxt(480, txt1, txt2)
+			--r_frame = 0
+		end
+	end
+end)
+
 local missions_checked_deletion = {} -- for deleting. Maybe I'm being overcautious for not merging the two tables though
 
 local function deleteMission()
@@ -925,7 +1085,7 @@ local function deleteMission()
 			for j = 1, #missions_list[characters[i]] do
 				missions_list[characters[i]][j] = nil
 			end
-			dofile("games/ssf2xjr1/addon/missions_saved/"..characters[i].."/missions_list.lua")
+			dofile("games/"..dirname.."/missions_saved/"..characters[i].."/missions_list.lua")
 			insertMissionsButtons(characters[i])
 		end
 		toggleInteractiveGUI(false, {})
@@ -934,8 +1094,8 @@ local function deleteMission()
 		if #missions_checked_deletion > 1 then
 			s = "s"
 		end
-		msg1 = "\t    Mission"..s.." succesfully deleted"
-		msg_fcount = MSG_FRAMELIMIT-120
+		local txt1 = "\t    Mission"..s.." succesfully deleted"
+		showTxt(480, txt1, "")
 	else
 		guipages.missions_hub.infos.text = "\tNo missions were selected"
 		error_msg_fcount = ERROR_MSG_FRAMELIMIT-120
@@ -986,40 +1146,17 @@ guipages.missions_hub[2].func = function()
 		CIG("delete",1)
 	end
 end
--------------------------------
---	Play a mission
--------------------------------
-local frame_delay = 0
-local timer = 0
-local random_slot = 1
 
-local function playMission(mission) -- mission[1] = character / [2] = mission's name
-	if frame_delay < 3 then frame_delay = 3 end -- to be sure that we can reroll a mission
-	if not recording.playback then
-		timer = countFrames(timer)
-	end
-	if timer > frame_delay then
-		savestate.load(mission_path..mission.character.."/"..mission.name..".fs") -- savestate
-		if mission.mission_text then
-			msg1 = mission.mission_text
-		end
-		random_slot = math.random(1, mission.slots_nb)
-		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
-			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
-		end
-		togglePlayBack(nil, {})
-		timer = 0
-		frame_delay = mission.frame_delay
-	end
-end
+-------------------------------
+--	Mission selector
+-------------------------------
 
-local mission_selector = 0
 local listenMissionsSettingsModfications = false
 local mission_reroll = true
 
 local function stockMissionsChecked()
 	if interactivegui.enabled and not listenMissionsSettingsModfications then
-		reset_msg()
+		showTxt(1,"", "")
 		for k in pairs(missions_checked) do
 			missions_checked[k] = nil
 		end
@@ -1075,6 +1212,8 @@ end
 local function missions()
 	handlePopUp()
 	drawErrorMsg()
+	drawTxt()
 	playMissionLogic()
 end
-table.insert(ST_functions, missions)
+
+table.insert(registers.registerbefore, missions)

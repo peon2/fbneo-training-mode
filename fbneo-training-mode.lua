@@ -7,6 +7,7 @@ DISABLE_SCROLLING_INPUT = false
 -- memory macros
 wb = memory.writebyte
 ww = memory.writeword
+wdw = memory.writedword
 rb = memory.readbyte
 rw = memory.readword
 rws = memory.readwordsigned
@@ -15,6 +16,24 @@ rdw = memory.readdword
 if not memory.writeword_audio then -- writeword_audio is defined on fightcade, stub otherwise
 	memory.writeword_audio = function() end
 	print "memory.writeword_audio not defined"
+end
+
+-- watch replay mode (no health refill, etc..)
+if not emu.isreplay then
+	REPLAY = false
+else
+	REPLAY = emu.isreplay()
+end
+
+if REPLAY then
+	-- we don't want to write memory when watching a replay
+	wb = function() end
+	ww = function() end
+	wdw = function() end
+	-- this breaks throw hitboxes on some games
+	-- memory.writebyte = function() end
+	-- memory.writeword = function() end
+	-- memory.writedword = function() end
 end
 
 require "gd"
@@ -120,7 +139,8 @@ local games = {
 }
 
 local usage = function()
-		print ("Beta for fbneo-training-script ("..FBNEO_TRAINING_MODE_VERSION..")")
+	print ("Beta for fbneo-training-script ("..FBNEO_TRAINING_MODE_VERSION..")")
+	if not REPLAY then
 		print "Replay with 1 coin press"
 		print "Record with 2 coin presses"
 		print "Swap inputs with 3 coin presses"
@@ -130,6 +150,7 @@ local usage = function()
 		print "Select a function with P1 Button 1"
 		print "Read function info with P1 Button 2"
 		print "Return to the previous menu with P1 Button 3"
+	end
 end
 
 -- locals
@@ -420,13 +441,13 @@ checkAvailableFunctions = function() -- SETUP availablefunctions TABLE
 	if playerOneInHitstun then availablefunctions.playeroneinhitstun = true end
 	if playerTwoInHitstun then availablefunctions.playertwoinhitstun = true end
 	if readPlayerOneHealth then availablefunctions.readplayeronehealth = true end
-	if writePlayerOneHealth then availablefunctions.writeplayeronehealth = true end
+	if writePlayerOneHealth and not REPLAY then availablefunctions.writeplayeronehealth = true end
 	if readPlayerTwoHealth then availablefunctions.readplayertwohealth = true end
-	if writePlayerTwoHealth then availablefunctions.writeplayertwohealth = true end
+	if writePlayerTwoHealth and not REPLAY then availablefunctions.writeplayertwohealth = true end
 	if readPlayerOneMeter then availablefunctions.readplayeronemeter = true end
-	if writePlayerOneMeter then availablefunctions.writeplayeronemeter = true end
+	if writePlayerOneMeter and not REPLAY then availablefunctions.writeplayeronemeter = true end
 	if readPlayerTwoMeter then availablefunctions.readplayertwometer = true end
-	if writePlayerTwoMeter then availablefunctions.writeplayertwometer = true end
+	if writePlayerTwoMeter and not REPLAY then availablefunctions.writeplayertwometer = true end
 	if playerOneFacingLeft then availablefunctions.playeronefacingleft = true end
 	if playerTwoFacingLeft then availablefunctions.playertwofacingleft = true end
 	-- 
@@ -1509,7 +1530,7 @@ local Unserialise = function(inputs, _stable, constants) -- takes inputs (record
 	end
 end
 
-local toggleRecording = function(bool, vargs)
+toggleRecording = function(bool, vargs)
 
 	if interactivegui.movehud.enabled then return end
 
@@ -2385,6 +2406,7 @@ input.registerhotkey(3, changeInteractiveGuiSelection)
 input.registerhotkey(4, function() print(interactiveguipages[interactivegui.page][interactivegui.selection].info) end)
 
 local processGUIInputs = function()
+	if REPLAY then return end
 	--inspired by grouflons and crystal_cubes menus
 
 	-- some general input stuff put at the start, could be put in its own function
@@ -2680,7 +2702,7 @@ local moveHUDInteract = function()
 	buttonHandler(t)
 end
 
-local registers = {
+registers = {
 	registerbefore = {},
 	guiregister = {},
 	registerafter = {},
@@ -3427,3 +3449,34 @@ savestate.registerload(loadprocedure)
 emu.registerexit(exitprocedure)
 
 setRegisters()
+
+----------------------------------------------
+-- ADDONS
+----------------------------------------------
+
+local addons_loaded = false
+
+local function loadAddons()
+	if not addons_loaded then
+		-- generic addons
+		dofile("addon/addons.lua")
+		for i = 1, #addons_run do
+			if fexists("addon/"..addons_run[i]) then
+				dofile("addon/"..addons_run[i])
+			end
+		end
+		-- game specific addons
+		if fexists("games/"..dirname.."/addon/addons.lua") then
+			dofile("games/"..dirname.."/addon/addons.lua")
+			for i = 1, #addons_run do
+				if fexists("games/"..dirname.."/addon/"..addons_run[i]) then
+					dofile("games/"..dirname.."/addon/"..addons_run[i])
+				end
+			end
+		end
+		addons_loaded = true
+	end
+end
+
+table.insert(registers.guiregister, loadAddons)
+----------------------------------------------

@@ -181,6 +181,7 @@ function gamestate.read_player_vars(_player_obj)
 	_player_obj.animation_frames_left	= rb(_player_obj.addresses.animation_frames_left)
 	-- _player_obj.hitbox_id	 		= memory.readdword(_player_obj.addresses.hitbox_ptr )
 	_player_obj.is_attacking			= isAttacking(_player_obj)
+	_player_obj.hurting_move			= rb(_player_obj.addresses.attack_flag) > 0x00
 	-----------------
 	-- Inputs
 	-----------------
@@ -198,7 +199,7 @@ function gamestate.stock_player_vars(_player_obj)
 	air_state						= _player_obj.air_state,
 	airborn							= _player_obj.airborn,
 	projectile_ready 				= _player_obj.projectile_ready,
-	--cancel_ready					= _player_obj.cancel_ready,
+	cancel_ready					= _player_obj.cancel_ready,
 	dizzy							= _player_obj.dizzy,
 	-----------------
 	-- Gauges
@@ -215,7 +216,7 @@ function gamestate.stock_player_vars(_player_obj)
 	pos_x							= _player_obj.pos_x,
 	pos_y							= _player_obj.pos_y,
 	flip_input						= _player_obj.flip_input,
-	--is_cornered						= _player_obj.is_cornered,
+	is_cornered						= _player_obj.is_cornered,
 	-----------------
 	-- Character
 	-----------------
@@ -251,6 +252,7 @@ function gamestate.stock_player_vars(_player_obj)
 	animation_frames_left			= _player_obj.animation_frames_left,
 	--hitbox_id						= _player_obj.hitbox_id,
 	is_attacking					= _player_obj.is_attacking,
+	hurting_move					= _player_obj.hurting_move,
 	-----------------
 	-- Inputs
 	-----------------

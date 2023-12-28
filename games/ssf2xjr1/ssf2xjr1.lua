@@ -4,29 +4,40 @@ require("games/ssf2xjr1/character_specific")
 require("games/ssf2xjr1/gamestate")
 require("games/ssf2xjr1/constants")
 
--- use a custom config file if one exists, otherwise load defaults
-if fexists("games/ssf2xjr1/customconfig.lua") then
-	dofile("games/ssf2xjr1/customconfig.lua")
-else
-	customconfig = {
-		draw_hud = -1,
-		autoblock_selector = -1,
-		autoreversal_selector = -1,
-		dizzy_selector = -1,
-		easy_charge_moves_selector = -1,
-		frame_advantage_selector = -1,
-		frame_trap_selector = -1,
-		frameskip_selector = -1,
-		projectile_frequence_selector = -1,
-		reversal_trigger_selector = -1,
-		roundstart_selector = -1,
-		slowdown_selector = - 1,
-		nomusic_selector = -1,
-		stage_selector = -1,
-		tech_throw_selector = -1,
-		crossup_display_selector = -1,
-		tick_throw_display_selector = -1,
-	}
+-- create a custom config file for training mode
+if not fexists("games/ssf2xjr1/customconfig.lua") then
+	local file = io.open("games/ssf2xjr1/customconfig.lua", "w")
+	file:write("customconfig = {\n\tdraw_hud = -1,\n\tautoblock_selector = -1,\n\tautoreversal_selector = -1,\n\tdizzy_selector = -1,\n\teasy_charge_moves_selector = -1,\n\tframe_advantage_selector = -1,\n\tframe_trap_selector = -1,\n\tframeskip_selector = -1,\n\tprojectile_frequence_selector = -1,\n\treversal_trigger_selector = -1,\n\troundstart_selector = -1,\n\tslowdown_selector = - 1,\n\tnomusic_selector = -1,\n\tstage_selector = -1,\n\ttech_throw_selector = -1,\n\tcrossup_display_selector = -1,\n\tsafe_jump_display_selector = -1,\n\ttick_throw_display_selector = -1,\n}")
+	file:close()
+end
+dofile("games/ssf2xjr1/customconfig.lua")
+-- create a custom config file for replay mode
+local replay_config = false
+
+if not fexists("games/ssf2xjr1/customconfig_replay.lua") then
+	local file = io.open("games/ssf2xjr1/customconfig_replay.lua", "w")
+	file:write("draw_hud = -1\nframe_advantage_selector = -1\nframe_trap_selector = -1\nnomusic_selector = -1\ncrossup_display_selector = -1\nsafe_jump_display_selector = -1\ntick_throw_display_selector = -1")
+	file:close()
+end
+
+local function loadReplayConfig()
+	if REPLAY then
+		if not replay_config then
+			dofile("games/ssf2xjr1/customconfig_replay.lua")
+			replay_config = true
+		end
+	else
+		if replay_config then
+			draw_hud = customconfig.draw_hud
+			frame_advantage_selector = customconfig.frame_advantage_selector
+			frame_trap_selector = customconfig.frame_trap_selector
+			nomusic_selector = customconfig.nomusic_selector
+			crossup_display_selector = customconfig.crossup_display_selector
+			safe_jump_display_selector = customconfig.safe_jump_display_selector
+			tick_throw_display_selector = customconfig.tick_throw_display_selector
+			replay_config = false
+		end
+	end
 end
 
 translationtable = {
@@ -125,6 +136,11 @@ local function updatePatch()
 	end
 end
 
+local player = {
+	gamestate.P1,
+	gamestate.P2
+}
+
 emu.registerstart(updatePatch)
 -----------------------------
 -----------------------------
@@ -168,6 +184,43 @@ function readCharacterName(_player_obj) -- Translate _player_obj.character into 
 		return "feilong"
 	elseif character == Deejay then
 		return "deejay"
+	end
+end
+
+function printName(_player_obj)
+	local character = _player_obj.character
+	if character == Ryu then
+		return "Ryu"
+	elseif character == Honda then
+		return "Honda"
+	elseif character == Blanka then
+		return "Blanka"
+	elseif character == Guile then
+		return "Guile"
+	elseif character == Ken then
+		return "Ken"
+	elseif character == Chun then
+		return "Chun-Li"
+	elseif character == Zangief then
+		return "Zangief"
+	elseif character == Dhalsim then
+		return "Dhalsim"
+	elseif character == Dictator then
+		return "Dictator"
+	elseif character == Sagat then
+		return "Sagat"
+	elseif character == Boxer then
+		return "Boxer"
+	elseif character == Claw then
+		return "Claw"
+	elseif character == Cammy then
+		return "Cammy"
+	elseif character == Hawk then
+		return "T-Hawk"
+	elseif character == Fei then
+		return "Fei Long"
+	elseif character == Deejay then
+		return "Deejay"
 	end
 end
 
@@ -402,11 +455,13 @@ msg1 = ""
 msg2 = ""
 msg3 = ""
 -- Messages following the players
-player_msg = {"",""}
+player_msg1 = {"",""}
+player_msg2 = {"",""}
 -- Messages timer
 MSG_FRAMELIMIT = 600
 msg_fcount = 0
-player_msg_fcount = {0,0}
+player_msg1_fcount = {0,0}
+player_msg2_fcount = {0,0}
 
 function update_msg(code)
 	if code == 0 then -- reset general messages
@@ -414,12 +469,18 @@ function update_msg(code)
 		msg2 = ""
 		msg3 = ""
 		msg_fcount = 0
-	elseif code == -1 then -- reset player messages
-		player_msg[1] = ""
-		player_msg_fcount[1] = 0
-	elseif code == -2 then
-		player_msg[2] = ""
-		player_msg_fcount[2] = 0
+	elseif code == -11 then -- reset player messages
+		player_msg1[1] = ""
+		player_msg1_fcount[1] = 0
+	elseif code == -12 then
+		player_msg2[1] = ""
+		player_msg2_fcount[1] = 0
+	elseif code == -21 then
+		player_msg1[2] = ""
+		player_msg1_fcount[2] = 0
+	elseif code == -22 then
+		player_msg2[2] = ""
+		player_msg2_fcount[2] = 0
 	end
 end
 
@@ -427,11 +488,19 @@ function reset_msg()
 	update_msg(0)
 end
 
-function reset_player_msg(player)
+function reset_player_msg1(player)
 	if player == 1 then
-		update_msg(-1)
+		update_msg(-11)
 	elseif player == 2 then
-		update_msg(-2)
+		update_msg(-21)
+	end
+end
+
+function reset_player_msg2(player)
+	if player == 1 then
+		update_msg(-12)
+	elseif player == 2 then
+		update_msg(-22)
 	end
 end
 
@@ -444,38 +513,54 @@ local function get_player_msg_y(_player_obj)
 	local screen_y = 0
 	
 	if character == Boxer or character == Zangief then
-		screen_y = 125
+		screen_y = 120
 	elseif character == Claw or character == Hawk or character == Sagat then
-		screen_y = 115
+		screen_y = 110
 	elseif character == Deejay then
-		screen_y = 130
+		screen_y = 125
 	else
-		screen_y = 140
+		screen_y = 135
 	end
 	return screen_y-_player_obj.pos_y
 end 
 
 local function draw_messages()
+	-- General messages
 	if msg_fcount >= MSG_FRAMELIMIT then
 		reset_msg()
 	elseif msg_fcount > 0 then
 		msg_fcount = countFrames(msg_fcount)
 	end
-	if player_msg_fcount[1] >= MSG_FRAMELIMIT then
-		reset_player_msg(1)
-	elseif player_msg_fcount[1] > 0 then
-		player_msg_fcount[1] = countFrames(player_msg_fcount[1])
+	-- P1 messages
+	if player_msg1_fcount[1] >= MSG_FRAMELIMIT then
+		reset_player_msg1(1)
+	elseif player_msg1_fcount[1] > 0 then
+		player_msg1_fcount[1] = countFrames(player_msg1_fcount[1])
 	end
-	if player_msg_fcount[2] >= MSG_FRAMELIMIT then
-		reset_player_msg(2)
-	elseif player_msg_fcount[2] > 0 then
-		player_msg_fcount[2] = countFrames(player_msg_fcount[2])
+	if player_msg2_fcount[1] >= MSG_FRAMELIMIT then
+		reset_player_msg2(1)
+	elseif player_msg2_fcount[1] > 0 then
+		player_msg2_fcount[1] = countFrames(player_msg2_fcount[1])
 	end
+	-- P2 messages
+	if player_msg1_fcount[2] >= MSG_FRAMELIMIT then
+		reset_player_msg1(2)
+	elseif player_msg1_fcount[2] > 0 then
+		player_msg1_fcount[2] = countFrames(player_msg1_fcount[2])
+	end
+	if player_msg2_fcount[2] >= MSG_FRAMELIMIT then
+		reset_player_msg2(2)
+	elseif player_msg2_fcount[2] > 0 then
+		player_msg2_fcount[2] = countFrames(player_msg2_fcount[2])
+	end
+	-- Draw
 	gui.text(92,78,msg1)
 	gui.text(92,86,msg2)
 	gui.text(92,94,msg3)
-	gui.text(get_player_msg_x(gamestate.P1),get_player_msg_y(gamestate.P1),player_msg[1])
-	gui.text(get_player_msg_x(gamestate.P2),get_player_msg_y(gamestate.P2),player_msg[2])
+	gui.text(get_player_msg_x(gamestate.P1),get_player_msg_y(gamestate.P1),player_msg1[1])
+	gui.text(get_player_msg_x(gamestate.P1),get_player_msg_y(gamestate.P1)+10,player_msg2[1])
+	gui.text(get_player_msg_x(gamestate.P2),get_player_msg_y(gamestate.P2),player_msg1[2])
+	gui.text(get_player_msg_x(gamestate.P2),get_player_msg_y(gamestate.P2)+10,player_msg2[2])
 end
 
 function str(bool)
@@ -532,6 +617,8 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
+	if not gamestate.is_in_match then return 0 end
+	if REPLAY then return gamestate.P1.life end
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
 	if p1maxhealth == trainingmaxhealth then
 		return gamestate.P1.life_backup-(trainingmaxhealth-144)
@@ -541,6 +628,8 @@ function readPlayerOneHealth()
 end
 
 function readPlayerTwoHealth()
+	if not gamestate.is_in_match then return 0 end
+	if REPLAY then return gamestate.P2.life end
 	-- this must be life_backup (health at previous frame, otherwise breaks the combo counter)
 	if p2maxhealth == trainingmaxhealth then
 		return gamestate.P2.life_backup-(trainingmaxhealth-144)
@@ -550,6 +639,7 @@ function readPlayerTwoHealth()
 end
 
 function writePlayerOneHealth(health)
+	if REPLAY then return end
 	if not combovars.p1.refillhealthenabled then
 		return
 	end
@@ -573,6 +663,7 @@ function writePlayerOneHealth(health)
 end
 
 function writePlayerTwoHealth(health)
+	if REPLAY then return end
 	if not combovars.p2.refillhealthenabled then
 		return
 	end
@@ -612,12 +703,14 @@ function readPlayerTwoMeter()
 end
 
 function writePlayerOneMeter(meter)
+	if REPLAY then return end
 	if gamestate.curr_state == in_match then
 		wb(gamestate.P1.addresses.special_meter, meter)
 	end
 end
 
 function writePlayerTwoMeter(meter)
+	if REPLAY then return end
 	if gamestate.curr_state == in_match then
 		wb(gamestate.P2.addresses.special_meter, meter)
 	end
@@ -628,12 +721,14 @@ end
 ------------------------
 
 local infiniteTime = function()
+	if REPLAY then return end
 	if (gamestate.round_timer < 0x98) then
 		ww(addresses.global.round_timer,0x9928)
 	end
 end
 
 local neverEnd_p1 = function()
+	if REPLAY then return end
 
 	local DEBUG=false
 	local p1scaledhealth = p1maxhealth
@@ -695,6 +790,7 @@ local neverEnd_p1 = function()
 end
 
 local neverEnd_p2 = function()
+	if REPLAY then return end
 
 	local DEBUG=false
 	local p2scaledhealth = p2maxhealth
@@ -755,6 +851,7 @@ local neverEnd_p2 = function()
 end
 
 local neverEnd = function()
+	if REPLAY then return end
 	if not gamestate.is_in_match then
 		return
 	end
@@ -1849,6 +1946,7 @@ local function menuSelection()  -- Just a little fix : without it the cursor in 
 end
 
 local function fixPreviousInputDetection(_fixed_inputs) -- Restores the previous input detection / Disables the autofire
+	if REPLAY then return end
 	if _fixed_inputs then
 		ww(gamestate.P2.addresses.prev_input, gamestate.P2.prev.curr_input)
 	end
@@ -2115,6 +2213,7 @@ local reversal_executed_at = -1
 local framesleft = -1
 local reversal_guessed = 0
 local autoReversal = function()
+	if REPLAY then return end
 	local DEBUG=false
 	if gamestate.patched then
 		patchedAutoReversal()
@@ -2323,6 +2422,7 @@ local canblock_counter = 0
 local canblock_length = 20
 
 local autoBlock = function()
+	if REPLAY then return end
 
 	if autoblock_selector == -1 or gamestate.P1.throw_flag == 0x01 then -- If P2 is thrown we return, this way the dummy can tech a throw
 		return
@@ -2445,6 +2545,7 @@ end
 --------------------------
 stage_selector = customconfig.stage_selector
 local stageSelect = function()
+	if REPLAY then return end
 	if stage_selector == -1 then
 		return
 	end
@@ -2459,6 +2560,7 @@ end
 ---------------------------
 dizzy_selector = customconfig.dizzy_selector
 local p2DizzyControl = function()
+	if REPLAY then return end
 	local dizzy = 0
 	if dizzy_selector == -1 then
 		return
@@ -2480,6 +2582,7 @@ local round_state=-1
 local fight_anim = 123
 local roundstart_played=false
 local roundStart = function()
+	if REPLAY then return end
 
 	local DEBUG=false
 
@@ -2555,6 +2658,7 @@ local start_input = false
 local prev_start_input = false
 
 local function lockCharacters()
+	if REPLAY then return end
 	if first_load then
 		print("Lock the characters with Start")
 	end
@@ -2618,6 +2722,7 @@ end
 tech_throw_selector = customconfig.tech_throw_selector
 
 local function techThrowControl()
+	if REPLAY then return end
 	if tech_throw_selector == 0 then
 		if gamestate.P1.throw_flag == 0x01 then
 			modifyInputSet(2,6,5,3)
@@ -2645,6 +2750,7 @@ end
 slowdown_selector = customconfig.slowdown_selector
 
 local slowdownControl = function()
+	if REPLAY then return end
 	if slowdown_selector == -1 then
 		return
 	end
@@ -2769,6 +2875,7 @@ end
 easy_charge_moves_selector = customconfig.easy_charge_moves_selector
 
 local easyChargeControl = function ()
+	if REPLAY then return end
 	if easy_charge_moves_selector == 0 or easy_charge_moves_selector == 2 then
 		easyCharge(gamestate.P1)
 	end
@@ -2812,6 +2919,20 @@ local function readInHitstun(_player_obj) -- Tells if the player_object is in hi
 		gui.text(230,80,"Hitfreeze State P2   	  : "..str(gamestate.P2.in_hitfreeze))
 		gui.text(230,90,"Hit/Blockstun Counter P2 : "..gamestate.P2.hitstun_counter)
 		gui.text(230,100,"Hitstun/Blockstun P2	  : "..str(gamestate.P2.in_hitstun))
+	end
+end
+
+gamestate.P1.is_knockdown = false
+gamestate.P2.is_knockdown = false
+
+local function readKnockdown(_player_obj)
+	if _player_obj.air_state == 255 or _player_obj.state == being_thrown then
+		_player_obj.is_knockdown = true
+	end
+	if _player_obj.is_knockdown then
+		if _player_obj.state ~= being_hit and _player_obj.state ~= being_thrown then
+			_player_obj.is_knockdown = false
+		end
 	end
 end
 
@@ -3430,7 +3551,7 @@ local function throwInformationsDisplay()
 			-- P2 throw range
 			if gamestate.P2.flip_input then
 				for i = 1, #character_specific[p2character].hitboxes.throw do
-					p2_throw_range[i][2] = (gamestate.P2.pos_x + character_specific[p2character].hitboxes.throw[1][2]) - (gamestate.P1.pos_x - character_specific[p1character].hitboxes.throwable)
+					p2_throw_range[i][2] = (gamestate.P2.pos_x + character_specific[p2character].hitboxes.throw[i][2]) - (gamestate.P1.pos_x - character_specific[p1character].hitboxes.throwable)
 				end
 			else
 				for i = 1, #character_specific[p2character].hitboxes.throw do
@@ -3754,25 +3875,25 @@ local function crossupAnalysis(_player_obj)
 							if DEBUG then
 								print("> True Crossup : should have been blocked "..block_direction[attacker.id])
 							end
-							player_msg[attacker.id] = "True crossup"
+							player_msg1[attacker.id] = "True crossup"
 							if DEBUG then
-								player_msg[attacker.id] = "True crossup : should block "..block_direction[attacker.id]
+								player_msg1[attacker.id] = "True crossup : should block "..block_direction[attacker.id]
 							end
-							player_msg_fcount[attacker.id] = MSG_FRAMELIMIT-120
+							player_msg1_fcount[attacker.id] = MSG_FRAMELIMIT-120
 						else
 							if DEBUG then
 								print("> Fake Crossup : should have been blocked "..block_direction[attacker.id])
 							end
-							player_msg[attacker.id] = "Fake crossup"
+							player_msg1[attacker.id] = "Fake crossup"
 							if DEBUG then
-								player_msg[attacker.id] = "Fake crossup : should block "..block_direction[attacker.id]
+								player_msg1[attacker.id] = "Fake crossup : should block "..block_direction[attacker.id]
 							end
-							player_msg_fcount[attacker.id] = MSG_FRAMELIMIT-120
+							player_msg1_fcount[attacker.id] = MSG_FRAMELIMIT-120
 						end
 					else
 						if DEBUG then
-							player_msg[attacker.id] = "Non crossup : should block "..block_direction[attacker.id]
-							player_msg_fcount[attacker.id] = MSG_FRAMELIMIT-120
+							player_msg1[attacker.id] = "Non crossup : should block "..block_direction[attacker.id]
+							player_msg1_fcount[attacker.id] = MSG_FRAMELIMIT-120
 							print("> Non Crossup : should have been blocked "..block_direction[attacker.id])
 						end
 						did_not_crossup[attacker.id] = true
@@ -3784,11 +3905,11 @@ local function crossupAnalysis(_player_obj)
 			if DEBUG then
 				print("> Fake Crossup : should have been blocked "..block_direction[attacker.id])
 			end
-			player_msg[attacker.id] = "Fake crossup"
+			player_msg1[attacker.id] = "Fake crossup"
 			if DEBUG then
-				player_msg[attacker.id] = "Fake crossup : should block "..block_direction[attacker.id]
+				player_msg1[attacker.id] = "Fake crossup : should block "..block_direction[attacker.id]
 			end
-			player_msg_fcount[attacker.id] = MSG_FRAMELIMIT-120
+			player_msg1_fcount[attacker.id] = MSG_FRAMELIMIT-120
 			did_not_crossup[attacker.id] = false
 		end
 	end
@@ -3798,6 +3919,311 @@ local function crossupDisplay()
 	if crossup_display_selector > -1 then
 		crossupAnalysis(gamestate.P1)
 		crossupAnalysis(gamestate.P2)
+	end
+end
+---------------------------------
+-- Safe Jump Display
+---------------------------------
+safe_jump_display_selector = customconfig.safe_jump_display_selector
+
+---------------------------------------------------
+-- Maybe should be be moved in character_specific.lua
+---------------------------------------------------
+local function getJumpVersion(_player_obj) -- Returns neutral, back or forward
+	--
+	local DEBUG = false
+	--
+	local character = _player_obj.character
+	local left = isCharacterLeft(_player_obj)
+	local jump_x_coeff = 0
+	if _player_obj.id == 1 then
+		jump_x_coeff = rb(0xFF848A)
+	elseif _player_obj.id == 2 then
+		jump_x_coeff = rb(0xFF888A)
+	end
+	--
+	if DEBUG then
+		print("0x"..string.format("%x",jump_x_coeff))
+	end
+	--
+	if jump_x_coeff == 0x00 then
+		return "neutral"
+	elseif character == Dhalsim or character == Hawk or character == Sagat or character == Zangief then 
+		if jump_x_coeff == 0xFD then
+			if left then
+				return "back"
+			else
+				return "forward"
+			end
+		elseif jump_x_coeff == 0x02 or (character == Hawk and jump_x_coeff == 0x03) then -- Hawk 0x3 when right
+			if left then
+				return "forward"
+			else
+				return "back"
+			end
+		end
+	elseif character == Chun or character == Dictator then
+		if jump_x_coeff == 0xFB then
+			if left then
+				return "back"
+			else
+				return "forward"
+			end
+		elseif jump_x_coeff == 0x04 or (character == Dictator and jump_x_coeff == 0x05) then -- Dicta 0x05 when right
+			if left then
+				return "forward"
+			else
+				return "back"
+			end
+		end
+	elseif character == Claw then
+		if jump_x_coeff == 0xFA or jump_x_coeff == 0xFB then -- Claw 0xFB when right
+			if left then
+				return "back"
+			else
+				return "forward"
+			end
+		elseif jump_x_coeff == 0x05 then
+			if left then
+				return "forward"
+			else
+				return "back"
+			end
+		end
+	else
+		if jump_x_coeff == 0xFC or (character == Boxer and jump_x_coeff == 0xFD) then -- Boxer 0xFD when right
+			if left then
+				return "back"
+			else
+				return "forward"
+			end
+		elseif jump_x_coeff == 0x03 or ((character == DJ or character == Fei or character == Guile or character == Ken or character == Ryu) and jump_x_coeff == 0x04) then -- Shoto, Guile, Fei and DJ 0x4 when right
+			if left then
+				return "forward"
+			else
+				return "back"
+			end
+		end
+	end
+end
+
+local function getJumpDuration(_player_obj, _jump_version) -- Returns the total of uncancellable jump frames
+	--
+	local character = _player_obj.character
+	local old = _player_obj.is_old
+	local duration = 0
+	--
+	if _jump_version == "neutral" then
+		if character == Claw then
+			duration = 42
+		elseif character == Blanka or (character == Sagat and old) then
+			duration = 45
+		elseif character == Hawk or (character == Sagat and not old) then
+			duration = 47
+		elseif character == Zangief then
+			duration = 48
+		elseif character == Boxer or (character == DJ and not old) or character == Fei or (old and (character == Ken or character == Ryu)) then
+			duration = 49
+		elseif character == Chun or (not old and (character == Ken or character == Ryu)) then
+			duration = 50
+		elseif character == Honda or (character == DJ and old) then
+			duration = 51
+		elseif character == Cammy or character == Dictator then
+			duration = 52
+		elseif character == Guile then
+			duration = 53
+		elseif character == Dhalsim then
+			duration = 67
+		end
+	elseif _jump_version == "back" then
+		if character == Claw then
+			duration = 42
+		elseif character == Blanka or character == Hawk then
+			duration = 46
+		elseif (character == Sagat and old) then
+			duration = 47
+		elseif old and (character == Ken or character == Ryu) then
+			duration = 48
+		elseif character == Ken or character == Ryu or character == Sagat or character == Zangief then
+			duration = 49
+		elseif character == Boxer or (character == DJ and not old) or character == Fei then
+			duration = 50
+		elseif character == Chun or character == Honda then
+			duration = 51
+		elseif character == Cammy or (character == DJ and old) then
+			duration = 52
+		elseif character == Dictator or character == Guile then
+			duration = 53
+		elseif character == Dhalsim then
+			duration = 68
+		end
+	elseif _jump_version == "forward" then
+		if character == Claw then
+			duration = 41
+		elseif character == Blanka or (character == Sagat and old) then
+			duration = 44
+		elseif character == Fei or character == Hawk or character == Zangief or (character == DJ and old) or (character == Sagat and not old) then
+			duration = 46
+		elseif character == Boxer or (character == DJ and not old) or (old and (character == Ken or character == Ryu)) then
+			duration = 48
+		elseif not old and (character == Ken or character == Ryu) then
+			duration = 49
+		elseif character == Cammy or character == Chun or character == Honda then
+			duration = 50
+		elseif character == Dictator then
+			duration = 51
+		elseif character == Guile then
+			duration = 52
+		end
+	end
+
+	return duration
+end
+
+local function getReversalStartup(_player_obj)
+	--
+	local character = _player_obj.character
+	local old = _player_obj.is_old
+	local has_super = (_player_obj.special_meter == 48)
+	--
+	if character == Chun and not old then
+		return 2
+	elseif character == Sagat then
+		return 3
+	elseif character == Cammy or character == DJ or character == Hawk or character == Ryu then
+		return 4
+	elseif character == Guile or (character == Claw and not old) then
+		return 5
+	elseif character == Fei or character == Honda or (character == Boxer and has_super) then
+		return 6
+	elseif character == Dictator and has_super then
+		return 9
+	elseif character == Boxer and not has_super then
+		return 11
+	elseif character == Chun and old then
+		return 17
+	end
+end
+---------------------
+-- Detect Safe Jump
+---------------------
+local safe_jump_attempt = {false,false}
+local recovery_count = {0,0}
+local jump_version = {"",""}
+local jump_duration = {0,0}
+-- DEBUG values
+local curr_jump_frame = {0,0}
+local landing_frame = {false,false}
+local landing_msg_counter = 0
+local debug_diff = {0,0}
+local debug_recovery_count = {0,0}
+--
+local function detectSafeJump(_player_obj)
+	--
+	local DEBUG = false
+	--
+	local attacker = _player_obj
+	local defender = {}
+	if attacker.id == 1 then
+		defender = gamestate.P2
+	elseif attacker.id == 2 then
+		defender = gamestate.P1
+	end
+	-- Detecting a safe jump attempt
+	if defender.is_knockdown then
+		if (attacker.prev.state ~= jumping and attacker.state == jumping) then -- to be fixed : some moves trigger the jumping state
+			-- Is the jump a safe jumpt attempt ? (Maybe add distance conditions)
+			jump_version[attacker.id] = getJumpVersion(attacker)
+			if jump_version[attacker.id] == "back" or (jump_version[attacker.id] ~= "neutral" and jump_version[attacker.id] ~= "forward") then return end
+			-- Can the defender be safe jumped ?
+			if defender.character == Blanka or defender.character == Ken or defender.character == Zangief then
+				player_msg2[attacker.id] = printName(defender).." can't be safe jumped"
+				player_msg2_fcount[attacker.id] = MSG_FRAMELIMIT-120
+				return
+			elseif defender.character == Dhalsim or (defender.character == Dictator and defender.special_meter ~= 48) or (defender.character == Claw and defender.is_old) then
+				player_msg2[attacker.id] = printName(defender).." doesn't have any invulnerable reversal"
+				player_msg2_fcount[attacker.id] = MSG_FRAMELIMIT-120
+				return
+			end
+			-- If they can, continue
+			jump_duration[attacker.id] = getJumpDuration(attacker,jump_version[attacker.id])
+			safe_jump_attempt[attacker.id] = true
+			if DEBUG then
+				-- Reset debug values
+				curr_jump_frame[attacker.id] = 0
+				debug_diff[attacker.id] = 0
+				debug_recovery_count[defender.id] = 0
+			end
+		end
+	end
+	-- Is the jump safe ?
+	if safe_jump_attempt[attacker.id] then
+		if defender.is_knockdown then
+			recovery_count[defender.id] = countFrames(recovery_count[defender.id])
+		else
+			if jump_duration[attacker.id] >= recovery_count[defender.id] then -- If the attacker lands (or would have landed) after the defender recovered
+				if getReversalStartup(defender) ~= nil then
+					if jump_duration[attacker.id]-recovery_count[defender.id] <= getReversalStartup(defender) then -- Check if the attacker lands (or would have landed) before the reversal's active frames
+						player_msg2[attacker.id] = "Safe jump"
+					else
+						player_msg2[attacker.id] = "Too late ("..jump_duration[attacker.id]-recovery_count[defender.id].."f)"
+					end
+				end
+			else -- If the attacker lands before the defender recovers
+				player_msg2[attacker.id] = "Too soon ("..recovery_count[defender.id]-jump_duration[attacker.id].."f)"
+			end
+			player_msg2_fcount[attacker.id] = MSG_FRAMELIMIT-120
+			safe_jump_attempt[attacker.id] = false
+			recovery_count[defender.id] = 0
+		end
+	end
+	if DEBUG then
+		--
+		local x = 0
+		if attacker.id == 1 then
+			x = 100
+		elseif attacker.id == 2 then
+			x = 230
+		end
+		--
+		if safe_jump_attempt[attacker.id] then
+			if curr_jump_frame[attacker.id] < jump_duration[attacker.id] then
+				curr_jump_frame[attacker.id] = countFrames(curr_jump_frame[attacker.id])
+			elseif (curr_jump_frame[attacker.id] ~= 0) and (curr_jump_frame[attacker.id] >= jump_duration[attacker.id]) then
+				landing_frame[attacker.id] = true
+			end
+			debug_recovery_count[defender.id] = recovery_count[defender.id]
+			debug_diff[attacker.id] = jump_duration[attacker.id]-recovery_count[defender.id]
+			if getReversalStartup(defender) ~= nil then
+				debug_diff[attacker.id] = debug_diff[attacker.id].." (max = "..getReversalStartup(defender)..")"
+			else
+				debug_diff[attacker.id] = debug_diff[attacker.id].." (can't be safe jumped)"
+			end
+		end
+		-- Display
+		gui.text(x,50,"P"..attacker.id.." State : "..player[attacker.id].state)
+		gui.text(x,60,"P"..defender.id.." is knockdown : "..str(player[defender.id].is_knockdown))
+		--gui.text(x,60,"P"..attacker.id.." Curr. Jump Frame : "..curr_jump_frame[attacker.id])
+		gui.text(x,70,"P"..attacker.id.." Total Jump Duration : "..jump_duration[attacker.id])
+		gui.text(x,80,"P"..defender.id.." Recovery Count : "..debug_recovery_count[defender.id])
+		gui.text(x,90,"Diff : "..debug_diff[attacker.id])
+
+		if landing_frame[attacker.id] then
+			landing_msg_counter = countFrames(landing_msg_counter)
+			if landing_msg_counter < 30 then
+				gui.text(x,130,"P"..attacker.id.." Landing frame")
+			else
+				landing_msg_counter = 0
+				landing_frame[attacker.id] = false
+			end
+		end
+	end
+end
+
+local function safeJumpDisplay()
+	if safe_jump_display_selector > -1 then
+		detectSafeJump(gamestate.P1)
+		detectSafeJump(gamestate.P2)
 	end
 end
 -------------------------
@@ -3931,6 +4357,7 @@ local function throwProjectilesLogic()
 end
 
 local function projectileTraining()
+	if REPLAY then return end
 	stockProjectilesChecked()
 	throwProjectilesLogic()
 end
@@ -3978,6 +4405,7 @@ function displayProjectileSettings()
 end
 
 function displayContextualSettings()
+	if REPLAY then return end
 	displayReversalSettings()
 	displayProjectileSettings()
 end
@@ -3997,13 +4425,16 @@ local function updateGamestate()
 	gamestate.read_game_vars()
 	gamestate.read_player_vars(gamestate.P1)
 	readInHitstun(gamestate.P1)
+	readKnockdown(gamestate.P1)
 	gamestate.read_player_vars(gamestate.P2)
 	readInHitstun(gamestate.P2)
+	readKnockdown(gamestate.P2)
 	-- global
 	checkFrameskip()
 end
 
 local function ST_Training_basic_settings()
+	if REPLAY then return end
 	neverEnd()
 	autoBlock()
 	autoReversal()
@@ -4023,11 +4454,14 @@ local function ST_Training_advanced_settings()
 	frameTrapDisplay()
 	tickThrowDisplay()
 	crossupDisplay()
+	safeJumpDisplay()
 	projectileTraining()
 	roundStart()
 end
 
 local function ST_Training_misc()
+	loadReplayConfig()
+	if REPLAY then return end
 	displayContextualSettings()
 	fixPreviousInputDetection(fixed_inputs)
 	if first_load then
@@ -4038,26 +4472,10 @@ local function ST_Training_misc()
 	end
 end
 
-local addons_charged = false
-
-local function loadAddons()
-	if not addons_charged then
-		dofile("games/ssf2xjr1/addon/addons.lua")
-		for i = 1, #addons_run do
-			if fexists("games/ssf2xjr1/addon/"..addons_run[i]) then
-				dofile("games/ssf2xjr1/addon/"..addons_run[i])
-			end
-		end
-		insertAddonButton()
-		addons_charged = true
-	end
-end
-
 ST_functions = {updateGamestate, ST_Training_misc, ST_Training_basic_settings, ST_Training_advanced_settings, draw_messages}
 
 function Run() -- runs every frame
 	for i = 1, #ST_functions do
 		ST_functions[i]()
 	end
-	loadAddons()
 end

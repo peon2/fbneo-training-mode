@@ -514,21 +514,7 @@ local function Z3_Training_basic_settings()
 	crouchCancelTraining()
 end
 
-local addons_charged = false
-local function loadAddons()
-	if not addons_charged then
-		dofile("games/sfa3/addon/addons.lua")
-		for i = 1, #addons_run do
-			if fexists("games/sfa3/addon/"..addons_run[i]) then
-				dofile("games/sfa3/addon/"..addons_run[i])
-			end
-		end
-		insertAddonButton()
-		addons_charged = true
-	end
-end
-
-Z3_functions = {updateGamestate, Z3_Training_basic_settings, loadAddons, draw_messages}
+Z3_functions = {updateGamestate, Z3_Training_basic_settings, draw_messages}
 
 function Run() -- runs every frame
 	for i = 1, #Z3_functions do

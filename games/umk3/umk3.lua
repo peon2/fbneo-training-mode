@@ -113,7 +113,7 @@ function writePlayerTwoHealth(health)
 end
 
 function infiniteTime()
-	memory.writedword(0xff80dc60, 0x0300c0d7)
+	wdw(0xff80dc60, 0x0300c0d7)
 end
 
 function Run()

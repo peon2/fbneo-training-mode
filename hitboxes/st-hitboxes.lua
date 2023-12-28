@@ -252,6 +252,17 @@ local function define_box(obj, entry)
 	return box
 end
 
+local function returnBoxType(obj, entry)
+	local box = {
+		type = game.box_list[entry].type,
+		id = memory.readbyte(obj.animation_ptr + game.box_list[entry].id_ptr),
+	}
+
+	if box.id == 0 or process_box_type[box.type](obj, box) == false then
+		return nil
+	end
+	return box
+end
 
 local function define_throw_box(obj, entry)
 	local box = {
@@ -279,6 +290,16 @@ local function update_game_object(obj)
 	end
 end
 
+function updateGameObjectBoxes(_player_obj)
+	_player_obj.animation_ptr = memory.readdword(_player_obj.base + 0x1A)
+	_player_obj.boxes = {}
+	for i = 1, #_player_obj.boxes do
+		player_obj.boxes[i] = nil
+	end
+	for entry in ipairs(game.box_list) do
+		table.insert(_player_obj.boxes, returnBoxType(_player_obj, entry))
+	end
+end
 
 local function read_projectiles()
 	local current_projectiles = {}

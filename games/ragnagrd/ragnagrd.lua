@@ -138,7 +138,7 @@ function writePlayerTwoMeter(meter)
 end
 
 function infiniteTime()
-	memory.writeword(0x10022E, 0x0601)
+	ww(0x10022E, 0x0601)
 end
 
 

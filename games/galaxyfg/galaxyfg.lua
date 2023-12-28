@@ -78,11 +78,11 @@ function playerTwoInHitstun()
 end
 
 function infiniteTime()
-	memory.writebyte(0x101252,0xFE)
+	wb(0x101252,0xFE)
 end
 
 function maxCredits()
-	memory.writebyte(0xD00034, 0x990)
+	wb(0xD00034, 0x990)
 end
 
 function Run() -- runs every frame

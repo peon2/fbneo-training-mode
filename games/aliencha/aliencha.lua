@@ -88,7 +88,7 @@ function writePlayerTwoHealth(health)
 end
 
 function infiniteTime()
-	memory.writeword(0x200f31, 0x6200)
+	ww(0x200f31, 0x6200)
 end
 
 function Run() -- runs every frame
