@@ -118,3 +118,4 @@ end
 function Run() -- runs every frame
 	infiniteTime()
 end
+require('addon.kof_training')
