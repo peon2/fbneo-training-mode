@@ -5,7 +5,33 @@ KOF_CONFIG = {
 		dummy_guarding = false,
 		standing_guard = 0,
 		crouch_guard = 0,
-		random_guard = 0
+		random_guard = 0,
+		reversal =0,
+		REVERSAL_OPTIONS = {
+			
+			OFF = 0,
+			ON = 1,
+			RANDOM = 2
+		},
+		reversal_moves = {}
+	},
+    REVERSAL_MOVES = {
+		OPTIONS = {
+			OFF = 0,
+			GUARD = 1,
+			WAKEUP = 2,
+			BOTH = 3
+		}},
+    WAKEUP = {
+		dummy_waking_up = false,
+		reversal  = 0,
+		REVERSAL_OPTIONS = {
+			
+			OFF = 0,
+			ON = 1,
+			RANDOM = 2
+		},
+		reversal_moves = {}
 	},
 	MOVES = {
 		
@@ -112,47 +138,27 @@ guicustompage = {
 			end,
 	},
 	{
-		text = "Toggle Reversal",
-		x = 8,
-		y = 70,
+		text = "Toggle Guard Reversal",
+		x = 118,
+		y = 50,
 		olcolour = "black",
 		handle = 2,
 		info = {
 		},
 		func =	function()
-				dummy_reversal = dummy_reversal + 1
-				if dummy_reversal > 1 then
-					dummy_reversal = 0
+				KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.reversal + 1
+				if KOF_CONFIG.GUARD.reversal > 2 then
+					KOF_CONFIG.GUARD.reversal = 0
 				end
 			end,
-		autofunc = function(this)
-				if dummy_reversal == 0 then
-					this.text = "Toggle Reversal: Off"
-				elseif dummy_reversal == 1 then
-					this.text = "Toggle Reversal: On"
-				end
-			end,
-	},
-	{
-		text = "Toggle Reversal Random",
-		x = 8,
-		y = 90,
-		olcolour = "black",
-		handle = 2,
-		info = {
-		},
-		func =	function()
-				dummy_reversal_random = dummy_reversal_random + 1
-				if dummy_reversal_random > 1 then
-					dummy_reversal_random = 0
-				end
-			end,
-		autofunc = function(this)
-				if dummy_reversal_random == 0 then
-					this.text = "Toggle Reversal Random: Off"
-				elseif dummy_reversal_random == 1 then
-					this.text = "Toggle Reversal Random: On"
-				end
+		autofunc = function(this)				
+					if (KOF_CONFIG.GUARD.reversal  == KOF_CONFIG.GUARD.REVERSAL_OPTIONS.OFF) then
+						this.text = "Enable G. Reversal: Off" 
+					elseif (KOF_CONFIG.GUARD.reversal  == KOF_CONFIG.GUARD.REVERSAL_OPTIONS.ON) then
+						this.text = "Enable G. Reversal: On" 
+					elseif (KOF_CONFIG.GUARD.reversal  == KOF_CONFIG.GUARD.REVERSAL_OPTIONS.RANDOM ) then
+						this.text = "Enable G. Reversal: Random"
+					end
 			end,
 	},
 	----{
@@ -161,19 +167,19 @@ guicustompage = {
 	{
 			text = "Reversal Move Active Settings",
 			x = 8,
-			y = 110,
+			y = 70,
 			olcolour = "black",
 			handle = 8,
 			func = 	function() CIG("reversal_move_active_settings", 1) end,
 	},
 	{
-		text = "Current Reversal Move(s)",
+		text = "Guard Rev(s)",
 		x = 8,
-		y = 130,
+		y = 90,
 		olcolour = "black",
 		handle = 2,
 		info = {
-            "the first one is the default"
+            "active moves for reversal on guard"
 		},
 		func =	function()
 				
@@ -181,7 +187,7 @@ guicustompage = {
 		autofunc = function(this)
             local txt = ""
             local i = 1
-                for index, value in ipairs(dummy_reversal_moves) do
+                for index, value in ipairs(KOF_CONFIG.GUARD.reversal_moves) do
                     if i == 1 then
                         txt = txt..value
                         i = 1 + 1
@@ -189,29 +195,78 @@ guicustompage = {
                         txt = txt..", "..value
                     end
                 end   
-                this.text =  "Current Reversal Move(s): ("..txt..")"
+                this.text =  "Guard Rev(s): ("..txt..")"
 			end,
 	},
 	{
-		text = "Toggle Recovery",
+		text = "Wake Up Rev(s)",
+		x = 118,
+		y = 90,
+		olcolour = "black",
+		handle = 2,
+		info = {
+            "active moves for reversal on Wake Up"
+		},
+		func =	function()
+				
+			end,
+		autofunc = function(this)
+            local txt = ""
+            local i = 1
+                for index, value in ipairs(KOF_CONFIG.WAKEUP.reversal_moves) do
+                    if i == 1 then
+                        txt = txt..value
+                        i = 1 + 1
+                    else
+                        txt = txt..", "..value
+                    end
+                end   
+                this.text =  "WakeUp Rev(s): ("..txt..")"
+			end,
+	},
+	{
+		text = "Enable WAKEUP",
 		x = 8,
-		y = 150,
+		y = 110,
 		olcolour = "black",
 		handle = 2,
 		info = {
 		},
 		func =	function()
-				dummy_recovery = dummy_recovery + 1
-				if dummy_recovery > 1 then
-					dummy_recovery = 0
-				end
+					if next(KOF_CONFIG.WAKEUP.reversal_moves) == nil then
+						return
+					end
+					KOF_CONFIG.WAKEUP.reversal= KOF_CONFIG.WAKEUP.reversal+ 1
+					if KOF_CONFIG.WAKEUP.reversal> 2 then
+						KOF_CONFIG.WAKEUP.reversal= 0
+					end
+					if KOF_CONFIG.WAKEUP.reversal ~= KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.OFF then
+						KOF_CONFIG.WAKEUP.dummy_waking_up = true
+					end
+				end,
+		autofunc = function(this)				
+					if (KOF_CONFIG.WAKEUP.reversal == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.OFF) then
+						this.text = "Enable Wake Up Reversal: Off" 
+					elseif (KOF_CONFIG.WAKEUP.reversal == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON) then
+						this.text = "Enable Wake Up Reversal: On" 
+					elseif (KOF_CONFIG.WAKEUP.reversal == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM ) then
+						this.text = "Enable Wake Up Reversal: Random"
+					end
 			end,
-		autofunc = function(this)
-				if dummy_recovery == 0 then
-					this.text = "Toggle Recovery: Off"
-				elseif dummy_recovery == 1 then
-					this.text = "Toggle Recovery: On"
-				end
+	},
+	{
+		text = "WakeUp delay",
+		x = 8,
+		y = 130,
+		olcolour = "black",
+		handle = 2,
+		info = {
+			"Controls how many frames until the character takes to do the reversal",
+			"Because depending on the mo "
+		},
+		func =	function()
+
+				
 			end,
 	},
 }

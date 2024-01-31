@@ -295,11 +295,23 @@ for index, value in pairs(moves) do
         olcolour = "black",
         info = {},
         func = function()
-            moves_var_names[index] = (moves_var_names[index] + 1) % 2
-            dummy_reversal_moves = getCurrentReversalMoves()
+				moves_var_names[index] = moves_var_names[index]+ 1
+				if moves_var_names[index]> 3 then
+					moves_var_names[index] = 0
+				end
+            	KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
+				KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
         end,
         autofunc = function(this)
-            this.text = "Enable " .. index .. ": " .. ((moves_var_names[index] == 0) and "Off" or "On")
+			if (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+				this.text = "Enable " .. index .. ": Off" 
+			elseif (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) then
+				this.text = "Enable " .. index .. ": Guard" 
+			elseif (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP)then
+				this.text = "Enable " .. index .. ": WakeUp" 
+			elseif (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH)then
+				this.text = "Enable " .. index .. ": Both" 
+			end
         end,
     }
     table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[index])
@@ -307,14 +319,25 @@ for index, value in pairs(moves) do
 end
 
 
-function getCurrentReversalMoves()
+function getCurrentGuardReversalMoves()
 	local tabl = {}
 	for index, value in pairs(moves_var_names) do
-		if moves_var_names[index] == 1 then
+		if (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) or moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH then
 			table.insert(tabl, index)
 		end
 	end
 	return tabl
 end
 
-dummy_reversal_moves = getCurrentReversalMoves()
+function getCurrentWakeupReversalMoves()
+	local tabl = {}
+	for index, value in pairs(moves_var_names) do
+		if (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP) or moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH then
+			table.insert(tabl, index)
+		end
+	end
+	return tabl
+end
+
+KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
+KOF_CONFIG.WAKEUP.reversal_moves = getCurrentWakeupReversalMoves()
