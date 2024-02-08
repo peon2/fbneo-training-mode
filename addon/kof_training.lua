@@ -37,8 +37,6 @@ dummy_reversal_random = customconfig.dummy_reversal_random ]]
 --local p2move_adress = 0x108373
 local p2blockstun_address = 0x1083E3
 local p2blockstun_value = 0xA0
-local trigger_reversal = true
-local can_block = true
 
 -------------------------------------------------
 --- POSIBBLE MEMORIE ADRESSES ----
@@ -90,8 +88,8 @@ local function transitionToState(newState)
 end
 local iddle_time_running = false
 local iddle_finish_time = 0
-local iddle_time = 60
-local function recoveryEnabled()
+local iddle_time = 80
+local function wakeUpEnabled()
 	if iddle_time_running then
 		print("current iddle Time is: "..(iddle_finish_time - emu.framecount()))
 		if iddle_finish_time == emu.framecount()  then
@@ -103,29 +101,43 @@ local function recoveryEnabled()
 	end	
 	return true
 end
-local function startRecoveryIddleTime()
+local function startWakeupIddleTime()
 	iddle_time_running = true
 	iddle_finish_time = emu.framecount() + iddle_time
 end
+local delay_count = 0
 
+local function delay(delay_frames, functionToExecute, ...)
+    if delay_count < delay_frames then
+        delay_count = delay_count + 1
+        --print("DELAYED BY: ", delay_count)
+        return
+    end
+
+    if functionToExecute(...) == false then
+        delay_count = 0
+    end
+end
 
 local current_move_index_counter = 1
 local current_move_time_counter = 1
-local function doMove(move, times)
-	local seq = move.sequence
-	times = times or  move.times
-	--[[ can_block = false ]]
-	local tbl = {}--[[ 
-	print("current_move_time_counter: "..current_move_time_counter) ]]
-	if current_move_time_counter > times then
-	--[[ print("last time") ]]
-		
+local function doMove(move_name, times, conf)
+	if (conf == nil) then conf = false end
+	local seq = nil
+	if (conf == false) then
+		seq =  moves[move_name].sequence
+	else  
+		seq = KOF_CONFIG.MOVES[move_name].sequence
+	end
 	
+
+	local tbl = {}
+
+	if current_move_time_counter > times then	
 		current_move_time_counter =1
-		--[[ can_block = true ]]	
 		return false
 	end
---[[ 	print(joypad.get()["P1 Button B"]) ]]
+
 	if current_move_index_counter > #seq  then
 		current_move_index_counter = 1		
 		current_move_time_counter = current_move_time_counter +1
@@ -153,65 +165,85 @@ local function doMove(move, times)
 	joypad.set(tbl)
 	return true
 end
-local CURRENT_REVERSAL_MOVE = {}
+
+local move_index_counter = 1
+
+function doMoves(moveList, callback)
+	
+    if #moveList == 0 then
+        if callback then
+            callback()  -- Trigger the callback if provided and there are no moves
+        end
+        return false  -- No moves to execute
+    end
+	if move_index_counter > #moveList then
+		move_index_counter = 1
+		if callback then
+			callback()  -- Trigger the callback if provided and all moves are executed
+		end
+		return true -- All moves executed the specified number of times
+	end
+
+    local currentMove = moveList[move_index_counter]
+
+    delay(currentMove.delay, function()
+        local res = doMove(currentMove.name, currentMove.times, currentMove.conf)  -- Execute the current move once
+
+        if res == false then
+            move_index_counter = move_index_counter + 1
+        end
+
+        return res
+    end)
+
+    return true
+end
+
+
+local CURRENT_REVERSAL_MOVE_NAME = nil
 local function getCurrentReversalMove(state)
-	local next = next
-	if next(CURRENT_REVERSAL_MOVE) == nil then
-		if state == "blocking"	then	
+	if (CURRENT_REVERSAL_MOVE_NAME) == nil then
+		if state == "guard_reversal"	then
 			if KOF_CONFIG.GUARD.reversal  == KOF_CONFIG.GUARD.REVERSAL_OPTIONS.RANDOM then
-				CURRENT_REVERSAL_MOVE =moves[KOF_CONFIG.GUARD.reversal_moves[math.random(1,  #KOF_CONFIG.GUARD.reversal_moves)]]
+				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.GUARD.reversal_moves[math.random(1,  #KOF_CONFIG.GUARD.reversal_moves)]
 			else
-				CURRENT_REVERSAL_MOVE = moves[KOF_CONFIG.GUARD.reversal_moves[1]]
+				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.GUARD.reversal_moves[1]
 			end
 		elseif state == "waking_up" then	
 			if KOF_CONFIG.WAKEUP.reversal  == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM then
-				CURRENT_REVERSAL_MOVE =moves[KOF_CONFIG.WAKEUP.reversal_moves[math.random(1,  #KOF_CONFIG.WAKEUP.reversal_moves)]]
+				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.WAKEUP.reversal_moves[math.random(1,  #KOF_CONFIG.WAKEUP.reversal_moves)]
 			else
-				CURRENT_REVERSAL_MOVE = moves[KOF_CONFIG.WAKEUP.reversal_moves[1]]
+				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.WAKEUP.reversal_moves[1]
 			end
 		end
 	end
-	return CURRENT_REVERSAL_MOVE
+	return CURRENT_REVERSAL_MOVE_NAME
 end
 
+local function resetCurrentReversalName()
+	CURRENT_REVERSAL_MOVE_NAME = nil
+end
+local function buildReversal(reversal_name)
+	local _reversal = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(reversal_name)
+	return _reversal
+end
+local function doReversal(_name, _times)
 
-
-local function doReversal(state)
-	local times = nil
-	if state == "waking_up" then
-		times = 1
-	end
-
-	if doMove(getCurrentReversalMove(state), times) == false then
+	if doMove(_name, _times) == false then
 		
-		CURRENT_REVERSAL_MOVE = {}
-		if KOF_CONFIG.GUARD.dummy_guarding then
-        	transitionToState("blocking")  -- Transition to the "blocking" state
-		else
-			transitionToState("start")
-			startRecoveryIddleTime()
-		end
+		resetCurrentReversalName()
+		return false
 	end
+	return true
 end
-local function doRecovery()
-	if doMove(moves['AB'],7)== false then
-		startRecoveryIddleTime()
-		--[[ trigger_recovery = false ]]
-		if dummy_reversal == 1 then
-			transitionToState("reversal")
-		elseif dummy_guard == 1 then
-			transitionToState("blocking")
-		else
-			transitionToState("start")
-		end
-	end
-end
- function p2Block()
+
+function p2Block()
 	local tbl = {}	
 	tbl[getBlockingDirection()] = 1
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
+
 function p2Crouch()
 	local tbl = {}
 	tbl["P2 Down"] = 1
@@ -241,7 +273,7 @@ local function playerOnePressedButtons()
 end
 
 local function dummyGuardForATime()
-	return doMove(KOF_CONFIG.MOVES['GUARD_BACK'],10)
+	return doMove('GUARD_BACK',10, true)
 end
 
 local cooldowns = {}  -- Table to store cooldowns for different functions
@@ -266,15 +298,12 @@ local function executeWithCooldown(func, cooldownDuration, funcName)
 	end
 end
 
-function printTable(tbl)
-    print("Table content:")
-    for funcName, flag in pairs(functionRunningFlags) do
-    print(funcName, flag)
-	end
-end
+
+
+
 
 local function doNothing()
-	print('Doing nothing')
+	--print('Doing nothing')
 end
 
 local start_press = false
@@ -326,29 +355,21 @@ function block()
 		end
 	end
 end
-function doRandomAction(alternFunction, mainFunction, random_condition)
-	if random_condition then
-		local percentage_of_down = 50
-		local randomNumber = math.random(1, 100)
-		if randomNumber <= percentage_of_down then
-			alternFunction()
-		else
-			mainFunction()
-		end
-	else
-		mainFunction()
-	end
-end
 local active_wake_up =false
 local function isOnWakeUp()
 	return rb(0x108321) > 0
 end
+local function closeToGround()
+	return rb(0x108321) < 20 and rb(0x108321) >  5
+end
 local function isWakeUpTime()
-	return rb(0x108321) == 0
+	return rb(0x108321) == 0  
 end
 
 require('games.kof98.tests_kof98')
 testsRun = true
+
+local enabled_recovery = false
 function Run() -- runs every frame
 	--run tests once
 	runTests()
@@ -358,37 +379,88 @@ function Run() -- runs every frame
 		print(rb(0x108321).."-"..rb(0x108322).."-"..rb(0x108323))
 	end ]]
 	 -- Check the current state and execute corresponding behavior
-	 gui.text(197, 73,  "test 1: "..rb(0x108321), "cyan", "black")
+	--[[  gui.text(197, 73,  "test 1: "..rb(0x108321), "cyan", "black")
 	 gui.text(197, 83,  "test 2: "..rb(0x108322), "cyan", "black")
-	 gui.text(197, 93,  "test 3: "..rb(0x108323), "cyan", "black")
+	 gui.text(197, 93,  "test 3: "..rb(0x108323), "cyan", "black") ]]
 	 if stateMachine.currentState == "start" then
         -- Logic for the "start" state
-			active_wake_up = false
         -- Additional logic specific to the "start" state...
+		if KOF_CONFIG.RECOVERY.dummy_recovering then
+			if (wakeUpEnabled() and closeToGround()) then				
+				transitionToState("recovering")				
+			end
+		end
 		if KOF_CONFIG.GUARD.dummy_guarding  then
         	transitionToState("blocking")  -- Transition to the "blocking" state
-		elseif KOF_CONFIG.WAKEUP.dummy_waking_up then
-			--[[ if (recoveryEnabled()) then
-				if isInAir() then
+		elseif KOF_CONFIG.WAKEUP.dummy_waking_up and not KOF_CONFIG.RECOVERY.dummy_recovering  then
+			if (wakeUpEnabled()) then			
+				if(isOnWakeUp() and active_wake_up == false) then
+					active_wake_up = true
 					transitionToState("waking_up")
 				end
-			end ]]
-			if(isOnWakeUp() and active_wake_up == false) then
-				active_wake_up = true
-				transitionToState("waking_up")
 			end
 		end
 	elseif stateMachine.currentState == "blocking" then
+		if not KOF_CONFIG.GUARD.dummy_guarding then
+			transitionToState("start")
+		end
+		if KOF_CONFIG.WAKEUP.dummy_waking_up then
+			if (wakeUpEnabled()) then			
+				if(isOnWakeUp() and active_wake_up == false) then
+					active_wake_up = true
+					transitionToState("waking_up")
+				end
+			end
+		end
 		if  playerTwoInBlockstun() and KOF_CONFIG.GUARD.reversal ~= KOF_CONFIG.GUARD.REVERSAL_OPTIONS.OFF then
-			transitionToState("reversal")
+			transitionToState("guard_reversal")
 		end
 		block()
 	elseif stateMachine.currentState == "waking_up" then
-		if(isWakeUpTime() and active_wake_up == true) then
-			doReversal(stateMachine.currentState) --for state waking up
+		if(isWakeUpTime() and active_wake_up == true and wakeUpEnabled()) then
+	
+			local reversal_name = getCurrentReversalMove("waking_up")
+			local reversal = buildReversal(reversal_name)
+			delay(reversal.on_wake_up_delay, function ()
+				local res = doReversal(reversal.name, reversal.on_wake_up_times)
+				if res ==false then
+					startWakeupIddleTime()
+					active_wake_up=false
+					resetCurrentReversalName()					
+					if KOF_CONFIG.GUARD.dummy_guarding then
+						transitionToState("blocking")  -- Transition to the "blocking" state
+					else
+						transitionToState("start")
+						startWakeupIddleTime()
+					end
+				end
+				return res
+			end) --for state waking up
 		end
-	elseif stateMachine.currentState == "reversal" then
-		doGuardReversal()
-	 end
+	elseif stateMachine.currentState == "guard_reversal" then		
+		 
+	elseif stateMachine.currentState == "recovering" then
+		local recovery_moves = {}
+		table.insert(recovery_moves,{ name = "AB", delay = KOF_CONFIG.RECOVERY.delay, times = KOF_CONFIG.RECOVERY.times, conf = true } )
+		if KOF_CONFIG.WAKEUP.dummy_waking_up then
+			local reversal_name = getCurrentReversalMove("waking_up")
+			local reversal = buildReversal(reversal_name)
+			table.insert(recovery_moves,{ name = reversal.name, delay = reversal.on_wake_up_delay, times = reversal.on_wake_up_times } )
+		end
+		doMoves(recovery_moves,function()
+			--print("All moves executed!")
+		
+			if KOF_CONFIG.WAKEUP.dummy_waking_up then 
+				startWakeupIddleTime()
+				resetCurrentReversalName()
+			end
+			if KOF_CONFIG.GUARD.dummy_guarding then
+				transitionToState("blocking")
+			else
+				transitionToState("start")
+			end
+		end)								
+	
+	end
 	infiniteTime()
 end
