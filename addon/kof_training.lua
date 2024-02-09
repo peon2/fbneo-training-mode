@@ -91,19 +91,19 @@ local iddle_finish_time = 0
 local iddle_time = 80
 local function wakeUpEnabled()
 	if iddle_time_running then
-		print("current iddle Time is: "..(iddle_finish_time - emu.framecount()))
-		if iddle_finish_time == emu.framecount()  then
-			iddle_finish_time = 0
+		print("current iddle Time is: "..(iddle_finish_time))
+		if iddle_finish_time == 0  then			
 			iddle_time_running = false
 			return true
 		end
+		iddle_finish_time = iddle_finish_time -1
 		return false
 	end	
 	return true
 end
 local function startWakeupIddleTime()
 	iddle_time_running = true
-	iddle_finish_time = emu.framecount() + iddle_time
+	iddle_finish_time = iddle_time
 end
 local delay_count = 0
 
@@ -304,6 +304,7 @@ end
 
 local function doNothing()
 	--print('Doing nothing')
+	return false
 end
 
 local start_press = false
@@ -368,9 +369,46 @@ end
 
 require('games.kof98.tests_kof98')
 testsRun = true
+-- Function to set default configuration based on configName
+function setDefaultConfig(configName)
+    if configName == "safe_jump_training" then
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
+		KOF_CONFIG.RECOVERY.dummy_recovering = true
+        KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.ON
+		KOF_CONFIG.RECOVERY.delay = 25
+		KOF_CONFIG.RECOVERY.times = 3
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "C_GUARD"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 8
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		KOF_CONFIG.MOVES_VAR_NAMES["DOWN_C"] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+        -- Set other options as needed for "safe_jump_training" configuration
+    elseif configName == "aggressive_training" then
+        KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.ON
+        -- Set other options as needed for "aggressive_training" configuration
+    elseif configName == "custom_config" then
+        -- Define custom configuration options here
+    else
+        print("Unknown configuration:", configName)
+    end
+end
 
-local enabled_recovery = false
+local dont_recover = false
+local recovery_enabled = false
+local set_config = true
 function Run() -- runs every frame
+	if set_config then
+		setDefaultConfig("safe_jump_training")
+		set_config=false
+	end
 	--run tests once
 	runTests()
 	--gui.text(197, 73,  rb(in_air), "cyan", "black")
@@ -386,8 +424,33 @@ function Run() -- runs every frame
         -- Logic for the "start" state
         -- Additional logic specific to the "start" state...
 		if KOF_CONFIG.RECOVERY.dummy_recovering then
-			if (wakeUpEnabled() and closeToGround()) then				
-				transitionToState("recovering")				
+			
+			
+			if (wakeUpEnabled() and closeToGround()) then
+				if KOF_CONFIG.RECOVERY.recovery == KOF_CONFIG.RECOVERY.OPTIONS.RANDOM then
+					local percentage_of_success = 50
+					local randomNumber = math.random(1, 100)
+					if(randomNumber <= percentage_of_success )then
+						dont_recover = true
+					else 
+						recovery_enabled = true
+					end
+				elseif KOF_CONFIG.RECOVERY.recovery == KOF_CONFIG.RECOVERY.OPTIONS.ON then
+					recovery_enabled = true
+				end
+				if dont_recover then
+					print("not recovering")
+					delay(10, function()
+						local res = doNothing()
+						if not res then
+							dont_recover = false
+						end
+						return res
+					end
+					)
+					return
+				end			
+				if recovery_enabled then transitionToState("recovering")	end			
 			end
 		end
 		if KOF_CONFIG.GUARD.dummy_guarding  then
@@ -437,7 +500,23 @@ function Run() -- runs every frame
 				return res
 			end) --for state waking up
 		end
-	elseif stateMachine.currentState == "guard_reversal" then		
+	elseif stateMachine.currentState == "guard_reversal" then
+		local reversal_name = getCurrentReversalMove("guard_reversal")
+	local reversal = buildReversal(reversal_name)
+	delay(reversal.on_guard_delay, function ()
+		local res = doReversal(reversal.name, reversal.on_guard_times)
+		if res ==false then
+			startWakeupIddleTime()
+			active_wake_up=false					
+			if KOF_CONFIG.GUARD.dummy_guarding then
+				transitionToState("blocking")  -- Transition to the "blocking" state
+			else
+				transitionToState("start")
+				startWakeupIddleTime()
+			end
+		end
+		return res
+	end) --for state guard_reversal		
 		 
 	elseif stateMachine.currentState == "recovering" then
 		local recovery_moves = {}
@@ -449,7 +528,7 @@ function Run() -- runs every frame
 		end
 		doMoves(recovery_moves,function()
 			--print("All moves executed!")
-		
+			recovery_enabled = false
 			if KOF_CONFIG.WAKEUP.dummy_waking_up then 
 				startWakeupIddleTime()
 				resetCurrentReversalName()

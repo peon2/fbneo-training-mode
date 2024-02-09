@@ -181,7 +181,7 @@ movelist:setReversals(moves)
 KOF_CONFIG.REVERSAL_MOVES.MOVELIST = movelist
 
 local reversalmoveactivesettings = {}
-local moves_var_names = {}
+
 local elementsPerColumn = 4-- Elements per column
 local xSpacing = 115 -- Spacing between columns
 local xPosition = 8
@@ -192,9 +192,12 @@ local rowGap = 40
 for index, value in pairs(moves) do
 	local baseIndex = ((iterator- 1) *elementsPerRow )+ 1
     if moves[index].default == true then
-        moves_var_names[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH
+		print("KOF_CONFIG.MOVES_VAR_NAMES")
+		printTable(KOF_CONFIG.MOVES_VAR_NAMES[index])
+        KOF_CONFIG.MOVES_VAR_NAMES[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH
+		printTable(KOF_CONFIG.MOVES_VAR_NAMES[index])
     else
-        moves_var_names[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
+        KOF_CONFIG.MOVES_VAR_NAMES[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
     end
 
     local column = math.floor((iterator - 1) / elementsPerColumn) + 1
@@ -217,24 +220,26 @@ for index, value in pairs(moves) do
         olcolour = "black",
         info = {},
         func = function()
-				moves_var_names[index] = moves_var_names[index]+ 1
-				if moves_var_names[index]> 3 then
-					moves_var_names[index] = 0
+				KOF_CONFIG.MOVES_VAR_NAMES[index] = KOF_CONFIG.MOVES_VAR_NAMES[index]+ 1
+				if KOF_CONFIG.MOVES_VAR_NAMES[index]> 3 then
+					KOF_CONFIG.MOVES_VAR_NAMES[index] = 0
 				end
             	KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
 				KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
         end,
         autofunc = function(this)
 			
-			if (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+			if (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
 				this.text = index .. ": Off" 
-			elseif (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) then
+			elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) then
 				this.text = index .. ": Guard" 
-			elseif (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP)then
+			elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP)then
 				this.text = index .. ": WakeUp" 
-			elseif (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH)then
+			elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH)then
 				this.text = index .. ": Both" 
 			end
+			KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
+			KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
         end,
     }
 	table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex])
@@ -462,8 +467,8 @@ end
 
 function getCurrentGuardReversalMoves()
 	local tabl = {}
-	for index, value in pairs(moves_var_names) do
-		if (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) or moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH then
+	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES) do
+		if (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) or KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH then
 		
             local reversalMove = index
 			table.insert(tabl, reversalMove)
@@ -476,8 +481,8 @@ end
  function getCurrentWakeupReversalMoves()
     local tabl = {}
     
-    for index, value in pairs(moves_var_names) do
-        if (moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP) or moves_var_names[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH then
+    for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES) do
+        if (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP) or KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH then
             
             local reversalMove = index
 			table.insert(tabl, reversalMove)

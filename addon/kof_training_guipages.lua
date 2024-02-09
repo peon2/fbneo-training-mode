@@ -64,10 +64,11 @@ KOF_CONFIG = {
 				{'a','b'},
 	
 			},
-			times = 10,
-			delay = 10
+			times = 3,
+			delay = 25
 		},
-	}
+	},
+	MOVES_VAR_NAMES = {}
 }
 
 
