@@ -248,7 +248,9 @@ local function p2CrouchGuard()
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
-
+local function dummyCrouchForATime()
+	return doMove("CROUCH", 10, true)
+end
 local function p2Crouch()
 	local tbl = {}
 	tbl["P2 Down"] = 1
@@ -327,7 +329,7 @@ local function block()
 		end
 		if(start_press or  functionRunningFlags["dummyGuardForATime"] == true or functionRunningFlags['doNothing'] == true ) then			
 			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
-				local percentage_of_down = 50
+				local percentage_of_down = 30
 				local randomNumber = math.random(1, 100)
 				if(randomNumber <= percentage_of_down )then
 					executeWithCooldown( doNothing, 20, "doNothing")
@@ -359,12 +361,12 @@ local function block()
 		end
 		if (start_press or  functionRunningFlags["dummyCrouchGuardForATime"] == true or functionRunningFlags['p2Crouch'] == true ) then
 			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
-				local percentage_of_down = 50
+				local percentage_of_down = 30
 				local randomNumber = math.random(1, 100)
 				if(randomNumber <= percentage_of_down )then
-					executeWithCooldown( p2Crouch, 20, " p2Crouch")
+					executeWithCooldown( dummyCrouchForATime, 1, "dummyCrouchForATime")
 				else
-					executeWithCooldown( dummyCrouchGuardForATime, 20, "dummyCrouchGuardForATime")
+					executeWithCooldown( dummyCrouchGuardForATime, 1, "dummyCrouchGuardForATime")
 				end
 				start_press = false
 				return
@@ -377,7 +379,10 @@ local function block()
 				return		
 			end
 			if(functionRunningFlags["dummyCrouchGuardForATime"] ) then				
-				executeWithCooldown( dummyCrouchGuardForATime, 10, "dummyCrouchGuardForATime")
+				executeWithCooldown( dummyCrouchGuardForATime, 1, "dummyCrouchGuardForATime")
+			end
+			if(functionRunningFlags["dummyCrouchForATime"] ) then				
+				executeWithCooldown( dummyCrouchForATime, 1, "dummyCrouchForATime")
 			end
 		else
 			p2Crouch()
