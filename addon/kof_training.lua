@@ -120,7 +120,7 @@ local function delay(delay_frames, functionToExecute, ...)
 end
 
 local current_move_index_counter = 1
-local current_move_time_counter = 1
+local current_move_time_counter = 0
 local function doMove(move_name, times, conf)
 	if (conf == nil) then conf = false end
 	local seq = nil
@@ -133,14 +133,18 @@ local function doMove(move_name, times, conf)
 
 	local tbl = {}
 
-	if current_move_time_counter > times then	
-		current_move_time_counter =1
+	if current_move_time_counter == times then	
+		current_move_time_counter =0
 		return false
 	end
 
 	if current_move_index_counter > #seq  then
 		current_move_index_counter = 1		
 		current_move_time_counter = current_move_time_counter +1
+		if current_move_time_counter == times then	
+			current_move_time_counter =0
+			return false
+		end
 	end
 	for index, value in ipairs(seq[current_move_index_counter]) do
 		if value == 'forward' then
@@ -162,6 +166,7 @@ local function doMove(move_name, times, conf)
 		end
 	end
 	current_move_index_counter = current_move_index_counter +1
+	
 	joypad.set(tbl)
 	return true
 end
@@ -237,14 +242,14 @@ local function doReversal(_name, _times)
 	return true
 end
 
-function p2Block()
+local function p2CrouchGuard()
 	local tbl = {}	
 	tbl[getBlockingDirection()] = 1
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
 
-function p2Crouch()
+local function p2Crouch()
 	local tbl = {}
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
@@ -274,6 +279,10 @@ end
 
 local function dummyGuardForATime()
 	return doMove('GUARD_BACK',10, true)
+end
+
+local function dummyCrouchGuardForATime()
+	return doMove('CROUCH_GUARD',30, true)
 end
 
 local cooldowns = {}  -- Table to store cooldowns for different functions
@@ -308,7 +317,7 @@ local function doNothing()
 end
 
 local start_press = false
-function block()
+local function block()
     -- Additional logic for blocking...
 	if KOF_CONFIG.GUARD.standing_guard == 1 then
 		if(start_press == false) then
@@ -343,17 +352,37 @@ function block()
 		end
 	end
 	if KOF_CONFIG.GUARD.crouch_guard == 1 then
-		if KOF_CONFIG.GUARD.random_guard == 1 then
-			local percentage_of_down = 50
-			local randomNumber = math.random(1, 100)
-			if(randomNumber <= percentage_of_down )then
-				p2Crouch()
-			else
-				p2Block() 
+		if(start_press == false) then
+			if playerOnePressedButtons()  then
+				start_press = true
+			end
+		end
+		if (start_press or  functionRunningFlags["dummyCrouchGuardForATime"] == true or functionRunningFlags['p2Crouch'] == true ) then
+			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
+				local percentage_of_down = 50
+				local randomNumber = math.random(1, 100)
+				if(randomNumber <= percentage_of_down )then
+					executeWithCooldown( p2Crouch, 20, " p2Crouch")
+				else
+					executeWithCooldown( dummyCrouchGuardForATime, 20, "dummyCrouchGuardForATime")
+				end
+				start_press = false
+				return
+			elseif start_press and KOF_CONFIG.GUARD.random_guard == 0 then
+				--p2CrouchGuard()
+				if dummyCrouchGuardForATime()  == false  then
+					start_press = false
+				end
+				
+				return		
+			end
+			if(functionRunningFlags["dummyCrouchGuardForATime"] ) then				
+				executeWithCooldown( dummyCrouchGuardForATime, 10, "dummyCrouchGuardForATime")
 			end
 		else
-			p2Block()		
+			p2Crouch()
 		end
+		
 	end
 end
 local active_wake_up =false
@@ -367,8 +396,7 @@ local function isWakeUpTime()
 	return rb(0x108321) == 0  
 end
 
-require('games.kof98.tests_kof98')
-testsRun = true
+
 -- Function to set default configuration based on configName
 function setDefaultConfig(configName)
     if configName == "safe_jump_training" then
@@ -409,8 +437,7 @@ function Run() -- runs every frame
 		setDefaultConfig("safe_jump_training")
 		set_config=false
 	end
-	--run tests once
-	runTests()
+
 	--gui.text(197, 73,  rb(in_air), "cyan", "black")
 	--[[ if rb(0x108321)~=0  then
 		
