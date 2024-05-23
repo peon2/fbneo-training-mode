@@ -92,6 +92,12 @@ moves = {
 			{'down'},
 			{'down', 'forward','c'},
 			{'down', 'forward','c'},
+			{'down', 'forward','c'},
+			{'down', 'forward','c'},
+			{'down', 'forward','c'},
+			{'c'},
+			{'c'},
+			{'c'},
 			{'c'},
 			{'c'},
 		},
@@ -130,16 +136,10 @@ moves = {
 	},
 	['THROW_C']={
 		["sequence"] = {
-			{'back'},
-			{'back'},
-			{'back'},
-			{'back'},
-			{'back', 'c'},
-			{'back', 'c'},				
-			{'back'},
-			{'back'},
-			{'back'},
-			{'back'},
+			{'forward'},
+			{'forward'},
+			{'forward', 'c'},
+			{'forward', 'c'},
 		},
 		times = 10
 	},
@@ -161,17 +161,35 @@ moves = {
 		times = 3
 	},
 	['MASH_CRB']={
-		["sequence"] = {	
-			{'down'},
-			{'down'},
-			{'down'},
-			{'down'},
-			{'down'},
-			{'down'},
+		["sequence"] = {
 			{'down','b'},
 			{'down', 'b'},
+			{'down', 'b'},
+			{'down', 'b'},
+			{'down', 'b'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
 		},
 		times = 17,
+	},
+	['SUPER_JUMP_BACK']={
+		["sequence"] = {	
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+		},
+		times = 17,
+		hidden = true
 	},
 }
 
@@ -190,281 +208,293 @@ local iterator = 1
 local elementsPerRow = 15
 local rowGap = 40
 for index, value in pairs(moves) do
-	local baseIndex = ((iterator- 1) *elementsPerRow )+ 1
-    if moves[index].default == true then
-		print("KOF_CONFIG.MOVES_VAR_NAMES")
-		printTable(KOF_CONFIG.MOVES_VAR_NAMES[index])
-        KOF_CONFIG.MOVES_VAR_NAMES[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH
-		printTable(KOF_CONFIG.MOVES_VAR_NAMES[index])
-    else
-        KOF_CONFIG.MOVES_VAR_NAMES[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
-    end
+	if moves[index].hidden then
+        -- Skip this iteration        
+	else
+		local baseIndex = ((iterator- 1) *elementsPerRow )+ 1
+		if moves[index].default == true then
+			print("KOF_CONFIG.MOVES_VAR_NAMES")
+			printTable(KOF_CONFIG.MOVES_VAR_NAMES[index])
+			KOF_CONFIG.MOVES_VAR_NAMES[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH
+			printTable(KOF_CONFIG.MOVES_VAR_NAMES[index])
+		else
+			KOF_CONFIG.MOVES_VAR_NAMES[index] =  KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
+		end
 
-    local column = math.floor((iterator - 1) / elementsPerColumn) + 1
-    local columnElement = (iterator - 1) % elementsPerColumn + 1
-    
-    xPosition = 8 + (column - 1) * xSpacing
-    
-    if columnElement == 1 then
-        yPosition = 10
-    else
-        yPosition = yPosition + rowGap
-    end
+		local column = math.floor((iterator - 1) / elementsPerColumn) + 1
+		local columnElement = (iterator - 1) % elementsPerColumn + 1
+		
+		xPosition = 8 + (column - 1) * xSpacing
+		
+		if columnElement == 1 then
+			yPosition = 10
+		else
+			yPosition = yPosition + rowGap
+		end
 
-	
+		
 
-    reversalmoveactivesettings[baseIndex] = {
-        text = index,
-        x = xPosition,
-        y = yPosition,
-        olcolour = "black",
-        info = {},
-        func = function()
-				KOF_CONFIG.MOVES_VAR_NAMES[index] = KOF_CONFIG.MOVES_VAR_NAMES[index]+ 1
-				if KOF_CONFIG.MOVES_VAR_NAMES[index]> 3 then
-					KOF_CONFIG.MOVES_VAR_NAMES[index] = 0
+		reversalmoveactivesettings[baseIndex] = {
+			text = index,
+			x = xPosition,
+			y = yPosition,
+			olcolour = "black",
+			info = {},
+			func = function()
+					KOF_CONFIG.MOVES_VAR_NAMES[index] = KOF_CONFIG.MOVES_VAR_NAMES[index]+ 1
+					if KOF_CONFIG.MOVES_VAR_NAMES[index]> 3 then
+						KOF_CONFIG.MOVES_VAR_NAMES[index] = 0
+					end
+					KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
+					KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+			end,
+			autofunc = function(this)
+				
+				if (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+					this.text = index .. ": Off" 
+				elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) then
+					this.text = index .. ": Guard" 
+				elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP)then
+					this.text = index .. ": WakeUp" 
+				elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH)then
+					this.text = index .. ": Both" 
 				end
-            	KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
+				KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
 				KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
-        end,
-        autofunc = function(this)
-			
-			if (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-				this.text = index .. ": Off" 
-			elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD) then
-				this.text = index .. ": Guard" 
-			elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP)then
-				this.text = index .. ": WakeUp" 
-			elseif (KOF_CONFIG.MOVES_VAR_NAMES[index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.BOTH)then
-				this.text = index .. ": Both" 
-			end
-			KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
-			KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
-        end,
-    }
-	table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex])
-	
+			end,
+		}
+		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex])
+		
 
-	local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(index)
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(index)
 
-	--ELEMENTS OF THE CALIBRATION ROW  for guard
-		-- First Element: "delay: "
-		reversalmoveactivesettings[baseIndex * 2 ] = {
-			text = "Guard:",
-			x = xPosition,
-			y = yPosition + 12,				
-			olcolour = "black",
-			info = { 
-				"this is the delay it will take on frames and the times of the reversal on guard"
-				
-			 },
-			func = function()
-				-- Function for "delay: "
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2])
-	
-		-- Second Element: "(-) delay"
-		reversalmoveactivesettings[baseIndex * 2  + 1] = {
-			text = "-",
-			x = xPosition + 34,  -- Adjust x position as needed
-			y = yPosition + 12,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				-- Function for "(-) delay"				
-				if current_reversal_move.on_guard_delay == 0 then
-					return
-				end
-				current_reversal_move.on_guard_delay  = current_reversal_move.on_guard_delay - 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2  + 1])
-		-- Third Element: "delay"
-		reversalmoveactivesettings[baseIndex * 2 + 2] = {
-			text = tostring(current_reversal_move.on_guard_delay),
-			x = xPosition + 45,  -- Adjust x position as needed
-			y = yPosition + 12,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				
-			end,
-			autofunc = function(this)
-				this.text = tostring(current_reversal_move.on_guard_delay)
-			end,
-	
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 2])
-		-- Fourth Element: "+ delay"
-		reversalmoveactivesettings[baseIndex * 2 + 3] = {
-			text = "+",
-			x = xPosition + 60,  -- Adjust x position as needed
-			y = yPosition + 12,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				-- Function for "(+) delay"
-				current_reversal_move.on_guard_delay  = current_reversal_move.on_guard_delay + 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 3])
-	
-		-- fith Element: "(-) Times"
-		reversalmoveactivesettings[baseIndex * 2 + 4] = {
-			text = "-",
-			x = xPosition + 75,  -- Adjust x position as needed
-			y = yPosition + 12,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func =  function()
-				-- Function for "(-) times"				
-				if current_reversal_move.on_guard_times == 1 then
-					return
-				end
-				current_reversal_move.on_guard_times  = current_reversal_move.on_guard_times - 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 4])
-		-- sixth Element: "times"
-		reversalmoveactivesettings[baseIndex * 2 + 5] = {
-			text = tostring(current_reversal_move.on_guard_times),
-			x = xPosition + 86,  -- Adjust x position as needed
-			y = yPosition + 12,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				
-			end,
-			autofunc = function(this)
-				this.text = tostring(current_reversal_move.on_guard_times)
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 5])
-		-- Seventh Element: "+ times"
-		reversalmoveactivesettings[baseIndex * 2 + 6] = {
-			text = "+",
-			x = xPosition + 99,  -- Adjust x position as needed
-			y = yPosition + 12,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				current_reversal_move.on_guard_times  = current_reversal_move.on_guard_times + 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 6])
-		--ELEMENTS OF THE CALIBRATION ROW  for Wake Up
+		--ELEMENTS OF THE CALIBRATION ROW  for guard
 			-- First Element: "delay: "
-		reversalmoveactivesettings[baseIndex * 2 + 7 ] = {
-			text = "WakeUp:",
-			x = xPosition,
-			y = yPosition + 24,				
-			olcolour = "black",
-			info = { 
-				"this is the delay it will take on frames and the times of the reversal on guard"
-				
-			 },
-			func = function()
-				-- Function for "delay: "
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 7])
-	
-		-- Second Element: "(-) delay"
-		reversalmoveactivesettings[baseIndex * 2  + 8] = {
-			text = "-",
-			x = xPosition + 34,  -- Adjust x position as needed
-			y = yPosition + 24,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				-- Function for "(-) delay"				
-				if current_reversal_move.on_wake_up_delay == 0 then
-					return
-				end
-				current_reversal_move.on_wake_up_delay  = current_reversal_move.on_wake_up_delay - 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2  + 8])
-		-- Third Element: "delay"
-		reversalmoveactivesettings[baseIndex * 2 + 9] = {
-			text = tostring(current_reversal_move.on_wake_up_delay),
-			x = xPosition + 45,  -- Adjust x position as needed
-			y = yPosition + 24,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				
-			end,
-			autofunc = function(this)
-				this.text = tostring(current_reversal_move.on_wake_up_delay)
-			end,
-	
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 9])
-		-- Fourth Element: "+ delay"
-		reversalmoveactivesettings[baseIndex * 2 + 10] = {
-			text = "+",
-			x = xPosition + 60,  -- Adjust x position as needed
-			y = yPosition + 24,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				-- Function for "(+) delay"
-				current_reversal_move.on_wake_up_delay  = current_reversal_move.on_wake_up_delay + 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 10])
-	
-		-- fith Element: "(-) Times"
-		reversalmoveactivesettings[baseIndex * 2 + 11] = {
-			text = "-",
-			x = xPosition + 75,  -- Adjust x position as needed
-			y = yPosition + 24,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func =  function()
-				-- Function for "(-) times"				
-				if current_reversal_move.on_wake_up_times == 1 then
-					return
-				end
-				current_reversal_move.on_wake_up_times  = current_reversal_move.on_wake_up_times - 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 11])
-		-- sixth Element: "times"
-		reversalmoveactivesettings[baseIndex * 2 + 12] = {
-			text = tostring(current_reversal_move.on_wake_up_times),
-			x = xPosition + 86,  -- Adjust x position as needed
-			y = yPosition + 24,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				
-			end,
-			autofunc = function(this)
-				this.text = tostring(current_reversal_move.on_wake_up_times)
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 12])
-		-- Seventh Element: "+ times"
-		reversalmoveactivesettings[baseIndex * 2 + 13] = {
-			text = "+",
-			x = xPosition + 99,  -- Adjust x position as needed
-			y = yPosition + 24,  -- Keep the same y position
-			olcolour = "black",
-			info = {},
-			func = function()
-				current_reversal_move.on_wake_up_times  = current_reversal_move.on_wake_up_times + 1
-			end,
-		}
-		table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 13])
-	
-    
-    iterator = iterator + 1
+			reversalmoveactivesettings[baseIndex * 2 ] = {
+				text = "Guard:",
+				x = xPosition,
+				y = yPosition + 12,				
+				olcolour = "black",
+				info = { 
+					"this is the delay it will take on frames and the times of the reversal on guard"
+					
+				},
+				func = function()
+					-- Function for "delay: "
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2])
+		
+			-- Second Element: "(-) delay"
+			reversalmoveactivesettings[baseIndex * 2  + 1] = {
+				text = "-",
+				x = xPosition + 34,  -- Adjust x position as needed
+				y = yPosition + 12,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					-- Function for "(-) delay"				
+					if current_reversal_move.on_guard_delay == 0 then
+						return
+					end
+					current_reversal_move.on_guard_delay  = current_reversal_move.on_guard_delay - 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2  + 1])
+			-- Third Element: "delay"
+			reversalmoveactivesettings[baseIndex * 2 + 2] = {
+				text = tostring(current_reversal_move.on_guard_delay),
+				x = xPosition + 45,  -- Adjust x position as needed
+				y = yPosition + 12,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					
+				end,
+				autofunc = function(this)
+					this.text = tostring(current_reversal_move.on_guard_delay)
+				end,
+		
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 2])
+			-- Fourth Element: "+ delay"
+			reversalmoveactivesettings[baseIndex * 2 + 3] = {
+				text = "+",
+				x = xPosition + 60,  -- Adjust x position as needed
+				y = yPosition + 12,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					-- Function for "(+) delay"
+					current_reversal_move.on_guard_delay  = current_reversal_move.on_guard_delay + 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 3])
+		
+			-- fith Element: "(-) Times"
+			reversalmoveactivesettings[baseIndex * 2 + 4] = {
+				text = "-",
+				x = xPosition + 75,  -- Adjust x position as needed
+				y = yPosition + 12,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func =  function()
+					-- Function for "(-) times"				
+					if current_reversal_move.on_guard_times == 1 then
+						return
+					end
+					current_reversal_move.on_guard_times  = current_reversal_move.on_guard_times - 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 4])
+			-- sixth Element: "times"
+			reversalmoveactivesettings[baseIndex * 2 + 5] = {
+				text = tostring(current_reversal_move.on_guard_times),
+				x = xPosition + 86,  -- Adjust x position as needed
+				y = yPosition + 12,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					
+				end,
+				autofunc = function(this)
+					this.text = tostring(current_reversal_move.on_guard_times)
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 5])
+			-- Seventh Element: "+ times"
+			reversalmoveactivesettings[baseIndex * 2 + 6] = {
+				text = "+",
+				x = xPosition + 99,  -- Adjust x position as needed
+				y = yPosition + 12,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					current_reversal_move.on_guard_times  = current_reversal_move.on_guard_times + 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 6])
+			--ELEMENTS OF THE CALIBRATION ROW  for Wake Up
+				-- First Element: "delay: "
+			reversalmoveactivesettings[baseIndex * 2 + 7 ] = {
+				text = "WakeUp:",
+				x = xPosition,
+				y = yPosition + 24,				
+				olcolour = "black",
+				info = { 
+					"this is the delay it will take on frames and the times of the reversal on guard"
+					
+				},
+				func = function()
+					-- Function for "delay: "
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 7])
+		
+			-- Second Element: "(-) delay"
+			reversalmoveactivesettings[baseIndex * 2  + 8] = {
+				text = "-",
+				x = xPosition + 34,  -- Adjust x position as needed
+				y = yPosition + 24,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					-- Function for "(-) delay"				
+					if current_reversal_move.on_wake_up_delay == 0 then
+						return
+					end
+					current_reversal_move.on_wake_up_delay  = current_reversal_move.on_wake_up_delay - 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2  + 8])
+			-- Third Element: "delay"
+			reversalmoveactivesettings[baseIndex * 2 + 9] = {
+				text = tostring(current_reversal_move.on_wake_up_delay),
+				x = xPosition + 45,  -- Adjust x position as needed
+				y = yPosition + 24,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					
+				end,
+				autofunc = function(this)
+					this.text = tostring(current_reversal_move.on_wake_up_delay)
+				end,
+		
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 9])
+			-- Fourth Element: "+ delay"
+			reversalmoveactivesettings[baseIndex * 2 + 10] = {
+				text = "+",
+				x = xPosition + 60,  -- Adjust x position as needed
+				y = yPosition + 24,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					-- Function for "(+) delay"
+					current_reversal_move.on_wake_up_delay  = current_reversal_move.on_wake_up_delay + 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 10])
+		
+			-- fith Element: "(-) Times"
+			reversalmoveactivesettings[baseIndex * 2 + 11] = {
+				text = "-",
+				x = xPosition + 75,  -- Adjust x position as needed
+				y = yPosition + 24,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func =  function()
+					-- Function for "(-) times"				
+					if current_reversal_move.on_wake_up_times == 1 then
+						return
+					end
+					current_reversal_move.on_wake_up_times  = current_reversal_move.on_wake_up_times - 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 11])
+			-- sixth Element: "times"
+			reversalmoveactivesettings[baseIndex * 2 + 12] = {
+				text = tostring(current_reversal_move.on_wake_up_times),
+				x = xPosition + 86,  -- Adjust x position as needed
+				y = yPosition + 24,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					
+				end,
+				autofunc = function(this)
+					this.text = tostring(current_reversal_move.on_wake_up_times)
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 12])
+			-- Seventh Element: "+ times"
+			reversalmoveactivesettings[baseIndex * 2 + 13] = {
+				text = "+",
+				x = xPosition + 99,  -- Adjust x position as needed
+				y = yPosition + 24,  -- Keep the same y position
+				olcolour = "black",
+				info = {},
+				func = function()
+					current_reversal_move.on_wake_up_times  = current_reversal_move.on_wake_up_times + 1
+				end,
+			}
+			table.insert(guipages.reversal_move_active_settings, reversalmoveactivesettings[baseIndex * 2 + 13])
+		
+		
+		iterator = iterator + 1
+	end
 end
 
-
+-- Function to get the index from the value
+function getIndexFromConfigValue(value)
+    for index, confValue in pairs(KOF_CONFIG.TRAINING.CONFIGURATIONS) do
+        if confValue == value then
+            return index
+        end
+    end
+    return nil  -- Value not found
+end
 function getCurrentGuardReversalMoves()
 	local tabl = {}
 	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES) do
@@ -495,45 +525,278 @@ KOF_CONFIG.GUARD.reversal_moves = getCurrentGuardReversalMoves()
 KOF_CONFIG.WAKEUP.reversal_moves = getCurrentWakeupReversalMoves()
 
 
-
-function loadReversalSettings()
-	local wakeupreversalmovecalibratesettings = {}
-	guipages.wake_up_reversal_move_calibration_settings  ={}
-	local wake_up_reversal_move_calibration_settings ={
-		title = {
-			text = "Wake Up Reversal calibration Settings",
-			x = interactivegui.boxxlength/2 - (#"Wake Up Reversal calibration Settings")*2,
-			y = 1,
-		},
-		{
-			text = "<<",
-			olcolour = "black",
-			info = "Back",
-			func =  function() CIG(interactivegui.previouspage,1) end,
-		},
-	}
-	guipages.wake_up_reversal_move_calibration_settings = wake_up_reversal_move_calibration_settings
-	for index, reversalMove in ipairs(KOF_CONFIG.WAKEUP.reversal_moves) do
-		local baseIndex = (index - 1) * 9 + 1
-		local yValue = 10 + (index - 1) * 20
-
-		-- Create the first element with the move name
-		wakeupreversalmovecalibratesettings[index] = {
-			text = "Calibrate Wake Up  " .. reversalMove .. ":",
-			x = 8,
-			y = yValue,
-			olcolour = "black",
-			info = {},
-			handle =index,
-			func = function()
-				
-			end,
-			autofunc = function(this)
-				this.text = "Calibrate Wake Up  " .. reversalMove.. ")"
-			end,
-		}
-		table.insert(guipages.wake_up_reversal_move_calibration_settings, wakeupreversalmovecalibratesettings[index])
+function deactivateAllDefaultMoves()
+	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES) do
+		KOF_CONFIG.MOVES_VAR_NAMES[index] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
+			
 	end
 
+	KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
 end
-loadReversalSettings()
+
+function resetAllConfiguration()
+	deactivateAllDefaultMoves()
+	KOF_CONFIG.GUARD.standing_guard = 0
+	KOF_CONFIG.GUARD.crouch_guard = 0
+	KOF_CONFIG.GUARD.dummy_guarding = false
+	KOF_CONFIG.GUARD.random_guard = 0
+	KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.OFF
+	KOF_CONFIG.WAKEUP.dummy_waking_up = false
+	KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.OFF
+
+	KOF_CONFIG.RECOVERY.dummy_recovering = false
+	KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.OFF
+
+	KOF_CONFIG.RECOVERY.delay = 10
+	KOF_CONFIG.RECOVERY.times = 8
+end
+
+-- Function to set default configuration based on configName
+function setDefaultConfig(configName)
+
+	resetAllConfiguration()
+	if configName ==  KOF_CONFIG.TRAINING.CONFIGURATIONS["None"] then
+		return
+	end
+    if configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_1"] then
+			-- activate recovery
+		KOF_CONFIG.RECOVERY.dummy_recovering = true
+		KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.ON
+		--set recovery time for CD knockdown
+		KOF_CONFIG.RECOVERY.delay = 24
+		KOF_CONFIG.RECOVERY.times = 3
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_2"] then
+		print("now on pressure 2")
+			-- activate recovery
+		KOF_CONFIG.RECOVERY.dummy_recovering = true
+		KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.ON
+		--set recovery time for CD knockdown
+		KOF_CONFIG.RECOVERY.delay = 24
+		KOF_CONFIG.RECOVERY.times = 3
+		--activate wake up on
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_3"] then
+			-- activate recovery
+		KOF_CONFIG.RECOVERY.dummy_recovering = true
+		KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.ON
+		--set recovery time for CD knockdown
+		KOF_CONFIG.RECOVERY.delay = 24
+		KOF_CONFIG.RECOVERY.times = 3
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- activate cr guard on wakeup 
+		local move_name = "C_GUARD"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 30
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_4"] then
+			-- activate recovery
+		KOF_CONFIG.RECOVERY.dummy_recovering = true
+		KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.ON
+		--set recovery time for CD knockdown
+		KOF_CONFIG.RECOVERY.delay = 24
+		KOF_CONFIG.RECOVERY.times = 3
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- activate cr guard on wakeup 
+		local move_name = "C_GUARD"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 0
+		current_reversal_move.on_wake_up_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		--activate guard reversal
+		KOF_CONFIG.GUARD.dummy_guarding = true
+        KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.ON
+		--activate crouch guard
+		KOF_CONFIG.GUARD.crouch_guard = 1
+		-- activate guard random
+		KOF_CONFIG.GUARD.random_guard = 1
+		-- activate throw C on guard 
+		local move_name = "THROW_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_guard_delay = 10
+		current_reversal_move.on_guard_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		-- reload reversal moves
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["crouching_frametrap"] then
+		--activate guard reversal
+		KOF_CONFIG.GUARD.dummy_guarding = true
+        KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.ON
+		--activate crouch guard
+		KOF_CONFIG.GUARD.crouch_guard = 1
+		-- activate throw C on guard 
+		local move_name = "THROW_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_guard_delay = 10
+		current_reversal_move.on_guard_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		-- reload reversal moves
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["standing_frametrap"] then
+		--activate guard reversal
+		KOF_CONFIG.GUARD.dummy_guarding = true
+        KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.ON
+		--activate crouch guard
+		KOF_CONFIG.GUARD.standing_guard = 1
+		-- activate throw C on guard 
+		local move_name = "THROW_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_guard_delay = 10
+		current_reversal_move.on_guard_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		-- reload reversal moves
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["high_confirm_against_CDA"] then
+		--activate guard reversal
+		KOF_CONFIG.GUARD.dummy_guarding = true
+        KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.RANDOM
+		--activate crouch guard
+		KOF_CONFIG.GUARD.standing_guard = 1
+		-- activate guard random
+		KOF_CONFIG.GUARD.random_guard = 1
+		-- activate throw C on guard 
+		local move_name = "C_GUARD"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_guard_delay = 0
+		current_reversal_move.on_guard_times = 10
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		-- activate CD on guard 
+		local move_name = "CD"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_guard_delay = 0
+		current_reversal_move.on_guard_times = 3
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		-- reload reversal moves
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_whiff_cr_c"] then
+		--activate crouch guard
+		KOF_CONFIG.GUARD.dummy_guarding = true
+		KOF_CONFIG.GUARD.crouch_guard = 1
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON
+		-- activate dp on wakeup 
+		local move_name = "DOWN_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 40
+		current_reversal_move.on_wake_up_times = 2
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_dpc"] then
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 25
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["shimmy_wakeup"] then
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 25
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "THROW_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 35
+		current_reversal_move.on_wake_up_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_delay_OS_basic"] then
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 25
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "THROW_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 35
+		current_reversal_move.on_wake_up_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "MASH_CRB"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 35
+		current_reversal_move.on_wake_up_times = 3
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_delay_OS_full"] then
+		--activate wake up random
+		KOF_CONFIG.WAKEUP.dummy_waking_up = true
+        KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
+		-- activate dp on wakeup 
+		local move_name = "DPC"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 25
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "THROW_C"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 35
+		current_reversal_move.on_wake_up_times = 5
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "MASH_CRB"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 25
+		current_reversal_move.on_wake_up_times = 6
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "AB"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 39
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		local move_name = "SUPER_JUMP_BACK"
+		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
+		current_reversal_move.on_wake_up_delay = 36
+		current_reversal_move.on_wake_up_times = 1
+		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		-- reload reversal moves
+		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+	else
+        print("Unknown configuration:", configName)
+    end
+end

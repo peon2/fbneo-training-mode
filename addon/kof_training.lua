@@ -34,7 +34,7 @@ dummy_reversal = customconfig.dummy_reversal
 dummy_reversal_random = customconfig.dummy_reversal_random ]]
 
 --local reversal_move =0x62 -- 0x63 --standing punch
---local p2move_adress = 0x108373
+local p2move_adress = 0x108373
 local p2blockstun_address = 0x1083E3
 local p2blockstun_value = 0xA0
 
@@ -57,7 +57,9 @@ local p2blockstun_value = 0xA0
 	function playerTwoIsBeingHit()
 		return rb(p2hitstatus)~=0
 	end
-	
+local function dummyMoveIsActive()
+	return  rb(p2move_adress) ~=0
+end
 local function playerTwoInBlockstun()
 	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
 		return true
@@ -120,51 +122,60 @@ local function delay(delay_frames, functionToExecute, ...)
 end
 
 local current_move_index_counter = 1
-local current_move_time_counter = 1
+local current_move_time_counter = 0
+
 local function doMove(move_name, times, conf)
-	if (conf == nil) then conf = false end
-	local seq = nil
-	if (conf == false) then
-		seq =  moves[move_name].sequence
-	else  
-		seq = KOF_CONFIG.MOVES[move_name].sequence
-	end
-	
+    if conf == nil then conf = false end
 
-	local tbl = {}
+    local seq
+    if conf == false then
+        seq = moves[move_name].sequence
+    else
+        seq = KOF_CONFIG.MOVES[move_name].sequence
+    end
 
-	if current_move_time_counter > times then	
-		current_move_time_counter =1
-		return false
-	end
+    if current_move_time_counter >= times then
+        current_move_time_counter = 0
+        current_move_index_counter = 1
+        return false
+    end
 
-	if current_move_index_counter > #seq  then
-		current_move_index_counter = 1		
-		current_move_time_counter = current_move_time_counter +1
-	end
-	for index, value in ipairs(seq[current_move_index_counter]) do
-		if value == 'forward' then
-			tbl[getFacingDirection()] = 1
-		elseif value == 'back' then
-			tbl[getBlockingDirection()] = 1
-		elseif value == 'down' then
-			tbl["P2 Down"] = 1
-		elseif value == 'up' then
-			tbl["P2 Up"] = 1
-		elseif value == 'a' then
-			tbl["P2 Button A"] = 1
-		elseif value == 'b' then
-			tbl["P2 Button B"] = 1
-		elseif value == 'c' then
-			tbl["P2 Button C"] = 1
-		elseif value == 'd' then
-			tbl["P2 Button D"] = 1
-		end
-	end
-	current_move_index_counter = current_move_index_counter +1
-	joypad.set(tbl)
-	return true
+    if current_move_index_counter > #seq then
+        current_move_index_counter = 1
+        current_move_time_counter = current_move_time_counter + 1
+        if current_move_time_counter >= times then
+            current_move_time_counter = 0
+            return false
+        end
+    end
+
+    local tbl = {}
+    for _, value in ipairs(seq[current_move_index_counter]) do
+        if value == 'forward' then
+            tbl[getFacingDirection()] = 1
+        elseif value == 'back' then
+            tbl[getBlockingDirection()] = 1
+        elseif value == 'down' then
+            tbl["P2 Down"] = 1
+        elseif value == 'up' then
+            tbl["P2 Up"] = 1
+        elseif value == 'a' then
+            tbl["P2 Button A"] = 1
+        elseif value == 'b' then
+            tbl["P2 Button B"] = 1
+        elseif value == 'c' then
+            tbl["P2 Button C"] = 1
+        elseif value == 'd' then
+            tbl["P2 Button D"] = 1
+        end
+    end
+
+    joypad.set(tbl)
+    current_move_index_counter = current_move_index_counter + 1
+
+    return true
 end
+
 
 local move_index_counter = 1
 
@@ -230,21 +241,23 @@ end
 local function doReversal(_name, _times)
 
 	if doMove(_name, _times) == false then
-		
+		print("move is false")
 		resetCurrentReversalName()
 		return false
 	end
 	return true
 end
 
-function p2Block()
+local function dummyCrouchGuard()
 	local tbl = {}	
 	tbl[getBlockingDirection()] = 1
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
-
-function p2Crouch()
+local function dummyCrouchForATime()
+	return doMove("CROUCH", 10, true)
+end
+local function p2Crouch()
 	local tbl = {}
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
@@ -274,6 +287,10 @@ end
 
 local function dummyGuardForATime()
 	return doMove('GUARD_BACK',10, true)
+end
+
+local function dummyCrouchGuardForATime()
+	return doMove('CROUCH_GUARD',30, true)
 end
 
 local cooldowns = {}  -- Table to store cooldowns for different functions
@@ -308,7 +325,7 @@ local function doNothing()
 end
 
 local start_press = false
-function block()
+local function block()
     -- Additional logic for blocking...
 	if KOF_CONFIG.GUARD.standing_guard == 1 then
 		if(start_press == false) then
@@ -318,7 +335,7 @@ function block()
 		end
 		if(start_press or  functionRunningFlags["dummyGuardForATime"] == true or functionRunningFlags['doNothing'] == true ) then			
 			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
-				local percentage_of_down = 50
+				local percentage_of_down = 30
 				local randomNumber = math.random(1, 100)
 				if(randomNumber <= percentage_of_down )then
 					executeWithCooldown( doNothing, 20, "doNothing")
@@ -343,17 +360,46 @@ function block()
 		end
 	end
 	if KOF_CONFIG.GUARD.crouch_guard == 1 then
-		if KOF_CONFIG.GUARD.random_guard == 1 then
-			local percentage_of_down = 50
-			local randomNumber = math.random(1, 100)
-			if(randomNumber <= percentage_of_down )then
-				p2Crouch()
-			else
-				p2Block() 
+		if(start_press == false) then
+			if playerOnePressedButtons()  then
+				start_press = true
+			end
+		end
+		if (start_press or  functionRunningFlags["dummyCrouchGuardForATime"] == true or functionRunningFlags['p2Crouch'] == true ) then
+			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
+				local percentage_of_down = 35
+				local randomNumber = math.random(1, 100)
+				if(randomNumber <= percentage_of_down )then
+					executeWithCooldown( dummyCrouchForATime, 1, "dummyCrouchForATime")
+				else
+					executeWithCooldown( dummyCrouchGuardForATime, 1, "dummyCrouchGuardForATime")
+				end
+				start_press = false
+				return
+			elseif start_press and KOF_CONFIG.GUARD.random_guard == 0 then
+				if dummyMoveIsActive() then
+					dummyCrouchGuard()
+				elseif dummyCrouchGuardForATime()  == false  then
+					start_press = false
+				end
+				
+				return		
+			end
+			if(functionRunningFlags["dummyCrouchGuardForATime"] ) then
+				
+				if dummyMoveIsActive() then
+					dummyCrouchGuard()
+				else		
+					executeWithCooldown( dummyCrouchGuardForATime, 1, "dummyCrouchGuardForATime")
+				end
+			end
+			if(functionRunningFlags["dummyCrouchForATime"] ) then				
+				executeWithCooldown( dummyCrouchForATime, 1, "dummyCrouchForATime")
 			end
 		else
-			p2Block()		
+			p2Crouch()
 		end
+		
 	end
 end
 local active_wake_up =false
@@ -367,8 +413,7 @@ local function isWakeUpTime()
 	return rb(0x108321) == 0  
 end
 
-require('games.kof98.tests_kof98')
-testsRun = true
+
 -- Function to set default configuration based on configName
 function setDefaultConfig(configName)
     if configName == "safe_jump_training" then
@@ -403,14 +448,9 @@ end
 
 local dont_recover = false
 local recovery_enabled = false
-local set_config = true
+
 function Run() -- runs every frame
-	if set_config then
-		setDefaultConfig("safe_jump_training")
-		set_config=false
-	end
-	--run tests once
-	runTests()
+	
 	--gui.text(197, 73,  rb(in_air), "cyan", "black")
 	--[[ if rb(0x108321)~=0  then
 		
@@ -504,8 +544,10 @@ function Run() -- runs every frame
 		local reversal_name = getCurrentReversalMove("guard_reversal")
 	local reversal = buildReversal(reversal_name)
 	delay(reversal.on_guard_delay, function ()
+		print("doing delay")
 		local res = doReversal(reversal.name, reversal.on_guard_times)
 		if res ==false then
+			print("guard reversal is stoping")
 			startWakeupIddleTime()
 			active_wake_up=false					
 			if KOF_CONFIG.GUARD.dummy_guarding then
