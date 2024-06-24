@@ -445,6 +445,10 @@ function setDefaultConfig(configName)
         print("Unknown configuration:", configName)
     end
 end
+local dizzy_location = 0x10843F
+local function dissableDizzy()
+		wb(dizzy_location, 0x67)	
+end
 
 local dont_recover = false
 local recovery_enabled = false
@@ -460,6 +464,9 @@ function Run() -- runs every frame
 	--[[  gui.text(197, 73,  "test 1: "..rb(0x108321), "cyan", "black")
 	 gui.text(197, 83,  "test 2: "..rb(0x108322), "cyan", "black")
 	 gui.text(197, 93,  "test 3: "..rb(0x108323), "cyan", "black") ]]
+	 if not KOF_CONFIG.DIZZY.dummy_can_dizzy  then
+		dissableDizzy()
+	 end
 	 if stateMachine.currentState == "start" then
         -- Logic for the "start" state
         -- Additional logic specific to the "start" state...

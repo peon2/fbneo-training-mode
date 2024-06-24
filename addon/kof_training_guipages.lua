@@ -47,6 +47,15 @@ KOF_CONFIG = {
 		delay = 10,
 		times = 8
 	},
+	DIZZY ={
+		dummy_can_dizzy = true,
+		enabled = 1,
+		OPTIONS = {
+			OFF = 0,
+			ON = 1,
+		},
+
+	},
 	MOVES = {
 		
 		['GUARD_BACK']={
@@ -392,6 +401,31 @@ guicustompage = {
 			olcolour = "black",
 			handle = 8,
 			func = 	function() CIG("reversal_move_active_settings", 1) end,
+	},
+	{
+			text = "Dissy enabled",
+			x = 110+8,
+			y = 85  +10,
+			olcolour = "black",
+			handle = 8,
+			func =	function()
+				KOF_CONFIG.DIZZY.enabled  = KOF_CONFIG.DIZZY.enabled + 1
+						if KOF_CONFIG.DIZZY.enabled> 1 then
+							KOF_CONFIG.DIZZY.enabled= 0
+						end
+						if KOF_CONFIG.DIZZY.enabled ~= KOF_CONFIG.DIZZY.OPTIONS.OFF then
+							KOF_CONFIG.DIZZY.dummy_can_dizzy = true
+						else 
+							KOF_CONFIG.DIZZY.dummy_can_dizzy= false
+						end
+					end,
+			autofunc = function(this)				
+						if KOF_CONFIG.DIZZY.enabled == KOF_CONFIG.DIZZY.OPTIONS.OFF  then
+							this.text = "DIZZY: Off" 
+						elseif KOF_CONFIG.DIZZY.enabled == KOF_CONFIG.DIZZY.OPTIONS.ON  then
+							this.text = "DIZZY: On" 
+						end
+				end,
 	},{
 		text = "Guard Reversals",
 		x = 8,
