@@ -1,5 +1,4 @@
 
-
 KOF_CONFIG = {
 
 	GUARD = {
@@ -19,9 +18,7 @@ KOF_CONFIG = {
     REVERSAL_MOVES = {
 		OPTIONS = {
 			OFF = 0,
-			GUARD = 1,
-			WAKEUP = 2,
-			BOTH = 3
+			ON= 1,
 		},
 		MOVELIST = nil
 	},
@@ -88,7 +85,10 @@ KOF_CONFIG = {
 			times = 10
 		}
 	},
-	MOVES_VAR_NAMES = {},
+	MOVES_VAR_NAMES = {
+		GUARD={},
+		WAKEUP={},
+	},
 	TRAINING ={
 		current_configuration = -1,
 		CONFIGURATIONS =  {
@@ -114,8 +114,8 @@ KOF_CONFIG = {
 
 guicustompage = {
 	title = {
-		text = "The king of fighters 98 - Training Mode Settings",
-		x = interactivegui.boxxlength/2 - (#"The king of fighters 98 - Training Mode Settings")*2,
+		text = "The king of fighters - Training Mode Settings",
+		x = interactivegui.boxxlength/2 - (#"The king of fighters - Training Mode Settings")*2,
 		y = 1,
 	},
 	guielements.leftarrow,
@@ -395,14 +395,6 @@ guicustompage = {
 		y = 75 + 10,
 	},
 	{
-			text = "Reversal Move Calibration",
-			x = 8,
-			y = 85  +10,
-			olcolour = "black",
-			handle = 8,
-			func = 	function() CIG("reversal_move_active_settings", 1) end,
-	},
-	{
 			text = "Dissy enabled",
 			x = 110+8,
 			y = 85  +10,
@@ -429,12 +421,15 @@ guicustompage = {
 	},{
 		text = "Guard Reversals",
 		x = 8,
-		y = 95 + 10,
+		y = 85  +10,
+		olcolour = "black",
+		handle = 9,
+		func = 	function() CIG("guard_reversal_move_active_settings", 1) end,
 	},
 	{
 		text = "()",
 		x = 8,
-		y = 105 + 10,
+		y = 95 + 10,
 		olcolour = "black",
 		handle = 2,
 		info = {
@@ -458,12 +453,12 @@ guicustompage = {
 	},{
 		text = "WakeUp Reversals",
 		x = 8,
-		y = 115 + 10,
+		y = 105 + 10,
 	},
 	{
 		text = "()",
 		x = 8,
-		y = 125 + 10,
+		y = 115 + 10,
 		olcolour = "black",
 		handle = 8,
 		func = 	function()
@@ -484,12 +479,12 @@ guicustompage = {
 	},{
 		text = "Configurations: ",
 		x = 8,
-		y = 135 + 10,
+		y = 125 + 10,
 	},
 	{
 		text = "Current Conf: ",
 		x = 8,
-		y = 145 + 10,
+		y = 135 + 10,
 		olcolour = "black",
 		handle = 2,
 		info = {
@@ -507,9 +502,9 @@ guicustompage = {
 			end,
 	},
 }
-local reversal_move_active_settings = {
+local guard_reversal_move_active_settings = {
 	title = {
-		text = "Reversal Move Active Settings",
+		text = "Guard Reversal Move Active Settings",
 		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
@@ -517,10 +512,19 @@ local reversal_move_active_settings = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG(interactivegui.previouspage,1) end,
+		func =  function() CIG(0,1) end,
 	},
 }
 
 
-guipages.reversal_move_active_settings = reversal_move_active_settings
+guipages.guard_reversal_move_active_settings = guard_reversal_move_active_settings
+
+function trace_line(event, line)
+    if event == "call" then
+        local info = debug.getinfo(2, "Sl")
+        print("Calling function at line:", info.currentline)
+    elseif event == "line" then
+        print("Executing line:", line)
+    end
+end
 
