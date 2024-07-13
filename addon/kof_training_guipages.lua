@@ -454,6 +454,8 @@ guicustompage = {
 		text = "WakeUp Reversals",
 		x = 8,
 		y = 105 + 10,
+		handle = 9,
+		func = 	function() CIG("wakeup_reversal_move_active_settings", 1) end,
 	},
 	{
 		text = "()",
@@ -518,6 +520,22 @@ local guard_reversal_move_active_settings = {
 
 
 guipages.guard_reversal_move_active_settings = guard_reversal_move_active_settings
+local wakeup_reversal_move_active_settings = {
+	title = {
+		text = "Wake UP Reversal Move Active Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(0,1) end,
+	},
+}
+
+
+guipages.wakeup_reversal_move_active_settings = wakeup_reversal_move_active_settings
 
 function trace_line(event, line)
     if event == "call" then

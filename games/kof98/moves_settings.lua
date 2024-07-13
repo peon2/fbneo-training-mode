@@ -82,7 +82,8 @@ MOVE_TYPES = {
 	NORMAL ="NORMAL",
 	COMMAND_NORMAL ="COMMAND_NORMAL",
 	SPECIAL = "SPECIAL",
-	SUPER = "SUPER"
+	SUPER = "SUPER",
+	COMMON ="COMMON"
 }
 -- Define the BUTTONS table with unique keys
 -- Define the BUTTONS table with values wrapped in tables
@@ -127,6 +128,7 @@ moves = {
 			times = 5,
 			default = true,
 			type = MOVE_TYPES.SPECIAL,
+			description = "dpc",
 
 			button_editable = true
 	},
@@ -176,7 +178,6 @@ moves = {
         },
 		description = "Quarter circle forward (236)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -201,7 +202,6 @@ moves = {
         },
 		description = "Half circle forward (41236)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -226,7 +226,6 @@ moves = {
         },
 		description = "Half circle Back (63214)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -253,7 +252,6 @@ moves = {
         },
 		description = "Half circle Back Forward (632146)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -274,7 +272,6 @@ moves = {
         },
 		description = "Quarter circle Back (214)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -297,7 +294,6 @@ moves = {
         },
 		description = "Quarter circle Back Forward (2146)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SUPER,
 		button_editable = true
     },
@@ -324,7 +320,6 @@ moves = {
         },
 		description = "Quarter circle Back Half circle Forward (214236)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SUPER,
 		button_editable = true
     },
@@ -351,7 +346,6 @@ moves = {
         },
 		description = "Quarter circle forward * 2 (236236)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SUPER,
 		button_editable = true
     },
@@ -378,7 +372,6 @@ moves = {
         },
 		description = "Quarter circle forward (236214)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SUPER,
 		button_editable = true
     },
@@ -407,8 +400,236 @@ moves = {
         },
 		description = "pretzel (1632143)",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SUPER,
+		button_editable = true
+    },
+	['SJ_B'] = {
+        sequence = {
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back'},
+        },
+		description = "super jump back",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+    },
+	['SJ_F'] = {
+        sequence = {
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+        },
+		description = "super jump forward",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+    },
+	['DSJ_F'] = {
+        sequence = {
+			wakeup_current_button = BUTTONS.A,
+			guard_current_button = BUTTONS.A,
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'up','forward'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+        },
+		description = "super jump forward with a delayed button",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+		button_editable=true
+    },
+	['HH_F'] = {
+        sequence = {	
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},	
+			{'-'},
+			{'-'},
+			{'up','forward'},
+			{'up','forward'},
+        },
+		description = "Hyper Hop forward",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+    },
+	['LONG_AB'] = {
+        sequence = {
+			{'-'},
+			{'-'},
+			{'forward'},
+			{'forward'},	
+			{'-'},
+			{'-'},
+			{'forward','a','b'},
+			{'forward','a','b'},
+			{'a','b'},
+			{'a','b'},
+        },
+		description = "longer AB",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+    },
+	['BACKDASH'] = {
+        sequence = {
+			{'-'},
+			{'-'},
+			{'back'},
+			{'back'},	
+			{'-'},
+			{'-'},
+			{'back'},
+			{'back'},
+        },
+		description = "longer AB",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+    },
+	['INS_SJ_B'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},
+			{'up','back'},
+			{'up','back'},
+			{'up','back','a'},
+			{'up','back','a'},
+			{'up','back','a'},
+			{'up','back','a'},
+			{'up','back','a'},
+			{'up','back','a'},
+        },
+		description = "instant super jump back",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+		button_editable = true
+    },
+	['DHJ_F'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+			{'-'},
+			{'-'},
+			{'down'},
+			{'down'},
+			{'-'},
+			{'-'},
+			{'up','forward'},
+			{'up','forward'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+        },
+		description = "delayed hyper hop forward with button",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+		button_editable = true
+    },
+	['DH_F'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'up','forward'},
+			{'up','forward'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'a'},
+			{'a'},
+        },
+		description = "hop forward with delayed  button",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+		button_editable = true
+    },
+	['DNEUTRALH'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+			{'-'},
+			{'-'},
+			{'up'},
+			{'up'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'-'},
+			{'a'},
+			{'a'},
+        },
+		description = "neutral hop with delayed button",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+		button_editable = true
+    },
+	['DNEUTRALJ'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+			{'-'},
+			{'-'},
+			{'up'},
+			{'up'},
+			{'up'},
+			{'up'},
+			{'up'},
+			{'up'},
+			{'-'},
+			{'-'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+			{'a'},
+        },
+		description = "neutral jump with delayed button",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
 		button_editable = true
     },
 	['DOWN_C']={
@@ -419,7 +640,8 @@ moves = {
 			{'down', 'forward', 'c'},
 		},
 		times = 13,
-		default  = true
+		default  = true,
+		description = "down c",
 	},
 	['STAND_A']={
 		["sequence"] = {
@@ -428,7 +650,8 @@ moves = {
 			{'a'},
 			{'a'},
 		},
-		times = 13
+		times = 13,
+		description = "down c",
 	},
 	['C_GUARD']={
 		["sequence"] = {
@@ -439,7 +662,8 @@ moves = {
 			{'back','down'},
 
 		},
-		times = 10
+		times = 10,
+		description = "down c",
 	},	
 	['ST_A']={
 		["sequence"] = {
@@ -598,16 +822,18 @@ moves = {
 			{'forward', 'c'},
 			{'forward', 'c'},
 		},
-		times = 10
+		times = 10,
+		description = "down c",
 	},
 	['CD']={
-		["sequence"] = {		
+		["sequence"] = {	
 			{'_'},
 			{'_'},
 			{'c', 'd'} 
 		},
 		times = 10,
-		type = MOVE_TYPES.NORMAL
+		type = MOVE_TYPES.NORMAL,
+		description = "CD",
 	},
 	['AB']={
 		["sequence"] = {
@@ -617,7 +843,8 @@ moves = {
 			{'a', 'b'} 
 		},
 		times = 3,
-		type = MOVE_TYPES.NORMAL
+		type = MOVE_TYPES.NORMAL,
+		description = "AB",
 	},
 	['MASH_CRB']={
 		["sequence"] = {
@@ -633,6 +860,7 @@ moves = {
 			{'-'},
 		},
 		times = 17,
+		description = "down c",
 	},
 	['SUPER_JUMP_BACK']={
 		["sequence"] = {	
@@ -648,7 +876,8 @@ moves = {
 			{'up','back'},
 		},
 		times = 17,
-		hidden = true
+		hidden = true,
+		description = "down c",
 	},
 }
 -- Example usage:
@@ -675,271 +904,37 @@ GUARD = "GUARD",
 WAKEUP = "WAKEUP",
 ALL = "ALL" 
 }
-local function initializeReversalMoveSettings(moves, config, guipages, type)
-	local reversalmoveactivesettings = {}
+local LOWERC_TYPES = {
+	['GUARD'] = "guard",
+	['WAKEUP'] = "wakeup",
+	['COMMAND_NORMAL'] = "command_normal",
+	['SPECIAL'] = "special",
+	['SUPER'] = "super",
+	['NORMAL'] = "normal",
+	['COMMON'] = "common",
 
-	local elementsPerColumn = 6-- Elements per column
-	local xSpacing = 115 -- Spacing between columns
-	local xPosition = 8
-	local yPosition = 10
-	local iterator = 1
-	local elementsPerRow = 20
-	local rowGap = 25
-	for index, value in pairs(moves) do
-		if moves[index].hidden then
-			-- Skip this iteration        
+}
+function getCustomPageNameByType(name, type)
+	return  LOWERC_TYPES[type].."_".. name
+end
+local function fillVarNames (type)
+	for key, item in pairs( moves) do
+		if moves[key].default == true then
+			table.insert(KOF_CONFIG.MOVES_VAR_NAMES[type],key)
+			KOF_CONFIG.MOVES_VAR_NAMES[type][key]= KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON
 		else
-			local baseIndex = ((iterator- 1) *elementsPerRow )+ 1
-			if moves[index].default == true then
-				table.insert(config.MOVES_VAR_NAMES[type],index)
-				config.MOVES_VAR_NAMES[type][index]= config.REVERSAL_MOVES.OPTIONS.ON
-			else
-				table.insert(config.MOVES_VAR_NAMES[type],index)
-				config.MOVES_VAR_NAMES[type][index]= config.REVERSAL_MOVES.OPTIONS.OFF
-			end
-
-			local column = math.floor((iterator - 1) / elementsPerColumn) + 1
-			local columnElement = (iterator - 1) % elementsPerColumn + 1
-			
-			xPosition = 8 + (column - 1) * xSpacing
-			
-			if columnElement == 1 then
-				yPosition = 10
-			else
-				yPosition = yPosition + rowGap
-			end
-
-			
-
-			reversalmoveactivesettings[baseIndex] = {
-				text = index,
-				x = xPosition,
-				y = yPosition,
-				olcolour = "black",
-				info = {moves[index].description},
-				func = function()
-						config.MOVES_VAR_NAMES[type][index] = config.MOVES_VAR_NAMES[type][index]+ 1
-						if config.MOVES_VAR_NAMES[type][index] > 1 then
-							config.MOVES_VAR_NAMES[type][index]  = 0
-						end
-						config[type].reversal_moves = getCurrentReversalMoves(type)
-				end,
-				autofunc = function(this)
-					
-					if (config.MOVES_VAR_NAMES[type][index] == config.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = index .. ": Off" 
-					elseif (config.MOVES_VAR_NAMES[type][index] == config.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = index .. ": ON" 
-					end
-					config[type].reversal_moves = getCurrentReversalMoves(type)
-				end,
-			}
-
-			table.insert(guipages, reversalmoveactivesettings[baseIndex])
-			local current_reversal_move = config.REVERSAL_MOVES.MOVELIST:getReversal(index)
-			if(moves[index].button_editable) then 
-				reversalmoveactivesettings[baseIndex   +1]  = {
-					text = "Button: ",
-					x = xPosition + 60,
-					y = yPosition,
-					olcolour = "black",
-					info = {"Button used to make the move"},
-					func = function()
-						if type == reversal_types.GUARD then
-							moves[index].guard_current_button = moves[index].guard_current_button   +  1
-							if moves[index].guard_current_button > 4 then
-								moves[index].guard_current_button = 1
-							end
-						elseif type == reversal_types.WAKEUP then
-							moves[index].wakeup_current_button = moves[index].wakeup_current_button   +  1
-							if moves[index].wakeup_current_button > 4 then
-								moves[index].wakeup_current_button = 1
-							end
-						end
-					end,
-					autofunc = function(this)
-						if type == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves[index].guard_current_button ] ..")" 
-						elseif type == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves[index].wakeup_current_button ] ..")" 						
-						end
-					end,
-				}
-			end
-			
-			table.insert(guipages, reversalmoveactivesettings[baseIndex +1])
-			--[[ -- Set hook to trace line execution
-			debug.sethook(trace_line, "l")
-			-- Execute the line in question
-			table.insert(guipages, reversalmoveactivesettings[baseIndex])
-
-			-- Clear hook when done
-			debug.sethook() ]]
-			
-
-			
-
-			--ELEMENTS OF THE CALIBRATION ROW  for guard
-				-- First Element: "delay: "
-				reversalmoveactivesettings[baseIndex * 2 ] = {
-					text = "d & t:",
-					x = xPosition,
-					y = yPosition + 12,				
-					olcolour = "black",
-					info = { 
-						"this is the delay it will take on frames and the times of the reversal on guard"
-						
-					},
-					func = function()
-						-- Function for "delay: "
-					end,
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2])
-			
-				-- Second Element: "(-) delay"
-				reversalmoveactivesettings[baseIndex * 2  + 1] = {
-					text = "-",
-					x = xPosition + 34,  -- Adjust x position as needed
-					y = yPosition + 12,  -- Keep the same y position
-					olcolour = "black",
-					info = {},
-					func = function()
-						-- Function for "(-) delay"				
-						if current_reversal_move.on_guard_delay == 0 then
-							return
-						end
-						current_reversal_move.on_guard_delay  = current_reversal_move.on_guard_delay - 1
-					end,
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2  + 1])
-				-- Third Element: "delay"
-				reversalmoveactivesettings[baseIndex * 2 + 2] = {
-					text = tostring(current_reversal_move.on_guard_delay),
-					x = xPosition + 45,  -- Adjust x position as needed
-					y = yPosition + 12,  -- Keep the same y position
-					olcolour = "black",
-					info = {},
-					func = function()
-						
-					end,
-					autofunc = function(this)
-						this.text = tostring(current_reversal_move.on_guard_delay)
-					end,
-			
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2 + 2])
-				-- Fourth Element: "+ delay"
-				reversalmoveactivesettings[baseIndex * 2 + 3] = {
-					text = "+",
-					x = xPosition + 60,  -- Adjust x position as needed
-					y = yPosition + 12,  -- Keep the same y position
-					olcolour = "black",
-					info = {},
-					func = function()
-						-- Function for "(+) delay"
-						current_reversal_move.on_guard_delay  = current_reversal_move.on_guard_delay + 1
-					end,
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2 + 3])
-			
-				-- fith Element: "(-) Times"
-				reversalmoveactivesettings[baseIndex * 2 + 4] = {
-					text = "-",
-					x = xPosition + 75,  -- Adjust x position as needed
-					y = yPosition + 12,  -- Keep the same y position
-					olcolour = "black",
-					info = {},
-					func =  function()
-						-- Function for "(-) times"				
-						if current_reversal_move.on_guard_times == 1 then
-							return
-						end
-						current_reversal_move.on_guard_times  = current_reversal_move.on_guard_times - 1
-					end,
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2 + 4])
-				-- sixth Element: "times"
-				reversalmoveactivesettings[baseIndex * 2 + 5] = {
-					text = tostring(current_reversal_move.on_guard_times),
-					x = xPosition + 86,  -- Adjust x position as needed
-					y = yPosition + 12,  -- Keep the same y position
-					olcolour = "black",
-					info = {},
-					func = function()
-						
-					end,
-					autofunc = function(this)
-						this.text = tostring(current_reversal_move.on_guard_times)
-					end,
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2 + 5])
-				-- Seventh Element: "+ times"
-				reversalmoveactivesettings[baseIndex * 2 + 6] = {
-					text = "+",
-					x = xPosition + 99,  -- Adjust x position as needed
-					y = yPosition + 12,  -- Keep the same y position
-					olcolour = "black",
-					info = {},
-					func = function()
-						current_reversal_move.on_guard_times  = current_reversal_move.on_guard_times + 1
-					end,
-				}
-				table.insert(guipages, reversalmoveactivesettings[baseIndex * 2 + 6])
-				
-			
-			
-			iterator = iterator + 1
+			table.insert(KOF_CONFIG.MOVES_VAR_NAMES[type],key)
+			KOF_CONFIG.MOVES_VAR_NAMES[type][key]= KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
 		end
 	end
-	command_normals_custom_page_link ={
-		text = "command normals",
-		x = 8,
-		y = interactivegui.boxy2 -30,
-		olcolour = "black",
-		handle = 8,
-		func = 	function() changeInteractiveGuiPage("command_normals_move_settings") end,
-	}
-	table.insert(guipages, command_normals_custom_page_link)
-	
-	specials_custom_page_link ={
-		text = "specials",
-		x = 78,
-		y = interactivegui.boxy2 -30,
-		olcolour = "black",
-		handle = 8,
-		func = 	function() changeInteractiveGuiPage("special_move_settings") end,
-	}
-	table.insert(guipages, specials_custom_page_link)
-	
-	supers_custom_page_link ={
-		text = "Supers ",
-		x = 118,
-		y = interactivegui.boxy2 -30,
-		olcolour = "black",
-		handle = 8,
-		func = 	function() changeInteractiveGuiPage("supers_move_settings") end,
-	}
-	table.insert(guipages, supers_custom_page_link)
-	
+end
+fillVarNames(reversal_types.GUARD)
 
+local move_data = require "addon.kof_training_move_data"
+-- added normal moves to default page
+for key, item in pairs( move_data.guard_normals) do
+	table.insert(guipages.guard_reversal_move_active_settings,item)
 end
--- Function to filter elements by type
-local function filterMoves(moves, moveType)
-    local filtered = {}
-	for key, move in pairs(moves) do
-		print("move type: ", key.type)
-		print("moveType: ", moveType)
-		if move.type and move.type == moveType then  
-			filtered[key] = move
-		end
-	end
-    return filtered
-end
---- added normal moves to default page
-local normal_moves = filterMoves(moves, MOVE_TYPES.NORMAL) 
-initializeReversalMoveSettings(normal_moves, KOF_CONFIG,guipages.guard_reversal_move_active_settings , reversal_types.GUARD)
---adds command normal moves config page
-local command_normals_moves = filterMoves(moves, MOVE_TYPES.COMMAND_NORMAL) 
 local command_normals_move_settings = {
 	title = {
 		text = "Command Normals Move  Settings",
@@ -950,13 +945,37 @@ local command_normals_move_settings = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG("guard_reversal_move_active_settings",2) end,
+		func =  function() CIG(	interactivegui.previouspage ,2) end,
 	},
 }
-guipages.command_normals_move_settings = command_normals_move_settings
-initializeReversalMoveSettings(command_normals_moves, KOF_CONFIG,guipages.command_normals_move_settings, reversal_types.GUARD)
+guipages.guard_command_normals_move_settings= command_normals_move_settings
+for key, item in pairs( move_data.guard_command_normals) do
+	table.insert(guipages.guard_command_normals_move_settings,item)
+end
+
+--initializeReversalMoveSettings(normal_moves, KOF_CONFIG,guipages.wakeup_reversal_move_active_settings , reversal_types.WAKEUP, true)
+--[[-
+--adds command normal moves config page
+ local command_normals_moves = filterMoves(moves, MOVE_TYPES.COMMAND_NORMAL) 
+local command_normals_move_settings = {
+	title = {
+		text = "Command Normals Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(	interactivegui.previouspage ,2) end,
+	},
+}
+local command_normals_page_name = getCustomPageNameByType("command_normals_move_settings",reversal_types.GUARD)
+guipages[command_normals_page_name] = command_normals_move_settings
+initializeReversalMoveSettings(command_normals_moves, KOF_CONFIG,guipages[command_normals_page_name], reversal_types.GUARD)
+initializeReversalMoveSettings(command_normals_moves, KOF_CONFIG,guipages[command_normals_page_name], reversal_types.WAKEUP) ]]
 --- add special moves
-local special_moves = filterMoves(moves, MOVE_TYPES.SPECIAL) 
+--[[ local special_moves = filterMoves(moves, MOVE_TYPES.SPECIAL) 
 local special_move_settings = {
 	title = {
 		text = "Special Move  Settings",
@@ -967,13 +986,15 @@ local special_move_settings = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG("guard_reversal_move_active_settings",1) end,
+		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
-guipages.special_move_settings = special_move_settings
-initializeReversalMoveSettings(special_moves, KOF_CONFIG,guipages.special_move_settings, reversal_types.GUARD)
+local specials_page_name = getCustomPageNameByType("specials_move_settings",reversal_types.GUARD)
+guipages[specials_page_name] = special_move_settings
+initializeReversalMoveSettings(special_moves, KOF_CONFIG,guipages[specials_page_name], reversal_types.GUARD)
+initializeReversalMoveSettings(special_moves, KOF_CONFIG,guipages[specials_page_name], reversal_types.WAKEUP) ]]
 --adds super moves
-local super_moves = filterMoves(moves, MOVE_TYPES.SUPER) 
+--[[ local super_moves = filterMoves(moves, MOVE_TYPES.SUPER) 
 local super_move_settings = {
 	title = {
 		text = "super Move  Settings",
@@ -984,11 +1005,33 @@ local super_move_settings = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG(1,1) end,
+		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
-guipages.supers_move_settings = super_move_settings
-initializeReversalMoveSettings(super_moves, KOF_CONFIG,guipages.supers_move_settings, reversal_types.GUARD) 
+local supers_page_name = getCustomPageNameByType("supers_move_settings",reversal_types.GUARD)
+guipages[supers_page_name] = super_move_settings
+initializeReversalMoveSettings(super_moves, KOF_CONFIG,guipages[supers_page_name], reversal_types.GUARD)
+initializeReversalMoveSettings(super_moves, KOF_CONFIG,guipages[supers_page_name], reversal_types.WAKEUP) ]]
+--adds commom moves 
+--[[ local common_moves = filterMoves(moves, MOVE_TYPES.COMMON)
+local common_move_settings = {
+	title = {
+		text = "common Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+local commons_page_name = getCustomPageNameByType("commons_move_settings",reversal_types.GUARD)
+guipages[commons_page_name] = common_move_settings
+initializeReversalMoveSettings(common_moves, KOF_CONFIG,guipages[commons_page_name], reversal_types.GUARD)
+initializeReversalMoveSettings(common_moves, KOF_CONFIG,guipages[commons_page_name], reversal_types.WAKEUP) ]]
+
 -- Function to get the index from the value
 function getIndexFromConfigValue(value)
     for index, confValue in pairs(KOF_CONFIG.TRAINING.CONFIGURATIONS) do
@@ -1059,7 +1102,7 @@ function setDefaultConfig(configName)
 		KOF_CONFIG.RECOVERY.delay = 24
 		KOF_CONFIG.RECOVERY.times = 3
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_2"] then
-		print("now on pressure 2")
+	
 			-- activate recovery
 		KOF_CONFIG.RECOVERY.dummy_recovering = true
 		KOF_CONFIG.RECOVERY.recovery = KOF_CONFIG.RECOVERY.OPTIONS.ON

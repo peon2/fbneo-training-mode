@@ -241,7 +241,7 @@ end
 local function doReversal(_name, _times)
 
 	if doMove(_name, _times) == false then
-		print("move is false")
+
 		resetCurrentReversalName()
 		return false
 	end
@@ -486,7 +486,6 @@ function Run() -- runs every frame
 					recovery_enabled = true
 				end
 				if dont_recover then
-					print("not recovering")
 					delay(10, function()
 						local res = doNothing()
 						if not res then
@@ -551,10 +550,10 @@ function Run() -- runs every frame
 		local reversal_name = getCurrentReversalMove("guard_reversal")
 	local reversal = buildReversal(reversal_name)
 	delay(reversal.on_guard_delay, function ()
-		print("doing delay")
+		--print("doing delay")
 		local res = doReversal(reversal.name, reversal.on_guard_times)
 		if res ==false then
-			print("guard reversal is stoping")
+			--print("guard reversal is stoping")
 			startWakeupIddleTime()
 			active_wake_up=false					
 			if KOF_CONFIG.GUARD.dummy_guarding then
