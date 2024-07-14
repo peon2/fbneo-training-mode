@@ -131,7 +131,7 @@ end
 	--					if "]]..type..[[" == reversal_types.GUARD then
 	--						this.text = "Button: (".. BUTTON_NAMES[moves["]]..index..[["].guard_current_button ] ..")" 
 	--					elseif "]]..type..[[" == reversal_types.WAKEUP then
-	--						this.text = "Button: (".. BUTTON_NAMES[moves["]]..index..[["].wakeup_current_button ] ..")" 						
+						
 	--					end
 	--				end]],
 	--			}
@@ -397,7 +397,6 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DF_D"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DF_D" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
 				end,
         text = "DF_D",
         olcolour = "black",
@@ -505,7 +504,7 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DF_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DF_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DF_B",
         olcolour = "black",
@@ -613,7 +612,7 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["FWD_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "FWD_A" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "FWD_A",
         olcolour = "black",
@@ -721,7 +720,7 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["FWD_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "FWD_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "FWD_B",
         olcolour = "black",
@@ -829,7 +828,7 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["BACK_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "BACK_A" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "BACK_A",
         olcolour = "black",
@@ -937,7 +936,7 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["BACK_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "BACK_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "BACK_B",
         olcolour = "black",
@@ -1045,7 +1044,7 @@ YOU DONT CARE, I JUST WANT THIS SOMEHOW DOCUMENTED
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DF_C"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DF_C" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DF_C",
         olcolour = "black",
@@ -1156,7 +1155,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["CR_D"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_D" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "CR_D",
         olcolour = "black",
@@ -1264,7 +1263,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ST_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_A" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "ST_A",
         olcolour = "black",
@@ -1372,7 +1371,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["CD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CD" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "CD",
         olcolour = "black",
@@ -1480,7 +1479,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["CR_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "CR_B",
         olcolour = "black",
@@ -1588,7 +1587,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["CR_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_A" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "CR_A",
         olcolour = "black",
@@ -1696,7 +1695,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["AB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "AB" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "AB",
         olcolour = "black",
@@ -1804,7 +1803,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ST_D"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_D" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "ST_D",
         olcolour = "black",
@@ -1912,7 +1911,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ST_C"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_C" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "ST_C",
         olcolour = "black",
@@ -2020,7 +2019,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ST_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "ST_B",
         olcolour = "black",
@@ -2128,7 +2127,7 @@ move_data.guard_normals =  {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["CR_C"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_C" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "CR_C",
         olcolour = "black",
@@ -2271,7 +2270,7 @@ move_data.guard_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["HCB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HCB" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "HCB",
         olcolour = "black",
@@ -2288,26 +2287,16 @@ move_data.guard_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].guard_current_button ] ..")" 											
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["HCB"].guard_current_button = moves["HCB"].guard_current_button   +  1
 							if moves["HCB"].guard_current_button > 4 then
 								moves["HCB"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["HCB"].wakeup_current_button = moves["HCB"].wakeup_current_button   +  1
-							if moves["HCB"].wakeup_current_button > 4 then
-								moves["HCB"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["3"] = {
@@ -2406,7 +2395,7 @@ move_data.guard_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["QCB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCB" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "QCB",
         olcolour = "black",
@@ -2423,26 +2412,17 @@ move_data.guard_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCB"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
-							moves["QCB"].guard_current_button = moves["QCB"].guard_current_button   +  1
-							if moves["QCB"].guard_current_button > 4 then
-								moves["QCB"].guard_current_button = 1
-							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["QCB"].wakeup_current_button = moves["QCB"].wakeup_current_button   +  1
-							if moves["QCB"].wakeup_current_button > 4 then
-								moves["QCB"].wakeup_current_button = 1
-							end
-						end
+                        moves["QCB"].guard_current_button = moves["QCB"].guard_current_button   +  1
+                        if moves["QCB"].guard_current_button > 4 then
+                            moves["QCB"].guard_current_button = 1
+                        end
 					end,
     },
     ["12"] = {
@@ -2533,22 +2513,22 @@ move_data.guard_specials = {
     ["19"] = {
         y = 60,
         x = 8,
-        info = {'dpc'},
+        info = {'k9999 super'},
         autofunc = function(this)
 					
-					if (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DPC"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DPC" .. ": Off" 
-					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DPC"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DPC" .. ": ON" 
+					if (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["D_F_DF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "D_F_DF" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["D_F_DF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "D_F_DF" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
-        text = "DPC",
+        text = "D_F_DF",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DPC"] = KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DPC"]+ 1
-						if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DPC"] > 1 then
-							KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DPC"]  = 0
+						KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["D_F_DF"] = KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["D_F_DF"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["D_F_DF"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["D_F_DF"]  = 0
 						end
 						KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
 				end,
@@ -2558,26 +2538,16 @@ move_data.guard_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DPC"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DPC"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["D_F_DF"].guard_current_button ] ..")" 												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
-							moves["DPC"].guard_current_button = moves["DPC"].guard_current_button   +  1
-							if moves["DPC"].guard_current_button > 4 then
-								moves["DPC"].guard_current_button = 1
+							moves["D_F_DF"].guard_current_button = moves["D_F_DF"].guard_current_button   +  1
+							if moves["D_F_DF"].guard_current_button > 4 then
+								moves["D_F_DF"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DPC"].wakeup_current_button = moves["DPC"].wakeup_current_button   +  1
-							if moves["DPC"].wakeup_current_button > 4 then
-								moves["DPC"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["21"] = {
@@ -2598,10 +2568,10 @@ move_data.guard_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay  - 1
 					end,
     },
     ["23"] = {
@@ -2609,9 +2579,9 @@ move_data.guard_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay),
         olcolour = "black",
         func = function()
 						
@@ -2625,7 +2595,7 @@ move_data.guard_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_delay + 1
 					end,
     },
     ["25"] = {
@@ -2636,10 +2606,10 @@ move_data.guard_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times - 1
 					end,
     },
     ["26"] = {
@@ -2647,9 +2617,9 @@ move_data.guard_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times),
         olcolour = "black",
         func = function()
 						
@@ -2662,7 +2632,7 @@ move_data.guard_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_guard_times + 1
 					end,
     },
     ["28"] = {
@@ -2676,7 +2646,7 @@ move_data.guard_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["HCB_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HCB_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "HCB_F",
         olcolour = "black",
@@ -2693,26 +2663,17 @@ move_data.guard_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["HCB_F"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB_F"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["HCB_F"].guard_current_button = moves["HCB_F"].guard_current_button   +  1
 							if moves["HCB_F"].guard_current_button > 4 then
 								moves["HCB_F"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["HCB_F"].wakeup_current_button = moves["HCB_F"].wakeup_current_button   +  1
-							if moves["HCB_F"].wakeup_current_button > 4 then
-								moves["HCB_F"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["30"] = {
@@ -2811,7 +2772,7 @@ move_data.guard_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["HCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HCF" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "HCF",
         olcolour = "black",
@@ -2828,26 +2789,17 @@ move_data.guard_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["HCF"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCF"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["HCF"].guard_current_button = moves["HCF"].guard_current_button   +  1
 							if moves["HCF"].guard_current_button > 4 then
 								moves["HCF"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["HCF"].wakeup_current_button = moves["HCF"].wakeup_current_button   +  1
-							if moves["HCF"].wakeup_current_button > 4 then
-								moves["HCF"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["39"] = {
@@ -2946,7 +2898,7 @@ move_data.guard_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DP"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DP" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DP",
         olcolour = "black",
@@ -2963,26 +2915,17 @@ move_data.guard_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["DP"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DP"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["DP"].guard_current_button = moves["DP"].guard_current_button   +  1
 							if moves["DP"].guard_current_button > 4 then
 								moves["DP"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DP"].wakeup_current_button = moves["DP"].wakeup_current_button   +  1
-							if moves["DP"].wakeup_current_button > 4 then
-								moves["DP"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["48"] = {
@@ -3081,7 +3024,7 @@ move_data.guard_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["QCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCF" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "QCF",
         olcolour = "black",
@@ -3098,26 +3041,17 @@ move_data.guard_specials = {
         x = 183,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCF"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["QCF"].guard_current_button = moves["QCF"].guard_current_button   +  1
 							if moves["QCF"].guard_current_button > 4 then
 								moves["QCF"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["QCF"].wakeup_current_button = moves["QCF"].wakeup_current_button   +  1
-							if moves["QCF"].wakeup_current_button > 4 then
-								moves["QCF"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["57"] = {
@@ -3219,7 +3153,7 @@ move_data.guard_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["QCB_HCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCB_HCF" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "QCB_HCF",
         olcolour = "black",
@@ -3236,26 +3170,17 @@ move_data.guard_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_HCF"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_HCF"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["QCB_HCF"].guard_current_button = moves["QCB_HCF"].guard_current_button   +  1
 							if moves["QCB_HCF"].guard_current_button > 4 then
 								moves["QCB_HCF"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["QCB_HCF"].wakeup_current_button = moves["QCB_HCF"].wakeup_current_button   +  1
-							if moves["QCB_HCF"].wakeup_current_button > 4 then
-								moves["QCB_HCF"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["3"] = {
@@ -3354,7 +3279,7 @@ move_data.guard_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["PRETZEL"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "PRETZEL" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "PRETZEL",
         olcolour = "black",
@@ -3371,26 +3296,17 @@ move_data.guard_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["PRETZEL"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["PRETZEL"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["PRETZEL"].guard_current_button = moves["PRETZEL"].guard_current_button   +  1
 							if moves["PRETZEL"].guard_current_button > 4 then
 								moves["PRETZEL"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["PRETZEL"].wakeup_current_button = moves["PRETZEL"].wakeup_current_button   +  1
-							if moves["PRETZEL"].wakeup_current_button > 4 then
-								moves["PRETZEL"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["12"] = {
@@ -3489,7 +3405,7 @@ move_data.guard_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["QCF_HCB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCF_HCB" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "QCF_HCB",
         olcolour = "black",
@@ -3506,26 +3422,17 @@ move_data.guard_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_HCB"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_HCB"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["QCF_HCB"].guard_current_button = moves["QCF_HCB"].guard_current_button   +  1
 							if moves["QCF_HCB"].guard_current_button > 4 then
 								moves["QCF_HCB"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["QCF_HCB"].wakeup_current_button = moves["QCF_HCB"].wakeup_current_button   +  1
-							if moves["QCF_HCB"].wakeup_current_button > 4 then
-								moves["QCF_HCB"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["21"] = {
@@ -3624,7 +3531,7 @@ move_data.guard_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["QCB_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCB_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "QCB_F",
         olcolour = "black",
@@ -3641,26 +3548,17 @@ move_data.guard_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_F"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_F"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["QCB_F"].guard_current_button = moves["QCB_F"].guard_current_button   +  1
 							if moves["QCB_F"].guard_current_button > 4 then
 								moves["QCB_F"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["QCB_F"].wakeup_current_button = moves["QCB_F"].wakeup_current_button   +  1
-							if moves["QCB_F"].wakeup_current_button > 4 then
-								moves["QCB_F"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["30"] = {
@@ -3759,7 +3657,7 @@ move_data.guard_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["QCF_QCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCF_QCF" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "QCF_QCF",
         olcolour = "black",
@@ -3776,26 +3674,17 @@ move_data.guard_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_QCF"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_QCF"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["QCF_QCF"].guard_current_button = moves["QCF_QCF"].guard_current_button   +  1
 							if moves["QCF_QCF"].guard_current_button > 4 then
 								moves["QCF_QCF"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["QCF_QCF"].wakeup_current_button = moves["QCF_QCF"].wakeup_current_button   +  1
-							if moves["QCF_QCF"].wakeup_current_button > 4 then
-								moves["QCF_QCF"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["39"] = {
@@ -3896,7 +3785,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["BACKDASH"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "BACKDASH" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "BACKDASH",
         olcolour = "black",
@@ -4004,7 +3893,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DSJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DSJ_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DSJ_F",
         olcolour = "black",
@@ -4021,26 +3910,17 @@ move_data.guard_commons = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["DSJ_F"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DSJ_F"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["DSJ_F"].guard_current_button = moves["DSJ_F"].guard_current_button   +  1
 							if moves["DSJ_F"].guard_current_button > 4 then
 								moves["DSJ_F"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DSJ_F"].wakeup_current_button = moves["DSJ_F"].wakeup_current_button   +  1
-							if moves["DSJ_F"].wakeup_current_button > 4 then
-								moves["DSJ_F"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["11"] = {
@@ -4139,7 +4019,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["INS_SJ_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "INS_SJ_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "INS_SJ_B",
         olcolour = "black",
@@ -4156,26 +4036,17 @@ move_data.guard_commons = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["INS_SJ_B"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["INS_SJ_B"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["INS_SJ_B"].guard_current_button = moves["INS_SJ_B"].guard_current_button   +  1
 							if moves["INS_SJ_B"].guard_current_button > 4 then
 								moves["INS_SJ_B"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["INS_SJ_B"].wakeup_current_button = moves["INS_SJ_B"].wakeup_current_button   +  1
-							if moves["INS_SJ_B"].wakeup_current_button > 4 then
-								moves["INS_SJ_B"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["20"] = {
@@ -4274,7 +4145,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["SJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "SJ_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "SJ_F",
         olcolour = "black",
@@ -4382,7 +4253,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["HH_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HH_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "HH_F",
         olcolour = "black",
@@ -4490,7 +4361,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["SJ_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "SJ_B" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "SJ_B",
         olcolour = "black",
@@ -4598,7 +4469,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["LONG_AB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "LONG_AB" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "LONG_AB",
         olcolour = "black",
@@ -4706,7 +4577,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DH_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DH_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DH_F",
         olcolour = "black",
@@ -4723,26 +4594,17 @@ move_data.guard_commons = {
         x = 183,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["DH_F"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DH_F"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["DH_F"].guard_current_button = moves["DH_F"].guard_current_button   +  1
 							if moves["DH_F"].guard_current_button > 4 then
 								moves["DH_F"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DH_F"].wakeup_current_button = moves["DH_F"].wakeup_current_button   +  1
-							if moves["DH_F"].wakeup_current_button > 4 then
-								moves["DH_F"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["61"] = {
@@ -4841,7 +4703,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DNEUTRALH"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DNEUTRALH" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DNEUTRALH",
         olcolour = "black",
@@ -4858,26 +4720,17 @@ move_data.guard_commons = {
         x = 183,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALH"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALH"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["DNEUTRALH"].guard_current_button = moves["DNEUTRALH"].guard_current_button   +  1
 							if moves["DNEUTRALH"].guard_current_button > 4 then
 								moves["DNEUTRALH"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DNEUTRALH"].wakeup_current_button = moves["DNEUTRALH"].wakeup_current_button   +  1
-							if moves["DNEUTRALH"].wakeup_current_button > 4 then
-								moves["DNEUTRALH"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["70"] = {
@@ -4976,7 +4829,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DHJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DHJ_F" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DHJ_F",
         olcolour = "black",
@@ -4993,26 +4846,17 @@ move_data.guard_commons = {
         x = 183,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["DHJ_F"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DHJ_F"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["DHJ_F"].guard_current_button = moves["DHJ_F"].guard_current_button   +  1
 							if moves["DHJ_F"].guard_current_button > 4 then
 								moves["DHJ_F"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DHJ_F"].wakeup_current_button = moves["DHJ_F"].wakeup_current_button   +  1
-							if moves["DHJ_F"].wakeup_current_button > 4 then
-								moves["DHJ_F"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["79"] = {
@@ -5111,7 +4955,7 @@ move_data.guard_commons = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["DNEUTRALJ"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DNEUTRALJ" .. ": ON" 
 					end
-					KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+					
 				end,
         text = "DNEUTRALJ",
         olcolour = "black",
@@ -5128,26 +4972,17 @@ move_data.guard_commons = {
         x = 183,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "GUARD" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALJ"].guard_current_button ] ..")" 
-						elseif "GUARD" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALJ"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "GUARD" == reversal_types.GUARD then
 							moves["DNEUTRALJ"].guard_current_button = moves["DNEUTRALJ"].guard_current_button   +  1
 							if moves["DNEUTRALJ"].guard_current_button > 4 then
 								moves["DNEUTRALJ"].guard_current_button = 1
 							end
-						elseif "GUARD" == reversal_types.WAKEUP then
-							moves["DNEUTRALJ"].wakeup_current_button = moves["DNEUTRALJ"].wakeup_current_button   +  1
-							if moves["DNEUTRALJ"].wakeup_current_button > 4 then
-								moves["DNEUTRALJ"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["88"] = {
@@ -5235,6 +5070,114 @@ move_data.guard_commons = {
 						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_guard_times + 1
 					end,
     },
+    ["95"] = {
+        y = 135,
+        x = 123,
+        info = {'alternate guard'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ALT_GUARD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "ALT_GUARD" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ALT_GUARD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "ALT_GUARD" .. ": ON" 
+					end
+					
+				end,
+        text = "ALT_GUARD",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ALT_GUARD"] = KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ALT_GUARD"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ALT_GUARD"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["ALT_GUARD"]  = 0
+						end
+						KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+				end,
+    },
+    ["97"] = {
+        y = 147,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["98"] = {
+        y = 147,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay  - 1
+					end,
+    },
+    ["99"] = {
+        y = 147,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["100"] = {
+        y = 147,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_delay + 1
+					end,
+    },
+    ["101"] = {
+        y = 147,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times - 1
+					end,
+    },
+    ["102"] = {
+        y = 147,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["103"] = {
+        y = 147,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_guard_times + 1
+					end,
+    },
 }
 
 move_data.wakeup_command_normals = {
@@ -5249,7 +5192,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DF_D" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "DF_D",
         olcolour = "black",
@@ -5279,10 +5222,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay  - 1
 					end,
     },
     ["4"] = {
@@ -5290,9 +5233,9 @@ move_data.wakeup_command_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5306,7 +5249,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay + 1
 					end,
     },
     ["6"] = {
@@ -5317,10 +5260,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times - 1
 					end,
     },
     ["7"] = {
@@ -5328,9 +5271,9 @@ move_data.wakeup_command_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5343,7 +5286,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times + 1
 					end,
     },
     ["9"] = {
@@ -5357,7 +5300,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DF_B" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "DF_B",
         olcolour = "black",
@@ -5387,10 +5330,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay  - 1
 					end,
     },
     ["12"] = {
@@ -5398,9 +5341,9 @@ move_data.wakeup_command_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5414,7 +5357,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay + 1
 					end,
     },
     ["14"] = {
@@ -5425,10 +5368,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times - 1
 					end,
     },
     ["15"] = {
@@ -5436,9 +5379,9 @@ move_data.wakeup_command_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5451,7 +5394,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times + 1
 					end,
     },
     ["17"] = {
@@ -5465,7 +5408,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "FWD_A" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "FWD_A",
         olcolour = "black",
@@ -5495,10 +5438,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay  - 1
 					end,
     },
     ["20"] = {
@@ -5506,9 +5449,9 @@ move_data.wakeup_command_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5522,7 +5465,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay + 1
 					end,
     },
     ["22"] = {
@@ -5533,10 +5476,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times - 1
 					end,
     },
     ["23"] = {
@@ -5544,9 +5487,9 @@ move_data.wakeup_command_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5559,7 +5502,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times + 1
 					end,
     },
     ["25"] = {
@@ -5573,7 +5516,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "FWD_B" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "FWD_B",
         olcolour = "black",
@@ -5603,10 +5546,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay  - 1
 					end,
     },
     ["28"] = {
@@ -5614,9 +5557,9 @@ move_data.wakeup_command_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5630,7 +5573,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay + 1
 					end,
     },
     ["30"] = {
@@ -5641,10 +5584,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times - 1
 					end,
     },
     ["31"] = {
@@ -5652,9 +5595,9 @@ move_data.wakeup_command_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5667,7 +5610,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times + 1
 					end,
     },
     ["33"] = {
@@ -5681,7 +5624,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "BACK_A" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "BACK_A",
         olcolour = "black",
@@ -5711,10 +5654,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay  - 1
 					end,
     },
     ["36"] = {
@@ -5722,9 +5665,9 @@ move_data.wakeup_command_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5738,7 +5681,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay + 1
 					end,
     },
     ["38"] = {
@@ -5749,10 +5692,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times - 1
 					end,
     },
     ["39"] = {
@@ -5760,9 +5703,9 @@ move_data.wakeup_command_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5775,7 +5718,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times + 1
 					end,
     },
     ["41"] = {
@@ -5789,7 +5732,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "BACK_B" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "BACK_B",
         olcolour = "black",
@@ -5819,10 +5762,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay  - 1
 					end,
     },
     ["44"] = {
@@ -5830,9 +5773,9 @@ move_data.wakeup_command_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5846,7 +5789,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay + 1
 					end,
     },
     ["46"] = {
@@ -5857,10 +5800,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times - 1
 					end,
     },
     ["47"] = {
@@ -5868,9 +5811,9 @@ move_data.wakeup_command_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5883,7 +5826,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times + 1
 					end,
     },
     ["49"] = {
@@ -5897,7 +5840,7 @@ move_data.wakeup_command_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DF_C" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "DF_C",
         olcolour = "black",
@@ -5927,10 +5870,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay  - 1
 					end,
     },
     ["52"] = {
@@ -5938,9 +5881,9 @@ move_data.wakeup_command_normals = {
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -5954,7 +5897,7 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay + 1
 					end,
     },
     ["54"] = {
@@ -5965,10 +5908,10 @@ move_data.wakeup_command_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times - 1
 					end,
     },
     ["55"] = {
@@ -5976,9 +5919,9 @@ move_data.wakeup_command_normals = {
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -5991,7 +5934,7 @@ move_data.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times + 1
 					end,
     },
 }
@@ -6007,7 +5950,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_D" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "CR_D",
         olcolour = "black",
@@ -6037,10 +5980,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay  - 1
 					end,
     },
     ["4"] = {
@@ -6048,9 +5991,9 @@ move_data.wakeup_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6064,7 +6007,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay + 1
 					end,
     },
     ["6"] = {
@@ -6075,10 +6018,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times - 1
 					end,
     },
     ["7"] = {
@@ -6086,9 +6029,9 @@ move_data.wakeup_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6101,7 +6044,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times + 1
 					end,
     },
     ["9"] = {
@@ -6115,7 +6058,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_A" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "ST_A",
         olcolour = "black",
@@ -6145,10 +6088,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay  - 1
 					end,
     },
     ["12"] = {
@@ -6156,9 +6099,9 @@ move_data.wakeup_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6172,7 +6115,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay + 1
 					end,
     },
     ["14"] = {
@@ -6183,10 +6126,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times - 1
 					end,
     },
     ["15"] = {
@@ -6194,9 +6137,9 @@ move_data.wakeup_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6209,7 +6152,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times + 1
 					end,
     },
     ["17"] = {
@@ -6223,7 +6166,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CD" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "CD",
         olcolour = "black",
@@ -6253,10 +6196,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay  - 1
 					end,
     },
     ["20"] = {
@@ -6264,9 +6207,9 @@ move_data.wakeup_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6280,7 +6223,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay + 1
 					end,
     },
     ["22"] = {
@@ -6291,10 +6234,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times - 1
 					end,
     },
     ["23"] = {
@@ -6302,9 +6245,9 @@ move_data.wakeup_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6317,7 +6260,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times + 1
 					end,
     },
     ["25"] = {
@@ -6331,7 +6274,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_B" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "CR_B",
         olcolour = "black",
@@ -6361,10 +6304,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay  - 1
 					end,
     },
     ["28"] = {
@@ -6372,9 +6315,9 @@ move_data.wakeup_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6388,7 +6331,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay + 1
 					end,
     },
     ["30"] = {
@@ -6399,10 +6342,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times - 1
 					end,
     },
     ["31"] = {
@@ -6410,9 +6353,9 @@ move_data.wakeup_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6425,7 +6368,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times + 1
 					end,
     },
     ["33"] = {
@@ -6439,7 +6382,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_A" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "CR_A",
         olcolour = "black",
@@ -6469,10 +6412,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay  - 1
 					end,
     },
     ["36"] = {
@@ -6480,9 +6423,9 @@ move_data.wakeup_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6496,7 +6439,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay + 1
 					end,
     },
     ["38"] = {
@@ -6507,10 +6450,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times - 1
 					end,
     },
     ["39"] = {
@@ -6518,9 +6461,9 @@ move_data.wakeup_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6533,7 +6476,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times + 1
 					end,
     },
     ["41"] = {
@@ -6547,7 +6490,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "AB" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "AB",
         olcolour = "black",
@@ -6577,10 +6520,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay  - 1
 					end,
     },
     ["44"] = {
@@ -6588,9 +6531,9 @@ move_data.wakeup_normals = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6604,7 +6547,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay + 1
 					end,
     },
     ["46"] = {
@@ -6615,10 +6558,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times - 1
 					end,
     },
     ["47"] = {
@@ -6626,9 +6569,9 @@ move_data.wakeup_normals = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6641,7 +6584,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times + 1
 					end,
     },
     ["49"] = {
@@ -6655,7 +6598,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_D" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "ST_D",
         olcolour = "black",
@@ -6685,10 +6628,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay  - 1
 					end,
     },
     ["52"] = {
@@ -6696,9 +6639,9 @@ move_data.wakeup_normals = {
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6712,7 +6655,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay + 1
 					end,
     },
     ["54"] = {
@@ -6723,10 +6666,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times - 1
 					end,
     },
     ["55"] = {
@@ -6734,9 +6677,9 @@ move_data.wakeup_normals = {
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6749,7 +6692,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times + 1
 					end,
     },
     ["57"] = {
@@ -6763,7 +6706,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_C" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "ST_C",
         olcolour = "black",
@@ -6793,10 +6736,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay  - 1
 					end,
     },
     ["60"] = {
@@ -6804,9 +6747,9 @@ move_data.wakeup_normals = {
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6820,7 +6763,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay + 1
 					end,
     },
     ["62"] = {
@@ -6831,10 +6774,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times - 1
 					end,
     },
     ["63"] = {
@@ -6842,9 +6785,9 @@ move_data.wakeup_normals = {
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6857,7 +6800,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times + 1
 					end,
     },
     ["65"] = {
@@ -6871,7 +6814,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "ST_B" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "ST_B",
         olcolour = "black",
@@ -6901,10 +6844,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay  - 1
 					end,
     },
     ["68"] = {
@@ -6912,9 +6855,9 @@ move_data.wakeup_normals = {
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -6928,7 +6871,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay + 1
 					end,
     },
     ["70"] = {
@@ -6939,10 +6882,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times - 1
 					end,
     },
     ["71"] = {
@@ -6950,9 +6893,9 @@ move_data.wakeup_normals = {
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -6965,7 +6908,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times + 1
 					end,
     },
     ["73"] = {
@@ -6979,7 +6922,7 @@ move_data.wakeup_normals = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "CR_C" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "CR_C",
         olcolour = "black",
@@ -7009,10 +6952,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay  - 1
 					end,
     },
     ["76"] = {
@@ -7020,9 +6963,9 @@ move_data.wakeup_normals = {
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7036,7 +6979,7 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay + 1
 					end,
     },
     ["78"] = {
@@ -7047,10 +6990,10 @@ move_data.wakeup_normals = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times - 1
 					end,
     },
     ["79"] = {
@@ -7058,9 +7001,9 @@ move_data.wakeup_normals = {
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7073,7 +7016,7 @@ move_data.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times + 1
 					end,
     },
     ["81"] = {
@@ -7121,7 +7064,7 @@ move_data.wakeup_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HCB" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "HCB",
         olcolour = "black",
@@ -7138,26 +7081,17 @@ move_data.wakeup_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["HCB"].guard_current_button = moves["HCB"].guard_current_button   +  1
-							if moves["HCB"].guard_current_button > 4 then
-								moves["HCB"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["HCB"].wakeup_current_button = moves["HCB"].wakeup_current_button   +  1
 							if moves["HCB"].wakeup_current_button > 4 then
 								moves["HCB"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["3"] = {
@@ -7178,10 +7112,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay  - 1
 					end,
     },
     ["5"] = {
@@ -7189,9 +7123,9 @@ move_data.wakeup_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7205,7 +7139,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay + 1
 					end,
     },
     ["7"] = {
@@ -7216,10 +7150,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times - 1
 					end,
     },
     ["8"] = {
@@ -7227,9 +7161,9 @@ move_data.wakeup_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7242,7 +7176,7 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times + 1
 					end,
     },
     ["10"] = {
@@ -7256,7 +7190,7 @@ move_data.wakeup_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCB" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "QCB",
         olcolour = "black",
@@ -7273,26 +7207,17 @@ move_data.wakeup_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["QCB"].wakeup_current_button] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["QCB"].guard_current_button = moves["QCB"].guard_current_button   +  1
-							if moves["QCB"].guard_current_button > 4 then
-								moves["QCB"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["QCB"].wakeup_current_button = moves["QCB"].wakeup_current_button   +  1
 							if moves["QCB"].wakeup_current_button > 4 then
 								moves["QCB"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["12"] = {
@@ -7313,10 +7238,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay  - 1
 					end,
     },
     ["14"] = {
@@ -7324,9 +7249,9 @@ move_data.wakeup_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7340,7 +7265,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay + 1
 					end,
     },
     ["16"] = {
@@ -7351,10 +7276,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times - 1
 					end,
     },
     ["17"] = {
@@ -7362,9 +7287,9 @@ move_data.wakeup_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7377,28 +7302,27 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times + 1
 					end,
     },
     ["19"] = {
         y = 60,
         x = 8,
-        info = {'dpc'},
+        info = {'k9999 super move'},
         autofunc = function(this)
 					
-					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DPC"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DPC" .. ": Off" 
-					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DPC"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DPC" .. ": ON" 
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "D_F_DF" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "D_F_DF" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
 				end,
-        text = "DPC",
+        text = "D_F_DF",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DPC"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DPC"]+ 1
-						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DPC"] > 1 then
-							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DPC"]  = 0
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"]  = 0
 						end
 						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
 				end,
@@ -7408,26 +7332,17 @@ move_data.wakeup_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DPC"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DPC"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["D_F_DF"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["DPC"].guard_current_button = moves["DPC"].guard_current_button   +  1
-							if moves["DPC"].guard_current_button > 4 then
-								moves["DPC"].guard_current_button = 1
+							moves["D_F_DF"].wakeup_current_button = moves["D_F_DF"].wakeup_current_button   +  1
+							if moves["D_F_DF"].wakeup_current_button > 4 then
+								moves["D_F_DF"].wakeup_current_button = 1
 							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							moves["DPC"].wakeup_current_button = moves["DPC"].wakeup_current_button   +  1
-							if moves["DPC"].wakeup_current_button > 4 then
-								moves["DPC"].wakeup_current_button = 1
-							end
-						end
 					end,
     },
     ["21"] = {
@@ -7448,10 +7363,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay  - 1
 					end,
     },
     ["23"] = {
@@ -7459,9 +7374,9 @@ move_data.wakeup_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7475,7 +7390,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay + 1
 					end,
     },
     ["25"] = {
@@ -7486,10 +7401,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times - 1
 					end,
     },
     ["26"] = {
@@ -7497,9 +7412,9 @@ move_data.wakeup_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7512,7 +7427,7 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DPC").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times + 1
 					end,
     },
     ["28"] = {
@@ -7526,7 +7441,7 @@ move_data.wakeup_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HCB_F" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "HCB_F",
         olcolour = "black",
@@ -7543,26 +7458,17 @@ move_data.wakeup_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB_F"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB_F"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["HCB_F"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["HCB_F"].guard_current_button = moves["HCB_F"].guard_current_button   +  1
-							if moves["HCB_F"].guard_current_button > 4 then
-								moves["HCB_F"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["HCB_F"].wakeup_current_button = moves["HCB_F"].wakeup_current_button   +  1
 							if moves["HCB_F"].wakeup_current_button > 4 then
 								moves["HCB_F"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["30"] = {
@@ -7583,10 +7489,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay  - 1
 					end,
     },
     ["32"] = {
@@ -7594,9 +7500,9 @@ move_data.wakeup_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7610,7 +7516,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay + 1
 					end,
     },
     ["34"] = {
@@ -7621,10 +7527,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times - 1
 					end,
     },
     ["35"] = {
@@ -7632,9 +7538,9 @@ move_data.wakeup_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7647,7 +7553,7 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times + 1
 					end,
     },
     ["37"] = {
@@ -7661,7 +7567,7 @@ move_data.wakeup_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "HCF" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "HCF",
         olcolour = "black",
@@ -7678,26 +7584,17 @@ move_data.wakeup_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCF"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCF"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["HCF"].wakeup_current_button] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["HCF"].guard_current_button = moves["HCF"].guard_current_button   +  1
-							if moves["HCF"].guard_current_button > 4 then
-								moves["HCF"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["HCF"].wakeup_current_button = moves["HCF"].wakeup_current_button   +  1
 							if moves["HCF"].wakeup_current_button > 4 then
 								moves["HCF"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["39"] = {
@@ -7718,10 +7615,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay  - 1
 					end,
     },
     ["41"] = {
@@ -7729,9 +7626,9 @@ move_data.wakeup_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7745,7 +7642,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay + 1
 					end,
     },
     ["43"] = {
@@ -7756,10 +7653,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times - 1
 					end,
     },
     ["44"] = {
@@ -7767,9 +7664,9 @@ move_data.wakeup_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7782,7 +7679,7 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times + 1
 					end,
     },
     ["46"] = {
@@ -7796,7 +7693,7 @@ move_data.wakeup_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "DP" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "DP",
         olcolour = "black",
@@ -7813,26 +7710,17 @@ move_data.wakeup_specials = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DP"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["DP"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["DP"].wakeup_current_button] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["DP"].guard_current_button = moves["DP"].guard_current_button   +  1
-							if moves["DP"].guard_current_button > 4 then
-								moves["DP"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["DP"].wakeup_current_button = moves["DP"].wakeup_current_button   +  1
 							if moves["DP"].wakeup_current_button > 4 then
 								moves["DP"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["48"] = {
@@ -7853,10 +7741,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay  - 1
 					end,
     },
     ["50"] = {
@@ -7864,9 +7752,9 @@ move_data.wakeup_specials = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -7880,7 +7768,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay + 1
 					end,
     },
     ["52"] = {
@@ -7891,10 +7779,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times - 1
 					end,
     },
     ["53"] = {
@@ -7902,9 +7790,9 @@ move_data.wakeup_specials = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -7917,7 +7805,7 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times + 1
 					end,
     },
     ["55"] = {
@@ -7931,7 +7819,7 @@ move_data.wakeup_specials = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCF" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "QCF",
         olcolour = "black",
@@ -7948,26 +7836,17 @@ move_data.wakeup_specials = {
         x = 183,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["QCF"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["QCF"].guard_current_button = moves["QCF"].guard_current_button   +  1
-							if moves["QCF"].guard_current_button > 4 then
-								moves["QCF"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["QCF"].wakeup_current_button = moves["QCF"].wakeup_current_button   +  1
 							if moves["QCF"].wakeup_current_button > 4 then
 								moves["QCF"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["57"] = {
@@ -7988,10 +7867,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay  - 1
 					end,
     },
     ["59"] = {
@@ -7999,9 +7878,9 @@ move_data.wakeup_specials = {
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -8015,7 +7894,7 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay + 1
 					end,
     },
     ["61"] = {
@@ -8026,10 +7905,10 @@ move_data.wakeup_specials = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times - 1
 					end,
     },
     ["62"] = {
@@ -8037,9 +7916,9 @@ move_data.wakeup_specials = {
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -8052,7 +7931,7 @@ move_data.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times + 1
 					end,
     },
 }
@@ -8068,7 +7947,7 @@ move_data.wakeup_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCB_HCF" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "QCB_HCF",
         olcolour = "black",
@@ -8085,26 +7964,17 @@ move_data.wakeup_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_HCF"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_HCF"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["QCB_HCF"].guard_current_button = moves["QCB_HCF"].guard_current_button   +  1
-							if moves["QCB_HCF"].guard_current_button > 4 then
-								moves["QCB_HCF"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["QCB_HCF"].wakeup_current_button = moves["QCB_HCF"].wakeup_current_button   +  1
 							if moves["QCB_HCF"].wakeup_current_button > 4 then
 								moves["QCB_HCF"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["3"] = {
@@ -8125,10 +7995,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay  - 1
 					end,
     },
     ["5"] = {
@@ -8136,9 +8006,9 @@ move_data.wakeup_supers = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -8152,7 +8022,7 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay + 1
 					end,
     },
     ["7"] = {
@@ -8163,10 +8033,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times - 1
 					end,
     },
     ["8"] = {
@@ -8174,9 +8044,9 @@ move_data.wakeup_supers = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -8189,7 +8059,7 @@ move_data.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times + 1
 					end,
     },
     ["10"] = {
@@ -8203,7 +8073,7 @@ move_data.wakeup_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "PRETZEL" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "PRETZEL",
         olcolour = "black",
@@ -8220,26 +8090,17 @@ move_data.wakeup_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["PRETZEL"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["PRETZEL"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["PRETZEL"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["PRETZEL"].guard_current_button = moves["PRETZEL"].guard_current_button   +  1
-							if moves["PRETZEL"].guard_current_button > 4 then
-								moves["PRETZEL"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["PRETZEL"].wakeup_current_button = moves["PRETZEL"].wakeup_current_button   +  1
 							if moves["PRETZEL"].wakeup_current_button > 4 then
 								moves["PRETZEL"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["12"] = {
@@ -8260,10 +8121,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay  - 1
 					end,
     },
     ["14"] = {
@@ -8271,9 +8132,9 @@ move_data.wakeup_supers = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -8287,7 +8148,7 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay + 1
 					end,
     },
     ["16"] = {
@@ -8298,10 +8159,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times - 1
 					end,
     },
     ["17"] = {
@@ -8309,9 +8170,9 @@ move_data.wakeup_supers = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -8324,7 +8185,7 @@ move_data.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times + 1
 					end,
     },
     ["19"] = {
@@ -8338,7 +8199,7 @@ move_data.wakeup_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCF_HCB" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "QCF_HCB",
         olcolour = "black",
@@ -8355,26 +8216,17 @@ move_data.wakeup_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
 							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_HCB"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_HCB"].wakeup_current_button ] ..")" 						
-						end
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["QCF_HCB"].guard_current_button = moves["QCF_HCB"].guard_current_button   +  1
-							if moves["QCF_HCB"].guard_current_button > 4 then
-								moves["QCF_HCB"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["QCF_HCB"].wakeup_current_button = moves["QCF_HCB"].wakeup_current_button   +  1
 							if moves["QCF_HCB"].wakeup_current_button > 4 then
 								moves["QCF_HCB"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["21"] = {
@@ -8395,10 +8247,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay  - 1
 					end,
     },
     ["23"] = {
@@ -8406,9 +8258,9 @@ move_data.wakeup_supers = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -8422,7 +8274,7 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay + 1
 					end,
     },
     ["25"] = {
@@ -8433,10 +8285,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times - 1
 					end,
     },
     ["26"] = {
@@ -8444,9 +8296,9 @@ move_data.wakeup_supers = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -8459,7 +8311,7 @@ move_data.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times + 1
 					end,
     },
     ["28"] = {
@@ -8473,7 +8325,7 @@ move_data.wakeup_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCB_F" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "QCB_F",
         olcolour = "black",
@@ -8490,26 +8342,17 @@ move_data.wakeup_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_F"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_F"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_F"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["QCB_F"].guard_current_button = moves["QCB_F"].guard_current_button   +  1
-							if moves["QCB_F"].guard_current_button > 4 then
-								moves["QCB_F"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["QCB_F"].wakeup_current_button = moves["QCB_F"].wakeup_current_button   +  1
 							if moves["QCB_F"].wakeup_current_button > 4 then
 								moves["QCB_F"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["30"] = {
@@ -8530,10 +8373,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay  - 1
 					end,
     },
     ["32"] = {
@@ -8541,9 +8384,9 @@ move_data.wakeup_supers = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -8557,7 +8400,7 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay + 1
 					end,
     },
     ["34"] = {
@@ -8568,10 +8411,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times - 1
 					end,
     },
     ["35"] = {
@@ -8579,9 +8422,9 @@ move_data.wakeup_supers = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -8594,7 +8437,7 @@ move_data.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times + 1
 					end,
     },
     ["37"] = {
@@ -8608,7 +8451,7 @@ move_data.wakeup_supers = {
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "QCF_QCF" .. ": ON" 
 					end
-					KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+					
 				end,
         text = "QCF_QCF",
         olcolour = "black",
@@ -8625,26 +8468,17 @@ move_data.wakeup_supers = {
         x = 68,
         info = {'Button used to make the move'},
         autofunc = function(this)
-						if "WAKEUP" == reversal_types.GUARD then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_QCF"].guard_current_button ] ..")" 
-						elseif "WAKEUP" == reversal_types.WAKEUP then
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_QCF"].wakeup_current_button ] ..")" 						
-						end
+							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_QCF"].wakeup_current_button ] ..")" 
+												
+						
 					end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-						if "WAKEUP" == reversal_types.GUARD then
-							moves["QCF_QCF"].guard_current_button = moves["QCF_QCF"].guard_current_button   +  1
-							if moves["QCF_QCF"].guard_current_button > 4 then
-								moves["QCF_QCF"].guard_current_button = 1
-							end
-						elseif "WAKEUP" == reversal_types.WAKEUP then
 							moves["QCF_QCF"].wakeup_current_button = moves["QCF_QCF"].wakeup_current_button   +  1
 							if moves["QCF_QCF"].wakeup_current_button > 4 then
 								moves["QCF_QCF"].wakeup_current_button = 1
 							end
-						end
 					end,
     },
     ["39"] = {
@@ -8665,10 +8499,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay  == 0 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay  == 0 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay  - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay  - 1
 					end,
     },
     ["41"] = {
@@ -8676,9 +8510,9 @@ move_data.wakeup_supers = {
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay )
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay )
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
 						
@@ -8692,7 +8526,7 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_delay + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay + 1
 					end,
     },
     ["43"] = {
@@ -8703,10 +8537,10 @@ move_data.wakeup_supers = {
         olcolour = "black",
         func = function()
 						-- Function for "(-) times"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times == 1 then
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times == 1 then
 							return
 						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times - 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times - 1
 					end,
     },
     ["44"] = {
@@ -8714,9 +8548,9 @@ move_data.wakeup_supers = {
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times)
 					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times),
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times),
         olcolour = "black",
         func = function()
 						
@@ -8729,8 +8563,1415 @@ move_data.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_guard_times + 1
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times + 1
 					end,
     },
 }
+move_data.wakeup_commons = {
+    ["1"] = {
+        y = 10,
+        x = 8,
+        info = {'longer AB'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "BACKDASH" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "BACKDASH" .. ": ON" 
+					end
+					
+				end,
+        text = "BACKDASH",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["2"] = {
+        y = 22,
+        x = 8,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["3"] = {
+        y = 22,
+        x = 42,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay  - 1
+					end,
+    },
+    ["4"] = {
+        y = 22,
+        x = 53,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["5"] = {
+        y = 22,
+        x = 68,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay + 1
+					end,
+    },
+    ["6"] = {
+        y = 22,
+        x = 83,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times - 1
+					end,
+    },
+    ["7"] = {
+        y = 22,
+        x = 94,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["8"] = {
+        y = 22,
+        x = 107,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times + 1
+					end,
+    },
+    ["9"] = {
+        y = 35,
+        x = 8,
+        info = {'super jump forward with a delayed button'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "DSJ_F" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "DSJ_F" .. ": ON" 
+					end
+					
+				end,
+        text = "DSJ_F",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["10"] = {
+        y = 35,
+        x = 68,
+        info = {'Button used to make the move'},
+        autofunc = function(this)
+							this.text = "Button: (".. BUTTON_NAMES[moves["DSJ_F"].wakeup_current_button ] ..")" 
+												
+						
+					end,
+        text ="Button:  ",
+        olcolour = "black",
+        func = function()
+							moves["DSJ_F"].wakeup_current_button = moves["DSJ_F"].wakeup_current_button   +  1
+							if moves["DSJ_F"].wakeup_current_button > 4 then
+								moves["DSJ_F"].wakeup_current_button = 1
+							end
+					end,
+    },
+    ["11"] = {
+        y = 47,
+        x = 8,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["12"] = {
+        y = 47,
+        x = 42,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay  - 1
+					end,
+    },
+    ["13"] = {
+        y = 47,
+        x = 53,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["14"] = {
+        y = 47,
+        x = 68,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay + 1
+					end,
+    },
+    ["15"] = {
+        y = 47,
+        x = 83,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times - 1
+					end,
+    },
+    ["16"] = {
+        y = 47,
+        x = 94,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["17"] = {
+        y = 47,
+        x = 107,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times + 1
+					end,
+    },
+    ["18"] = {
+        y = 60,
+        x = 8,
+        info = {'instant super jump back'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "INS_SJ_B" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "INS_SJ_B" .. ": ON" 
+					end
+					
+				end,
+        text = "INS_SJ_B",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["19"] = {
+        y = 60,
+        x = 68,
+        info = {'Button used to make the move'},
+        autofunc = function(this)
+							this.text = "Button: (".. BUTTON_NAMES[moves["INS_SJ_B"].wakeup_current_button ] ..")" 
+												
+						
+					end,
+        text = "Button: ",
+        olcolour = "black",
+        func = function()
+							moves["INS_SJ_B"].wakeup_current_button = moves["INS_SJ_B"].wakeup_current_button   +  1
+							if moves["INS_SJ_B"].wakeup_current_button > 4 then
+								moves["INS_SJ_B"].wakeup_current_button = 1
+							end
+					end,
+    },
+    ["20"] = {
+        y = 72,
+        x = 8,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["21"] = {
+        y = 72,
+        x = 42,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay  - 1
+					end,
+    },
+    ["22"] = {
+        y = 72,
+        x = 53,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["23"] = {
+        y = 72,
+        x = 68,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay + 1
+					end,
+    },
+    ["24"] = {
+        y = 72,
+        x = 83,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times - 1
+					end,
+    },
+    ["25"] = {
+        y = 72,
+        x = 94,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["26"] = {
+        y = 72,
+        x = 107,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times + 1
+					end,
+    },
+    ["27"] = {
+        y = 85,
+        x = 8,
+        info = {'super jump forward'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "SJ_F" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "SJ_F" .. ": ON" 
+					end
+					
+				end,
+        text = "SJ_F",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["28"] = {
+        y = 97,
+        x = 8,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["29"] = {
+        y = 97,
+        x = 42,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay  - 1
+					end,
+    },
+    ["30"] = {
+        y = 97,
+        x = 53,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["31"] = {
+        y = 97,
+        x = 68,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay + 1
+					end,
+    },
+    ["32"] = {
+        y = 97,
+        x = 83,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times - 1
+					end,
+    },
+    ["33"] = {
+        y = 97,
+        x = 94,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["34"] = {
+        y = 97,
+        x = 107,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times + 1
+					end,
+    },
+    ["35"] = {
+        y = 110,
+        x = 8,
+        info = {'Hyper Hop forward'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "HH_F" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "HH_F" .. ": ON" 
+					end
+					
+				end,
+        text = "HH_F",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["36"] = {
+        y = 122,
+        x = 8,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["37"] = {
+        y = 122,
+        x = 42,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay  - 1
+					end,
+    },
+    ["38"] = {
+        y = 122,
+        x = 53,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["39"] = {
+        y = 122,
+        x = 68,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay + 1
+					end,
+    },
+    ["40"] = {
+        y = 122,
+        x = 83,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times - 1
+					end,
+    },
+    ["41"] = {
+        y = 122,
+        x = 94,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["42"] = {
+        y = 122,
+        x = 107,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times + 1
+					end,
+    },
+    ["43"] = {
+        y = 135,
+        x = 8,
+        info = {'super jump back'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "SJ_B" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "SJ_B" .. ": ON" 
+					end
+					
+				end,
+        text = "SJ_B",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["44"] = {
+        y = 147,
+        x = 8,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["45"] = {
+        y = 147,
+        x = 42,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay  - 1
+					end,
+    },
+    ["46"] = {
+        y = 147,
+        x = 53,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["47"] = {
+        y = 147,
+        x = 68,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay + 1
+					end,
+    },
+    ["48"] = {
+        y = 147,
+        x = 83,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times - 1
+					end,
+    },
+    ["49"] = {
+        y = 147,
+        x = 94,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["50"] = {
+        y = 147,
+        x = 107,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times + 1
+					end,
+    },
+    ["51"] = {
+        y = 10,
+        x = 123,
+        info = {'longer AB'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "LONG_AB" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "LONG_AB" .. ": ON" 
+					end
+					
+				end,
+        text = "LONG_AB",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["52"] = {
+        y = 22,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["53"] = {
+        y = 22,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay  - 1
+					end,
+    },
+    ["54"] = {
+        y = 22,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["55"] = {
+        y = 22,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay + 1
+					end,
+    },
+    ["56"] = {
+        y = 22,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times - 1
+					end,
+    },
+    ["57"] = {
+        y = 22,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["58"] = {
+        y = 22,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times + 1
+					end,
+    },
+    ["59"] = {
+        y = 35,
+        x = 123,
+        info = {'hop forward with delayed  button'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "DH_F" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "DH_F" .. ": ON" 
+					end
+					
+				end,
+        text = "DH_F",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["60"] = {
+        y = 35,
+        x = 183,
+        info = {'Button used to make the move'},
+        autofunc = function(this)
+							this.text = "Button: (".. BUTTON_NAMES[moves["DH_F"].wakeup_current_button ] ..")" 
+												
+						
+					end,
+        text = "Button: ",
+        olcolour = "black",
+        func = function()
+							moves["DH_F"].wakeup_current_button = moves["DH_F"].wakeup_current_button   +  1
+							if moves["DH_F"].wakeup_current_button > 4 then
+								moves["DH_F"].wakeup_current_button = 1
+							end
+					end,
+    },
+    ["61"] = {
+        y = 47,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["62"] = {
+        y = 47,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay  - 1
+					end,
+    },
+    ["63"] = {
+        y = 47,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["64"] = {
+        y = 47,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay + 1
+					end,
+    },
+    ["65"] = {
+        y = 47,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times - 1
+					end,
+    },
+    ["66"] = {
+        y = 47,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["67"] = {
+        y = 47,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times + 1
+					end,
+    },
+    ["68"] = {
+        y = 60,
+        x = 123,
+        info = {'neutral hop with delayed button'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "DNEUTRALH" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "DNEUTRALH" .. ": ON" 
+					end
+					
+				end,
+        text = "DNEUTRALH",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["69"] = {
+        y = 60,
+        x = 183,
+        info = {'Button used to make the move'},
+        autofunc = function(this)
+							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALH"].wakeup_current_button] ..")" 
+												
+						
+					end,
+        text = "Button: ",
+        olcolour = "black",
+        func = function()
+							moves["DNEUTRALH"].wakeup_current_button = moves["DNEUTRALH"].wakeup_current_button   +  1
+							if moves["DNEUTRALH"].wakeup_current_button > 4 then
+								moves["DNEUTRALH"].wakeup_current_button = 1
+							end
+					end,
+    },
+    ["70"] = {
+        y = 72,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["71"] = {
+        y = 72,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay  - 1
+					end,
+    },
+    ["72"] = {
+        y = 72,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["73"] = {
+        y = 72,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay + 1
+					end,
+    },
+    ["74"] = {
+        y = 72,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times - 1
+					end,
+    },
+    ["75"] = {
+        y = 72,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["76"] = {
+        y = 72,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times + 1
+					end,
+    },
+    ["77"] = {
+        y = 85,
+        x = 123,
+        info = {'delayed hyper hop forward with button'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "DHJ_F" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "DHJ_F" .. ": ON" 
+					end
+					
+				end,
+        text = "DHJ_F",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["78"] = {
+        y = 85,
+        x = 183,
+        info = {'Button used to make the move'},
+        autofunc = function(this)
+							this.text = "Button: (".. BUTTON_NAMES[moves["DHJ_F"].wakeup_current_button] ..")" 
+												
+						
+					end,
+        text = "Button: ",
+        olcolour = "black",
+        func = function()
+							moves["DHJ_F"].wakeup_current_button = moves["DHJ_F"].wakeup_current_button   +  1
+							if moves["DHJ_F"].wakeup_current_button > 4 then
+								moves["DHJ_F"].wakeup_current_button = 1
+							end
+					end,
+    },
+    ["79"] = {
+        y = 97,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["80"] = {
+        y = 97,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay  - 1
+					end,
+    },
+    ["81"] = {
+        y = 97,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["82"] = {
+        y = 97,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay + 1
+					end,
+    },
+    ["83"] = {
+        y = 97,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times - 1
+					end,
+    },
+    ["84"] = {
+        y = 97,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["85"] = {
+        y = 97,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times + 1
+					end,
+    },
+    ["86"] = {
+        y = 110,
+        x = 123,
+        info = {'neutral jump with delayed button'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "DNEUTRALJ" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "DNEUTRALJ" .. ": ON" 
+					end
+					
+				end,
+        text = "DNEUTRALJ",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["87"] = {
+        y = 110,
+        x = 183,
+        info = {'Button used to make the move'},
+        autofunc = function(this)
+							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALJ"].wakeup_current_button] ..")" 
+												
+						
+					end,
+        text = "Button: ",
+        olcolour = "black",
+        func = function()
+							moves["DNEUTRALJ"].wakeup_current_button = moves["DNEUTRALJ"].wakeup_current_button   +  1
+							if moves["DNEUTRALJ"].wakeup_current_button > 4 then
+								moves["DNEUTRALJ"].wakeup_current_button = 1
+							end
+					end,
+    },
+    ["88"] = {
+        y = 122,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["89"] = {
+        y = 122,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay  - 1
+					end,
+    },
+    ["90"] = {
+        y = 122,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["91"] = {
+        y = 122,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay + 1
+					end,
+    },
+    ["92"] = {
+        y = 122,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times - 1
+					end,
+    },
+    ["93"] = {
+        y = 122,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["94"] = {
+        y = 122,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times + 1
+					end,
+    },
+    ["95"] = {
+        y = 135,
+        x = 123,
+        info = {'alternate guard'},
+        autofunc = function(this)
+					
+					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "ALT_GUARD" .. ": Off" 
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "ALT_GUARD" .. ": ON" 
+					end
+					
+				end,
+        text = "ALT_GUARD",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"]+ 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["97"] = {
+        y = 147,
+        x = 123,
+        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        text = "d & t:",
+        olcolour = "black",
+        func = function()
+						-- Function for "delay: "
+					end,
+    },
+    ["98"] = {
+        y = 147,
+        x = 157,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) delay"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay  == 0 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay  - 1
+					end,
+    },
+    ["99"] = {
+        y = 147,
+        x = 168,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay )
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["100"] = {
+        y = 147,
+        x = 183,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						-- Function for "(+) delay"
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay + 1
+					end,
+    },
+    ["101"] = {
+        y = 147,
+        x = 198,
+        info = {},
+        text = "-",
+        olcolour = "black",
+        func = function()
+						-- Function for "(-) times"				
+						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times == 1 then
+							return
+						end
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times - 1
+					end,
+    },
+    ["102"] = {
+        y = 147,
+        x = 209,
+        info = {},
+        autofunc = function(this)
+						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times)
+					end,
+        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times),
+        olcolour = "black",
+        func = function()
+						
+					end,
+    },
+    ["103"] = {
+        y = 147,
+        x = 222,
+        info = {},
+        text = "+",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times + 1
+					end,
+    },
+}
+
 return move_data

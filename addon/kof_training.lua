@@ -93,7 +93,7 @@ local iddle_finish_time = 0
 local iddle_time = 80
 local function wakeUpEnabled()
 	if iddle_time_running then
-		print("current iddle Time is: "..(iddle_finish_time))
+		--print("current iddle Time is: "..(iddle_finish_time))
 		if iddle_finish_time == 0  then			
 			iddle_time_running = false
 			return true
@@ -108,9 +108,22 @@ local function startWakeupIddleTime()
 	iddle_finish_time = iddle_time
 end
 local delay_count = 0
-
+local function dummyCrouchGuard()
+	local tbl = {}	
+	tbl[getBlockingDirection()] = 1
+	tbl["P2 Down"] = 1
+	joypad.set(tbl)
+end
 local function delay(delay_frames, functionToExecute, ...)
     if delay_count < delay_frames then
+		if KOF_CONFIG.GUARD.dummy_guarding then
+			if KOF_CONFIG.GUARD.crouch_guard ==  1 then
+				dummyCrouchGuard()				
+			end
+			if KOF_CONFIG.GUARD.crouch_guard ==  1 then
+				dummyCrouchGuard()				
+			end
+		end
         delay_count = delay_count + 1
         --print("DELAYED BY: ", delay_count)
         return
@@ -120,16 +133,19 @@ local function delay(delay_frames, functionToExecute, ...)
         delay_count = 0
     end
 end
-
+local sequence_reversal_type = nil
 local current_move_index_counter = 1
 local current_move_time_counter = 0
-
+local current_sequence = {}
 local function doMove(move_name, times, conf)
     if conf == nil then conf = false end
 
     local seq
-    if conf == false then
-        seq = moves[move_name].sequence
+    if conf == false  then
+		if   (next(current_sequence) == nil) then 
+        	current_sequence = getSequence(moves[move_name], sequence_reversal_type)
+		end
+		seq = current_sequence
     else
         seq = KOF_CONFIG.MOVES[move_name].sequence
     end
@@ -137,6 +153,7 @@ local function doMove(move_name, times, conf)
     if current_move_time_counter >= times then
         current_move_time_counter = 0
         current_move_index_counter = 1
+		current_sequence = {}
         return false
     end
 
@@ -145,6 +162,7 @@ local function doMove(move_name, times, conf)
         current_move_time_counter = current_move_time_counter + 1
         if current_move_time_counter >= times then
             current_move_time_counter = 0
+			current_sequence = {}
             return false
         end
     end
@@ -220,12 +238,14 @@ local function getCurrentReversalMove(state)
 			else
 				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.GUARD.reversal_moves[1]
 			end
+			sequence_reversal_type = reversal_types.GUARD
 		elseif state == "waking_up" then	
 			if KOF_CONFIG.WAKEUP.reversal  == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM then
 				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.WAKEUP.reversal_moves[math.random(1,  #KOF_CONFIG.WAKEUP.reversal_moves)]
 			else
 				CURRENT_REVERSAL_MOVE_NAME =KOF_CONFIG.WAKEUP.reversal_moves[1]
 			end
+			sequence_reversal_type = reversal_types.WAKEUP
 		end
 	end
 	return CURRENT_REVERSAL_MOVE_NAME
@@ -233,6 +253,7 @@ end
 
 local function resetCurrentReversalName()
 	CURRENT_REVERSAL_MOVE_NAME = nil
+	sequence_reversal_type = nil
 end
 local function buildReversal(reversal_name)
 	local _reversal = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(reversal_name)
@@ -248,12 +269,7 @@ local function doReversal(_name, _times)
 	return true
 end
 
-local function dummyCrouchGuard()
-	local tbl = {}	
-	tbl[getBlockingDirection()] = 1
-	tbl["P2 Down"] = 1
-	joypad.set(tbl)
-end
+
 local function dummyCrouchForATime()
 	return doMove("CROUCH", 10, true)
 end

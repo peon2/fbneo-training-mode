@@ -87,51 +87,21 @@ MOVE_TYPES = {
 }
 -- Define the BUTTONS table with unique keys
 -- Define the BUTTONS table with values wrapped in tables
-local BUTTONS = {
+BUTTONS = {
     A = 1,
     B = 2,
     C = 3,
     D = 4,
 }
-local BUTTON_NAMES = {
+
+BUTTON_NAMES = {
     [1] = 'a',
     [2] = 'b',
     [3] = 'c',
     [4] = 'd'
 }
 
-
 moves = {
-	['DPC'] = {
-        wakeup_current_button = BUTTONS.A,
-        guard_current_button = BUTTONS.A,
-		["sequence"] = {
-			{'_'},
-			{'_'},
-			{ 'forward'},
-			{ 'forward'},
-			{'_'},
-			{'_'},
-			{'down'},
-			{'down'},
-			{'down', 'forward','c'},
-			{'down', 'forward','c'},
-			{'down', 'forward','c'},
-			{'down', 'forward','c'},
-			{'down', 'forward','c'},
-			{'c'},
-			{'c'},
-			{'c'},
-			{'c'},
-			{'c'},
-		},
-			times = 5,
-			default = true,
-			type = MOVE_TYPES.SPECIAL,
-			description = "dpc",
-
-			button_editable = true
-	},
 	['DP'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
@@ -156,6 +126,35 @@ moves = {
             {'a'},
         },
 		description = "Dragon Punch (623)",
+        times = 5,
+        default = true,
+        type = MOVE_TYPES.SPECIAL,
+		button_editable = true
+    },
+	['D_F_DF'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+            {'_'},
+            {'_'},
+            {'down'},
+            {'down'},
+            {'_'},
+            {'_'},
+            {'forward'},
+            {'forward'},
+            {'down', 'forward', 'a'},
+            {'down', 'forward', 'a'},
+            {'down', 'forward', 'a'},
+            {'down', 'forward', 'a'},
+            {'down', 'forward', 'a'},
+            {'a'},
+            {'a'},
+            {'a'},
+            {'a'},
+            {'a'},
+        },
+		description = "k9999 super move",
         times = 5,
         default = true,
         type = MOVE_TYPES.SPECIAL,
@@ -438,9 +437,9 @@ moves = {
         type = MOVE_TYPES.COMMON,
     },
 	['DSJ_F'] = {
+		wakeup_current_button = BUTTONS.A,
+		guard_current_button = BUTTONS.A,
         sequence = {
-			wakeup_current_button = BUTTONS.A,
-			guard_current_button = BUTTONS.A,
 			{'-'},
 			{'-'},
 			{'down'},
@@ -632,17 +631,41 @@ moves = {
         type = MOVE_TYPES.COMMON,
 		button_editable = true
     },
-	['DOWN_C']={
-		["sequence"] = {
-			{'down', 'forward'},
-			{'down', 'forward'},
-			{'down', 'forward', 'c'},
-			{'down', 'forward', 'c'},
-		},
-		times = 13,
-		default  = true,
-		description = "down c",
-	},
+	['ALT_GUARD'] = {
+        sequence = {
+			{'-'},
+			{'-'},
+			{'down','back'},
+			{'down','back'},
+			{'back'},
+			{'back'},
+			{'down','back'},
+			{'down','back'},
+			{'back'},
+			{'back'},
+			{'down','back'},
+			{'down','back'},
+			{'back'},
+			{'back'},
+			{'down','back'},
+			{'down','back'},
+			{'back'},
+			{'back'},
+			{'down','back'},
+			{'down','back'},
+			{'back'},
+			{'back'},
+			{'down','back'},
+			{'down','back'},
+			{'back'},
+			{'back'},
+			{'down','back'},
+			{'down','back'}
+        },
+		description = "alternate guard",
+        times = 5,
+        type = MOVE_TYPES.COMMON,
+    },
 	['STAND_A']={
 		["sequence"] = {
 			{'_'},		
@@ -733,6 +756,7 @@ moves = {
 			{ 'down','c'},
 		},
 		description = "crouching C",
+		default = true,
 		type = MOVE_TYPES.NORMAL
 		 },
 	['CR_D']={
@@ -880,29 +904,13 @@ moves = {
 		description = "down c",
 	},
 }
--- Example usage:
---[[ print("Initial sequence:")
-for _, step in ipairs(moves.DP.sequence) do
-    local actions = table.concat(step, ', ')
-    print(actions)
-end
 
--- Update the current button dynamically using the method
-moves.DP:updateButton(BUTTONS.B)
-
-print("\nUpdated sequence:")
-for _, step in ipairs(moves.DP.sequence) do
-    local actions = table.concat(step, ', ')
-    print(actions)
-end
- ]]
 local movelist = ReversalList:new()
 movelist:setReversals(moves)
 KOF_CONFIG.REVERSAL_MOVES.MOVELIST = movelist
-local reversal_types = {
+reversal_types = {
 GUARD = "GUARD",
 WAKEUP = "WAKEUP",
-ALL = "ALL" 
 }
 local LOWERC_TYPES = {
 	['GUARD'] = "guard",
@@ -914,6 +922,37 @@ local LOWERC_TYPES = {
 	['COMMON'] = "common",
 
 }
+
+
+-- Function to get the current button based on move_type
+local function getCurrentButton(move, reversal_type)
+    if reversal_type == reversal_types.WAKEUP then
+        return move.wakeup_current_button
+    elseif reversal_type == reversal_types.GUARD then
+        return move.guard_current_button
+    end
+end
+
+function getSequence(move, reversal_type)
+	if (not move.button_editable) or (reversal_type ==  nil) then
+		return move.sequence
+	end
+	local current_button = getCurrentButton(move, reversal_type)
+    local new_sequence = {}
+
+    for _, step in ipairs(move.sequence) do
+        local new_step = {}
+        for _, action in ipairs(step) do
+            if (action == BUTTON_NAMES[BUTTONS.A] or action == BUTTON_NAMES[BUTTONS.B] or action == BUTTON_NAMES[BUTTONS.C] or action == BUTTON_NAMES[BUTTONS.D]) and action ~= BUTTON_NAMES[current_button] then
+                table.insert(new_step, BUTTON_NAMES[current_button])
+            else
+                table.insert(new_step, action)
+            end
+        end
+        table.insert(new_sequence, new_step)
+    end
+    return new_sequence
+end
 function getCustomPageNameByType(name, type)
 	return  LOWERC_TYPES[type].."_".. name
 end
@@ -928,6 +967,9 @@ local function fillVarNames (type)
 		end
 	end
 end
+--[[ 
+CONFIG FOR GUAED REVERSALS
+]]
 fillVarNames(reversal_types.GUARD)
 
 local move_data = require "addon.kof_training_move_data"
@@ -935,9 +977,9 @@ local move_data = require "addon.kof_training_move_data"
 for key, item in pairs( move_data.guard_normals) do
 	table.insert(guipages.guard_reversal_move_active_settings,item)
 end
-local command_normals_move_settings = {
+local guard_command_normals_move_settings = {
 	title = {
-		text = "Command Normals Move  Settings",
+		text = "Guard Command Normals Move  Settings",
 		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
@@ -948,18 +990,78 @@ local command_normals_move_settings = {
 		func =  function() CIG(	interactivegui.previouspage ,2) end,
 	},
 }
-guipages.guard_command_normals_move_settings= command_normals_move_settings
+guipages.guard_command_normals_move_settings= guard_command_normals_move_settings
 for key, item in pairs( move_data.guard_command_normals) do
 	table.insert(guipages.guard_command_normals_move_settings,item)
 end
-
---initializeReversalMoveSettings(normal_moves, KOF_CONFIG,guipages.wakeup_reversal_move_active_settings , reversal_types.WAKEUP, true)
---[[-
---adds command normal moves config page
- local command_normals_moves = filterMoves(moves, MOVE_TYPES.COMMAND_NORMAL) 
-local command_normals_move_settings = {
+--special moves
+local guard_special_move_settings = {
 	title = {
-		text = "Command Normals Move  Settings",
+		text = "Guard Special Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.guard_specials_move_settings= guard_special_move_settings
+for key, item in pairs( move_data.guard_specials) do
+	table.insert(guipages.guard_specials_move_settings,item)
+end
+--supers
+local guard_super_move_settings = {
+	title = {
+		text = "Guard super Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.guard_supers_move_settings= guard_super_move_settings
+for key, item in pairs( move_data.guard_supers) do
+	table.insert(guipages.guard_supers_move_settings,item)
+end
+--common 
+local guard_common_move_settings = {
+	title = {
+		text = "Guard common Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+
+guipages.guard_commons_move_settings= guard_common_move_settings
+for key, item in pairs( move_data.guard_commons) do
+	table.insert(guipages.guard_commons_move_settings,item)
+end
+
+--[[ 
+CONFIG FOR WAKEUP REVERSALS 
+]]
+
+fillVarNames(reversal_types.WAKEUP)
+-- added normal moves to default page
+for key, item in pairs( move_data.wakeup_normals) do
+	table.insert(guipages.wakeup_reversal_move_active_settings,item)
+end
+local wakeup_command_normals_move_settings = {
+	title = {
+		text = "Wakeup Command Normals Move  Settings",
 		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
@@ -970,15 +1072,14 @@ local command_normals_move_settings = {
 		func =  function() CIG(	interactivegui.previouspage ,2) end,
 	},
 }
-local command_normals_page_name = getCustomPageNameByType("command_normals_move_settings",reversal_types.GUARD)
-guipages[command_normals_page_name] = command_normals_move_settings
-initializeReversalMoveSettings(command_normals_moves, KOF_CONFIG,guipages[command_normals_page_name], reversal_types.GUARD)
-initializeReversalMoveSettings(command_normals_moves, KOF_CONFIG,guipages[command_normals_page_name], reversal_types.WAKEUP) ]]
---- add special moves
---[[ local special_moves = filterMoves(moves, MOVE_TYPES.SPECIAL) 
-local special_move_settings = {
+guipages.wakeup_command_normals_move_settings= wakeup_command_normals_move_settings
+for key, item in pairs( move_data.wakeup_command_normals) do
+	table.insert(guipages.wakeup_command_normals_move_settings,item)
+end
+--special moves
+local wakeup_special_move_settings = {
 	title = {
-		text = "Special Move  Settings",
+		text = "Wakeup Special Move  Settings",
 		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
@@ -989,15 +1090,14 @@ local special_move_settings = {
 		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
-local specials_page_name = getCustomPageNameByType("specials_move_settings",reversal_types.GUARD)
-guipages[specials_page_name] = special_move_settings
-initializeReversalMoveSettings(special_moves, KOF_CONFIG,guipages[specials_page_name], reversal_types.GUARD)
-initializeReversalMoveSettings(special_moves, KOF_CONFIG,guipages[specials_page_name], reversal_types.WAKEUP) ]]
---adds super moves
---[[ local super_moves = filterMoves(moves, MOVE_TYPES.SUPER) 
-local super_move_settings = {
+guipages.wakeup_specials_move_settings= wakeup_special_move_settings
+for key, item in pairs( move_data.wakeup_specials) do
+	table.insert(guipages.wakeup_specials_move_settings,item)
+end
+--supers
+local wakeup_super_move_settings = {
 	title = {
-		text = "super Move  Settings",
+		text = "Wakeup super Move  Settings",
 		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
@@ -1008,15 +1108,15 @@ local super_move_settings = {
 		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
-local supers_page_name = getCustomPageNameByType("supers_move_settings",reversal_types.GUARD)
-guipages[supers_page_name] = super_move_settings
-initializeReversalMoveSettings(super_moves, KOF_CONFIG,guipages[supers_page_name], reversal_types.GUARD)
-initializeReversalMoveSettings(super_moves, KOF_CONFIG,guipages[supers_page_name], reversal_types.WAKEUP) ]]
---adds commom moves 
---[[ local common_moves = filterMoves(moves, MOVE_TYPES.COMMON)
-local common_move_settings = {
+guipages.wakeup_supers_move_settings= wakeup_super_move_settings
+for key, item in pairs( move_data.wakeup_supers) do
+	table.insert(guipages.wakeup_supers_move_settings,item)
+end
+--common 
+
+local wakeup_common_move_settings = {
 	title = {
-		text = "common Move  Settings",
+		text = "Wakeup common Move  Settings",
 		x = interactivegui.boxxlength/2 - 40,
 		y = 1,
 	},
@@ -1027,10 +1127,10 @@ local common_move_settings = {
 		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
-local commons_page_name = getCustomPageNameByType("commons_move_settings",reversal_types.GUARD)
-guipages[commons_page_name] = common_move_settings
-initializeReversalMoveSettings(common_moves, KOF_CONFIG,guipages[commons_page_name], reversal_types.GUARD)
-initializeReversalMoveSettings(common_moves, KOF_CONFIG,guipages[commons_page_name], reversal_types.WAKEUP) ]]
+guipages.wakeup_commons_move_settings= wakeup_common_move_settings
+for key, item in pairs( move_data.wakeup_commons) do
+	table.insert(guipages.wakeup_commons_move_settings,item)
+end
 
 -- Function to get the index from the value
 function getIndexFromConfigValue(value)
