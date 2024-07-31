@@ -581,7 +581,7 @@ function Run() -- runs every frame
 		end
 		return res
 	end) --for state guard_reversal		
-		 
+		 	
 	elseif stateMachine.currentState == "recovering" then
 		local recovery_moves = {}
 		table.insert(recovery_moves,{ name = "AB", delay = KOF_CONFIG.RECOVERY.delay, times = KOF_CONFIG.RECOVERY.times, conf = true } )
@@ -598,7 +598,7 @@ function Run() -- runs every frame
 				resetCurrentReversalName()
 			end
 			if KOF_CONFIG.GUARD.dummy_guarding then
-				transitionToState("blocking")
+				transitionToState("blocking")|
 			else
 				transitionToState("start")
 			end

@@ -127,7 +127,34 @@ moves = {
         },
 		description = "Dragon Punch (623)",
         times = 5,
-        default = true,
+        type = MOVE_TYPES.SPECIAL,
+		button_editable = true
+    },
+	['R_DP'] = {
+        wakeup_current_button = BUTTONS.A,
+        guard_current_button = BUTTONS.A,
+        sequence = {
+            {'_'},
+            {'_'},
+            {'back'},
+            {'back'},
+            {'_'},
+            {'_'},
+            {'down'},
+            {'down'},
+            {'down', 'back', 'a'},
+            {'down', 'back', 'a'},
+            {'down', 'back', 'a'},
+            {'down', 'back', 'a'},
+            {'down', 'back', 'a'},
+            {'a'},
+            {'a'},
+            {'a'},
+            {'a'},
+            {'a'},
+        },
+		description = "Reverse Dragon Punch (421)",
+        times = 5,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -156,7 +183,6 @@ moves = {
         },
 		description = "k9999 super move",
         times = 5,
-        default = true,
         type = MOVE_TYPES.SPECIAL,
 		button_editable = true
     },
@@ -633,38 +659,25 @@ moves = {
     },
 	['ALT_GUARD'] = {
         sequence = {
-			{'-'},
-			{'-'},
+			{'down','back'},
+			{'down','back'},
+			{'down','back'},
+			{'down','back'},
+			{'down','back'},
+			{'down','back'},
 			{'down','back'},
 			{'down','back'},
 			{'back'},
 			{'back'},
-			{'down','back'},
-			{'down','back'},
 			{'back'},
 			{'back'},
-			{'down','back'},
-			{'down','back'},
 			{'back'},
 			{'back'},
-			{'down','back'},
-			{'down','back'},
-			{'back'},
-			{'back'},
-			{'down','back'},
-			{'down','back'},
-			{'back'},
-			{'back'},
-			{'down','back'},
-			{'down','back'},
-			{'back'},
-			{'back'},
-			{'down','back'},
-			{'down','back'}
         },
 		description = "alternate guard",
         times = 5,
         type = MOVE_TYPES.COMMON,
+		default=true
     },
 	['STAND_A']={
 		["sequence"] = {
@@ -756,7 +769,6 @@ moves = {
 			{ 'down','c'},
 		},
 		description = "crouching C",
-		default = true,
 		type = MOVE_TYPES.NORMAL
 		 },
 	['CR_D']={
@@ -839,6 +851,16 @@ moves = {
 			 description = "back B",
 			 type = MOVE_TYPES.COMMAND_NORMAL
 			  },
+			  ['CR_GUARD']={
+				  ["sequence"] = {
+					{'down', 'back'},
+					{'down', 'back'},
+					{'down', 'back'},
+					{'down', 'back'},
+				  },
+				  description = "crouching guard",
+				  type = MOVE_TYPES.COMMAND_NORMAL
+				   },
 	['THROW_C']={
 		["sequence"] = {
 			{'forward'},
@@ -848,6 +870,7 @@ moves = {
 		},
 		times = 10,
 		description = "down c",
+		type = MOVE_TYPES.NORMAL,
 	},
 	['CD']={
 		["sequence"] = {	
@@ -1144,6 +1167,7 @@ end
 
 function getCurrentReversalMoves(type)
 	local tabl = {}
+
 	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES[type]) do
 		if (KOF_CONFIG.MOVES_VAR_NAMES[type][index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 		
@@ -1161,13 +1185,18 @@ KOF_CONFIG.WAKEUP.reversal_moves = getCurrentReversalMoves(reversal_types.WAKEUP
 
 
 function deactivateAllDefaultMoves()
-	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES) do
-		KOF_CONFIG.MOVES_VAR_NAMES[index] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
-			
+	
+	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES[reversal_types.GUARD]) do
+		KOF_CONFIG.MOVES_VAR_NAMES[reversal_types.GUARD][index] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF			
 	end
 
-	KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
-	KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+	
+	for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES[reversal_types.WAKEUP]) do
+		KOF_CONFIG.MOVES_VAR_NAMES[reversal_types.WAKEUP][index] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF			
+	end
+
+	KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentReversalMoves(reversal_types.GUARD)
+	KOF_CONFIG.GUARD.reversal_moves  = getCurrentReversalMoves(reversal_types.WAKEUP)
 end
 
 function resetAllConfiguration()
@@ -1186,11 +1215,14 @@ function resetAllConfiguration()
 	KOF_CONFIG.RECOVERY.delay = 10
 	KOF_CONFIG.RECOVERY.times = 8
 end
-
+local function enableReversalMove(move_name,type)
+	KOF_CONFIG.MOVES_VAR_NAMES[type][move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON
+end
 -- Function to set default configuration based on configName
 function setDefaultConfig(configName)
 
 	resetAllConfiguration()
+	
 	if configName ==  KOF_CONFIG.TRAINING.CONFIGURATIONS["None"] then
 		return
 	end
@@ -1213,13 +1245,15 @@ function setDefaultConfig(configName)
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 0
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
+		printTable(KOF_CONFIG.WAKEUP.reversal_moves)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_3"] then
 			-- activate recovery
 		KOF_CONFIG.RECOVERY.dummy_recovering = true
@@ -1231,19 +1265,22 @@ function setDefaultConfig(configName)
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 0
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		
+		enableReversalMove(move_name, reversal_types.WAKEUP)
 		-- activate cr guard on wakeup 
-		local move_name = "C_GUARD"
+		local move_name = "CR_GUARD"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 0
 		current_reversal_move.on_wake_up_times = 30
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		
+		enableReversalMove(move_name, reversal_types.WAKEUP)
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["cd_pressure_4"] then
 			-- activate recovery
 		KOF_CONFIG.RECOVERY.dummy_recovering = true
@@ -1255,19 +1292,22 @@ function setDefaultConfig(configName)
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"		
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 0
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		
+		enableReversalMove(move_name, reversal_types.WAKEUP)
 		-- activate cr guard on wakeup 
-		local move_name = "C_GUARD"
+		local move_name = "CR_GUARD"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 0
 		current_reversal_move.on_wake_up_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		
+		enableReversalMove(move_name, reversal_types.WAKEUP)
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 		--activate guard reversal
 		KOF_CONFIG.GUARD.dummy_guarding = true
         KOF_CONFIG.GUARD.reversal = KOF_CONFIG.GUARD.REVERSAL_OPTIONS.ON
@@ -1280,9 +1320,10 @@ function setDefaultConfig(configName)
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_guard_delay = 10
 		current_reversal_move.on_guard_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		
+		enableReversalMove(move_name, reversal_types.GUARD)
 		-- reload reversal moves
-		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentReversalMoves(reversal_types.GUARD)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["crouching_frametrap"] then
 		--activate guard reversal
 		KOF_CONFIG.GUARD.dummy_guarding = true
@@ -1294,9 +1335,10 @@ function setDefaultConfig(configName)
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_guard_delay = 10
 		current_reversal_move.on_guard_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		enableReversalMove(move_name, reversal_types.GUARD)
+
 		-- reload reversal moves
-		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentReversalMoves(reversal_types.GUARD)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["standing_frametrap"] then
 		--activate guard reversal
 		KOF_CONFIG.GUARD.dummy_guarding = true
@@ -1308,9 +1350,10 @@ function setDefaultConfig(configName)
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_guard_delay = 10
 		current_reversal_move.on_guard_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+		enableReversalMove(move_name, reversal_types.GUARD)
+
 		-- reload reversal moves
-		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentReversalMoves(reversal_types.GUARD)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["high_confirm_against_CDA"] then
 		--activate guard reversal
 		KOF_CONFIG.GUARD.dummy_guarding = true
@@ -1320,19 +1363,23 @@ function setDefaultConfig(configName)
 		-- activate guard random
 		KOF_CONFIG.GUARD.random_guard = 1
 		-- activate throw C on guard 
-		local move_name = "C_GUARD"
+		local move_name = "CR_GUARD"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_guard_delay = 0
 		current_reversal_move.on_guard_times = 10
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+				enableReversalMove(move_name, reversal_types.GUARD)
+		enableReversalMove(move_name, reversal_types.GUARD)
+
 		-- activate CD on guard 
 		local move_name = "CD"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_guard_delay = 0
 		current_reversal_move.on_guard_times = 3
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.GUARD
+				enableReversalMove(move_name, reversal_types.GUARD)
+		enableReversalMove(move_name, reversal_types.GUARD)
+
 		-- reload reversal moves
-		KOF_CONFIG.GUARD.reversal_moves  = getCurrentGuardReversalMoves()
+		KOF_CONFIG.GUARD.reversal_moves  = getCurrentReversalMoves(reversal_types.GUARD)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_whiff_cr_c"] then
 		--activate crouch guard
 		KOF_CONFIG.GUARD.dummy_guarding = true
@@ -1341,96 +1388,112 @@ function setDefaultConfig(configName)
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON
 		-- activate dp on wakeup 
-		local move_name = "DOWN_C"
+		local move_name = "CR_C"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 40
 		current_reversal_move.on_wake_up_times = 2
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_dpc"] then
 		--activate wake up random
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"		
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 25
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["shimmy_wakeup"] then
 		--activate wake up random
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 25
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		local move_name = "THROW_C"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 35
 		current_reversal_move.on_wake_up_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_delay_OS_basic"] then
 		--activate wake up random
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 25
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		local move_name = "THROW_C"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 35
 		current_reversal_move.on_wake_up_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
-		local move_name = "MASH_CRB"
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
+		local move_name = "CR_B"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 35
 		current_reversal_move.on_wake_up_times = 3
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 	elseif configName == KOF_CONFIG.TRAINING.CONFIGURATIONS["wakeup_delay_OS_full"] then
 		--activate wake up random
 		KOF_CONFIG.WAKEUP.dummy_waking_up = true
         KOF_CONFIG.WAKEUP.reversal = KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.RANDOM
 		-- activate dp on wakeup 
-		local move_name = "DPC"
+		local move_name = "DP"
+		moves[move_name].wakeup_current_button = BUTTONS.C
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 25
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		local move_name = "THROW_C"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 35
 		current_reversal_move.on_wake_up_times = 5
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
-		local move_name = "MASH_CRB"
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
+		local move_name = "CR_B"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 25
 		current_reversal_move.on_wake_up_times = 6
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		local move_name = "AB"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 39
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
-		local move_name = "SUPER_JUMP_BACK"
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
+		local move_name = "SJ_B"
 		local current_reversal_move = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_wake_up_delay = 36
 		current_reversal_move.on_wake_up_times = 1
-		KOF_CONFIG.MOVES_VAR_NAMES[move_name] = KOF_CONFIG.REVERSAL_MOVES.OPTIONS.WAKEUP
+		enableReversalMove(move_name, reversal_types.WAKEUP)
+		
 		-- reload reversal moves
-		KOF_CONFIG.WAKEUP.reversal_moves  = getCurrentWakeupReversalMoves()
+		KOF_CONFIG.WAKEUP.reversal_moves  =  getCurrentReversalMoves(reversal_types.WAKEUP)
 	else
         print("Unknown configuration:", configName)
     end
