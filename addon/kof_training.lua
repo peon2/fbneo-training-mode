@@ -598,7 +598,7 @@ function Run() -- runs every frame
 				resetCurrentReversalName()
 			end
 			if KOF_CONFIG.GUARD.dummy_guarding then
-				transitionToState("blocking")|
+				transitionToState("blocking")
 			else
 				transitionToState("start")
 			end
