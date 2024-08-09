@@ -114,14 +114,20 @@ local function dummyCrouchGuard()
 	tbl["P2 Down"] = 1
 	joypad.set(tbl)
 end
+
+local function dummyGuard()
+	local tbl = {}	
+	tbl[getBlockingDirection()] = 1
+	joypad.set(tbl)
+end
 local function delay(delay_frames, functionToExecute, ...)
     if delay_count < delay_frames then
 		if KOF_CONFIG.GUARD.dummy_guarding then
 			if KOF_CONFIG.GUARD.crouch_guard ==  1 then
 				dummyCrouchGuard()				
 			end
-			if KOF_CONFIG.GUARD.crouch_guard ==  1 then
-				dummyCrouchGuard()				
+			if KOF_CONFIG.GUARD.standing_guard ==  1 then
+				dummyGuard()			
 			end
 		end
         delay_count = delay_count + 1
