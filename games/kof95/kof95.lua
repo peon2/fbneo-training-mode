@@ -116,4 +116,3 @@ function Run() -- runs every frame
 	infiniteTime()
 	wb(0x10E79A, 0x1) -- enable hidden chars
 end
-require('addon.kof_training')

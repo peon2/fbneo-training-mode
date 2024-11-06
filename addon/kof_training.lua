@@ -474,7 +474,76 @@ end
 
 local dont_recover = false
 local recovery_enabled = false
+local toggle = true 
+-- global, as it is used in ssf2x
+local kofTogglePlayBack = function(bool, vargs)
+	if interactivegui.movehud.enabled then return end
+	
+	local _playbackslot = recording.playbackslot or recording.recordingslot -- tmp for playbackslot
+	recording.playbackslot = nil
+	
+	local _rs = recording.recordingslot
+	-- i dont want the recording to change based on the randomize of the hud screen been selected
+	--[[ if recording.randomise then
+		local b = false
+		for i = 1, 5 do if recording[i][1] then b = true end end
+		if not b then return end
+		local pos
+		_playbackslot = nil
+		while _playbackslot==nil do -- keep running until we get a valid slot
+			pos = math.random(5)
+			if recording[pos][1] then -- check if there's something in here
+				_playbackslot = pos
+			end
+		end
+		-- make sure the recordslot is properly serialised if using randomise
+		recording.recordingslot = _playbackslot
+	end ]]
+	
+	if vargs then vargs.playback = false end
+	toggleStates(vargs)
+	
+	recording.recordingslot = _rs -- restore recordingslot after serialise (through toggleRecord)
+	
+	local recordslot = recording[_playbackslot]
+	if not recordslot then return end
 
+	if not recordslot.p1start and not recordslot.p2start then -- if nothing is recorded
+		recording[_playbackslot] = {}
+	end
+	if not recordslot[1] then return end -- if nothing is recorded
+
+	if bool==nil then recording.playback = not recording.playback
+	else recording.playback = bool end
+	
+	if not recording.replayP1 and not recording.replayP2 then
+		recording.replayP2 = true
+	end
+
+	if not recording.playback then
+		recordslot.framestart = nil
+	else
+		recording.playbackslot = _playbackslot
+		
+		if recording.replayP1 and recording.replayP2 then
+			recordslot.start = recordslot.p1start
+			if (recordslot.start==nil and recordslot.p2start~=nil) or (recordslot.start>recordslot.p2start) then recordslot.start = recordslot.p2start end
+		elseif recording.replayP1 then
+			toggleSwapInputs(true)
+			recordslot.start = recordslot.p1start 
+		else
+			recordslot.start = recordslot.p2start
+		end
+		if recordslot.start==recordslot.finish then toggleSwapInputs(false) return end -- nothing recorded
+		
+		recording.startcounter = 0 -- randomise starting playback
+		if recording.maxstarttime == 0 then
+			recording.starttime = 0
+		else
+			recording.starttime = math.random(recording.maxstarttime+1)-1 -- [0,maxstarttime]
+		end
+	end
+end
 function Run() -- runs every frame
 	
 	--gui.text(197, 73,  rb(in_air), "cyan", "black")
@@ -522,6 +591,11 @@ function Run() -- runs every frame
 			end
 		end
 		if KOF_CONFIG.GUARD.dummy_guarding  then
+			if toggle == true then
+				kofTogglePlayBack(nil, {})
+				toggle = false
+				return
+			end
         	transitionToState("blocking")  -- Transition to the "blocking" state
 		elseif KOF_CONFIG.WAKEUP.dummy_waking_up and not KOF_CONFIG.RECOVERY.dummy_recovering  then
 			if (wakeUpEnabled()) then			

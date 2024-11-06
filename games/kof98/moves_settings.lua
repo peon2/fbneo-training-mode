@@ -1072,6 +1072,24 @@ guipages.guard_commons_move_settings= guard_common_move_settings
 for key, item in pairs( move_data.guard_commons) do
 	table.insert(guipages.guard_commons_move_settings,item)
 end
+--recordings
+local guard_recordings_move_settings = {
+	title = {
+		text = "Guard recordings Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.guard_recordings_move_settings= guard_recordings_move_settings
+for key, item in pairs( move_data.guard_recordings) do
+	table.insert(guipages.guard_recordings_move_settings,item)
+end
 
 --[[ 
 CONFIG FOR WAKEUP REVERSALS 

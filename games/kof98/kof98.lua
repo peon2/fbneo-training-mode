@@ -6,7 +6,6 @@ function gamemsg()
 	print "Only partial support for advance with refilling max meter"
 end
 
-
 p1maxhealth = 0x68
 p2maxhealth = 0x68
 
@@ -128,8 +127,10 @@ function writePlayerTwoMeter(meter)
 	end
 end
 
-
 function infiniteTime()
 	ww(0x10A83a, 0x6000)
 end
-require('addon.kof_training')
+
+function Run() -- runs every frame
+	infiniteTime()
+end

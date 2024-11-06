@@ -2472,6 +2472,14 @@ move_data.guard_normals =  {
         olcolour = "black",
         func = function() changeInteractiveGuiPage(getCustomPageNameByType( "commons_move_settings", "GUARD")) end,
     },
+    ["93"] = {
+        y = 161.6,
+        x = 185,
+        handle = 8,
+        text = "Recordings",
+        olcolour = "black",
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType( "recordings_move_settings", "GUARD")) end,
+    },
 }
 
 move_data.guard_specials = {
@@ -10551,7 +10559,7 @@ move_data.wakeup_commons = {
     ["95"] = {
         y = 135,
         x = 123,
-        info = {'alternate guard'},
+        info = {'fgrbg guard'},
         autofunc = function(this)
 					
 					if (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
