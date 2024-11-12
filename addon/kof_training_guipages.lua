@@ -54,6 +54,7 @@ KOF_CONFIG = {
 
 	},
 	CPU ={
+		HAS_CHANGED = false,
 		dummy_can_fight = false,
 		enabled = 0,
 		OPTIONS = {
@@ -498,6 +499,8 @@ guicustompage = {
 			olcolour = "black",
 			handle = 8,
 			func =	function()
+				KOF_CONFIG.CPU.HAS_CHANGED = true
+
 				KOF_CONFIG.CPU.enabled  = KOF_CONFIG.CPU.enabled + 1
 						if KOF_CONFIG.CPU.enabled> 1 then
 							KOF_CONFIG.CPU.enabled= 0

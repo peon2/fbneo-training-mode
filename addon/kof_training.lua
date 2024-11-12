@@ -477,6 +477,10 @@ local function enableCPU()
 		wb(cpu_location, 0x81)	
 end
 
+local function disableCPU()
+		wb(cpu_location, 0x01)
+end
+
 local dont_recover = false
 local recovery_enabled = false
 -- global, as it is used in ssf2x
@@ -600,9 +604,17 @@ function Run() -- runs every
 	 if not KOF_CONFIG.DIZZY.dummy_can_dizzy  then
 		dissableDizzy()
 	 end
-	 if KOF_CONFIG.CPU.dummy_can_fight then
-		enableCPU()
-	 end
+	 
+	 if KOF_CONFIG.CPU.HAS_CHANGED then 
+	 print("CPU HAS CHANGED")
+		KOF_CONFIG.CPU.HAS_CHANGED = false
+			
+		if KOF_CONFIG.CPU.dummy_can_fight then
+			enableCPU()
+		else	
+			disableCPU()
+		end
+	end
 	 if stateMachine.currentState == "start" then
         -- Logic for the "start" state
         -- Additional logic specific to the "start" state...
