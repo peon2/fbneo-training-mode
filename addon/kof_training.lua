@@ -472,9 +472,13 @@ local function dissableDizzy()
 		wb(dizzy_location, 0x67)	
 end
 
+local cpu_location = 0x108470
+local function enableCPU()
+		wb(cpu_location, 0x81)	
+end
+
 local dont_recover = false
 local recovery_enabled = false
-local toggle = true 
 -- global, as it is used in ssf2x
 local kofTogglePlayBack = function(bool, vargs)
 	if interactivegui.movehud.enabled then return end
@@ -544,7 +548,45 @@ local kofTogglePlayBack = function(bool, vargs)
 		end
 	end
 end
-function Run() -- runs every frame
+local function isRecording(reversal_name)
+	if moves[reversal_name].type == MOVE_TYPES.RECORDING then
+		return true
+	end
+	return false
+end
+	  local first_character_location_p1 = 0x10A84E
+	  local first_character_location_p2 = 0x10A85F
+	  -- Function to load a machine state from a specified file
+function load_machine_state(file_path)
+    -- Check if the save file exists
+    local file = io.open(file_path, "rb")
+    if file then
+        file:close()  -- Close the file after checking for existence
+        savestate.load(file_path)  -- Load the machine state
+        print("Machine state loaded from: " .. file_path)
+    else
+        print("Error: Save file not found at " .. file_path)
+    end
+end
+
+-- Example usage:
+function Run() -- runs every 
+	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED then
+		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
+		load_machine_state("addon\\kof_training\\savestates\\kof98_select.fs")  -- Replace with your file path
+
+		wb(first_character_location_p1, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
+		wb(first_character_location_p2, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
+		if KOF_CONFIG.UI.PLAYER1_EXTRA then
+			wb(0x10A85A,0x01)
+		
+		end
+		if KOF_CONFIG.UI.PLAYER2_EXTRA then
+			wb(0x10A86B,0x01)
+		end
+
+	end
+
 	
 	--gui.text(197, 73,  rb(in_air), "cyan", "black")
 	--[[ if rb(0x108321)~=0  then
@@ -557,6 +599,9 @@ function Run() -- runs every frame
 	 gui.text(197, 93,  "test 3: "..rb(0x108323), "cyan", "black") ]]
 	 if not KOF_CONFIG.DIZZY.dummy_can_dizzy  then
 		dissableDizzy()
+	 end
+	 if KOF_CONFIG.CPU.dummy_can_fight then
+		enableCPU()
 	 end
 	 if stateMachine.currentState == "start" then
         -- Logic for the "start" state
@@ -591,11 +636,6 @@ function Run() -- runs every frame
 			end
 		end
 		if KOF_CONFIG.GUARD.dummy_guarding  then
-			if toggle == true then
-				kofTogglePlayBack(nil, {})
-				toggle = false
-				return
-			end
         	transitionToState("blocking")  -- Transition to the "blocking" state
 		elseif KOF_CONFIG.WAKEUP.dummy_waking_up and not KOF_CONFIG.RECOVERY.dummy_recovering  then
 			if (wakeUpEnabled()) then			
@@ -645,22 +685,44 @@ function Run() -- runs every frame
 	elseif stateMachine.currentState == "guard_reversal" then
 		local reversal_name = getCurrentReversalMove("guard_reversal")
 	local reversal = buildReversal(reversal_name)
-	delay(reversal.on_guard_delay, function ()
-		--print("doing delay")
-		local res = doReversal(reversal.name, reversal.on_guard_times)
-		if res ==false then
-			--print("guard reversal is stoping")
-			startWakeupIddleTime()
-			active_wake_up=false					
-			if KOF_CONFIG.GUARD.dummy_guarding then
-				transitionToState("blocking")  -- Transition to the "blocking" state
-			else
-				transitionToState("start")
-				startWakeupIddleTime()
-			end
+	if isRecording(reversal_name) then
+		if recording.loop then
+			return
 		end
-		return res
-	end) --for state guard_reversal		
+		local _recording = recording.recordingslot
+		recording.recordingslot = moves[reversal_name].index
+		print("index is" ..moves[reversal_name].index)
+		print("recording is" ..reversal_name)
+		kofTogglePlayBack(true, {})
+		recording.recordingslot = _recording
+		--print("guard reversal is stoping")
+		startWakeupIddleTime()
+		resetCurrentReversalName()
+		active_wake_up=false					
+		if KOF_CONFIG.GUARD.dummy_guarding then
+			transitionToState("blocking")  -- Transition to the "blocking" state
+		else
+			transitionToState("start")
+			startWakeupIddleTime()
+		end
+	else
+		delay(reversal.on_guard_delay, function ()
+			--print("doing delay")
+			local res = doReversal(reversal.name, reversal.on_guard_times)
+			if res ==false then
+				--print("guard reversal is stoping")
+				startWakeupIddleTime()
+				active_wake_up=false					
+				if KOF_CONFIG.GUARD.dummy_guarding then
+					transitionToState("blocking")  -- Transition to the "blocking" state
+				else
+					transitionToState("start")
+					startWakeupIddleTime()
+				end
+			end
+			return res
+		end) --for state guard_reversal		
+	end
 		 	
 	elseif stateMachine.currentState == "recovering" then
 		local recovery_moves = {}

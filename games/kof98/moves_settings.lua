@@ -83,7 +83,8 @@ MOVE_TYPES = {
 	COMMAND_NORMAL ="COMMAND_NORMAL",
 	SPECIAL = "SPECIAL",
 	SUPER = "SUPER",
-	COMMON ="COMMON"
+	COMMON ="COMMON",
+	RECORDING = "RECORDING"
 }
 -- Define the BUTTONS table with unique keys
 -- Define the BUTTONS table with values wrapped in tables
@@ -102,6 +103,11 @@ BUTTON_NAMES = {
 }
 
 moves = {
+	['REC_1'] = {type = MOVE_TYPES.RECORDING, index = 1},
+	['REC_2'] = {type = MOVE_TYPES.RECORDING, index = 2},
+	['REC_3'] = {type = MOVE_TYPES.RECORDING, index = 3},
+	['REC_4'] = {type = MOVE_TYPES.RECORDING, index = 4},
+	['REC_5'] = {type = MOVE_TYPES.RECORDING, index = 5},
 	['DP'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
@@ -945,6 +951,8 @@ local LOWERC_TYPES = {
 	['COMMON'] = "common",
 
 }
+
+
 
 
 -- Function to get the current button based on move_type

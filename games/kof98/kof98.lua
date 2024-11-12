@@ -130,7 +130,4 @@ end
 function infiniteTime()
 	ww(0x10A83a, 0x6000)
 end
-
-function Run() -- runs every frame
-	infiniteTime()
-end
+require('addon.kof_training')
