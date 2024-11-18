@@ -581,13 +581,28 @@ function Run() -- runs every
 
 		wb(first_character_location_p1, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
 		wb(first_character_location_p2, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
-		if KOF_CONFIG.UI.PLAYER1_EXTRA then
+		if KOF_CONFIG.UI.PLAYER1_EX then
 			wb(0x10A85A,0x01)
 		
 		end
-		if KOF_CONFIG.UI.PLAYER2_EXTRA then
+		if KOF_CONFIG.UI.PLAYER2_EX then
 			wb(0x10A86B,0x01)
 		end
+		if KOF_CONFIG.UI.MODE_HAS_CHANGED then
+			KOF_CONFIG.UI.MODE_HAS_CHANGED = false
+			if KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.ADVANCED then
+				wb(0x10A84C,0x00)
+			elseif KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+				wb(0x10A84C,0x01)
+			end
+			if KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.ADVANCED then
+				wb(0x10A85D,0x00)
+			elseif KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+				wb(0x10A85D,0x01)
+			end
+		end
+				
+		
 
 	end
 

@@ -166,11 +166,18 @@ KOF_CONFIG = {
 		CURRENT_PLAYER2 = {
 
 		},
-		PLAYER1_EXTRA = false,
-		PLAYER2_EXTRA = false,
+		PLAYER1_EX = false,
+		PLAYER2_EX = false,
 		CHARACTERS_HAS_CHANGED = true,
 		current_stage_selected = 1,
-		curent_background_music_selected = 1
+		curent_background_music_selected = 1,
+		MODE_HAS_CHANGED = false,
+		PLAYER1_MODE = 1,
+		PLAYER2_MODE = 1,
+		MODES = {
+			EXTRA = 0,
+			ADVANCED = 1,
+		}
 	}
 	
 }
@@ -2418,34 +2425,79 @@ local character_data = {
 		["115"] = {
 			y = 106,
 			x = 137,
-			info = {'P1 extra character'},
+			info = {'P1 Ex character'},
 			func = function()
-						KOF_CONFIG.UI.PLAYER1_EXTRA = not KOF_CONFIG.UI.PLAYER1_EXTRA
+						KOF_CONFIG.UI.PLAYER1_EX = not KOF_CONFIG.UI.PLAYER1_EX
 					end,
-			text = "P1 extra",
+			text = "P1 Ex",
 			olcolour = "black",
 			autofunc = function(this)
-						if KOF_CONFIG.UI.PLAYER1_EXTRA == true then
-							this.text = "P1 Character Extra: ON"
+						if KOF_CONFIG.UI.PLAYER1_EX == true then
+							this.text = "P1 Character Ex: ON"
 						else
-							this.text = "P1 Character Extra: OFF"
+							this.text = "P1 Character Ex: OFF"
 						end
 					end,
 		},
 		["116"] = {
 			y = 118,
 			x = 137,
-			info = {'P2 extra character'},
+			info = {'P2 Ex character'},
 			func = function()
-						KOF_CONFIG.UI.PLAYER2_EXTRA = not KOF_CONFIG.UI.PLAYER2_EXTRA
+						KOF_CONFIG.UI.PLAYER2_EX = not KOF_CONFIG.UI.PLAYER2_EX
 					end,
-			text = "P2 extra",
+			text = "P2 Ex",
 			olcolour = "black",
 			autofunc = function(this)
-						if KOF_CONFIG.UI.PLAYER2_EXTRA == true then
-							this.text = "P2 Character Extra: ON"
+						if KOF_CONFIG.UI.PLAYER2_EX == true then
+							this.text = "P2 Character Ex: ON"
 						else
-							this.text = "P2 Character Extra: OFF"
+							this.text = "P2 Character Ex: OFF"
+						end
+					end,
+		},
+		["117"] = {
+			y = 130,
+			x = 137,
+			info = {'P1 Mode'},
+			func = function()
+						KOF_CONFIG.UI.PLAYER1_MODE = KOF_CONFIG.UI.PLAYER1_MODE + 1
+						KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
+						KOF_CONFIG.UI.MODE_HAS_CHANGED = true
+						if KOF_CONFIG.UI.PLAYER1_MODE > 1 then
+							KOF_CONFIG.UI.PLAYER1_MODE  = 0
+						end
+					end,
+			text = "P1 Mode",
+			olcolour = "black",
+			autofunc = function(this)
+						if KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+							this.text = "P1 Mode: Extra"
+						else
+							this.text = "P1 Mode: Advanced"
+						end
+					end,
+		},
+		["118"] = {
+			y = 142,
+			x = 137,
+			info = {'P2 Mode'},
+			func = function()
+						KOF_CONFIG.UI.PLAYER2_MODE = KOF_CONFIG.UI.PLAYER2_MODE + 1
+						KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
+						KOF_CONFIG.UI.MODE_HAS_CHANGED = true
+						
+						if KOF_CONFIG.UI.PLAYER2_MODE > 1 then
+							KOF_CONFIG.UI.PLAYER2_MODE  = 0
+						end
+					end,
+			text = "P2 Mode",
+			olcolour = "black",
+			autofunc = function(this)
+						if KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+							this.text = "P2 Mode: Extra"
+						else
+							this.text = "P2 Mode: Advanced"
 						end
 					end,
 		},
