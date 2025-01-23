@@ -575,10 +575,15 @@ end
 
 -- Example usage:
 function Run() -- runs every 
+
 	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED then
 		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
-		load_machine_state("addon\\kof_training\\savestates\\kof98_select.fs")  -- Replace with your file path
-
+		load_machine_state("addon\\kof_training\\savestates\\"..emu.romname().."_select.fs")  -- Replace with your file path
+		if KOF_CONFIG.CPU.HAS_CHANGED then 
+			KOF_CONFIG.CPU.HAS_CHANGED = false
+			local level_address = 0x10FD8E
+			wb(level_address, KOF_CONFIG.CPU.current_dificulty)
+		end	
 		wb(first_character_location_p1, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
 		wb(first_character_location_p2, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
 		if KOF_CONFIG.UI.PLAYER1_EX then
@@ -620,15 +625,19 @@ function Run() -- runs every
 		dissableDizzy()
 	 end
 	 
-	 if KOF_CONFIG.CPU.HAS_CHANGED then 
-	 print("CPU HAS CHANGED")
-		KOF_CONFIG.CPU.HAS_CHANGED = false
-			
-		if KOF_CONFIG.CPU.dummy_can_fight then
-			enableCPU()
-		else	
+	if KOF_CONFIG.CPU.dummy_can_fight then
+		enableCPU()
+	else	
+		disableCPU()
+	end
+
+	--GCCD
+	if KOF_CONFIG.GCCD.dummy_can_gccd then
+		if playerTwoInBlockstun() then
 			disableCPU()
-		end
+			KOF_CONFIG.CPU.dummy_can_fight = false
+			transitionToState("cpu_action")
+		end 
 	end
 	 if stateMachine.currentState == "start" then
         -- Logic for the "start" state
@@ -773,6 +782,10 @@ function Run() -- runs every
 			end
 		end)								
 	
+	elseif stateMachine.currentState == "cpu_action" then
+		if KOF_CONFIG.GCCD.dummy_can_gccd then 
+			
+		end
 	end
 	infiniteTime()
 end

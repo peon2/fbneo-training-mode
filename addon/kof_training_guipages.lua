@@ -56,13 +56,42 @@ KOF_CONFIG = {
 	CPU ={
 		HAS_CHANGED = false,
 		dummy_can_fight = false,
-		enabled = 0,
+		current_dificulty = 0,
+		DIFFICULTY = {
+			["BEGINNER"] = 0,
+			["EASY"] = 1,
+			["NORMAL"] = 2,
+			["MVS"] = 3,
+			["HARD"] = 4,
+			["VERYHARD"] = 5,
+			["HARDEST"] = 6,
+			["EXPERT"] = 7
+
+		},
+		getDifficultyString = function(self, value)
+			for key, val in pairs(self.DIFFICULTY) do
+				if val == value then
+					return tostring(val + 1) .. "-" .. key
+				end
+			end
+			return nil
+		end,
+		vs_enabled = 0,
 		OPTIONS = {
 			OFF = 0,
 			ON = 1,
 		},
+		GCCD = {
+			dummy_can_gccd = false,
+			current_gccd = 0,
+			OPTIONS = {
+				OFF = 0,
+				ON = 1,
+				RANDOM = 2,
+			},
 
 	},
+	 },
 	MOVES = {
 		
 		['GUARD_BACK']={
@@ -500,31 +529,12 @@ guicustompage = {
 		func = 	function() CIG("character_select_settings", 1) end,
 	},
 	{
-			text = "Enable CPU",
-			x = 110+8,
-			y = 105  +10,
-			olcolour = "black",
-			handle = 8,
-			func =	function()
-				KOF_CONFIG.CPU.HAS_CHANGED = true
-
-				KOF_CONFIG.CPU.enabled  = KOF_CONFIG.CPU.enabled + 1
-						if KOF_CONFIG.CPU.enabled> 1 then
-							KOF_CONFIG.CPU.enabled= 0
-						end
-						if KOF_CONFIG.CPU.enabled ~= KOF_CONFIG.CPU.OPTIONS.OFF then
-							KOF_CONFIG.CPU.dummy_can_fight = true
-						else 
-							KOF_CONFIG.CPU.dummy_can_fight= false
-						end
-					end,
-			autofunc = function(this)				
-						if KOF_CONFIG.CPU.enabled == KOF_CONFIG.CPU.OPTIONS.OFF  then
-							this.text = "CPU: Off" 
-						elseif KOF_CONFIG.CPU.enabled == KOF_CONFIG.CPU.OPTIONS.ON  then
-							this.text = "CPU: On" 
-						end
-				end,
+			text = "CPU settings",
+			x = 118,
+			y = 115,
+			olcolour = "black",			
+			handle = 9,
+			func = 	function() CIG("cpu_settings", 1) end,
 	},{
 		text = "Guard Reversals",
 		x = 8,
@@ -611,6 +621,103 @@ guicustompage = {
 			end,
 	},
 }
+local cpu_settings = {
+	title = {
+		text = "CPU Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(0,1) end,
+	},
+}
+
+guipages.cpu_settings = cpu_settings
+local cpu_data = {	
+	["1"] = 
+	{
+			text = "Enable CPU",
+			x = 10,
+			y = 8,
+			olcolour = "black",
+			func =	function()
+
+				KOF_CONFIG.CPU.vs_enabled  = KOF_CONFIG.CPU.vs_enabled + 1
+						if KOF_CONFIG.CPU.vs_enabled> 1 then
+							KOF_CONFIG.CPU.vs_enabled= 0
+						end
+						if KOF_CONFIG.CPU.vs_enabled ~= KOF_CONFIG.CPU.OPTIONS.OFF then
+							KOF_CONFIG.CPU.dummy_can_fight = true
+						else 
+							KOF_CONFIG.CPU.dummy_can_fight= false
+						end
+					end,
+			autofunc = function(this)				
+						if KOF_CONFIG.CPU.vs_enabled == KOF_CONFIG.CPU.OPTIONS.OFF  then
+							this.text = "CPU: Off" 
+						elseif KOF_CONFIG.CPU.vs_enabled == KOF_CONFIG.CPU.OPTIONS.ON  then
+							this.text = "CPU: On" 
+						end
+				end,
+	},
+	["2"] = {
+		x = 10,
+		y = 20,
+		info = {'set CPU difficulty'},
+		func = function()
+					KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
+					KOF_CONFIG.CPU.HAS_CHANGED = true
+					print("current dificulty "..KOF_CONFIG.CPU.current_dificulty)
+					KOF_CONFIG.CPU.current_dificulty  = KOF_CONFIG.CPU.current_dificulty + 1
+						if KOF_CONFIG.CPU.current_dificulty> 7 then
+							KOF_CONFIG.CPU.current_dificulty= 0
+						end
+				end,
+		text = "Dummy Difficulty",
+		olcolour = "black",
+		autofunc = function(this)						
+					KOF_CONFIG.CPU.current_dificulty =  rb(0x10FD8E)
+					this.text = "Dummy Difficulty: ".. KOF_CONFIG.CPU:getDifficultyString(KOF_CONFIG.CPU.current_dificulty)
+				end,
+	},
+	["3"] = {
+		x = 10,
+		y = 32,
+		info = {'Guard Cancel CD'},
+		func = function()
+					KOF_CONFIG.CPU.GCCD.current_gccd  = KOF_CONFIG.CPU.GCCD.current_gccd + 1
+					if KOF_CONFIG.CPU.GCCD.current_gccd> 2 then
+						KOF_CONFIG.CPU.GCCD.current_gccd= 0
+					end
+					
+					if KOF_CONFIG.CPU.GCCD.current_gccd ~= KOF_CONFIG.CPU.GCCD.OPTIONS.OFF then
+						KOF_CONFIG.CPU.GCCD.dummy_can_gccd = true
+					else 
+						KOF_CONFIG.CPU.GCCD.dummy_can_gccd= false
+					end
+			end,
+		text = "CD on Guard:",
+		olcolour = "black",
+		autofunc = function(this)				
+							
+					if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.OFF  then
+						this.text = "CD on Guard: Off" 
+					elseif KOF_CONFIG.CPU.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON  then
+						this.text = "CD on Guard: On" 
+					elseif KOF_CONFIG.CPU.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM  then
+						this.text = "CD on Guard: Random"
+					end
+				end,
+	},
+}
+
+
+for key, item in pairs( cpu_data) do
+table.insert(guipages.cpu_settings,item)
+end
 local character_select_settings = {
 	title = {
 		text = "Character Selecction Settings",
