@@ -91,6 +91,16 @@ KOF_CONFIG = {
 			},
 
 	},
+	GCAB = {
+		dummy_can_gcab = false,
+		current_gcab = 0,
+		OPTIONS = {
+			OFF = 0,
+			ON = 1,
+			RANDOM = 2,
+		},
+
+},
 	 },
 	MOVES = {
 		
@@ -720,6 +730,35 @@ local cpu_data = {
 						this.text = "CD on Guard: On" 
 					elseif KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM  then
 						this.text = "CD on Guard: Random"
+					end
+				end,
+	},
+	["4"] = {
+		x = 10,
+		y = 44,
+		info = {'Guard Cancel AB'},
+		func = function()
+					KOF_CONFIG.CPU.GCAB.current_gcab  = KOF_CONFIG.CPU.GCAB.current_gcab + 1
+					if KOF_CONFIG.CPU.GCAB.current_gcab> 2 then
+						KOF_CONFIG.CPU.GCAB.current_gcab= 0
+					end
+					
+					if KOF_CONFIG.CPU.GCAB.current_gcab ~= KOF_CONFIG.CPU.GCAB.OPTIONS.OFF then
+						KOF_CONFIG.CPU.GCAB.dummy_can_gcab = true
+					else 
+						KOF_CONFIG.CPU.GCAB.dummy_can_gcab= false
+					end
+			end,
+		text = "AB on Guard:",
+		olcolour = "black",
+		autofunc = function(this)				
+							
+					if KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.OFF  then
+						this.text = "AB on Guard: Off" 
+					elseif KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.ON  then
+						this.text = "AB on Guard: On" 
+					elseif KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.RANDOM  then
+						this.text = "AB on Guard: Random"
 					end
 				end,
 	},
