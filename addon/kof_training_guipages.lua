@@ -112,6 +112,17 @@ KOF_CONFIG = {
 			times = 3,
 			delay = 25
 		},
+		['CD']={
+			["sequence"] = {
+				{'-'},
+				{'c','d'},
+				{'c','d'},
+				{'c','d'},
+	
+			},
+			times = 3,
+			delay = 25
+		},
 		["CROUCH"] = {
 			["sequence"] = {
 			{"down"},
@@ -705,9 +716,9 @@ local cpu_data = {
 							
 					if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.OFF  then
 						this.text = "CD on Guard: Off" 
-					elseif KOF_CONFIG.CPU.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON  then
+					elseif KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON  then
 						this.text = "CD on Guard: On" 
-					elseif KOF_CONFIG.CPU.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM  then
+					elseif KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM  then
 						this.text = "CD on Guard: Random"
 					end
 				end,
