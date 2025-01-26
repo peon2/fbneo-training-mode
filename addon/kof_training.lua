@@ -66,15 +66,35 @@ local function playerTwoInBlockstun()
 	end
 	return false
 end
-local last_byte_of_ACT_code_address = 0x108173
+local last_byte_of_ACT_code_address = 0x108373
 local function ACTcodesOfFallingActive()
-	if rb(last_byte_of_ACT_code_address) >= 0x1B and rb(last_byte_of_ACT_code_address) <= 0x33 then 
+	--[[ if rb(last_byte_of_ACT_code_address) >= 28 and rb(last_byte_of_ACT_code_address) <= 33 then 
 	 return true
+	end ]]
+	if rb(last_byte_of_ACT_code_address) == 31 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 32 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 33 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 35 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 37 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 42 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 51 then
+		return true
+	elseif rb(last_byte_of_ACT_code_address) == 128 then
+		return true
 	end
 	return false
 end
 local function playerTwoIsFalling()
-	if rb(p2hitstatus) == 0x01 then
+	if rb(p2hitstatus) == 11 then
+		print ("playerTwoIsFalling")
+	end
+	if rb(p2hitstatus) == 1 or rb(p2hitstatus) == 11 then
 		if ACTcodesOfFallingActive() then
 			return true
 		end
@@ -587,20 +607,30 @@ function load_machine_state(file_path)
         print("Error: Save file not found at " .. file_path)
     end
 end
-local running_randomned_cpu_action = false
+local running_randomned_cpu_action_gccd = false
+local running_randomned_cpu_action_gcab = false
 local gccd_random_move_ends = false
 local gcab_random_move_ends = false
+local current_cpu_action_running = false
+local gccd_action_running = false
+local gcab_action_running = false
 -- Example usage:
 function Run() -- runs every 
+gui.text(70,30, "cpu action: "..rb(p2hitstatus).."-"..rb(p2hitstatus+1) , "cyan", "black")
+gui.text(70,40, "in air: ".. tostring(playerTwoIsFalling() ) , "cyan", "black")
 
-	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED then
+
+
+	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED or KOF_CONFIG.CPU.HAS_CHANGED then
 		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
 		load_machine_state("addon\\kof_training\\savestates\\"..emu.romname().."_select.fs")  -- Replace with your file path
 		if KOF_CONFIG.CPU.HAS_CHANGED then 
 			KOF_CONFIG.CPU.HAS_CHANGED = false
-			local level_address = 0x10FD8E
-			wb(level_address, KOF_CONFIG.CPU.current_dificulty)
 		end	
+
+		local level_address = 0x10FD8E
+		wb(level_address, KOF_CONFIG.CPU.current_dificulty)
+
 		wb(first_character_location_p1, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
 		wb(first_character_location_p2, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
 		if KOF_CONFIG.UI.PLAYER1_EX then
@@ -660,30 +690,34 @@ function Run() -- runs every
         -- Logic for the "start" state
         -- Additional logic specific to the "start" state...
 		
-		--GCCD
-		if KOF_CONFIG.CPU.GCCD.dummy_can_gccd then
-			if playerTwoInBlockstun() then
-				if gccd_random_move_ends == true then
-					return
+		--
+		if KOF_CONFIG.CPU.dummy_can_fight or current_cpu_action_running then --only while cpu is enabled or a cpu action is running
+			if KOF_CONFIG.CPU.GCCD.dummy_can_gccd then
+				if playerTwoInBlockstun() then
+					if gccd_random_move_ends == true then
+						return
+					end
+					gccd_action_running = true
+					disableCPU()
+					KOF_CONFIG.CPU.dummy_can_fight = false
+					transitionToState("cpu_action")
+				else
+					gccd_random_move_ends = false
 				end
-				disableCPU()
-				KOF_CONFIG.CPU.dummy_can_fight = false
-				transitionToState("cpu_action")
-			else
-				gccd_random_move_ends = false
-			end
-		end		
-		--GCAB
-		if KOF_CONFIG.CPU.GCAB.dummy_can_gcab then
-			if playerTwoIsFalling() then
-				if gcca_random_move_ends == true then
-					return
+			end		
+			--GCAB
+			if KOF_CONFIG.CPU.GCAB.dummy_can_gcab then
+				if playerTwoIsFalling() then
+					if gcab_random_move_ends == true then
+						return
+					end
+					gcab_action_running = true
+					disableCPU()
+					KOF_CONFIG.CPU.dummy_can_fight = false
+					transitionToState("cpu_action")
+				else
+					gcab_random_move_ends = false
 				end
-				disableCPU()
-				KOF_CONFIG.CPU.dummy_can_fight = false
-				transitionToState("cpu_action")
-			else
-				gcca_random_move_ends = false
 			end
 		end
 		if KOF_CONFIG.RECOVERY.dummy_recovering then
@@ -828,20 +862,22 @@ function Run() -- runs every
 	
 	elseif stateMachine.currentState == "cpu_action" then
 		if KOF_CONFIG.CPU.GCCD.dummy_can_gccd then 
-			if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON then				
+			if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON and gccd_action_running then				
 				if doMove("CD", 3,true) == false then
 
 					enableCPU()
-					
+					current_cpu_action_running = false
+					gccd_action_running = false
 					KOF_CONFIG.CPU.dummy_can_fight = true
 					transitionToState("start")
 				end 
 			elseif KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM and gccd_random_move_ends == false then
-				if running_randomned_cpu_action == true then
+				if running_randomned_cpu_action_gccd == true then
 					if doMove("CD", 3,true) == false then
 						enableCPU()
 						gccd_random_move_ends = true
-						running_randomned_cpu_action = false
+						running_randomned_cpu_action_gccd = false
+						current_cpu_action_running = false
 						KOF_CONFIG.CPU.dummy_can_fight = true
 						transitionToState("start")
 					end
@@ -852,13 +888,14 @@ function Run() -- runs every
 					local randomNumber = math.random(1, 100)
 					if(randomNumber <= percentage_of_success )then
 						print("random success")
-						running_randomned_cpu_action = true
+						running_randomned_cpu_action_gccd = true
 					else
 						print("random fail")
 						gccd_random_move_ends = true
-						running_randomned_cpu_action = false
+						running_randomned_cpu_action_gccd = false
 						enableCPU()
 						KOF_CONFIG.CPU.dummy_can_fight = true
+						current_cpu_action_running = false
 						transitionToState("start")
 					end
 				end
@@ -866,22 +903,25 @@ function Run() -- runs every
 
 		end
 		
-		if KOF_CONFIG.CPU.GCAB.dummy_can_gcab then 
+		if KOF_CONFIG.CPU.GCAB.dummy_can_gcab and gcab_action_running then 
 			if KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.ON then				
-				if doMove("AB", 3,true) == false then
+				if doMove("AB", 5,true) == false then
 
 					enableCPU()
 					
 					KOF_CONFIG.CPU.dummy_can_fight = true
+					current_cpu_action_running = false
+					gcab_action_running = false
 					transitionToState("start")
 				end 
 			elseif KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.RANDOM and gcab_random_move_ends == false then
-				if running_randomned_cpu_action == true then
+				if running_randomned_cpu_action_gcab == true then
 					if doMove("CD", 3,true) == false then
 						enableCPU()
 						gcab_random_move_ends = true
-						running_randomned_cpu_action = false
+						running_randomned_cpu_action_gcab = false
 						KOF_CONFIG.CPU.dummy_can_fight = true
+						current_cpu_action_running = false
 						transitionToState("start")
 					end
 					return
@@ -891,13 +931,14 @@ function Run() -- runs every
 					local randomNumber = math.random(1, 100)
 					if(randomNumber <= percentage_of_success )then
 						print("random success")
-						running_randomned_cpu_action = true
+						running_randomned_cpu_action_gcab = true
 					else
 						print("random fail")
 						gcab_random_move_ends = true
-						running_randomned_cpu_action = false
+						running_randomned_cpu_action_gcab = false
 						enableCPU()
 						KOF_CONFIG.CPU.dummy_can_fight = true
+						current_cpu_action_running = false
 						transitionToState("start")
 					end
 				end

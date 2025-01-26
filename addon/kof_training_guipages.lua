@@ -691,17 +691,16 @@ local cpu_data = {
 		func = function()
 					KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
 					KOF_CONFIG.CPU.HAS_CHANGED = true
-					print("current dificulty "..KOF_CONFIG.CPU.current_dificulty)
 					KOF_CONFIG.CPU.current_dificulty  = KOF_CONFIG.CPU.current_dificulty + 1
-						if KOF_CONFIG.CPU.current_dificulty> 7 then
-							KOF_CONFIG.CPU.current_dificulty= 0
-						end
+					if KOF_CONFIG.CPU.current_dificulty> 7 then
+						KOF_CONFIG.CPU.current_dificulty= 0
+					end
+					print("current dificulty "..KOF_CONFIG.CPU.current_dificulty)
 				end,
 		text = "Dummy Difficulty",
 		olcolour = "black",
 		autofunc = function(this)						
-					KOF_CONFIG.CPU.current_dificulty =  rb(0x10FD8E)
-					this.text = "Dummy Difficulty: ".. KOF_CONFIG.CPU:getDifficultyString(KOF_CONFIG.CPU.current_dificulty)
+					this.text = "Dummy Difficulty: ".. KOF_CONFIG.CPU:getDifficultyString(rb(0x10FD8E))
 				end,
 	},
 	["3"] = {
