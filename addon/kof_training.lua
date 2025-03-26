@@ -614,13 +614,157 @@ local gcab_random_move_ends = false
 local current_cpu_action_running = false
 local gccd_action_running = false
 local gcab_action_running = false
+Character = {}
+Character.__index = Character
+
+function Character:new(name, screen_address, screen_position_address, action_base_address, action_sequence_address)
+
+    local obj = {
+		name = name,
+        screen_address = screen_address,
+        screen_position_address = screen_position_address,
+		action_base_address = action_base_address,
+		action_sequence_address = action_sequence_address,
+        screen_index = 0, -- Placeholder
+        screen_position_index = 0, -- Placeholder
+		action_base = 0,
+		action_sequence = 0,
+		short_jumping = false,
+    }
+    setmetatable(obj, Character)
+    
+    -- Call the private method inside the constructor
+    obj:_calculate_indexes()
+    
+    return obj
+end
+
+function Character:_calculate_indexes()
+    self.screen_index = rb(self.screen_address)
+    self.screen_position_index = rb(self.screen_position_address)
+end
+
+function Character:calculate_actions()
+    self.action_base = rb(self.action_base_address)
+    self.action_sequence = rb(self.action_sequence_address)
+end
+
+
+function Character:get_screen_position()
+    -- Recalculate indexes before returning
+    self:_calculate_indexes()
+    return string.format("%d-%d", self.screen_index, self.screen_position_index)
+end
+
+function Character:is_close_to(other)
+    self:_calculate_indexes()
+    other:_calculate_indexes()
+
+    local screen_diff = (self.screen_index - other.screen_index) * 256
+    local position_diff = self.screen_position_index - other.screen_position_index
+    local total_distance = math.abs(screen_diff + position_diff)
+
+    return total_distance < 155
+end
+function Character:get_distance_to(other)
+    self:_calculate_indexes()  -- Ensure indexes are updated
+    other:_calculate_indexes()
+
+    local screen_diff = (other.screen_index - self.screen_index) * 256
+    local position_diff = other.screen_position_index - self.screen_position_index
+
+    return math.abs(screen_diff + position_diff)
+end
+
+function Character:is_short_jumping()
+    self:calculate_actions() -- Update action values before checking
+    return  self.action_base == 0 and self.action_sequence == 17
+end
+
+function Character:is_short_jumping_close_to(other)
+    return self:is_short_jumping() and self:is_close_to(other)
+end
+
+
+
+
+local char1_screen_address = 0x108118
+local char2_screen_address = 0x108318
+local char1_name = "P1"
+local char2_name = "P2"
+local char1_screen_position_address =  0x108119
+local char2_screen_position_address = 0x108319
+
 -- Example usage:
-function Run() -- runs every 
-gui.text(70,30, "cpu action: "..rb(p2hitstatus).."-"..rb(p2hitstatus+1) , "cyan", "black")
+local char1 = Character:new(char1_name, char1_screen_address, char1_screen_position_address, p1hitstatus, p1hitstatus+1)
+local char2 = Character:new( char2_name, char2_screen_address, char2_screen_position_address, p2hitstatus, p2hitstatus+1)
+
+local function draw_distance_status(character1, character2)
+    local is_close = character1:is_close_to(character2)
+    local text = is_close and "close" or "far"
+    local color = is_close and "red" or "cyan"
+    
+    gui.text(170, 40, text, color, "black")
+end
+local function draw_action_code(character, x, y)
+    character:calculate_actions() -- Ensure values are updated before drawing
+    gui.text( x, y,character.name.." action: ".. character.action_base .. "-" .. character.action_sequence, "white", "black")
+end
+
+local draw_screen_position = function(character, x, y)
+	character:calculate_actions() -- Ensure values are updated before drawing
+	gui.text( x, y,character.name.." screen pos: ".. character:get_screen_position(), "white", "black")
+end
+local function draw_debug_info()
+	
+
+draw_action_code(char1, 30, 180)
+draw_action_code(char2, 170, 180)
 gui.text(70,40, "in air: ".. tostring(playerTwoIsFalling() ) , "cyan", "black")
+draw_screen_position(char1, 30,190)
+draw_screen_position(char2, 170,190)
+draw_distance_status(char1, char2)
 
+end
+local initial_distance = nil
+local frame_counter = 0
+local near_jump_os_action_active = false
 
+local function check_jump_approaching(char1, char2)
+    local current_distance = char1:get_distance_to(char2)
 
+    if frame_counter == 0 and char1:is_short_jumping_close_to(char2) and not near_jump_os_action_active then
+        initial_distance = current_distance
+        frame_counter = 1  -- Start counting frames
+    elseif frame_counter > 0 then
+        frame_counter = frame_counter + 1
+
+        if frame_counter >= 10 then
+			frame_counter = 0  -- Reset after checking
+            if current_distance <= initial_distance then
+				near_jump_os_action_active = true
+                return true
+                -- Perform action here if needed
+            end
+        end
+    end
+	return false
+end
+
+local kof_config_throw_os_on_jump = true 
+function Run() -- runs every 
+	draw_debug_info()
+	if kof_config_throw_os_on_jump then
+		check_jump_approaching(char1, char2)
+		if near_jump_os_action_active then	
+			delay(24, function()
+				if doMove("THROW_OS", 1,true) == false then
+					near_jump_os_action_active = false
+				end 
+			end)	
+		end
+	end
+			
 	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED or KOF_CONFIG.CPU.HAS_CHANGED then
 		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
 		load_machine_state("addon\\kof_training\\savestates\\"..emu.romname().."_select.fs")  -- Replace with your file path
