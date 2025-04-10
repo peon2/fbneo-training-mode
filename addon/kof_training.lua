@@ -751,7 +751,47 @@ local function check_jump_approaching(char1, char2)
 	return false
 end
 
-local kof_config_throw_os_on_jump = true 
+local STAGES = {
+	JAPAN_STREET = 0,
+	CHINA = 1,
+	KOREA = 2,
+	MID_EAST = 3,
+	SPAIN = 4,
+	USA_YARD = 5,
+	JAPAN_TEMPLE = 6,
+	USA_WHARF = 7,
+	BLACK_NOAH = 8,
+}
+local MUSIC_TRACKS = {
+    ESAKA = 0x00,
+    KURIKINTON = 0x01,
+    ART_OF_FIGHT = 0x02,
+    RUMBLING_ON_THE_CITY = 0x03,
+    SHIN_SENRITSU_NO_DORA = 0x04,
+    FAIRY = 0x05,
+    SEOUL_ROAD = 0x06,
+    BLOODY = 0x07,
+    C62 = 0x08,
+    BLUE_MARYS_BLUES = 0x09,
+    LONDON_MARCH = 0x0A,
+    ARASHI_NO_SAXOPHONE_2 = 0x0B,
+    IN_SPITE_OF_ONES_AGE = 0x0C,
+    SLUM_NO_5 = 0x0D,
+    KETCHAKU_R_D = 0x0E,
+    STILL_GREEN = 0x0F,
+    THE_RR = 0x10,
+    ESAKA_ALT = 0x11,
+    RHYTHMIC_HALLUCINATION = 0x12,
+    FANTASTIC_WALTZ = 0x13,
+    MAD_FANTASY = 0x14,
+    NE = 0x15,
+    ARASHI_NO_SAXOPHONE = 0x16,
+    ARASHI_NO_SAXOPHONE_2_ALT = 0x17
+}
+
+
+
+local kof_config_throw_os_on_jump = false
 function Run() -- runs every 
 	draw_debug_info()
 	if kof_config_throw_os_on_jump then
@@ -774,6 +814,12 @@ function Run() -- runs every
 
 		local level_address = 0x10FD8E
 		wb(level_address, KOF_CONFIG.CPU.current_dificulty)
+
+		local stage_address = 0x10A7EA
+		wb(stage_address, STAGES.JAPAN_STREET)
+
+		local music_address = 0x10ED5F
+		wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ)
 
 		wb(first_character_location_p1, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
 		wb(first_character_location_p2, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
