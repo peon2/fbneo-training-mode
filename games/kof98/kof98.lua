@@ -107,11 +107,21 @@ end
 
 function writePlayerOneMeter(meter)
 	wb(p1meter, meter)
+	local p1meter = 0x1081e8
+    --gui.text( 170, 160,"P1 meter: ".. meter, "white", "black")	
+
+	p1maxmeter = 0x80
+	
+	local stocks = 0x1082e3
 	if meter==p1maxmeter then
-		wb(0x1082e3, 3) -- advance
+		wb(stocks, 3) -- advance
 		ww(p1meter+4, 0x4000) -- set up the timer
 		wb(p1meter+8, 0x10) -- activate
 	end
+    gui.text( 170, 150,"P1 MAX meter: ".. modulevars.p1.maxmeter, "white", "black")
+
+	
+
 end
 
 function readPlayerTwoMeter()

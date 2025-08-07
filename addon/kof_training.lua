@@ -715,15 +715,47 @@ local draw_screen_position = function(character, x, y)
 	character:calculate_actions() -- Ensure values are updated before drawing
 	gui.text( x, y,character.name.." screen pos: ".. character:get_screen_position(), "white", "black")
 end
+local past_stun = 0
+local decreased_stun = 0
+local function draw_stun_status(character1, character2)
+	local stun = rb(0x10843F)
+	if stun < past_stun then
+		decreased_stun = stun - past_stun
+	elseif stun > past_stun then
+		decreased_stun = 0
+	end
+	past_stun = stun
+	x = 200
+	y = 48
+	gui.text( x, y," stun: ".. stun.." ("..decreased_stun..")" , "yellow")
+end
+local past_guard = 0
+local decreased_guard = 0
+local function draw_guard_status(character1, character2)
+	local guard = rb(0x108447)
+	if guard < past_guard then
+		decreased_guard = guard - past_guard
+	elseif guard > past_guard then
+		decreased_guard = 0
+	end
+	past_guard = guard
+	x = 200
+	y = 40
+	gui.text( x, y," guard: ".. guard.." ("..decreased_guard..")" , "cyan")
+end
 local function draw_debug_info()
 	
 
 draw_action_code(char1, 30, 180)
 draw_action_code(char2, 170, 180)
-gui.text(70,40, "in air: ".. tostring(playerTwoIsFalling() ) , "cyan", "black")
 draw_screen_position(char1, 30,190)
 draw_screen_position(char2, 170,190)
 draw_distance_status(char1, char2)
+draw_stun_status(char1, char2)
+draw_guard_status(char1, char2)
+
+gui.text( 170, 170,"P1 meter: "..rb(0x1081e8), "white", "black")
+
 
 end
 local initial_distance = nil
@@ -791,10 +823,10 @@ local MUSIC_TRACKS = {
 
 
 
-local kof_config_throw_os_on_jump = false
+local kof_config_throw_os_on_jump = trr
 function Run() -- runs every 
 	draw_debug_info()
-	if kof_config_throw_os_on_jump then
+	if kof_config_throw_os_on_jump or KOF_CONFIG.CPU.THROW_OS_ON_JUMP then
 		check_jump_approaching(char1, char2)
 		if near_jump_os_action_active then	
 			delay(24, function()

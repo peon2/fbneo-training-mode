@@ -120,6 +120,8 @@ end
 
 function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
+    gui.text( 170, 170,"P1 meter: ".. meter, "white", "black")	
+
 	if meter==p2maxmeter then
 		wb(0x1084e3, 3) -- advance
 		ww(p2meter+4, 0x4000)

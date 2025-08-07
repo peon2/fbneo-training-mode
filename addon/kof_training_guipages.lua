@@ -102,6 +102,7 @@ KOF_CONFIG = {
 
 },
 	 },
+	 THROW_OS_ON_JUMP =false , 
 	MOVES = {
 		
 		['GUARD_BACK']={
@@ -832,6 +833,25 @@ local cpu_data = {
 						this.text = "AB on Guard: On" 
 					elseif KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.RANDOM  then
 						this.text = "AB on Guard: Random"
+					end
+				end,
+	},
+	["5"] = {
+		x = 10,
+		y = 56,
+		info = {'Guard OS'},
+		func = function()
+					KOF_CONFIG.CPU.THROW_OS_ON_JUMP  = not KOF_CONFIG.CPU.THROW_OS_ON_JUMP
+				
+			end,
+		text = "Guard OS:",
+		olcolour = "black",
+		autofunc = function(this)				
+							
+					if KOF_CONFIG.CPU.THROW_OS_ON_JUMP then
+						this.text = "Guard OS: On" 
+					else
+						this.text = "Guard OS: Off" 
 					end
 				end,
 	},
