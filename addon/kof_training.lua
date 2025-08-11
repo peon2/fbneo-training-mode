@@ -60,11 +60,104 @@ local 	function playerTwoIsBeingHit()
 local function dummyMoveIsActive()
 	return  rb(p2move_adress) ~=0
 end
+
+
+local base_action_adress = p1hitstatus +  1
+
+local function P2ActionIsExecuting()
+	return rb(base_action_adress) ~= 0x00
+end	
+
+local current_p1_base_action = 0
+local past_p1_base_action = 0
+
+local action_frames = 0
+local last_updated_frame_of_action = -1
+local running_action = false
+local p1_entered_new_action = false
+local last_action_duration = 0
+local function P1ActCodeRunning()
+	current_p1_base_action = rb(base_action_adress)
+	if current_p1_base_action == 0x23 then
+		return false
+	end
+	
+	if (current_p1_base_action == past_p1_base_action) and P2ActionIsExecuting() then
+		local current_frame = emu.framecount()
+		if current_frame ~= last_updated_frame_of_action then
+			last_updated_frame_of_action = current_frame
+			action_frames = action_frames + 1
+			running_action = true
+			p1_entered_new_action = true
+		end
+		return running_action
+	end
+	if p1_entered_new_action then
+		last_action_duration = action_frames
+		p1_entered_new_action = false
+	end
+	past_p1_base_action = current_p1_base_action
+	action_frames = 0
+
+	return false
+end
+local function p1CurrentAction()
+	if P1ActCodeRunning() then
+		return current_p1_base_action
+	end
+	return 0
+	
+end
+local function getLastActionDuration()
+	return last_action_duration
+end
+local player_two_entered_blockstun = false
+local last_updated_frame = -1
+local blockstun_frames = 0
+local last_blockstun_duration = 0
 local function playerTwoInBlockstun()
 	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
+		local current_frame = emu.framecount()
+		if current_frame ~= last_updated_frame then
+			blockstun_frames = blockstun_frames + 1
+			last_updated_frame = current_frame
+		end
+		player_two_entered_blockstun = true
+		return true
+	end
+	if player_two_entered_blockstun then
+		last_blockstun_duration = blockstun_frames
+		player_two_entered_blockstun = false
+	end
+	blockstun_frames = 0
+	return false
+end
+local p2blockstun_value = 0
+local p2_blockstun_last_updated_frame = -1
+local function p2CurrentBlockstun()
+	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
+		local current_frame = emu.framecount()
+		if current_frame ~= p2_blockstun_last_updated_frame then
+			p2blockstun_value = p2blockstun_value + 1
+			p2_blockstun_last_updated_frame = current_frame
+		end
+		return p2blockstun_value
+	end
+	return 0
+end
+
+local function playerTwoIsInFirstFrameOfBlockstun()
+	if playerTwoInBlockstun() and blockstun_frames == 1 then
 		return true
 	end
 	return false
+end
+local function getBlockstunFrames()
+	return blockstun_frames
+end
+-- Getter for duration of last blockstun when player two leaves it
+local function getLastBlockstunDuration()
+	return last_blockstun_duration
 end
 local last_byte_of_ACT_code_address = 0x108373
 local function ACTcodesOfFallingActive()
@@ -341,9 +434,15 @@ local function playerOnePressedButtons()
 
     return buttonsPressed
 end
-
 local function dummyGuardForATime()
-	return doMove('GUARD_BACK',10, true)
+	if P2ActionIsExecuting() then
+		return doMove('GUARD_BACK',10, true)		
+	end
+end
+local function justGuard()	
+	local tbl = {}	
+	tbl[getBlockingDirection()] = 1
+	joypad.set(tbl)
 end
 
 local function dummyCrouchGuardForATime()
@@ -390,7 +489,27 @@ local function block()
 				start_press = true
 			end
 		end
-		if(start_press or  functionRunningFlags["dummyGuardForATime"] == true or functionRunningFlags['doNothing'] == true ) then			
+		if start_press then
+			if KOF_CONFIG.GUARD.random_guard == 1 then
+				local percentage_of_down = 30
+				local randomNumber = math.random(1, 100)
+				if(randomNumber <= percentage_of_down )then
+					executeWithCooldown( doNothing, 20, "doNothing")
+				else
+					executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
+				end
+				start_press = false
+				return
+			else
+				if P2ActionIsExecuting() then
+					justGuard()
+				else
+					start_press = false
+				end
+			end
+		end
+	end
+	--[[	if(start_press or  functionRunningFlags["dummyGuardForATime"] == true or functionRunningFlags['doNothing'] == true ) then			
 			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
 				local percentage_of_down = 30
 				local randomNumber = math.random(1, 100)
@@ -402,7 +521,11 @@ local function block()
 				start_press = false
 				return
 			else
-				executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
+				--executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
+				if P2ActionIsExecuting() then
+					executeWithCooldown(justGuard, 20, "dummyGuardForATime")
+					
+				end
 				start_press = false
 				return
 			end
@@ -415,7 +538,7 @@ local function block()
 				executeWithCooldown( doNothing, 20, "doNothing")
 			end
 		end
-	end
+	end --]]
 	if KOF_CONFIG.GUARD.crouch_guard == 1 then
 		if(start_press == false) then
 			if playerOnePressedButtons()  then
@@ -743,6 +866,52 @@ local function draw_guard_status(character1, character2)
 	y = 40
 	gui.text( x, y," guard: ".. guard.." ("..decreased_guard..")" , "cyan")
 end
+local p1_frame_advantage = 0
+local update_advantage_message = true
+local same_move_frame_count = 0
+local blockstun_frame_count = 0
+local action_frame_count = 0
+local function draw_frame_advantage()
+	if p1NewActCodeRunningStarted() then
+		startCountingActionFrames()
+		startCountingBlockstunFrames()
+	end
+	if P1ActCodeRunning() and 	playerTwoInBlockstun() then
+		blockstun_frame_count = getLastBlockstunDuration()
+		action_frame_count = getLastActionDuration()
+		return
+	end
+	p1_frame_advantage = action_frame_count - blockstun_frame_count
+	local x = 20
+	local y = 40
+	local color =""
+	if p1_frame_advantage == 0 then 
+		color = "yellow" 
+	elseif p1_frame_advantage > 0 then
+		color = "green" 
+	else
+		color = "red" 
+	end
+	
+
+	-- this condition should detect if a the same move is puttingp2 inblockstun
+	--[[if P1ActCodeRunning() and playerTwoInBlockstun() then
+		same_move_frame_count = same_move_frame_count + 1
+
+		p1_frame_advantage = same_move_frame_count - blockstun_frame_count	
+		update_advantage_message  = false
+
+	end ]]
+	--if P1SameActCodeRunning() and blockstun_frame_count > 0 then
+
+
+
+		gui.text( x, y,"adv: ".. p1_frame_advantage, color)
+		gui.text( x, y+10,"act d: ".. action_frame_count, color)
+		gui.text( x, y+20,"blck d: ".. blockstun_frame_count, color)
+		
+
+end
 local function draw_debug_info()
 	
 
@@ -753,6 +922,7 @@ draw_screen_position(char2, 170,190)
 draw_distance_status(char1, char2)
 draw_stun_status(char1, char2)
 draw_guard_status(char1, char2)
+--draw_frame_advantage()
 
 gui.text( 170, 170,"P1 meter: "..rb(0x1081e8), "white", "black")
 
@@ -821,10 +991,88 @@ local MUSIC_TRACKS = {
     ARASHI_NO_SAXOPHONE_2_ALT = 0x17
 }
 
+function filterAct(act)
+	if act== 21 or act == 22 or act == 23 or act == 24 or act == 25 or act == 79 or act == 14 or act == 2 or act == 48 or act == 49 or act == 1 or act == 0 or act == 6 or act == 45 or act == 46 or act == 47 or act == 3 or act == 4 or act == 5 or act == 15 or act == 16 or act == 7 or act == 8 or act == 9 or act == 10 or act == 11 or act == 12 or act == 13 or act == 17 or act == 18 or act == 19 or act == 20 then
+		return 0x00
+	end
+end
 
 
-local kof_config_throw_os_on_jump = trr
+
+local kof_config_throw_os_on_jump = false
+local p1_recovery_frames = 0
+local p2_blockstun_frames = 0
+
+local measuring = false
+local frame_advantage = 0
+
+local last_checked_frame = -1
+local past_frame_act = 0
+local p1_last_recovery_frames = 0
+local latest_blockstun = 0
+local filtered_act = 0
+local function checkFrameAdvantage()
+    local current_frame = emu.framecount()
+    if current_frame == last_checked_frame then
+        return -- Already updated this frame
+    end
+    last_checked_frame = current_frame
+
+    local act = p1CurrentAction()
+	filtered_act = filterAct(act)
+    local blockstun = p2CurrentBlockstun()
+	--gui.text(20, 50, "blockstun: " .. latest_blockstun, "yellow")
+
+    -- Start measuring when blockstun begins
+    if blockstun ~= 0 and not measuring then
+        measuring = true
+        p1_recovery_frames = 0
+        p2_blockstun_frames = 0
+        frame_advantage = 0
+	end
+
+    if measuring then
+        -- Count blockstun frames
+        if blockstun ~= 0 then
+            p2_blockstun_frames = p2_blockstun_frames + 1
+        end
+
+        -- Count P1 recovery frames
+        if filtered_act ~= 0 and filtered_act == past_frame_act then
+            p1_recovery_frames = p1_recovery_frames + 1
+		p1_last_recovery_frames = p1_recovery_frames
+
+		elseif filtered_act ~= 0 and filtered_act ~= past_frame_act then
+			latest_blockstun = p2_blockstun_frames
+			p1_recovery_frames = 0
+			p2_blockstun_frames = 0
+		end
+		past_frame_act = filtered_act
+
+        -- End measurement when blockstun finishes
+        if blockstun == 0 and act == 0 then
+            frame_advantage = p2_blockstun_frames - p1_recovery_frames
+			latest_blockstun = p2_blockstun_frames
+			p2_blockstun_frames = 0
+			p1_recovery_frames = 0
+            measuring = false
+        end
+    end
+	--gui.text(20, 60, "act duration: " .. p1_last_recovery_frames, "yellow")
+	
+
+    -- Draw last advantage result
+    if frame_advantage ~= 0 then
+        gui.text(20, 40, "Block Adv: " .. frame_advantage, "yellow")
+        --gui.text(20, 90, "lts bs: " .. latest_blockstun, "yellow")
+
+    end
+end
+
 function Run() -- runs every 
+--gui.text(20, 30, "block address: " .. rb(p2blockstun_address), "yellow")
+--justGuard()
+checkFrameAdvantage()
 	draw_debug_info()
 	if kof_config_throw_os_on_jump or KOF_CONFIG.CPU.THROW_OS_ON_JUMP then
 		check_jump_approaching(char1, char2)
