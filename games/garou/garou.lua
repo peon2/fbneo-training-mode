@@ -115,8 +115,5 @@ function maxCredits()
 	wb(0x10E008, 0x09)
 	wb(0x10E009, 0x09)
 end
+require('addon.garou_training')
 
-function Run() -- runs every frame
-	infiniteTime()
-	maxCredits()
-end

@@ -85,6 +85,10 @@ function playerTwoInHitstun()
 	return rb(p1combocounter)~=0
 end
 
+function playerTwoCanCounter()
+	return rb(p1combocounter)==0
+end
+
 function readPlayerOneHealth()
 	return rb(p1health)
 end

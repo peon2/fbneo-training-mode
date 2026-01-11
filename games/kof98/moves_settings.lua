@@ -1176,6 +1176,24 @@ local wakeup_common_move_settings = {
 		func =  function() CIG(interactivegui.previouspage,1) end,
 	},
 }
+--recordings
+local wakeup_recordings_move_settings = {
+	title = {
+		text = "Wakeup recordings Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.wakeup_recordings_move_settings= wakeup_recordings_move_settings
+for key, item in pairs( move_data.wakeup_recordings) do
+	table.insert(guipages.wakeup_recordings_move_settings,item)
+end
 guipages.wakeup_commons_move_settings= wakeup_common_move_settings
 for key, item in pairs( move_data.wakeup_commons) do
 	table.insert(guipages.wakeup_commons_move_settings,item)

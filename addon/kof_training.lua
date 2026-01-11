@@ -1,11 +1,13 @@
 assert(rb,"Run fbneo-training-mode.lua")
-
+DBIndex = require("addon.kof_training.db_lua.db.index")
 
 local p1hitstatus = 0x108172
 local p2hitstatus = 0x108372
 
 local in_air = 0x108322
 
+local p1_stored_index_location = 0x10A84E
+local p2_stored_index_location = 0x10A85F
 
 local stateMachine = {
     currentState = "start",
@@ -55,19 +57,84 @@ local	function playerOneIsBeingHit()
 	end
 	
 local 	function playerTwoIsBeingHit()
+	
 		return rb(p2hitstatus)~=0
 	end
 local function dummyMoveIsActive()
 	return  rb(p2move_adress) ~=0
+end
+local last_frame = emu.framecount()
+
+function saveStateLoaded()
+    local f = emu.framecount()
+    if f < last_frame then
+        last_frame = f
+        return true
+    end
+    last_frame = f
+    return false
 end
 
 
 local base_action_adress = p1hitstatus +  1
 
 local function P2ActionIsExecuting()
-	return rb(base_action_adress) ~= 0x00
-end	
+	local action_filtered = {
+		[0] = true,
+		[1] = true,
+		[2] = true,
+		[3] = true,
+		[4] = true,	
+		[5] = true, 
+		[6] = true,
+		[7] = true,
+		[8] = true,	
+		[9] = true,
+		[10] = true,
+		[11] = true, 
+		[12] = true,
+		[13] = true,
+		[14] = true,	
+		[15] = true,
+		[16] = true,
+		[17] = true,
+		[18] = true,	
+		[19] = true,
+		[20] = true,
+		[21] = true,
+		[22] = true,	
+		[23] = true,
+		[45] = true,
+		[46] = true,
+		[47] = true,
+		[48] = true,
+		[49] = true,
+		[50] = true,
+		[51] = true,
+		[52] = true,
+		[53] = true,
+		[54] = true,
+		[55] = true,
+		[56] = true,
+		[157] = true,
+		[158] = true,
+		[159] = true,
+		[232] = true,
+		[233] = true
+	}
 
+	if not action_filtered[rb(base_action_adress)] then
+		return true	
+	end
+	return false
+end
+
+local function P2CurrentAction()
+	return rb(p2move_adress)
+end
+local function P2SetAction(action)
+	wb(p2move_adress,action)
+end
 local current_p1_base_action = 0
 local past_p1_base_action = 0
 
@@ -184,9 +251,9 @@ local function ACTcodesOfFallingActive()
 	return false
 end
 local function playerTwoIsFalling()
-	if rb(p2hitstatus) == 11 then
+	--[[if rb(p2hitstatus) == 11 then
 		print ("playerTwoIsFalling")
-	end
+	end--]]
 	if rb(p2hitstatus) == 1 or rb(p2hitstatus) == 11 then
 		if ACTcodesOfFallingActive() then
 			return true
@@ -194,18 +261,193 @@ local function playerTwoIsFalling()
 	end
 	return false
 end
+--[[*** General Functions ***]]
 
+function getPlayerName(player_id)
+	if player_id == KOF_CONFIG.PLAYERS.PLAYER1.ID then
+		local p1_rom_index = rb(p1_stored_index_location) + 1 -- +1 because the table CHARACTERS starts at 1
+		return KOF_CONFIG.CHARACTERS[p1_rom_index].name
+	elseif player_id == KOF_CONFIG.PLAYERS.PLAYER2.ID then
+		local p2_rom_index = rb(p2_stored_index_location) + 1 -- +1 because the table CHARACTERS starts at 1
+		return KOF_CONFIG.CHARACTERS[p2_rom_index].name
+	end
+end
+
+function getPlayerStoredId(player_id)
+	if player_id == KOF_CONFIG.PLAYERS.PLAYER1.ID then
+		local p1_stored_id = rb(p1_stored_index_location)
+		return p1_stored_id
+	elseif player_id == KOF_CONFIG.PLAYERS.PLAYER2.ID then
+		local p2_stored_id = rb(p2_stored_index_location)
+		return p2_stored_id
+	end
+end
+function dumpTable(t, indent)
+    indent = indent or ""
+    print(indent .. "{")
+
+    for k, v in pairs(t) do
+        local key = type(k) == "string" and k or "[" .. k .. "]"
+
+        if type(v) == "table" then
+            print(indent .. "  " .. key .. " = ")
+            dumpTable(v, indent .. "  ")
+        else
+            print(indent .. "  " .. key .. " = " .. tostring(v))
+        end
+    end
+
+    print(indent .. "}")
+end
+
+function getCurrentSetupName()
+	local p1_rom_index = rb(p1_stored_index_location) + 1 -- +1 because the table CHARACTERS starts at 1
+	local p2_rom_index = rb(p2_stored_index_location) + 1 -- +1 because the table CHARACTERS starts at 1
+	local p1_short_name = KOF_CONFIG.CHARACTERS[p1_rom_index].short_name
+	local p2_short_name = KOF_CONFIG.CHARACTERS[p2_rom_index].short_name
+	local base_name = p1_short_name.."_"..p2_short_name
+	return base_name
+end
+
+
+function loadSetupFromFile(recording_slot_number,setup_name)
+	local pathname = "addon/kof_training/db_lua/db/"..emu.romname().."/"..setup_name..".lua"
+	print("Loading replay from: "..pathname)
+	local loaded_table, err = table.load(pathname)
+	if fexists(pathname) and loaded_table then
+		recording[recording_slot_number] = loaded_table
+		print("Replay loaded successfully.")
+	else
+		print("Error loading replay:", err)
+	end
+	
+end
+function isRecordingEmpty()
+	local t = recording
+    for i = 1, 5 do
+        if t[i] and next(t[i]) ~= nil then
+            return false
+        end
+    end
+    return true
+end
+
+function buildSetup()
+    local setup = {}
+
+    setup.base_name = getCurrentSetupName()
+
+    setup.recordings = {}
+    for i = 1, 5 do
+        setup.recordings[i] = recording[i]
+    end
+
+    setup.p1 = {
+        name = getPlayerName(1),
+        stored_id = getPlayerStoredId(1)
+    }
+
+    setup.p2 = {
+        name = getPlayerName(2),
+        stored_id = getPlayerStoredId(2)
+    }
+
+    setup.recording_var_states = {}
+
+    return setup
+end
+-- Function to reset all named keys to 0 in a subtable
+local function resetReversals(tableRoot, subtableKey)
+    local subtable = tableRoot[subtableKey]
+    if not subtable then return end  -- do nothing if the key doesn't exist
+
+    for k, v in pairs(subtable) do
+        -- Only affect named keys, ignore numeric indexes
+        if type(k) == "string" and v ~= 0 then
+            subtable[k] = 0
+        end
+    end
+end
+
+function applySetup(setup)
+    local rom = emu.romname()
+    local base = setup.base_name
+
+    local savestatePath =
+        "addon/kof_training/db_lua/db/" .. rom .. "/savestates/" .. base .. ".fs"
+
+    -- 1. Load savestate
+    if fexists(savestatePath) then
+        savestate.load(savestatePath)
+    else
+        print("Savestate not found:", savestatePath)
+    end
+
+    -- 2. Load recordings into active slots
+    for i = 1, 5 do
+        recording[i] = setup.recordings[i]
+    end
+	-- load wakeup and recovery configs
+	if setup.WAKEUP_CONFIG ~= nil then
+		KOF_CONFIG.WAKEUP = setup.WAKEUP_CONFIG
+	end
+    if setup.GUARD_CONFIG ~= nil then
+		KOF_CONFIG.GUARD = setup.GUARD_CONFIG
+	end
+	if setup.RECOVERY_CONFIG ~= nil then
+		KOF_CONFIG.RECOVERY = setup.RECOVERY_CONFIG
+	end
+	if setup.wakeup then
+		
+		resetReversals(KOF_CONFIG.MOVES_VAR_NAMES, "WAKEUP")
+		dumpTable(KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]) 
+		for i =1,5 do
+			KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_"..i] = setup.recording_var_states[i].value
+			KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_"..i).propagates = setup.recording_var_states[i].propagates
+		end
+		
+		KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+		formatGuiTables()
+
+	end
+    if setup.guard then
+		
+		resetReversals(KOF_CONFIG.MOVES_VAR_NAMES, "GUARD")
+		dumpTable(KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]) 
+		for i =1,5 do
+			KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_"..i] = setup.recording_var_states[i].value
+			KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_"..i).propagates = setup.recording_var_states[i].propagates
+		end
+		
+		KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
+		formatGuiTables()
+
+	end
+end
+
+--[[*** end of General Functions ***]]
 local function getFacingDirection()
 	if playerTwoFacingLeft() then
 		return "P2 Left"
 	end
 	return "P2 Right"
 end
-local function getBlockingDirection()
-	if playerTwoFacingLeft() then
-		return "P2 Right"
+local function getBlockingDirection(player_id)
+	if player_id == nil then 
+		player_id = KOF_CONFIG.PLAYERS.PLAYER2.ID
 	end
-	return "P2 Left"
+
+	if player_id == KOF_CONFIG.PLAYERS.PLAYER2.ID then
+		if playerTwoFacingLeft() then
+			return "P2 Right"
+		end
+		return "P2 Left"
+	elseif player_id == KOF_CONFIG.PLAYERS.PLAYER1.ID then
+		if playerOneFacingLeft() then
+			return "P1 Right"
+		end
+		return "P1 Left"
+	end
 end
 
 
@@ -219,9 +461,27 @@ end
 local iddle_time_running = false
 local iddle_finish_time = 0
 local iddle_time = 80
+local last_frame_ran = 0
 local function wakeUpEnabled()
+	if saveStateLoaded() then
+		iddle_time_running = false
+		iddle_finish_time = 0
+		last_frame_ran = 0
+
+		return true
+	end
+
+	local current_frame = emu.framecount()
+
+	-- already ran this frame
+	if (current_frame == last_frame_ran) and iddle_time_running then
+		print("Already ran this frame")
+		return false
+	end
+
+	last_frame_ran = current_frame
 	if iddle_time_running then
-		--print("current iddle Time is: "..(iddle_finish_time))
+		print("current iddle Time is: "..(iddle_finish_time))
 		if iddle_finish_time == 0  then			
 			iddle_time_running = false
 			return true
@@ -235,7 +495,6 @@ local function startWakeupIddleTime()
 	iddle_time_running = true
 	iddle_finish_time = iddle_time
 end
-local delay_count = 0
 local function dummyCrouchGuard()
 	local tbl = {}	
 	tbl[getBlockingDirection()] = 1
@@ -248,23 +507,17 @@ local function dummyGuard()
 	tbl[getBlockingDirection()] = 1
 	joypad.set(tbl)
 end
+
+local delay_count = 0
 local function delay(delay_frames, functionToExecute, ...)
     if delay_count < delay_frames then
-		if KOF_CONFIG.GUARD.dummy_guarding then
-			if KOF_CONFIG.GUARD.crouch_guard ==  1 then
-				dummyCrouchGuard()				
-			end
-			if KOF_CONFIG.GUARD.standing_guard ==  1 then
-				dummyGuard()			
-			end
-		end
-        delay_count = delay_count + 1
-        --print("DELAYED BY: ", delay_count)
-        return
+		delay_count = delay_count + 1
+		return true
     end
 
     if functionToExecute(...) == false then
         delay_count = 0
+		return false
     end
 end
 local sequence_reversal_type = nil
@@ -272,6 +525,12 @@ local current_move_index_counter = 1
 local current_move_time_counter = 0
 local current_sequence = {}
 local function doMove(move_name, times, conf)
+	--[[if saveStateLoaded() then
+		return false
+	end--]]
+	if current_move_time_counter >= times then
+        return false
+    end
     if conf == nil then conf = false end
 
     local seq
@@ -284,22 +543,18 @@ local function doMove(move_name, times, conf)
         seq = KOF_CONFIG.MOVES[move_name].sequence
     end
 
+
+  if current_move_index_counter > #seq then
+    current_move_time_counter = current_move_time_counter + 1
     if current_move_time_counter >= times then
         current_move_time_counter = 0
         current_move_index_counter = 1
-		current_sequence = {}
+        current_sequence = {}
         return false
     end
+    current_move_index_counter = 1
+end
 
-    if current_move_index_counter > #seq then
-        current_move_index_counter = 1
-        current_move_time_counter = current_move_time_counter + 1
-        if current_move_time_counter >= times then
-            current_move_time_counter = 0
-			current_sequence = {}
-            return false
-        end
-    end
 
     local tbl = {}
     for _, value in ipairs(seq[current_move_index_counter]) do
@@ -329,38 +584,7 @@ local function doMove(move_name, times, conf)
 end
 
 
-local move_index_counter = 1
 
-function doMoves(moveList, callback)
-	
-    if #moveList == 0 then
-        if callback then
-            callback()  -- Trigger the callback if provided and there are no moves
-        end
-        return false  -- No moves to execute
-    end
-	if move_index_counter > #moveList then
-		move_index_counter = 1
-		if callback then
-			callback()  -- Trigger the callback if provided and all moves are executed
-		end
-		return true -- All moves executed the specified number of times
-	end
-
-    local currentMove = moveList[move_index_counter]
-
-    delay(currentMove.delay, function()
-        local res = doMove(currentMove.name, currentMove.times, currentMove.conf)  -- Execute the current move once
-
-        if res == false then
-            move_index_counter = move_index_counter + 1
-        end
-
-        return res
-    end)
-
-    return true
-end
 
 
 local CURRENT_REVERSAL_MOVE_NAME = nil
@@ -410,6 +634,12 @@ end
 local function p2Crouch()
 	local tbl = {}
 	tbl["P2 Down"] = 1
+	joypad.set(tbl)
+end
+local function p1CrouchGuard()
+	local tbl = {}	
+	tbl[getBlockingDirection(KOF_CONFIG.PLAYERS.PLAYER1.ID)] = 1
+	tbl["P1 Down"] = 1
 	joypad.set(tbl)
 end
 -- Initial state
@@ -479,107 +709,125 @@ local function doNothing()
 	--print('Doing nothing')
 	return false
 end
-
-local start_press = false
-local function block()
-    -- Additional logic for blocking...
-	if KOF_CONFIG.GUARD.standing_guard == 1 then
-		if(start_press == false) then
-			if playerOnePressedButtons()  then
-				start_press = true
-			end
-		end
-		if start_press then
-			if KOF_CONFIG.GUARD.random_guard == 1 then
-				local percentage_of_down = 30
-				local randomNumber = math.random(1, 100)
-				if(randomNumber <= percentage_of_down )then
-					executeWithCooldown( doNothing, 20, "doNothing")
-				else
-					executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
-				end
-				start_press = false
-				return
-			else
-				if P2ActionIsExecuting() then
-					justGuard()
-				else
-					start_press = false
-				end
-			end
-		end
+local function filterAct(act)
+	if act== 21 or act == 22 or act == 23 or act == 24 or act == 25 or act == 79 or act == 14 or act == 2 or act == 48 or act == 49 or act == 1 or act == 0 or act == 6 or act == 45 or act == 46 or act == 47 or act == 3 or act == 4 or act == 5 or act == 15 or act == 16 or act == 7 or act == 8 or act == 9 or act == 10 or act == 11 or act == 12 or act == 13 or act == 17 or act == 18 or act == 19 or act == 20 then
+		return 0x00
 	end
-	--[[	if(start_press or  functionRunningFlags["dummyGuardForATime"] == true or functionRunningFlags['doNothing'] == true ) then			
-			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
-				local percentage_of_down = 30
-				local randomNumber = math.random(1, 100)
-				if(randomNumber <= percentage_of_down )then
-					executeWithCooldown( doNothing, 20, "doNothing")
-				else
-					executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
-				end
-				start_press = false
-				return
-			else
-				--executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
-				if P2ActionIsExecuting() then
-					executeWithCooldown(justGuard, 20, "dummyGuardForATime")
-					
-				end
-				start_press = false
-				return
-			end
+end
+local function eliminateInvalidAct(act)
+	local invalidActs = {
+		[0] = true, [1] = true
+	}
 
-			if(functionRunningFlags["dummyGuardForATime"] ) then				
-				executeWithCooldown( dummyGuardForATime, 20, "dummyGuardForATime")
+
+	if invalidActs[act] then
+		return true
+	end
+	return false		
+end
+
+local function eliminateInvalidActOfBackdash(player)
+	local act_of_backdash = 0
+	local current_act = rb(base_action_adress)
+	if act_of_backdash ~= current_act then
+		return false
+	end
+	if player == 1 then
+		wb(base_action_adress, 0x00)
+	elseif player == 2 then
+		wb(base_action_adress + 1, 0x00)
+	end
+end
+local function filterActOfBlocking(act)
+	local invalidActs = {
+		[0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true,
+		[6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true,
+		[12] = true, [13] = true, [14] = true, [15] = true, [16] = true, [17] = true,
+		[18] = true, [19] = true, [20] = true, [21] = true, [22] = true, [23] = true,
+		[24] = true, [25] = true, [45] = true, [46] = true, [47] = true, [48] = true,
+		[49] = true, [50] = true, [79] = true
+	}
+
+	if invalidActs[act] then
+		return 0x00
+	end
+	return act
+end
+local function p1MoveIsExecuting()
+	local act = p1CurrentAction()
+	if filterActOfBlocking(act) == 0x00 then
+		return false
+	end
+	return true
+end
+local start_ = false
+
+local chosenGuardOption = nil  -- nil = no decision yet
+
+local function block()
+	--TODO : add  a little prolongation of time to the block
+    -- Additional logic for blocking.
+	if KOF_CONFIG.GUARD.standing_guard == 1 then
+		if KOF_CONFIG.GUARD.random_guard == 1 then
+			local percentage_of_guard = 50
+			if P2ActionIsExecuting() then
+				-- Choose ONCE
+				if not chosenGuardOption then
+					local randomNumber = math.random(1, 100)
+					if randomNumber <= percentage_of_guard then
+						chosenGuardOption = "doNothing"
+					else
+						chosenGuardOption = "justGuard"
+					end
+				end
+
+				-- Execute LOCKED choice
+				if chosenGuardOption == "doNothing" then
+					doNothing()
+				elseif chosenGuardOption == "justGuard" then
+					justGuard()
+				end
+			else
+				-- Reset when action ends
+				chosenGuardOption = nil
 			end
-		
-			if(functionRunningFlags["doNothing"] ) then				
-				executeWithCooldown( doNothing, 20, "doNothing")
+			return
+		else
+			if P2ActionIsExecuting() then
+				gui.text(10,103,"Guard")
+				justGuard()
 			end
 		end
-	end --]]
-	if KOF_CONFIG.GUARD.crouch_guard == 1 then
-		if(start_press == false) then
-			if playerOnePressedButtons()  then
-				start_press = true
-			end
-		end
-		if (start_press or  functionRunningFlags["dummyCrouchGuardForATime"] == true or functionRunningFlags['p2Crouch'] == true ) then
-			if start_press and KOF_CONFIG.GUARD.random_guard == 1 then
-				local percentage_of_down = 35
-				local randomNumber = math.random(1, 100)
-				if(randomNumber <= percentage_of_down )then
-					executeWithCooldown( dummyCrouchForATime, 1, "dummyCrouchForATime")
-				else
-					executeWithCooldown( dummyCrouchGuardForATime, 1, "dummyCrouchGuardForATime")
+	elseif KOF_CONFIG.GUARD.crouch_guard == 1 then
+		if P2ActionIsExecuting() then
+				if KOF_CONFIG.GUARD.random_guard == 1 then
+						-- Choose ONCE
+				if not chosenOption then
+					
+					local percentage_of_guard = 50
+					local randomNumber = math.random(1, 100)
+					if randomNumber <= percentage_of_guard then
+						chosenOption = "dummyCrouch"
+					else
+						chosenOption = "dummyCrouchGuard"
+					end
 				end
-				start_press = false
-				return
-			elseif start_press and KOF_CONFIG.GUARD.random_guard == 0 then
-				if dummyMoveIsActive() then
+
+				-- Execute LOCKED choice
+				if chosenOption == "dummyCrouch" then
+					p2Crouch()
+				elseif chosenOption == "dummyCrouchGuard" then
 					dummyCrouchGuard()
-				elseif dummyCrouchGuardForATime()  == false  then
-					start_press = false
 				end
-				
-				return		
-			end
-			if(functionRunningFlags["dummyCrouchGuardForATime"] ) then
-				
-				if dummyMoveIsActive() then
-					dummyCrouchGuard()
-				else		
-					executeWithCooldown( dummyCrouchGuardForATime, 1, "dummyCrouchGuardForATime")
-				end
-			end
-			if(functionRunningFlags["dummyCrouchForATime"] ) then				
-				executeWithCooldown( dummyCrouchForATime, 1, "dummyCrouchForATime")
+			else
+				dummyCrouchGuard()
 			end
 		else
+			-- Reset when action ends
+			chosenOption = nil	
 			p2Crouch()
 		end
-		
+			
 	end
 end
 local active_wake_up =false
@@ -587,7 +835,7 @@ local function isOnWakeUp()
 	return rb(0x108321) > 0
 end
 local function closeToGround()
-	return rb(0x108321) < 20 and rb(0x108321) >  5
+	return rb(0x108321) < 20 and rb(0x108321) >  10 -- 18 used to be 5
 end
 local function isWakeUpTime()
 	return rb(0x108321) == 0  
@@ -628,6 +876,26 @@ end
 local dizzy_location = 0x10843F
 local function dissableDizzy()
 		wb(dizzy_location, 0x67)	
+end
+
+
+local counter_location_1 = 0x1083e6
+local counter_location_2 = 0x10d994
+local function enableCounter()
+	if playerTwoCanCounter() then
+		ww(counter_location_1, 0x1000)
+		ww(counter_location_2, 0x0070)
+	end
+end
+
+local guard_break_location = 0x108447
+local function toggleGuardBreak()
+	if KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE == KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.OPTIONS.NEVER then
+		wb(guard_break_location, 0x67)
+	elseif KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE == KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.OPTIONS.ALWAYS then
+		wb(guard_break_location, 0x00)
+	end
+
 end
 
 local cpu_location = 0x108470
@@ -716,8 +984,6 @@ local function isRecording(reversal_name)
 	end
 	return false
 end
-	  local first_character_location_p1 = 0x10A84E
-	  local first_character_location_p2 = 0x10A85F
 	  -- Function to load a machine state from a specified file
 function load_machine_state(file_path)
     -- Check if the save file exists
@@ -991,11 +1257,7 @@ local MUSIC_TRACKS = {
     ARASHI_NO_SAXOPHONE_2_ALT = 0x17
 }
 
-function filterAct(act)
-	if act== 21 or act == 22 or act == 23 or act == 24 or act == 25 or act == 79 or act == 14 or act == 2 or act == 48 or act == 49 or act == 1 or act == 0 or act == 6 or act == 45 or act == 46 or act == 47 or act == 3 or act == 4 or act == 5 or act == 15 or act == 16 or act == 7 or act == 8 or act == 9 or act == 10 or act == 11 or act == 12 or act == 13 or act == 17 or act == 18 or act == 19 or act == 20 then
-		return 0x00
-	end
-end
+
 
 
 
@@ -1069,10 +1331,78 @@ local function checkFrameAdvantage()
     end
 end
 
-function Run() -- runs every 
---gui.text(20, 30, "block address: " .. rb(p2blockstun_address), "yellow")
---justGuard()
-checkFrameAdvantage()
+
+local dummy_position = 0
+local percentage_of_recovery = 50
+local chosenRecoveryOption = nil  -- nil = no decision ye
+local function recover(callback)
+	if KOF_CONFIG.RECOVERY.recovery == KOF_CONFIG.RECOVERY.OPTIONS.RANDOM then	
+			-- Choose ONCE
+		if not chosenRecoveryOption then
+			local randomNumber = math.random(1, 100)
+			if randomNumber <= percentage_of_recovery then
+				chosenRecoveryOption = "doNothing"
+			else
+				chosenRecoveryOption = "recoveryRoll"
+			end
+		end
+
+		if chosenRecoveryOption == "doNothing" then
+			delay(30,function ()
+				chosenRecoveryOption =nil
+				callback()
+				return false
+			end)
+		elseif chosenRecoveryOption == "recoveryRoll" then
+					
+			delay(KOF_CONFIG.RECOVERY.delay, function()
+				local res = doMove("AB",  KOF_CONFIG.RECOVERY.times, true)
+				if res == false then				
+					chosenRecoveryOption =nil
+					callback()
+					return false
+				end
+
+				return true
+			end)
+		end
+	elseif KOF_CONFIG.RECOVERY.recovery == KOF_CONFIG.RECOVERY.OPTIONS.ON then
+				
+			delay(KOF_CONFIG.RECOVERY.delay, function()
+				local res = doMove("AB",  KOF_CONFIG.RECOVERY.times, true)
+				if res == false then
+					chosenRecoveryOption =nil
+					callback()
+					return false
+				end
+
+				return true
+			end)
+	end
+	return true
+end
+function Run() -- runs every frame
+	if KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard then
+		p1CrouchGuard()
+	end
+	--gui.text(20, 30, "block address: " .. rb(p2blockstun_address), "yellow")
+	--justGuard()
+	--108318 - 108319 Dummy stage position from 0020 (left corner) to 02e0  (right corner)
+    gui.text(20, 80, "dummy position: " .. dummy_position, "yellow")
+	if KOF_CONFIG.GUARD.dummy_guarding then
+		gui.text(20, 100, "dummy guarding", "yellow")
+		if P2CurrentAction() == 2 or P2CurrentAction() == 1 or P2CurrentAction() == 46 or P2CurrentAction() == 47 or P2CurrentAction() == 48 or P2CurrentAction() == 49 or P2CurrentAction() == 50 then
+			dummy_position = rw(0x108318)
+			if playerTwoFacingLeft then
+				ww(0x108318,dummy_position)
+			else 
+				ww(0x108318,dummy_position)
+			end	
+			P2SetAction(0)
+		end
+	end
+
+	checkFrameAdvantage()
 	draw_debug_info()
 	if kof_config_throw_os_on_jump or KOF_CONFIG.CPU.THROW_OS_ON_JUMP then
 		check_jump_approaching(char1, char2)
@@ -1101,8 +1431,8 @@ checkFrameAdvantage()
 		local music_address = 0x10ED5F
 		wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ)
 
-		wb(first_character_location_p1, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
-		wb(first_character_location_p2, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
+		wb(p1_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
+		wb(p2_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
 		if KOF_CONFIG.UI.PLAYER1_EX then
 			wb(0x10A85A,0x01)
 		
@@ -1141,6 +1471,14 @@ checkFrameAdvantage()
 	 if not KOF_CONFIG.DIZZY.dummy_can_dizzy  then
 		dissableDizzy()
 	 end
+	 if KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.can_be_countered then
+		enableCounter()
+	 end
+	
+	 if KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.state_toggled then
+		gui.text(197, 83,  "guard break state toggled:"..rb(guard_break_location) , "cyan", "black")
+		toggleGuardBreak()
+	 end
 	 
 	if KOF_CONFIG.CPU.dummy_can_fight then
 		enableCPU()
@@ -1159,8 +1497,12 @@ checkFrameAdvantage()
 	 if stateMachine.currentState == "start" then
         -- Logic for the "start" state
         -- Additional logic specific to the "start" state...
-		
+		gui.text(10, 300,  "this is the wakeup state"..tostring(KOF_CONFIG.WAKEUP.dummy_waking_up).." " , "cyan", "black")
 		--
+		if KOF_CONFIG.WAKEUP.dummy_waking_up then
+			wakeUpEnabled()
+		end
+		
 		if KOF_CONFIG.CPU.dummy_can_fight or current_cpu_action_running then --only while cpu is enabled or a cpu action is running
 			if KOF_CONFIG.CPU.GCCD.dummy_can_gccd then
 				if playerTwoInBlockstun() then
@@ -1191,35 +1533,25 @@ checkFrameAdvantage()
 			end
 		end
 		if KOF_CONFIG.RECOVERY.dummy_recovering then
-			
-			
-			if (wakeUpEnabled() and closeToGround()) then
-				if KOF_CONFIG.RECOVERY.recovery == KOF_CONFIG.RECOVERY.OPTIONS.RANDOM then
-					local percentage_of_success = 50
-					local randomNumber = math.random(1, 100)
-					if(randomNumber <= percentage_of_success )then
-						dont_recover = true
-					else 
-						recovery_enabled = true
+			if dont_recover then
+				delay(10, function()
+					local res = doNothing()
+					if not res then
+						dont_recover = false
 					end
-				elseif KOF_CONFIG.RECOVERY.recovery == KOF_CONFIG.RECOVERY.OPTIONS.ON then
-					recovery_enabled = true
+					return res
 				end
-				if dont_recover then
-					delay(10, function()
-						local res = doNothing()
-						if not res then
-							dont_recover = false
-						end
-						return res
-					end
-					)
-					return
-				end			
-				if recovery_enabled then transitionToState("recovering")	end			
+				)
+				return false
+			end	
+			
+			if closeToGround() and wakeUpEnabled() then
+				
+				transitionToState("recovering")
+			else
+				--recovery_enabled = true
 			end
-		end
-		if KOF_CONFIG.GUARD.dummy_guarding  then
+		elseif KOF_CONFIG.GUARD.dummy_guarding  then
         	transitionToState("blocking")  -- Transition to the "blocking" state
 		elseif KOF_CONFIG.WAKEUP.dummy_waking_up and not KOF_CONFIG.RECOVERY.dummy_recovering  then
 			if (wakeUpEnabled()) then			
@@ -1230,7 +1562,9 @@ checkFrameAdvantage()
 			end
 		end
 	elseif stateMachine.currentState == "blocking" then
-		if not KOF_CONFIG.GUARD.dummy_guarding then
+		if (wakeUpEnabled() and closeToGround()) and KOF_CONFIG.RECOVERY.dummy_recovering then
+			transitionToState("recovering")
+		end		if not KOF_CONFIG.GUARD.dummy_guarding then
 			transitionToState("start")
 		end
 		if KOF_CONFIG.WAKEUP.dummy_waking_up then
@@ -1242,20 +1576,51 @@ checkFrameAdvantage()
 			end
 		end
 		if  playerTwoInBlockstun() and KOF_CONFIG.GUARD.reversal ~= KOF_CONFIG.GUARD.REVERSAL_OPTIONS.OFF then
+			
+			local reversal_name = getCurrentReversalMove("guard_reversal")
+			local reversal = buildReversal(reversal_name)
+			if isRecording(reversal_name) then
+				if (not reversal.propagates) and recording.playback then
+					return
+				end
+			end
 			transitionToState("guard_reversal")
 		end
 		block()
 	elseif stateMachine.currentState == "waking_up" then
+		print("waking up")
+		if isWakeUpTime() then
+			print("wakeup time active")
+		end
+		if active_wake_up == true then
+			print("active_wakeup active")
+		end
+		if wakeUpEnabled() then
+			print("wakeup enabled")
+		else
+			print("wakeup disabled")
+		end
 		if(isWakeUpTime() and active_wake_up == true and wakeUpEnabled()) then
-	
+			dont_recover = true
+			print("wakeup reversal is starting")
 			local reversal_name = getCurrentReversalMove("waking_up")
 			local reversal = buildReversal(reversal_name)
-			delay(reversal.on_wake_up_delay, function ()
-				local res = doReversal(reversal.name, reversal.on_wake_up_times)
-				if res ==false then
+			if isRecording(reversal_name) then				
+				if ( not reversal.propagates) and recording.playback then
+					return	
+				else	
+						
+					if recording.loop then
+						return
+					end
+					local _recording = recording.recordingslot
+					recording.recordingslot = moves[reversal_name].index
+					kofTogglePlayBack(true, {})
+					recording.recordingslot = _recording
+					--print("wakeup reversal is stoping")
 					startWakeupIddleTime()
-					active_wake_up=false
-					resetCurrentReversalName()					
+					resetCurrentReversalName()
+					active_wake_up=false			
 					if KOF_CONFIG.GUARD.dummy_guarding then
 						transitionToState("blocking")  -- Transition to the "blocking" state
 					else
@@ -1263,31 +1628,51 @@ checkFrameAdvantage()
 						startWakeupIddleTime()
 					end
 				end
-				return res
-			end) --for state waking up
+			else			
+				delay(reversal.on_wake_up_delay, function ()
+					local res = doReversal(reversal.name, reversal.on_wake_up_times)
+					if res ==false then
+						startWakeupIddleTime()
+						active_wake_up=false
+						resetCurrentReversalName()					
+						if KOF_CONFIG.GUARD.dummy_guarding then
+							transitionToState("blocking")  -- Transition to the "blocking" state
+						else
+							transitionToState("start")
+							startWakeupIddleTime()
+						end
+					end
+					return res
+				end) --for state waking up
+			end
 		end
 	elseif stateMachine.currentState == "guard_reversal" then
 		local reversal_name = getCurrentReversalMove("guard_reversal")
 	local reversal = buildReversal(reversal_name)
 	if isRecording(reversal_name) then
-		if recording.loop then
-			return
-		end
-		local _recording = recording.recordingslot
-		recording.recordingslot = moves[reversal_name].index
-		print("index is" ..moves[reversal_name].index)
-		print("recording is" ..reversal_name)
-		kofTogglePlayBack(true, {})
-		recording.recordingslot = _recording
-		--print("guard reversal is stoping")
-		startWakeupIddleTime()
-		resetCurrentReversalName()
-		active_wake_up=false					
-		if KOF_CONFIG.GUARD.dummy_guarding then
-			transitionToState("blocking")  -- Transition to the "blocking" state
-		else
-			transitionToState("start")
+		
+		if ( not reversal.propagates) and recording.playback then
+			return	
+		else	
+				
+			if recording.loop then
+				print("recording loop active")
+				return
+			end
+			local _recording = recording.recordingslot
+			recording.recordingslot = moves[reversal_name].index
+			kofTogglePlayBack(true, {})
+			recording.recordingslot = _recording
+			--print("guard reversal is stoping")
 			startWakeupIddleTime()
+			resetCurrentReversalName()
+			active_wake_up=false			
+			if KOF_CONFIG.GUARD.dummy_guarding then
+				transitionToState("blocking")  -- Transition to the "blocking" state
+			else
+				transitionToState("start")
+				startWakeupIddleTime()
+			end
 		end
 	else
 		delay(reversal.on_guard_delay, function ()
@@ -1309,27 +1694,25 @@ checkFrameAdvantage()
 	end
 		 	
 	elseif stateMachine.currentState == "recovering" then
-		local recovery_moves = {}
-		table.insert(recovery_moves,{ name = "AB", delay = KOF_CONFIG.RECOVERY.delay, times = KOF_CONFIG.RECOVERY.times, conf = true } )
-		if KOF_CONFIG.WAKEUP.dummy_waking_up then
-			local reversal_name = getCurrentReversalMove("waking_up")
-			local reversal = buildReversal(reversal_name)
-			table.insert(recovery_moves,{ name = reversal.name, delay = reversal.on_wake_up_delay, times = reversal.on_wake_up_times } )
-		end
-		doMoves(recovery_moves,function()
-			--print("All moves executed!")
-			recovery_enabled = false
+	
+		recover(function()
+			--print("Move executed!")
+			dont_recover = true
 			if KOF_CONFIG.WAKEUP.dummy_waking_up then 
-				startWakeupIddleTime()
-				resetCurrentReversalName()
-			end
-			if KOF_CONFIG.GUARD.dummy_guarding then
+				active_wake_up = true
+				transitionToState("waking_up")
+				return false
+			elseif KOF_CONFIG.GUARD.dummy_guarding then
 				transitionToState("blocking")
+				return false
+
 			else
 				transitionToState("start")
+				return false
+
 			end
-		end)								
-	
+		end)
+			
 	elseif stateMachine.currentState == "cpu_action" then
 		if KOF_CONFIG.CPU.GCCD.dummy_can_gccd then 
 			if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON and gccd_action_running then				
@@ -1357,10 +1740,10 @@ checkFrameAdvantage()
 					local percentage_of_success = 30
 					local randomNumber = math.random(1, 100)
 					if(randomNumber <= percentage_of_success )then
-						print("random success")
+						--print("random success")
 						running_randomned_cpu_action_gccd = true
 					else
-						print("random fail")
+						--print("random fail")
 						gccd_random_move_ends = true
 						running_randomned_cpu_action_gccd = false
 						enableCPU()
@@ -1400,10 +1783,10 @@ checkFrameAdvantage()
 					local percentage_of_success = 30
 					local randomNumber = math.random(1, 100)
 					if(randomNumber <= percentage_of_success )then
-						print("random success")
+						--print("random success")
 						running_randomned_cpu_action_gcab = true
 					else
-						print("random fail")
+						--print("random fail")
 						gcab_random_move_ends = true
 						running_randomned_cpu_action_gcab = false
 						enableCPU()

@@ -5539,8 +5539,13 @@ move_data.guard_recordings = {
 					if not next(recording[1]) then
 						this.text = "REC_1" .. ": empty" 
                         
+                        
                     elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
 						this.text = "REC_1" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = false
+                        end
 					elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
 						this.text = "REC_1" .. ": ON" 
 					end
@@ -5549,7 +5554,7 @@ move_data.guard_recordings = {
         text = "REC_1",
         olcolour = "black",
         func = function()
-						KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] = KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"]+ 1
+						KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] = KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] + 1
 						if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"] > 1 then
 							KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_1"]  = 0
 						end
@@ -5559,53 +5564,28 @@ move_data.guard_recordings = {
     ["2"] = {
         y = 22,
         x = 8,
-        info = {'this is the delay'},
-        text = "delay:",
-        olcolour = "black",
-        func = function()
-						-- Function for "delay: "
-					end,
-    },
-    ["3"] = {
-        y = 22,
-        x = 42,
-        info = {},
-        text = "-",
-        olcolour = "black",
-        func = function()
-						-- Function for "(-) delay"				
-						if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay  == 0 then
-							return
-						end
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay  - 1
-					end,
-    },
-    ["4"] = {
-        y = 22,
-        x = 53,
-        info = {},
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
         autofunc = function(this)
-						this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay )
-					end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay),
+					if not next(recording[1]) then
+						this.text = "Prop REC_1" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == false) then
+						this.text = "Prop REC_1" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == true) then
+						this.text = "Prop REC_1" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
         olcolour = "black",
         func = function()
-						
-					end,
-    },
-    ["5"] = {
-        y = 22,
-        x = 68,
-        info = {},
-        text = "+",
-        olcolour = "black",
-        func = function()
-						-- Function for "(+) delay"
-						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").on_guard_delay + 1
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates
+                         
 					end,
     },
     --REC 2 --
-    ["6"] = {
+    ["3"] = {
         y = 34,
         x = 8,
         info = {'Recording 2'},
@@ -5616,6 +5596,10 @@ move_data.guard_recordings = {
                 
             elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_2"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
                         this.text = "REC_2" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_2"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = false
+                        end
                     elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_2"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
                         this.text = "REC_2" .. ": ON" 
                     end
@@ -5630,56 +5614,31 @@ move_data.guard_recordings = {
                     KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
                 end,
     },
-    ["7"] = {
+    ["4"] = {
         y = 46,
         x = 8,
-        info = {'this is the delay'},
-        text = "delay:",
-        olcolour = "black",
-        func = function()
-						-- Function for "delay: "
-					end,
-    },
-    ["8"] = {
-        y = 46,
-        x = 42,
-        info = {},
-        text = "-",
-        olcolour = "black",
-        func = function()
-                        -- Function for "(-) delay"
-                        if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay  == 0 then
-                            return
-                        end
-                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay  - 1
-                    end,
-    },
-    ["9"] = {
-        y = 46,
-        x = 53,
-        info = {},
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
         autofunc = function(this)
-                    this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay )
-                end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay),
+					if not next(recording[2]) then
+						this.text = "Prop REC_2" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == false) then
+						this.text = "Prop REC_2" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == true) then
+						this.text = "Prop REC_2" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
         olcolour = "black",
         func = function()
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay + 1
-                end,
-    }, 
-    ["10"] = {
-        y = 46,
-        x = 68,
-        info = {},
-        text = "+",
-        olcolour = "black",
-        func = function()
-                    -- Function for "(+) delay"
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").on_guard_delay + 1
-                end,
-    },
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates
+                         
+					end,
+    }    ,
     -- REC 3 --
-    ["11"] = {
+    ["5"] = {
         y = 58,
         x = 8,
         info = {'Recording 3'},
@@ -5690,6 +5649,10 @@ move_data.guard_recordings = {
                 
             elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_3"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
                         this.text = "REC_3" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_3"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = false
+                        end
                     elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_3"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
                         this.text = "REC_3" .. ": ON" 
                     end
@@ -5704,56 +5667,31 @@ move_data.guard_recordings = {
                     KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
                 end,
     },
-    ["12"] = {
+    ["6"] = {
         y = 70,
         x = 8,
-        info = {'this is the delay'},
-        text = "delay:",
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[3]) then
+						this.text = "Prop REC_3" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == false) then
+						this.text = "Prop REC_3" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == true) then
+						this.text = "Prop REC_3" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates
+                         
 					end,
     },
-    ["13"] = {
-        y = 70,
-        x = 42,
-        info = {},
-        text = "-",
-        olcolour = "black",
-        func = function()
-                        -- Function for "(-) delay"
-                        if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay  == 0 then
-                            return
-                        end
-                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay  - 1
-                    end,
-    },
-    ["14"] = {
-        y = 70,
-        x = 53,
-        info = {},
-        autofunc = function(this)
-                    this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay )
-                end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay),
-        olcolour = "black",
-        func = function()    
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay + 1
-                end,
-    }, 
-    ["15"] = {
-        y = 70,
-        x = 68,
-        info = {},
-        text = "+",
-        olcolour = "black",
-        func = function()
-                    -- Function for "(+) delay"
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").on_guard_delay + 1
-                end,
-    },
     -- REC 4 -- 
-    ["16"] = {
+    ["7"] = {
         y = 82,
         x = 8,
         info = {'Recording 4'},
@@ -5764,6 +5702,10 @@ move_data.guard_recordings = {
                 
             elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_4"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
                         this.text = "REC_4" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_4"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = false
+                        end
                     elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_4"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
                         this.text = "REC_4" .. ": ON" 
                     end
@@ -5778,56 +5720,31 @@ move_data.guard_recordings = {
                     KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
                 end,
     },
-    ["17"] = {
+    ["8"] = {
         y = 94,
         x = 8,
-        info = {'this is the delay'},
-        text = "delay:",
-        olcolour = "black",
-        func = function()
-						-- Function for "delay: "
-					end,
-    }, 
-    ["18"] = {
-        y = 94,
-        x = 42,
-        info = {},
-        text = "-",
-        olcolour = "black",
-        func = function()
-                        -- Function for "(-) delay"
-                        if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay  == 0 then
-                            return
-                        end
-                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay  - 1
-                    end,
-    },
-    ["19"] = {
-        y = 94,
-        x = 53,
-        info = {},
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
         autofunc = function(this)
-                    this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay )
-                end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay),
-        olcolour = "black",
-        func = function()    
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay + 1
-                end,
-    },
-    ["20"] = {
-        y = 94,
-        x = 68,
-        info = {},
-        text = "+",
+					if not next(recording[4]) then
+						this.text = "Prop REC_4" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == false) then
+						this.text = "Prop REC_4" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == true) then
+						this.text = "Prop REC_4" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
         olcolour = "black",
         func = function()
-                    -- Function for "(+) delay"
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").on_guard_delay + 1
-                end,
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates
+                         
+					end,
     },
     -- REC 5 -- 
-    ["21"] = {
+    ["9"] = {
         y = 106,
         x = 8,
         info = {'Recording 5'},
@@ -5838,6 +5755,10 @@ move_data.guard_recordings = {
                         
                     elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_5"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
                         this.text = "REC_5" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_5"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = false
+                        end
                     elseif (KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_5"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
                         this.text = "REC_5" .. ": ON" 
                     end
@@ -5852,54 +5773,66 @@ move_data.guard_recordings = {
                     KOF_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
                 end,
     },
-    ["22"] = {
+    ["10"] = {
         y = 118,
         x = 8,
-        info = {'this is the delay'},
-        text = "delay:",
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[5]) then
+						this.text = "Prop REC_5" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == false) then
+						this.text = "Prop REC_5" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == true) then
+						this.text = "Prop REC_5" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates
+                         
 					end,
-    }, 
-    ["23"] = {
-        y = 118,
-        x = 42,
-        info = {},
-        text = "-",
+    },
+    ["11"] = {
+        x = 80,
+        y = 10,
+        info = {'Save current recording setup to file'},
+        autofunc = function(this)
+					if isRecordingEmpty() then
+                       this.text = "Setup to Save" .. ": N/A" 
+                    else
+                       this.text = "Save Setup for: " .. getCurrentSetupName()
+                    end
+
+					
+				end,
+        text = "..non data:",
         olcolour = "black",
         func = function()
-                        -- Function for "(-) delay"
-                        if KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay  == 0 then
+                        if isRecordingEmpty() then
                             return
                         end
-                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay   = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay  - 1
-                    end,
+						-- Function for "save current setup to file: "
+                       local setup = buildSetup()
+                       setup.guard = true
+                       setup.GUARD_CONFIG = KOF_CONFIG["GUARD"]
+                       setup.RECOVERY_CONFIG = KOF_CONFIG["RECOVERY"] -- Probably good to include recovery too like wakeup does
+                       for i =1,5 do
+                            setup.recording_var_states[i] = {}
+                            setup.recording_var_states[i].value = KOF_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_"..i]
+                            setup.recording_var_states[i].propagates = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_"..i).propagates
+                       end
+
+                       DBIndex.createSetup(setup)
+                        -- 🔥 refresh setups page immediately
+                        refreshSetupMenu()
+                       
+                         
+					end,
     },
-    ["24"] = {
-        y = 118,
-        x = 53,
-        info = {},
-        autofunc = function(this)
-                    this.text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay )
-                end,
-        text = tostring(KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay),
-        olcolour = "black",
-        func = function()    
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay + 1
-                end,
-    },
-    ["25"] = {
-        y = 118,
-        x = 68,
-        info = {},
-        text = "+",
-        olcolour = "black",
-        func = function()
-                    -- Function for "(+) delay"
-                    KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").on_guard_delay + 1
-                end,
-    }
 
 }
 
@@ -7989,6 +7922,14 @@ move_data.wakeup_normals = {
         text = "Common ",
         olcolour = "black",
         func = function() changeInteractiveGuiPage(getCustomPageNameByType( "commons_move_settings", "WAKEUP")) end,
+    },
+    ["93"] = {
+        y = 161.6,
+        x = 185,
+        handle = 8,
+        text = "Recordings",
+        olcolour = "black",
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType( "recordings_move_settings", "WAKEUP")) end,
     },
 }
 move_data.wakeup_specials = {
@@ -11037,6 +10978,315 @@ move_data.wakeup_commons = {
 						KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times  = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times + 1
 					end,
     },
+}
+
+move_data.wakeup_recordings = { 
+    
+    ["1"] = {
+        y = 10,
+        x = 8,
+        info = {'Recording 1'},
+        autofunc = function(this)
+					if not next(recording[1]) then
+						this.text = "REC_1" .. ": empty" 
+                        
+                        
+                    elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+						this.text = "REC_1" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = false
+                        end
+					elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+						this.text = "REC_1" .. ": ON" 
+					end
+					
+				end,
+        text = "REC_1",
+        olcolour = "black",
+        func = function()
+						KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] + 1
+						if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] > 1 then
+							KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"]  = 0
+						end
+						KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+				end,
+    },
+    ["2"] = {
+        y = 22,
+        x = 8,
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[1]) then
+						this.text = "Prop REC_1" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == false) then
+						this.text = "Prop REC_1" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == true) then
+						this.text = "Prop REC_1" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
+        olcolour = "black",
+        func = function()
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates
+                         
+					end,
+    },
+    --REC 2 --
+    ["3"] = {
+        y = 34,
+        x = 8,
+        info = {'Recording 2'},
+        autofunc = function(this)
+                    
+            if not next(recording[2]) then
+                this.text = "REC_2" .. ": empty" 
+                
+            elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                        this.text = "REC_2" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = false
+                        end
+                    elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                        this.text = "REC_2" .. ": ON" 
+                    end
+                end,
+        text = "REC_2",
+        olcolour = "black",
+        func = function()
+                    KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"]+ 1
+                    if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] > 1 then
+                        KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"]  = 0
+                    end
+                    KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+                end,
+    },
+    ["4"] = {
+        y = 46,
+        x = 8,
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[2]) then
+						this.text = "Prop REC_2" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == false) then
+						this.text = "Prop REC_2" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == true) then
+						this.text = "Prop REC_2" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
+        olcolour = "black",
+        func = function()
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates
+                         
+					end,
+    }    ,
+    -- REC 3 --
+    ["5"] = {
+        y = 58,
+        x = 8,
+        info = {'Recording 3'},
+        autofunc = function(this)
+                    
+            if not next(recording[3]) then
+                this.text = "REC_3" .. ": empty" 
+                
+            elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                        this.text = "REC_3" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = false
+                        end
+                    elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                        this.text = "REC_3" .. ": ON" 
+                    end
+                end,
+        text = "REC_3",
+        olcolour = "black",
+        func = function()
+                    KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"]+ 1
+                    if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] > 1 then
+                        KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"]  = 0
+                    end
+                    KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+                end,
+    },
+    ["6"] = {
+        y = 70,
+        x = 8,
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[3]) then
+						this.text = "Prop REC_3" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == false) then
+						this.text = "Prop REC_3" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == true) then
+						this.text = "Prop REC_3" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
+        olcolour = "black",
+        func = function()
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates
+                         
+					end,
+    },
+    -- REC 4 -- 
+    ["7"] = {
+        y = 82,
+        x = 8,
+        info = {'Recording 4'},
+        autofunc = function(this)
+                    
+            if not next(recording[4]) then
+                this.text = "REC_4" .. ": empty" 
+                
+            elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                        this.text = "REC_4" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = false
+                        end
+                    elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                        this.text = "REC_4" .. ": ON" 
+                    end
+                end,
+        text = "REC_4",
+        olcolour = "black",
+        func = function()
+                    KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"]+ 1
+                    if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] > 1 then
+                        KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"]  = 0
+                    end
+                    KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+                end,
+    },
+    ["8"] = {
+        y = 94,
+        x = 8,
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[4]) then
+						this.text = "Prop REC_4" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == false) then
+						this.text = "Prop REC_4" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == true) then
+						this.text = "Prop REC_4" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
+        olcolour = "black",
+        func = function()
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates
+                         
+					end,
+    },
+    -- REC 5 -- 
+    ["9"] = {
+        y = 106,
+        x = 8,
+        info = {'Recording 5'},
+        autofunc = function(this)
+                    
+                    if not next(recording[5]) then
+						this.text = "REC_5" .. ": empty" 
+                        
+                    elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                        this.text = "REC_5" .. ": Off" 
+                        
+                        if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                            KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = false
+                        end
+                    elseif (KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                        this.text = "REC_5" .. ": ON" 
+                    end
+                end,
+        text = "REC_5",
+        olcolour = "black",
+        func = function()
+                    KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"]+ 1
+                    if KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] > 1 then
+                        KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"]  = 0
+                    end
+                    KOF_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+                end,
+    },
+    ["10"] = {
+        y = 118,
+        x = 8,
+        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        autofunc = function(this)
+					if not next(recording[5]) then
+						this.text = "Prop REC_5" .. ": N/A" 
+                        
+                    elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == false) then
+						this.text = "Prop REC_5" .. ": false" 
+					elseif ( KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == true) then
+						this.text = "Prop REC_5" .. ": true" 
+					end
+					
+				end,
+        text = "Propagate:",
+        olcolour = "black",
+        func = function()
+						-- Function for "propagate: "
+                        KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = not KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates
+                         
+					end,
+    },
+    ["11"] = {
+        x = 80,
+        y = 10,
+        info = {'Save current recording setup to file'},
+        autofunc = function(this)
+					if isRecordingEmpty() then
+                       this.text = "Setup to Save" .. ": N/A" 
+                    else
+                       this.text = "Save Setup for: " .. getCurrentSetupName()
+                    end
+
+					
+				end,
+        text = "..non data:",
+        olcolour = "black",
+        func = function()
+                        if isRecordingEmpty() then
+                            return
+                        end
+						-- Function for "save current setup to file: "
+                       -- saveSetupToFile(1, getCurrentSetupName())
+                       --loadSetupFromFile(1, getCurrentSetupName())
+                       local setup = buildSetup()
+                       setup.wakeup = true
+                       setup.WAKEUP_CONFIG = KOF_CONFIG["WAKEUP"]
+                       setup.RECOVERY_CONFIG = KOF_CONFIG["RECOVERY"]
+                       for i =1,5 do
+                            setup.recording_var_states[i] = {}
+                            setup.recording_var_states[i].value = KOF_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_"..i]
+                            setup.recording_var_states[i].propagates = KOF_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_"..i).propagates
+                       end
+
+                       DBIndex.createSetup(setup)
+                        -- 🔥 refresh setups page immediately
+                        refreshSetupMenu()
+                       
+                         
+					end,
+    },
+
 }
 
 return move_data

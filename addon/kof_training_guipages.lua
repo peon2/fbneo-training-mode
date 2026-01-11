@@ -20,6 +20,21 @@ KOF_CONFIG = {
 			OFF = 0,
 			ON= 1,
 		},
+		
+	getCurrentReversalMoves = function(type)
+			local tabl = {}
+
+			for index, value in pairs(KOF_CONFIG.MOVES_VAR_NAMES[type]) do
+				if (KOF_CONFIG.MOVES_VAR_NAMES[type][index] == KOF_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+				
+					local reversalMove = index
+					table.insert(tabl, reversalMove)
+				end
+			end
+			
+			return tabl
+		end
+		,
 		MOVELIST = nil
 	},
     WAKEUP = {
@@ -51,6 +66,45 @@ KOF_CONFIG = {
 			OFF = 0,
 			ON = 1,
 		},
+
+	},
+	PLAYERS={
+		PLAYER1 = {
+			ID = 1,
+			NAME = "P1",
+			CROUCH_GUARD = {
+				can_crouch_guard = false,
+				ENABLED = 0,
+				OPTIONS = {
+					OFF = 0,
+					ON = 1,
+				}
+			},
+
+		},
+		PLAYER2 = {
+			ID = 2,
+			NAME = "P2",
+			COUNTER = {
+				can_be_countered = false,
+				ENABLED = 0,
+				OPTIONS = {
+					OFF = 0,
+					ON = 1,
+				}
+			},
+			GUARD_BREAK = {
+				state_toggled = false,
+				STATE = 0,
+				OPTIONS = {
+					NORMAL = 0,
+					NEVER = 1,
+					ALWAYS = 2
+				}
+			},
+
+		},
+		
 
 	},
 	CPU ={
@@ -191,7 +245,6 @@ KOF_CONFIG = {
 				{'-'},
 				{'a','b'},
 				{'a','b'},
-				{'a','b'},
 	
 			},
 			times = 3,
@@ -244,44 +297,44 @@ KOF_CONFIG = {
 		}
 	},
 	CHARACTERS = {
-		[1] = { name = "Kyo Kusanagi", code = "0x00" },
-		[2] = { name = "Benimaru Nikaido", code = "0x01" },
-		[3] = { name = "Goro Daimon", code = "0x02" },
-		[4] = { name = "Terry Bogard", code = "0x03" },
-		[5] = { name = "Andy Bogard", code = "0x04" },
-		[6] = { name = "Joe Higashi", code = "0x05" },
-		[7] = { name = "Ryo Sakazaki", code = "0x06" },
-		[8] = { name = "Robert Garcia", code = "0x07" },
-		[9] = { name = "Yuri Sakazaki", code = "0x08" },
-		[10] = { name = "Leona", code = "0x09" },
-		[11] = { name = "Ralf Jones", code = "0x0A" },
-		[12] = { name = "Clark Steel", code = "0x0B" },
-		[13] = { name = "Athena Asamiya", code = "0x0C" },
-		[14] = { name = "Sie Kensou", code = "0x0D" },
-		[15] = { name = "Chin Gentsai", code = "0x0E" },
-		[16] = { name = "Chizuru Kagura", code = "0x0F" },
-		[17] = { name = "Mai Shiranui", code = "0x10" },
-		[18] = { name = "King", code = "0x11" },
-		[19] = { name = "Kim Kaphwan", code = "0x12" },
-		[20] = { name = "Chang Koehan", code = "0x13" },
-		[21] = { name = "Choi Bounge", code = "0x14" },
-		[22] = { name = "Yashiro Nanakase", code = "0x15" },
-		[23] = { name = "Shermie", code = "0x16" },
-		[24] = { name = "Chris", code = "0x17" },
-		[25] = { name = "Ryuji Yamazaki", code = "0x18" },
-		[26] = { name = "Blue Mary", code = "0x19" },
-		[27] = { name = "Billy Kane", code = "0x1A" },
-		[28] = { name = "Iori Yagami", code = "0x1B" },
-		[29] = { name = "Mature", code = "0x1C" },
-		[30] = { name = "Vice", code = "0x1D" },
-		[31] = { name = "Heidern", code = "0x1E" },
-		[32] = { name = "Takuma Sakazaki", code = "0x1F" },
-		[33] = { name = "Saisyu Kusanagi", code = "0x20" },
-		[34] = { name = "Heavy D!", code = "0x21" },
-		[35] = { name = "Lucky Glauber", code = "0x22" },
-		[36] = { name = "Brian Battler", code = "0x23" },
-		[37] = { name = "Rugal Bernstein", code = "0x24" },
-		[38] = { name = "Shingo Yabuki", code = "0x25" },
+		[1] = { name = "Kyo Kusanagi", code = "0x00", short_name = "kyo" },
+		[2] = { name = "Benimaru Nikaido", code = "0x01", short_name = "beni" },
+		[3] = { name = "Goro Daimon", code = "0x02", short_name = "goro" },
+		[4] = { name = "Terry Bogard", code = "0x03", short_name = "terry" },
+		[5] = { name = "Andy Bogard", code = "0x04", short_name = "andy" },
+		[6] = { name = "Joe Higashi", code = "0x05", short_name = "joe" },
+		[7] = { name = "Ryo Sakazaki", code = "0x06", short_name = "ryo" },
+		[8] = { name = "Robert Garcia", code = "0x07", short_name = "robert" },
+		[9] = { name = "Yuri Sakazaki", code = "0x08", short_name = "yuri" },
+		[10] = { name = "Leona", code = "0x09", short_name = "leona" },
+		[11] = { name = "Ralf Jones", code = "0x0A", short_name = "ralf" },
+		[12] = { name = "Clark Steel", code = "0x0B", short_name = "clark" },
+		[13] = { name = "Athena Asamiya", code = "0x0C", short_name = "athena" },
+		[14] = { name = "Sie Kensou", code = "0x0D", short_name = "sie" },
+		[15] = { name = "Chin Gentsai", code = "0x0E", short_name = "chin" },
+		[16] = { name = "Chizuru Kagura", code = "0x0F", short_name = "chizuru" },
+		[17] = { name = "Mai Shiranui", code = "0x10", short_name = "mai" },
+		[18] = { name = "King", code = "0x11", short_name = "king" },
+		[19] = { name = "Kim Kaphwan", code = "0x12", short_name = "kim" },
+		[20] = { name = "Chang Koehan", code = "0x13", short_name = "chang" },
+		[21] = { name = "Choi Bounge", code = "0x14", short_name = "choi" },
+		[22] = { name = "Yashiro Nanakase", code = "0x15", short_name = "yashiro" },
+		[23] = { name = "Shermie", code = "0x16", short_name = "shermie" },
+		[24] = { name = "Chris", code = "0x17", short_name = "chris" },
+		[25] = { name = "Ryuji Yamazaki", code = "0x18", short_name = "ryuji" },
+		[26] = { name = "Blue Mary", code = "0x19", short_name = "mary" },
+		[27] = { name = "Billy Kane", code = "0x1A", short_name = "billy" },
+		[28] = { name = "Iori Yagami", code = "0x1B", short_name = "iori" },
+		[29] = { name = "Mature", code = "0x1C", short_name = "mature" },
+		[30] = { name = "Vice", code = "0x1D", short_name = "vice" },
+		[31] = { name = "Heidern", code = "0x1E", short_name = "heidern" },
+		[32] = { name = "Takuma Sakazaki", code = "0x1F", short_name = "takuma" },
+		[33] = { name = "Saisyu Kusanagi", code = "0x20", short_name = "saisyu" },
+		[34] = { name = "Heavy D!", code = "0x21", short_name = "heavy" },
+		[35] = { name = "Lucky Glauber", code = "0x22", short_name = "lucky" },
+		[36] = { name = "Brian Battler", code = "0x23", short_name = "brian" },
+		[37] = { name = "Rugal Bernstein", code = "0x24", short_name = "rugal" },
+		[38] = { name = "Shingo Yabuki", code = "0x25", short_name = "shingo" },
 		
 	},
 	UI ={
@@ -456,7 +509,8 @@ guicustompage = {
 						KOF_CONFIG.WAKEUP.dummy_waking_up = true
 					else KOF_CONFIG.WAKEUP.dummy_waking_up = false end
 				end,
-		autofunc = function(this)				
+		autofunc = function(this)		
+			--gui.text(10, 200, "wake up reversal: "..tostring(KOF_CONFIG.WAKEUP.reversal))		
 					if (KOF_CONFIG.WAKEUP.reversal == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.OFF) then
 						this.text = "Wake Up Reversal: Off" 
 					elseif (KOF_CONFIG.WAKEUP.reversal == KOF_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON) then
@@ -591,31 +645,13 @@ guicustompage = {
 		text = "Reversal Move List Settings and information: ",
 		x = 2,
 		y = 75 + 10,
-	},
-	{
-			text = "Dissy enabled",
-			x = 110+8,
-			y = 85  +10,
-			olcolour = "black",
-			handle = 8,
-			func =	function()
-				KOF_CONFIG.DIZZY.enabled  = KOF_CONFIG.DIZZY.enabled + 1
-						if KOF_CONFIG.DIZZY.enabled> 1 then
-							KOF_CONFIG.DIZZY.enabled= 0
-						end
-						if KOF_CONFIG.DIZZY.enabled ~= KOF_CONFIG.DIZZY.OPTIONS.OFF then
-							KOF_CONFIG.DIZZY.dummy_can_dizzy = true
-						else 
-							KOF_CONFIG.DIZZY.dummy_can_dizzy= false
-						end
-					end,
-			autofunc = function(this)				
-						if KOF_CONFIG.DIZZY.enabled == KOF_CONFIG.DIZZY.OPTIONS.OFF  then
-							this.text = "DIZZY: Off" 
-						elseif KOF_CONFIG.DIZZY.enabled == KOF_CONFIG.DIZZY.OPTIONS.ON  then
-							this.text = "DIZZY: On" 
-						end
-				end,
+	},{
+		text = "p1 and dummy settings:",
+		x = 118,
+		y = 95,
+		olcolour = "black",
+		handle = 8,
+		func = 	function() CIG("p1_and_dummy_settings", 1) end,
 	},{
 		text = "Character Selecction",
 		x = 118,
@@ -715,8 +751,100 @@ guicustompage = {
 		autofunc = function(this) 
                 this.text =  "Current Conf: "..getIndexFromConfigValue(KOF_CONFIG.TRAINING.current_configuration)
 			end,
+	},{
+		text = "Load Recorded Setup: ",
+		x = 8,
+		y = 157,
+		olcolour = "black",
+		handle = 2,
+		info = {
+            "load here the recorded setup from recording"
+		},
+		func = 	function() CIG("activate_current_recording_setup", 1) end,
+	}
+}
+
+local activate_current_recording_setup = {
+	title = {
+		text = "Activate Recorded setup from recording",
+		x = interactivegui.boxxlength/2 - (#"Activate Recorded setup from recording")*2,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(0,1) end,
 	},
 }
+guipages.activate_current_recording_setup = activate_current_recording_setup
+local function buildSetupMenu(setups)
+    local items = {}
+
+    local start_x = 10
+    local start_y = 8
+    local spacing = 12
+
+    for i, setup in ipairs(setups) do
+        local item = {
+            x = start_x,
+            y = start_y + (i - 1) * spacing,
+            text = setup.base_name,
+            olcolour = "black",
+			fillpercent = 1,
+			checked = false,
+			func = function() 
+				items[i].checked = not items[i].checked
+				if items[i].checked then
+					-- Uncheck other items
+					for j, other_item in ipairs(items) do
+						if j ~= i then
+							other_item.checked = false
+						end
+					end
+					-- Load the selected setup
+					applySetup(setups[i])
+				end
+			end,
+			autofunc = function(this)
+				if this.checked then
+					this.fillpercent = 1
+				elseif not this.checked then
+					this.fillpercent = 0
+				end
+			end
+        }
+
+        table.insert(items, item)
+    end
+
+    return items
+end
+local setups = DBIndex.loadAllSetups()
+local setup_items = buildSetupMenu(setups)
+
+for _, item in ipairs(setup_items) do
+    table.insert(guipages.activate_current_recording_setup , item)
+end
+local SETUP_MENU_START_INDEX = #activate_current_recording_setup + 1
+
+function refreshSetupMenu()
+    -- remove old dynamic items
+    for i = #guipages.activate_current_recording_setup, SETUP_MENU_START_INDEX, -1 do
+        table.remove(guipages.activate_current_recording_setup, i)
+    end
+
+    -- reload setups from disk
+    local setups = DBIndex.loadAllSetups()
+    local setup_items = buildSetupMenu(setups)
+
+    -- insert new items
+    for _, item in ipairs(setup_items) do
+        table.insert(guipages.activate_current_recording_setup, item)
+    end
+	formatGuiTables() --  this is VERY important as it resets the gui for the new element to work properly
+end
+
 local cpu_settings = {
 	title = {
 		text = "CPU Settings",
@@ -876,6 +1004,130 @@ local character_select_settings = {
 }
 
 guipages.character_select_settings = character_select_settings
+local p1_and_dummy_settings = {
+	title = {
+		text = "P1 and Dummy  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(0,1) end,
+	},
+}
+
+guipages.p1_and_dummy_settings = p1_and_dummy_settings
+local p1_and_dummy_data = {
+	["1"] = 
+	{
+			text = "Dissy enabled",
+			x = 10,
+			y = 8,
+			olcolour = "black",
+			handle = 1,
+			func =	function()
+				KOF_CONFIG.DIZZY.enabled  = KOF_CONFIG.DIZZY.enabled + 1
+						if KOF_CONFIG.DIZZY.enabled> 1 then
+							KOF_CONFIG.DIZZY.enabled= 0
+						end
+						if KOF_CONFIG.DIZZY.enabled ~= KOF_CONFIG.DIZZY.OPTIONS.OFF then
+							KOF_CONFIG.DIZZY.dummy_can_dizzy = true
+						else 
+							KOF_CONFIG.DIZZY.dummy_can_dizzy= false
+						end
+					end,
+			autofunc = function(this)				
+						if KOF_CONFIG.DIZZY.enabled == KOF_CONFIG.DIZZY.OPTIONS.OFF  then
+							this.text = "DIZZY: Off" 
+						elseif KOF_CONFIG.DIZZY.enabled == KOF_CONFIG.DIZZY.OPTIONS.ON  then
+							this.text = "DIZZY: On" 
+						end
+				end,
+	},
+	["2"] = 
+	{
+			text = "P1 crouch guard",
+			x = 10,
+			y = 20,
+			olcolour = "black",
+			handle = 2,
+			func =	function()
+				KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED  = KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED + 1
+						if KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED> 1 then
+							KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED= 0
+						end
+						if KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED ~= KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.OPTIONS.OFF then
+							KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard = true
+						else 
+							KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard= false
+						end
+					end,
+			autofunc = function(this)				
+						if KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED == KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.OPTIONS.OFF  then
+							this.text = "P1_CROUCH_GUARD: Off" 
+						elseif KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED == KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.OPTIONS.ON  then
+							this.text = "P1_CROUCH_GUARD: On" 
+						end
+				end,
+	},
+	["3"] = {
+			text = "P2 Guard Break",
+			x = 10,
+			y = 32,
+			olcolour = "black",
+			handle = 3,
+			func =	function()
+				KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED  = KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED + 1
+						if KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED> 1 then
+							KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED= 0
+						end
+						if KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED ~= KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.OPTIONS.OFF then
+							KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.can_be_countered = true
+						else 
+							KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.can_be_countered= false
+						end
+					end,
+			autofunc = function(this)				
+						if KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED == KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.OPTIONS.OFF  then
+							this.text = "Counter: Off" 
+						elseif KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.ENABLED == KOF_CONFIG.PLAYERS.PLAYER2.COUNTER.OPTIONS.ON  then
+							this.text = "Counter: On" 
+						end
+				end,
+			},
+	["4"] = {
+			text = "P2 Guard Break",
+			x = 10,
+			y = 44,
+			olcolour = "black",
+			handle = 3,
+			func =	function()
+				KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE  = KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE + 1
+						if KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE> 2 then
+							KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE= 0
+						end
+						if KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE == KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.OPTIONS.NORMAL then
+							KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.state_toggled = false
+						else 
+							KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.state_toggled= true
+						end
+					end,
+			autofunc = function(this)				
+						if KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE == KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.OPTIONS.NORMAL  then
+							this.text = "GUARD BREAK: Normal" 
+						elseif KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE == KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.OPTIONS.NEVER  then
+							this.text = "GUARD BREAK: Never" 
+						elseif KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.STATE == KOF_CONFIG.PLAYERS.PLAYER2.GUARD_BREAK.OPTIONS.ALWAYS  then
+							this.text = "GUARD BREAK: always" 
+						end
+				end,
+			},
+}
+for key, item in pairs( p1_and_dummy_data) do
+table.insert(guipages.p1_and_dummy_settings,item)
+end
 local guard_reversal_move_active_settings = {
 	title = {
 		text = "Guard Reversal Move Active Settings",
