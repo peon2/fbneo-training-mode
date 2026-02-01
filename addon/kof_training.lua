@@ -25,6 +25,22 @@ local stateMachine = {
 	currentState = "start",
 	lastState = nil,
 	is_a_soft_reset = false,
+	-- Migrated variables
+	active_wake_up = false,
+	isJustGuardRunning = false,
+	chosenGuardOption = nil,
+	last_do_move_name = nil,
+	dont_recover = false,
+	p2_was_in_hitstun = false,
+	dummy_position = 0,
+	-- CPU Action Flags
+	running_randomned_cpu_action_gccd = false,
+	running_randomned_cpu_action_gcab = false,
+	gccd_random_move_ends = false,
+	gcab_random_move_ends = false,
+	current_cpu_action_running = false,
+	gccd_action_running = false,
+	gcab_action_running = false,
 }
 
 reversal_types = {
@@ -34,10 +50,9 @@ reversal_types = {
 }
 
 -- [[ System State Variables ]]
-local active_wake_up = false
+
 local delay_count = 0
-local chosenGuardOption = nil
-local isJustGuardRunning = false
+
 local one_hit_guard_triggered = false
 
 local iddle_time_running = false
@@ -49,10 +64,10 @@ local sequence_reversal_type = nil
 local current_move_index_counter = 1
 local current_move_time_counter = 0
 local current_sequence = {}
-local last_do_move_name = nil
+
 
 local CURRENT_REVERSAL_MOVE_NAME = nil
-local dont_recover = false
+
 
 local player_two_entered_blockstun = false
 local last_updated_frame = -1
@@ -104,7 +119,7 @@ local function transitionToState(newState)
 
 	delay_count = 0
 	if newState == "start" or newState == "blocking" then
-		active_wake_up = false
+		stateMachine.active_wake_up = false
 	end
 end
 
@@ -166,7 +181,7 @@ local function dummyMoveIsActive()
 	return rb(p2move_adress) ~= 0
 end
 local last_frame = emu.framecount()
-local p2_was_in_hitstun = false
+
 
 function saveStateLoaded()
 	local f = emu.framecount()
@@ -683,9 +698,9 @@ local function transitionToState(newState)
 	-- Reset state-specific flags and counters
 	delay_count = 0
 	if newState == "start" or newState == "blocking" then
-		active_wake_up = false
+		stateMachine.active_wake_up = false
 		one_hit_guard_triggered = false
-		isJustGuardRunning = false
+		stateMachine.isJustGuardRunning = false
 	end
 end
 
@@ -755,11 +770,11 @@ local function doMove(move_name, times, conf)
 		return false
 	end--]]
 
-	if last_do_move_name ~= move_name then
+	if stateMachine.last_do_move_name ~= move_name then
 		current_move_time_counter = 0
 		current_move_index_counter = 1
 		current_sequence = {}
-		last_do_move_name = move_name
+		stateMachine.last_do_move_name = move_name
 	end
 
 	if current_move_time_counter >= times then
@@ -1087,7 +1102,7 @@ end
 
 
 local function block()
-	active_wake_up = false
+	stateMachine.active_wake_up = false
 	iddle_time_running = false
 	delay_count = 0
 
@@ -1117,34 +1132,34 @@ local function block()
 		-- Initial trigger: ONLY IF P1 IS EXECUTING OR P2 ENTERED BLOCKSTUN
 		local isAttackTriggered = P1ActionIsExecuting() or playerTwoInBlockstun()
 
-		if (isAttackTriggered) and not isJustGuardRunning then
+		if (isAttackTriggered) and not stateMachine.isJustGuardRunning then
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
 				gui.text(10, 60, "Trigger: NEW")
 			end
-			isJustGuardRunning = true
+			stateMachine.isJustGuardRunning = true
 			current_move_time_counter = 0
 		end
 
-		if isAttackTriggered and (last_do_move_name == "GUARD_BACK" or last_do_move_name == "CROUCH_GUARD") then
+		if isAttackTriggered and (stateMachine.last_do_move_name == "GUARD_BACK" or stateMachine.last_do_move_name == "CROUCH_GUARD") then
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
 				gui.text(10, 60, "Trigger: SUSTAIN")
 				gui.text(10, 103, "Guard: ON")
 			end
 			current_move_time_counter = 0 -- Sustain
-			isJustGuardRunning = true
+			stateMachine.isJustGuardRunning = true
 		end
 
-		if isJustGuardRunning then
+		if stateMachine.isJustGuardRunning then
 			if KOF_CONFIG.GUARD.dummy_action == KOF_CONFIG.GUARD.ACTION_OPTIONS.STANDING then -- Standing
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: Stand Guard")
 				end
-				isJustGuardRunning = justGuard()
+				stateMachine.isJustGuardRunning = justGuard()
 			elseif KOF_CONFIG.GUARD.dummy_action == KOF_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then -- Crouching
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: Crouch Guard")
 				end
-				isJustGuardRunning = dummyCrouchGuardForATime()
+				stateMachine.isJustGuardRunning = dummyCrouchGuardForATime()
 			end
 		else
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
@@ -1166,28 +1181,28 @@ local function block()
 		-- Logic: If P2 Action is executing, we need to make a decision (if not made)
 		-- OR if we already made a decision ("justGuard" or "doNothing" or "dummyCrouchGuard" etc)
 
-		-- We used to have "chosenGuardOption". We need to map new options.
+		-- We used to have "stateMachine.chosenGuardOption". We need to map new options.
 		-- Options: "Block" vs "NoBlock".
 		-- If Block -> Execute Guard (Stand/Crouch based on dummy_action).
 		-- If NoBlock -> Execute Base Action (Stand/Crouch based on dummy_action).
 
-		if P1ActionIsExecuting() or playerTwoInBlockstun() or chosenGuardOption then
+		if P1ActionIsExecuting() or playerTwoInBlockstun() or stateMachine.chosenGuardOption then
 			-- INITIAL DECISION
-			if not chosenGuardOption and (P1ActionIsExecuting() or playerTwoInBlockstun()) then
+			if not stateMachine.chosenGuardOption and (P1ActionIsExecuting() or playerTwoInBlockstun()) then
 				local randomNumber = math.random(1, 100)
 				if randomNumber <= percentage_of_guard then
-					chosenGuardOption = "Block"
+					stateMachine.chosenGuardOption = "Block"
 				else
-					chosenGuardOption = "NoBlock"
+					stateMachine.chosenGuardOption = "NoBlock"
 				end
 			end
 
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
-				gui.text(10, 80, "Choice: " .. tostring(chosenGuardOption))
+				gui.text(10, 80, "Choice: " .. tostring(stateMachine.chosenGuardOption))
 			end
 
 			-- EXECUTION
-			if chosenGuardOption == "NoBlock" then
+			if stateMachine.chosenGuardOption == "NoBlock" then
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: NoBlock (Base)")
 				end
@@ -1195,32 +1210,32 @@ local function block()
 				if KOF_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
 
 				-- Release choice if action ends
-				if not (P1ActionIsExecuting() or playerTwoInBlockstun()) then chosenGuardOption = nil end
-			elseif chosenGuardOption == "Block" then
+				if not (P1ActionIsExecuting() or playerTwoInBlockstun()) then stateMachine.chosenGuardOption = nil end
+			elseif stateMachine.chosenGuardOption == "Block" then
 				-- Initialize Guard if needed
-				if not isJustGuardRunning then
+				if not stateMachine.isJustGuardRunning then
 					current_move_time_counter = 0
-					isJustGuardRunning = true
+					stateMachine.isJustGuardRunning = true
 				end
 
 				-- Execute Guard
-				if isJustGuardRunning then
+				if stateMachine.isJustGuardRunning then
 					if KOF_CONFIG.GUARD.dummy_action == 0 then -- Standing
 						if KOF_CONFIG.DEBUG.BLOCK == 1 then
 							gui.text(10, 70, "Exec: Random Stand Guard")
 						end
-						isJustGuardRunning = justGuard()
+						stateMachine.isJustGuardRunning = justGuard()
 					elseif KOF_CONFIG.GUARD.dummy_action == 1 then -- Crouching
 						if KOF_CONFIG.DEBUG.BLOCK == 1 then
 							gui.text(10, 70, "Exec: Random Crouch Guard")
 						end
-						isJustGuardRunning = dummyCrouchGuardForATime()
+						stateMachine.isJustGuardRunning = dummyCrouchGuardForATime()
 					end
 				end
 
 				-- Release choice if guard finished
-				if not isJustGuardRunning then
-					chosenGuardOption = nil
+				if not stateMachine.isJustGuardRunning then
+					stateMachine.chosenGuardOption = nil
 				end
 			end
 		else
@@ -1228,8 +1243,8 @@ local function block()
 				gui.text(10, 80, "Choice: NONE")
 			end
 			-- Reset
-			if not isJustGuardRunning then
-				chosenGuardOption = nil
+			if not stateMachine.isJustGuardRunning then
+				stateMachine.chosenGuardOption = nil
 				if KOF_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
 			end
 		end
@@ -1251,15 +1266,15 @@ local function block()
 
 		-- Initial trigger
 		local isAttackTriggered = P1ActionIsExecuting() or playerTwoInBlockstun()
-		if isAttackTriggered and not isJustGuardRunning then
+		if isAttackTriggered and not stateMachine.isJustGuardRunning then
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
 				gui.text(10, 60, "Trigger: NEW (AG)")
 			end
-			isJustGuardRunning = true
+			stateMachine.isJustGuardRunning = true
 			current_move_time_counter = 0
 		end
 
-		if isAttackTriggered and (last_do_move_name == "GUARD_BACK" or last_do_move_name == "CROUCH_GUARD") then
+		if isAttackTriggered and (stateMachine.last_do_move_name == "GUARD_BACK" or stateMachine.last_do_move_name == "CROUCH_GUARD") then
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
 				gui.text(10, 60, "Trigger: SUSTAIN (AG)")
 				gui.text(10, 103, "All Guard: ACTIVE")
@@ -1267,17 +1282,17 @@ local function block()
 			current_move_time_counter = 0 -- Sustain
 		end
 
-		if isJustGuardRunning then
+		if stateMachine.isJustGuardRunning then
 			if needs_crouch then
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: AG Crouch Guard")
 				end
-				isJustGuardRunning = dummyCrouchGuardForATime()
+				stateMachine.isJustGuardRunning = dummyCrouchGuardForATime()
 			else
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: AG Stand Guard")
 				end
-				isJustGuardRunning = justGuard()
+				stateMachine.isJustGuardRunning = justGuard()
 			end
 		else
 			if KOF_CONFIG.DEBUG.BLOCK == 1 then
@@ -1329,28 +1344,28 @@ local function block()
 		end
 
 		-- Start guard immediately when triggered
-		if not isJustGuardRunning then
-			isJustGuardRunning = true
+		if not stateMachine.isJustGuardRunning then
+			stateMachine.isJustGuardRunning = true
 			current_move_time_counter = 0
 		end
 
 		-- Sustain guard while under attack or just entered guard state
-		if isAttackTriggered and (last_do_move_name == "GUARD_BACK" or last_do_move_name == "CROUCH_GUARD") then
+		if isAttackTriggered and (stateMachine.last_do_move_name == "GUARD_BACK" or stateMachine.last_do_move_name == "CROUCH_GUARD") then
 			current_move_time_counter = 0
 		end
 
 		-- Execute guard
-		if isJustGuardRunning then
+		if stateMachine.isJustGuardRunning then
 			if KOF_CONFIG.GUARD.dummy_action == 0 then
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: Stand Guard")
 				end
-				isJustGuardRunning = justGuard()
+				stateMachine.isJustGuardRunning = justGuard()
 			elseif KOF_CONFIG.GUARD.dummy_action == 1 then
 				if KOF_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Exec: Crouch Guard")
 				end
-				isJustGuardRunning = dummyCrouchGuardForATime()
+				stateMachine.isJustGuardRunning = dummyCrouchGuardForATime()
 			end
 		else
 			-- Guard finished → return to IDLE only when both not attacking and not being hit
@@ -1362,7 +1377,7 @@ local function block()
 				transitionToState("start")
 			else
 				-- Still under pressure, restart guard
-				isJustGuardRunning = true
+				stateMachine.isJustGuardRunning = true
 				current_move_time_counter = 0
 			end
 			-- if KOF_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
@@ -1379,12 +1394,11 @@ local function isOnWakeUp()
 	return dummy_in_air
 end
 local function closeToGround()
-	return rw(0x108321) < 5000 and (rw(0x108321) > 0)
+	return rw(0x108321) < 20000 and (rw(0x108321) > 0)
 end
 
 local function isWakeUpTime()
-	if closeToGround() and getP2RawActionByte() == 52 then
-		print("isWakeUpTime xxxx")
+	if getP2RawActionByte() == 52 then
 		stateMachine.is_a_soft_reset = true
 		return true
 	elseif stateMachine.is_a_soft_reset then
@@ -1462,7 +1476,6 @@ local function disableCPU()
 	wb(cpu_location, 0x01)
 end
 
-local dont_recover = false
 local recovery_enabled = false
 -- global, as it is used in ssf2x
 local kofTogglePlayBack = function(bool, vargs)
@@ -1561,13 +1574,6 @@ function load_machine_state(file_path)
 	end
 end
 
-local running_randomned_cpu_action_gccd = false
-local running_randomned_cpu_action_gcab = false
-local gccd_random_move_ends = false
-local gcab_random_move_ends = false
-local current_cpu_action_running = false
-local gccd_action_running = false
-local gcab_action_running = false
 Character = {}
 Character.__index = Character
 
@@ -2009,7 +2015,7 @@ local function checkP2FrameAdvantage()
 end
 
 
-local dummy_position = 0
+
 local percentage_of_recovery = 50
 local chosenRecoveryOption = nil -- nil = no decision ye
 local function recover(callback)
@@ -2057,12 +2063,354 @@ local function recover(callback)
 	return true
 end
 
+
+local StateHandlers = {}
+
+function StateHandlers.start(ctx)
+	-- RESET / INTERRUPT
+	if playerTwoIsFalling() or playerTwoIsBeingHit() then
+		iddle_time_running = false
+		iddle_finish_time = 0
+		stateMachine.active_wake_up = false
+	end
+
+	-- 1. CPU ACTIONS
+	if KOF_CONFIG.CPU.dummy_can_fight or stateMachine.current_cpu_action_running then
+		if KOF_CONFIG.CPU.GCCD.dummy_can_gccd and playerTwoInBlockstun() then
+			if not stateMachine.gccd_random_move_ends then
+				stateMachine.gccd_action_running = true
+				disableCPU()
+				KOF_CONFIG.CPU.dummy_can_fight = false
+				transitionToState("cpu_action")
+				return
+			end
+		else
+			stateMachine.gccd_random_move_ends = false
+		end
+
+		if KOF_CONFIG.CPU.GCAB.dummy_can_gcab and playerTwoIsFalling() then
+			if not stateMachine.gcab_random_move_ends then
+				stateMachine.gcab_action_running = true
+				disableCPU()
+				KOF_CONFIG.CPU.dummy_can_fight = false
+				transitionToState("cpu_action")
+				return
+			end
+		else
+			stateMachine.gcab_random_move_ends = false
+		end
+	end
+
+	-- 2. RECOVERY
+	if KOF_CONFIG.RECOVERY.dummy_recovering then
+		if stateMachine.dont_recover then
+			delay(10, function()
+				local res = doNothing()
+				if not res then stateMachine.dont_recover = false end
+				return res
+			end)
+		elseif closeToGround() and wakeUpEnabled() then
+			transitionToState("recovering")
+			return
+		end
+	end
+	-- 3. HIT REVERSAL CHECK
+	local p2_is_hit = playerTwoIsBeingHit()
+	if stateMachine.p2_was_in_hitstun and not p2_is_hit and not playerTwoIsFalling() and not isOnWakeUp() then
+		if KOF_CONFIG.HIT.reversal ~= KOF_CONFIG.HIT.REVERSAL_OPTIONS.OFF then
+			transitionToState("hit_reversal")
+			stateMachine.p2_was_in_hitstun = false
+			return
+		end
+	end
+	stateMachine.p2_was_in_hitstun = p2_is_hit
+
+	-- 4. WAKEUP
+	if KOF_CONFIG.WAKEUP.dummy_waking_up and wakeUpEnabled() then
+		if isOnWakeUp() and stateMachine.active_wake_up == false then
+			stateMachine.active_wake_up = true
+			transitionToState("waking_up")
+			return
+		end
+	end
+
+	if KOF_CONFIG.GUARD.guard_mode > KOF_CONFIG.GUARD.MODE_OPTIONS.OFF and not isOnWakeUp() and not stateMachine.active_wake_up then
+		if KOF_CONFIG.GUARD.guard_mode == KOF_CONFIG.GUARD.MODE_OPTIONS.ONE_HIT_GUARD then
+			if playerTwoIsBeingHit() then
+				transitionToState("blocking")
+				return
+			end
+		else
+			transitionToState("blocking")
+			return
+		end
+	end
+
+	-- 5. HIT REVERSAL TRIGGER
+	-- Logic: If we were being hit, and now we are not, and we are not falling, trigger Hit Reversal.
+	-- (Basic implementation: Rely on hitstun transition logic if feasible, or check hit status edge detection)
+	-- Actually, detecting the transition from "Being Hit" to "Neutral/Action" is best done by tracking state.
+	-- But for simplicity, we can do it by checking if we ARE recovering from a hit?
+	-- Or we can trust the 'p2CurrentHitstun()' logic?
+
+	-- Let's use a simple edge detector for now or reuse existing state checks.
+	-- If we are in 'start' and just finished being hit?
+
+	-- Better approach:
+	local hitstun = p2CurrentHitstun()
+	-- If hitstun just became 0, we finished being hit.
+	-- But p2CurrentHitstun() resets to 0 when not being hit.
+	-- We need a frame-by-frame tracker for this.
+
+	-- Let's assume the user wants it "like guard or wakeup".
+	-- Guard reversal triggers when blockstun ends? No, it triggers while in blockstun?
+	-- "guard_reversal": "if playerTwoInBlockstun() ... transitionToState('guard_reversal')".
+	-- Then in guard_reversal, it waits or executes.
+	-- For HIT, we can't do it WHILE being hit (usually), unless it's a "break" (like burst).
+	-- Assuming "Reversal" means "After Hitstun Ends".
+
+	-- Strategy: Track 'wasHit' in previous frame.
+	if KOF_CONFIG.HIT.reversal ~= KOF_CONFIG.HIT.REVERSAL_OPTIONS.OFF then
+		-- We need to know if we just recovered from a hit.
+		-- Using a global variable for tracking previous hit state might be cleanest.
+	end
+
+	-- STANCE
+	if KOF_CONFIG.GUARD.dummy_action == 1 then
+		p2Crouch()
+	end
+end
+
+function StateHandlers.blocking(ctx)
+	if playerTwoIsFalling() or isOnWakeUp() then
+		transitionToState("start")
+		return
+	end
+
+	if playerTwoInBlockstun() and KOF_CONFIG.GUARD.reversal ~= KOF_CONFIG.GUARD.REVERSAL_OPTIONS.OFF then
+		transitionToState("guard_reversal")
+		return
+	end
+
+	block()
+end
+
+function StateHandlers.waking_up(ctx)
+	if (isWakeUpTime() and stateMachine.active_wake_up == true and wakeUpEnabled()) then
+		stateMachine.dont_recover = true
+		local reversal_name = getCurrentReversalMove("waking_up")
+		local reversal = buildReversal(reversal_name)
+
+		if isRecording(reversal_name) then
+			if (not reversal.propagates) and recording.playback then
+				transitionToState("start")
+				return
+			end
+			if recording.loop then return end
+
+			local _recording = recording.recordingslot
+			recording.recordingslot = moves[reversal_name].index
+			kofTogglePlayBack(true, {})
+			recording.recordingslot = _recording
+
+			startWakeupIddleTime()
+			resetCurrentReversalName()
+			stateMachine.active_wake_up = false
+			stateMachine.isJustGuardRunning = false
+			stateMachine.chosenGuardOption = nil
+			stateMachine.last_do_move_name = nil
+			stateMachine.is_a_soft_reset = false
+			transitionToState("start")
+		else
+			delay(reversal.on_wake_up_delay, function()
+				local res = doReversal(reversal.name, reversal.on_wake_up_times)
+				if res == false then
+					startWakeupIddleTime()
+					stateMachine.active_wake_up = false
+					stateMachine.isJustGuardRunning = false
+					stateMachine.chosenGuardOption = nil
+					stateMachine.last_do_move_name = nil
+					stateMachine.is_a_soft_reset = false
+					resetCurrentReversalName()
+					transitionToState("start")
+				end
+				return res
+			end)
+		end
+	end
+end
+
+function StateHandlers.guard_reversal(ctx)
+	if playerTwoIsBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
+		transitionToState("start")
+		return
+	end
+
+	local reversal_name = getCurrentReversalMove("guard_reversal")
+	local reversal = buildReversal(reversal_name)
+
+	if isRecording(reversal_name) then
+		if (not reversal.propagates) and recording.playback then
+			transitionToState("blocking")
+			return
+		end
+		if recording.loop then return end
+
+		local _recording = recording.recordingslot
+		recording.recordingslot = moves[reversal_name].index
+		kofTogglePlayBack(true, {})
+		recording.recordingslot = _recording
+
+		startWakeupIddleTime()
+		resetCurrentReversalName()
+		transitionToState("blocking")
+	else
+		delay(reversal.on_guard_delay, function()
+			local res = doReversal(reversal.name, reversal.on_guard_times)
+			if res == false then
+				stateMachine.isJustGuardRunning = false
+				stateMachine.chosenGuardOption = nil
+				stateMachine.last_do_move_name = nil
+				startWakeupIddleTime()
+				transitionToState("blocking")
+			end
+			return res
+		end)
+	end
+end
+
+function StateHandlers.hit_reversal(ctx)
+	if playerTwoIsBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
+		transitionToState("start")
+		return
+	end
+
+	local reversal_name = getCurrentReversalMove("hit_reversal")
+	local reversal = buildReversal(reversal_name)
+
+	if isRecording(reversal_name) then
+		if (not reversal.propagates) and recording.playback then
+			transitionToState("start")
+			return
+		end
+		if recording.loop then return end
+
+		local _recording = recording.recordingslot
+		recording.recordingslot = moves[reversal_name].index
+		kofTogglePlayBack(true, {})
+		recording.recordingslot = _recording
+
+		startWakeupIddleTime()
+		resetCurrentReversalName()
+		transitionToState("start")
+	else
+		local d = reversal.on_hit_delay or reversal.on_guard_delay or 0
+		local t = reversal.on_hit_times or reversal.on_guard_times or 1
+
+		delay(d, function()
+			local res = doReversal(reversal.name, t)
+			if res == false then
+				-- Finished
+				stateMachine.isJustGuardRunning = false
+				stateMachine.chosenGuardOption = nil
+				stateMachine.last_do_move_name = nil
+				startWakeupIddleTime()
+				transitionToState("start") -- Return to start
+			end
+			return res
+		end)
+	end
+end
+
+function StateHandlers.recovering(ctx)
+	recover(function()
+		stateMachine.dont_recover = true
+		if KOF_CONFIG.WAKEUP.dummy_waking_up then
+			stateMachine.active_wake_up = true
+			transitionToState("waking_up")
+		elseif KOF_CONFIG.GUARD.guard_mode > 0 then
+			stateMachine.isJustGuardRunning = false
+			stateMachine.chosenGuardOption = nil
+			stateMachine.last_do_move_name = nil
+			transitionToState("blocking")
+		else
+			stateMachine.isJustGuardRunning = false
+			stateMachine.chosenGuardOption = nil
+			stateMachine.last_do_move_name = nil
+			transitionToState("start")
+		end
+	end)
+end
+
+function StateHandlers.cpu_action(ctx)
+	if KOF_CONFIG.CPU.GCCD.dummy_can_gccd and stateMachine.gccd_action_running then
+		if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON then
+			if doMove("CD", 3, true) == false then
+				enableCPU()
+				stateMachine.current_cpu_action_running = false
+				stateMachine.gccd_action_running = false
+				KOF_CONFIG.CPU.dummy_can_fight = true
+				transitionToState("start")
+			end
+		elseif KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM and not stateMachine.gccd_random_move_ends then
+			if stateMachine.running_randomned_cpu_action_gccd then
+				if doMove("CD", 3, true) == false then
+					enableCPU()
+					stateMachine.gccd_random_move_ends = true
+					stateMachine.running_randomned_cpu_action_gccd = false
+					stateMachine.current_cpu_action_running = false
+					KOF_CONFIG.CPU.dummy_can_fight = true
+					transitionToState("start")
+				end
+			else
+				if math.random(1, 100) <= 30 then
+					stateMachine.running_randomned_cpu_action_gccd = true
+				else
+					stateMachine.gccd_random_move_ends = true
+					enableCPU()
+					KOF_CONFIG.CPU.dummy_can_fight = true
+					stateMachine.current_cpu_action_running = false
+					transitionToState("start")
+				end
+			end
+		end
+	end
+
+	if KOF_CONFIG.CPU.GCAB.dummy_can_gcab and stateMachine.gcab_action_running then
+		if KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.ON then
+			if doMove("AB", 5, true) == false then
+				enableCPU()
+				KOF_CONFIG.CPU.dummy_can_fight = true
+				stateMachine.current_cpu_action_running = false
+				stateMachine.gcab_action_running = false
+				transitionToState("start")
+			end
+		elseif KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.RANDOM and not stateMachine.gcab_random_move_ends then
+			if stateMachine.running_randomned_cpu_action_gcab then
+				if doMove("AB", 5, true) == false then
+					enableCPU()
+					stateMachine.gcab_random_move_ends = true
+					stateMachine.running_randomned_cpu_action_gcab = false
+					KOF_CONFIG.CPU.dummy_can_fight = true
+					stateMachine.current_cpu_action_running = false
+					transitionToState("start")
+				end
+			else
+				if math.random(1, 100) <= 30 then
+					stateMachine.running_randomned_cpu_action_gcab = true
+				else
+					stateMachine.gccd_random_move_ends = true
+					enableCPU()
+					KOF_CONFIG.CPU.dummy_can_fight = true
+					stateMachine.current_cpu_action_running = false
+					transitionToState("start")
+				end
+			end
+		end
+	end
+end
+
 function Run() -- runs every frame
-	gui.text(20, 120, "Address 0x108321: " .. rb(0x108321))
-	gui.text(20, 132, "Address 0x108322: " .. rb(0x108322))
-	gui.text(20, 144, "Addresses together: " .. rw(0x108321))
-
-
 	if KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard then
 		p1CrouchGuard()
 	end
@@ -2070,18 +2418,18 @@ function Run() -- runs every frame
 	--justGuard()
 	--108318 - 108319 Dummy stage position from 0020 (left corner) to 02e0  (right corner)
 	if KOF_CONFIG.DEBUG.POSITION == 1 then
-		gui.text(20, 80, "dummy position: " .. dummy_position, "yellow")
+		gui.text(20, 80, "dummy position: " .. stateMachine.dummy_position, "yellow")
 	end
 	if KOF_CONFIG.GUARD.dummy_guarding then
 		if KOF_CONFIG.DEBUG.GUARD == 1 then
 			gui.text(20, 100, "dummy guarding", "yellow")
 		end
 		if getP2RawActionByte() == 2 or getP2RawActionByte() == 1 or getP2RawActionByte() == 46 or getP2RawActionByte() == 47 or getP2RawActionByte() == 48 or getP2RawActionByte() == 49 or getP2RawActionByte() == 50 then
-			dummy_position = rw(0x108318)
+			stateMachine.dummy_position = rw(0x108318)
 			if playerTwoFacingLeft then
-				ww(0x108318, dummy_position)
+				ww(0x108318, stateMachine.dummy_position)
 			else
-				ww(0x108318, dummy_position)
+				ww(0x108318, stateMachine.dummy_position)
 			end
 			P2SetAction(0)
 		end
@@ -2178,342 +2526,15 @@ function Run() -- runs every frame
 			transitionToState("cpu_action")
 		end
 	end ]]
-	if stateMachine.currentState == "start" then
-		-- RESET / INTERRUPT
-		if playerTwoIsFalling() or playerTwoIsBeingHit() then
-			iddle_time_running = false
-			iddle_finish_time = 0
-			active_wake_up = false
-		end
 
-		-- 1. CPU ACTIONS
-		if KOF_CONFIG.CPU.dummy_can_fight or current_cpu_action_running then
-			if KOF_CONFIG.CPU.GCCD.dummy_can_gccd and playerTwoInBlockstun() then
-				if not gccd_random_move_ends then
-					gccd_action_running = true
-					disableCPU()
-					KOF_CONFIG.CPU.dummy_can_fight = false
-					transitionToState("cpu_action")
-					return
-				end
-			else
-				gccd_random_move_ends = false
-			end
-
-			if KOF_CONFIG.CPU.GCAB.dummy_can_gcab and playerTwoIsFalling() then
-				if not gcab_random_move_ends then
-					gcab_action_running = true
-					disableCPU()
-					KOF_CONFIG.CPU.dummy_can_fight = false
-					transitionToState("cpu_action")
-					return
-				end
-			else
-				gcab_random_move_ends = false
-			end
-		end
-
-		-- 2. RECOVERY
-		if KOF_CONFIG.RECOVERY.dummy_recovering then
-			if dont_recover then
-				delay(10, function()
-					local res = doNothing()
-					if not res then dont_recover = false end
-					return res
-				end)
-			elseif closeToGround() and wakeUpEnabled() then
-				transitionToState("recovering")
-				return
-			end
-		end
-		-- 3. HIT REVERSAL CHECK
-		local p2_is_hit = playerTwoIsBeingHit()
-		if p2_was_in_hitstun and not p2_is_hit and not playerTwoIsFalling() and not isOnWakeUp() then
-			if KOF_CONFIG.HIT.reversal ~= KOF_CONFIG.HIT.REVERSAL_OPTIONS.OFF then
-				transitionToState("hit_reversal")
-				p2_was_in_hitstun = false
-				return
-			end
-		end
-		p2_was_in_hitstun = p2_is_hit
-
-		-- 4. WAKEUP
-		if KOF_CONFIG.WAKEUP.dummy_waking_up and wakeUpEnabled() then
-			if isOnWakeUp() and active_wake_up == false then
-				active_wake_up = true
-				transitionToState("waking_up")
-				return
-			end
-		end
-
-		if KOF_CONFIG.GUARD.guard_mode > KOF_CONFIG.GUARD.MODE_OPTIONS.OFF and not isOnWakeUp() and not active_wake_up then
-			if KOF_CONFIG.GUARD.guard_mode == KOF_CONFIG.GUARD.MODE_OPTIONS.ONE_HIT_GUARD then
-				if playerTwoIsBeingHit() then
-					transitionToState("blocking")
-					return
-				end
-			else
-				transitionToState("blocking")
-				return
-			end
-		end
-
-		-- 5. HIT REVERSAL TRIGGER
-		-- Logic: If we were being hit, and now we are not, and we are not falling, trigger Hit Reversal.
-		-- (Basic implementation: Rely on hitstun transition logic if feasible, or check hit status edge detection)
-		-- Actually, detecting the transition from "Being Hit" to "Neutral/Action" is best done by tracking state.
-		-- But for simplicity, we can do it by checking if we ARE recovering from a hit?
-		-- Or we can trust the 'p2CurrentHitstun()' logic?
-
-		-- Let's use a simple edge detector for now or reuse existing state checks.
-		-- If we are in 'start' and just finished being hit?
-
-		-- Better approach:
-		local hitstun = p2CurrentHitstun()
-		-- If hitstun just became 0, we finished being hit.
-		-- But p2CurrentHitstun() resets to 0 when not being hit.
-		-- We need a frame-by-frame tracker for this.
-
-		-- Let's assume the user wants it "like guard or wakeup".
-		-- Guard reversal triggers when blockstun ends? No, it triggers while in blockstun?
-		-- "guard_reversal": "if playerTwoInBlockstun() ... transitionToState('guard_reversal')".
-		-- Then in guard_reversal, it waits or executes.
-		-- For HIT, we can't do it WHILE being hit (usually), unless it's a "break" (like burst).
-		-- Assuming "Reversal" means "After Hitstun Ends".
-
-		-- Strategy: Track 'wasHit' in previous frame.
-		if KOF_CONFIG.HIT.reversal ~= KOF_CONFIG.HIT.REVERSAL_OPTIONS.OFF then
-			-- We need to know if we just recovered from a hit.
-			-- Using a global variable for tracking previous hit state might be cleanest.
-		end
-
-		-- STANCE
-		if KOF_CONFIG.GUARD.dummy_action == 1 then
-			p2Crouch()
-		end
-	elseif stateMachine.currentState == "blocking" then
-		if playerTwoIsFalling() or isOnWakeUp() then
-			transitionToState("start")
-			return
-		end
-
-		if playerTwoInBlockstun() and KOF_CONFIG.GUARD.reversal ~= KOF_CONFIG.GUARD.REVERSAL_OPTIONS.OFF then
-			transitionToState("guard_reversal")
-			return
-		end
-
-		block()
-	elseif stateMachine.currentState == "waking_up" then
-		if (isWakeUpTime() and active_wake_up == true and wakeUpEnabled()) then
-			dont_recover = true
-			local reversal_name = getCurrentReversalMove("waking_up")
-			local reversal = buildReversal(reversal_name)
-
-			if isRecording(reversal_name) then
-				if (not reversal.propagates) and recording.playback then
-					transitionToState("start")
-					return
-				end
-				if recording.loop then return end
-
-				local _recording = recording.recordingslot
-				recording.recordingslot = moves[reversal_name].index
-				kofTogglePlayBack(true, {})
-				recording.recordingslot = _recording
-
-				startWakeupIddleTime()
-				resetCurrentReversalName()
-				active_wake_up = false
-				isJustGuardRunning = false
-				chosenGuardOption = nil
-				last_do_move_name = nil
-				stateMachine.is_a_soft_reset = false
-				transitionToState("start")
-			else
-				delay(reversal.on_wake_up_delay, function()
-					local res = doReversal(reversal.name, reversal.on_wake_up_times)
-					if res == false then
-						startWakeupIddleTime()
-						active_wake_up = false
-						isJustGuardRunning = false
-						chosenGuardOption = nil
-						last_do_move_name = nil
-						stateMachine.is_a_soft_reset = false
-						resetCurrentReversalName()
-						transitionToState("start")
-					end
-					return res
-				end)
-			end
-		end
-	elseif stateMachine.currentState == "guard_reversal" then
-		if playerTwoIsBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
-			transitionToState("start")
-			return
-		end
-
-		local reversal_name = getCurrentReversalMove("guard_reversal")
-		local reversal = buildReversal(reversal_name)
-
-		if isRecording(reversal_name) then
-			if (not reversal.propagates) and recording.playback then
-				transitionToState("blocking")
-				return
-			end
-			if recording.loop then return end
-
-			local _recording = recording.recordingslot
-			recording.recordingslot = moves[reversal_name].index
-			kofTogglePlayBack(true, {})
-			recording.recordingslot = _recording
-
-			startWakeupIddleTime()
-			resetCurrentReversalName()
-			transitionToState("blocking")
-		else
-			delay(reversal.on_guard_delay, function()
-				local res = doReversal(reversal.name, reversal.on_guard_times)
-				if res == false then
-					isJustGuardRunning = false
-					chosenGuardOption = nil
-					last_do_move_name = nil
-					startWakeupIddleTime()
-					transitionToState("blocking")
-				end
-				return res
-			end)
-		end
-	elseif stateMachine.currentState == "hit_reversal" then
-		if playerTwoIsBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
-			transitionToState("start")
-			return
-		end
-
-		local reversal_name = getCurrentReversalMove("hit_reversal")
-		local reversal = buildReversal(reversal_name)
-
-		if isRecording(reversal_name) then
-			if (not reversal.propagates) and recording.playback then
-				transitionToState("start")
-				return
-			end
-			if recording.loop then return end
-
-			local _recording = recording.recordingslot
-			recording.recordingslot = moves[reversal_name].index
-			kofTogglePlayBack(true, {})
-			recording.recordingslot = _recording
-
-			startWakeupIddleTime()
-			resetCurrentReversalName()
-			transitionToState("start")
-		else
-			-- Use on_guard_delay/times as proxy if on_hit is not defined,
-			-- OR we should have ensured on_hit properties exist.
-			-- For now, let's assume we reuse on_guard properties or on_hit if I added them?
-			-- The plan says "changes added to the GUI with the moves recordings".
-			-- I should use specific 'on_hit_delay' if possible.
-			-- I will assume they are named 'on_hit_delay' and 'on_hit_times' and defaulting to 0/1 if missing.
-
-			local d = reversal.on_hit_delay or reversal.on_guard_delay or 0
-			local t = reversal.on_hit_times or reversal.on_guard_times or 1
-
-			delay(d, function()
-				local res = doReversal(reversal.name, t)
-				if res == false then
-					-- Finished
-					isJustGuardRunning = false
-					chosenGuardOption = nil
-					last_do_move_name = nil
-					startWakeupIddleTime()
-					transitionToState("start") -- Return to start
-				end
-				return res
-			end)
-		end
-	elseif stateMachine.currentState == "recovering" then
-		recover(function()
-			dont_recover = true
-			if KOF_CONFIG.WAKEUP.dummy_waking_up then
-				active_wake_up = true
-				transitionToState("waking_up")
-			elseif KOF_CONFIG.GUARD.guard_mode > 0 then
-				isJustGuardRunning = false
-				chosenGuardOption = nil
-				last_do_move_name = nil
-				transitionToState("blocking")
-			else
-				isJustGuardRunning = false
-				chosenGuardOption = nil
-				last_do_move_name = nil
-				transitionToState("start")
-			end
-		end)
-	elseif stateMachine.currentState == "cpu_action" then
-		if KOF_CONFIG.CPU.GCCD.dummy_can_gccd and gccd_action_running then
-			if KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.ON then
-				if doMove("CD", 3, true) == false then
-					enableCPU()
-					current_cpu_action_running = false
-					gccd_action_running = false
-					KOF_CONFIG.CPU.dummy_can_fight = true
-					transitionToState("start")
-				end
-			elseif KOF_CONFIG.CPU.GCCD.current_gccd == KOF_CONFIG.CPU.GCCD.OPTIONS.RANDOM and not gccd_random_move_ends then
-				if running_randomned_cpu_action_gccd then
-					if doMove("CD", 3, true) == false then
-						enableCPU()
-						gccd_random_move_ends = true
-						running_randomned_cpu_action_gccd = false
-						current_cpu_action_running = false
-						KOF_CONFIG.CPU.dummy_can_fight = true
-						transitionToState("start")
-					end
-				else
-					if math.random(1, 100) <= 30 then
-						running_randomned_cpu_action_gccd = true
-					else
-						gccd_random_move_ends = true
-						enableCPU()
-						KOF_CONFIG.CPU.dummy_can_fight = true
-						current_cpu_action_running = false
-						transitionToState("start")
-					end
-				end
-			end
-		end
-
-		if KOF_CONFIG.CPU.GCAB.dummy_can_gcab and gcab_action_running then
-			if KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.ON then
-				if doMove("AB", 5, true) == false then
-					enableCPU()
-					KOF_CONFIG.CPU.dummy_can_fight = true
-					current_cpu_action_running = false
-					gcab_action_running = false
-					transitionToState("start")
-				end
-			elseif KOF_CONFIG.CPU.GCAB.current_gcab == KOF_CONFIG.CPU.GCAB.OPTIONS.RANDOM and not gcab_random_move_ends then
-				if running_randomned_cpu_action_gcab then
-					if doMove("AB", 5, true) == false then
-						enableCPU()
-						gcab_random_move_ends = true
-						running_randomned_cpu_action_gcab = false
-						KOF_CONFIG.CPU.dummy_can_fight = true
-						current_cpu_action_running = false
-						transitionToState("start")
-					end
-				else
-					if math.random(1, 100) <= 30 then
-						running_randomned_cpu_action_gcab = true
-					else
-						gccd_random_move_ends = true
-						enableCPU()
-						KOF_CONFIG.CPU.dummy_can_fight = true
-						current_cpu_action_running = false
-						transitionToState("start")
-					end
-				end
-			end
+	-- Dispatch to State Handlers
+	local handler = StateHandlers[stateMachine.currentState]
+	if handler then
+		handler(stateMachine)
+	else
+		-- Fallback or error logging
+		if KOF_CONFIG.DEBUG.STATE == 1 then
+			print("Warning: No handler for state: " .. tostring(stateMachine.currentState))
 		end
 	end
 	infiniteTime()
