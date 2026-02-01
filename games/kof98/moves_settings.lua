@@ -25,6 +25,8 @@ end
 		on_guard_delay = 0,
 		on_wake_up_times = 1,
 		on_wake_up_delay = 27,
+		on_hit_times = 3,
+		on_hit_delay = 0,
 	}
 
 
@@ -111,6 +113,7 @@ moves = {
 	['DP'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -139,6 +142,7 @@ moves = {
 	['R_DP'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -167,6 +171,7 @@ moves = {
 	['D_F_DF'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -195,6 +200,7 @@ moves = {
 	['QCF'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -215,6 +221,7 @@ moves = {
 	['HCF'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -239,6 +246,7 @@ moves = {
 	['HCB'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -263,6 +271,7 @@ moves = {
 	['HCB_F'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -289,6 +298,7 @@ moves = {
 	['QCB'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -309,6 +319,7 @@ moves = {
 	['QCB_F'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -331,6 +342,7 @@ moves = {
 	['QCB_HCF'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -357,6 +369,7 @@ moves = {
 	['QCF_QCF'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -383,6 +396,7 @@ moves = {
 	['QCF_HCB'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -409,6 +423,7 @@ moves = {
 	['PRETZEL'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
             {'_'},
             {'_'},
@@ -471,6 +486,7 @@ moves = {
 	['DSJ_F'] = {
 		wakeup_current_button = BUTTONS.A,
 		guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
 			{'-'},
 			{'-'},
@@ -548,6 +564,7 @@ moves = {
 	['INS_SJ_B'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
 			{'-'},
 			{'-'},
@@ -570,6 +587,7 @@ moves = {
 	['DHJ_F'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
 			{'-'},
 			{'-'},
@@ -598,6 +616,7 @@ moves = {
 	['DH_F'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
 			{'-'},
 			{'-'},
@@ -620,6 +639,7 @@ moves = {
 	['DNEUTRALH'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
 			{'-'},
 			{'-'},
@@ -640,6 +660,7 @@ moves = {
 	['DNEUTRALJ'] = {
         wakeup_current_button = BUTTONS.A,
         guard_current_button = BUTTONS.A,
+		hit_current_button = BUTTONS.A,
         sequence = {
 			{'-'},
 			{'-'},
@@ -940,10 +961,12 @@ KOF_CONFIG.REVERSAL_MOVES.MOVELIST = movelist
 reversal_types = {
 GUARD = "GUARD",
 WAKEUP = "WAKEUP",
+HIT = "HIT"
 }
 local LOWERC_TYPES = {
 	['GUARD'] = "guard",
 	['WAKEUP'] = "wakeup",
+	['HIT'] = "hit",
 	['COMMAND_NORMAL'] = "command_normal",
 	['SPECIAL'] = "special",
 	['SUPER'] = "super",
@@ -999,13 +1022,13 @@ local function fillVarNames (type)
 	end
 end
 --[[ 
-CONFIG FOR GUAED REVERSALS
+CONFIG FOR GUARD REVERSALS
 ]]
 fillVarNames(reversal_types.GUARD)
 
-local move_data = require "addon.kof_training_move_data"
+local GUARD_GUI = require "addon.kof_training.move_data.guard_gui"
 -- added normal moves to default page
-for key, item in pairs( move_data.guard_normals) do
+for key, item in pairs( GUARD_GUI.guard_normals) do
 	table.insert(guipages.guard_reversal_move_active_settings,item)
 end
 local guard_command_normals_move_settings = {
@@ -1022,7 +1045,8 @@ local guard_command_normals_move_settings = {
 	},
 }
 guipages.guard_command_normals_move_settings= guard_command_normals_move_settings
-for key, item in pairs( move_data.guard_command_normals) do
+
+for key, item in pairs( GUARD_GUI.guard_command_normals) do
 	table.insert(guipages.guard_command_normals_move_settings,item)
 end
 --special moves
@@ -1040,7 +1064,7 @@ local guard_special_move_settings = {
 	},
 }
 guipages.guard_specials_move_settings= guard_special_move_settings
-for key, item in pairs( move_data.guard_specials) do
+for key, item in pairs( GUARD_GUI.guard_specials) do
 	table.insert(guipages.guard_specials_move_settings,item)
 end
 --supers
@@ -1058,7 +1082,7 @@ local guard_super_move_settings = {
 	},
 }
 guipages.guard_supers_move_settings= guard_super_move_settings
-for key, item in pairs( move_data.guard_supers) do
+for key, item in pairs( GUARD_GUI.guard_supers) do
 	table.insert(guipages.guard_supers_move_settings,item)
 end
 --common 
@@ -1077,7 +1101,7 @@ local guard_common_move_settings = {
 }
 
 guipages.guard_commons_move_settings= guard_common_move_settings
-for key, item in pairs( move_data.guard_commons) do
+for key, item in pairs( GUARD_GUI.guard_commons) do
 	table.insert(guipages.guard_commons_move_settings,item)
 end
 --recordings
@@ -1095,7 +1119,7 @@ local guard_recordings_move_settings = {
 	},
 }
 guipages.guard_recordings_move_settings= guard_recordings_move_settings
-for key, item in pairs( move_data.guard_recordings) do
+for key, item in pairs( GUARD_GUI.guard_recordings) do
 	table.insert(guipages.guard_recordings_move_settings,item)
 end
 
@@ -1105,7 +1129,9 @@ CONFIG FOR WAKEUP REVERSALS
 
 fillVarNames(reversal_types.WAKEUP)
 -- added normal moves to default page
-for key, item in pairs( move_data.wakeup_normals) do
+local WAKEUP_GUI = require "addon.kof_training.move_data.wakeup_gui"
+
+for key, item in pairs( WAKEUP_GUI.wakeup_normals) do
 	table.insert(guipages.wakeup_reversal_move_active_settings,item)
 end
 local wakeup_command_normals_move_settings = {
@@ -1122,7 +1148,7 @@ local wakeup_command_normals_move_settings = {
 	},
 }
 guipages.wakeup_command_normals_move_settings= wakeup_command_normals_move_settings
-for key, item in pairs( move_data.wakeup_command_normals) do
+for key, item in pairs( WAKEUP_GUI.wakeup_command_normals) do
 	table.insert(guipages.wakeup_command_normals_move_settings,item)
 end
 --special moves
@@ -1140,7 +1166,7 @@ local wakeup_special_move_settings = {
 	},
 }
 guipages.wakeup_specials_move_settings= wakeup_special_move_settings
-for key, item in pairs( move_data.wakeup_specials) do
+for key, item in pairs( WAKEUP_GUI.wakeup_specials) do
 	table.insert(guipages.wakeup_specials_move_settings,item)
 end
 --supers
@@ -1158,7 +1184,7 @@ local wakeup_super_move_settings = {
 	},
 }
 guipages.wakeup_supers_move_settings= wakeup_super_move_settings
-for key, item in pairs( move_data.wakeup_supers) do
+for key, item in pairs( WAKEUP_GUI.wakeup_supers) do
 	table.insert(guipages.wakeup_supers_move_settings,item)
 end
 --common 
@@ -1191,12 +1217,115 @@ local wakeup_recordings_move_settings = {
 	},
 }
 guipages.wakeup_recordings_move_settings= wakeup_recordings_move_settings
-for key, item in pairs( move_data.wakeup_recordings) do
+for key, item in pairs( WAKEUP_GUI.wakeup_recordings) do
 	table.insert(guipages.wakeup_recordings_move_settings,item)
 end
 guipages.wakeup_commons_move_settings= wakeup_common_move_settings
-for key, item in pairs( move_data.wakeup_commons) do
+for key, item in pairs( WAKEUP_GUI.wakeup_commons) do
 	table.insert(guipages.wakeup_commons_move_settings,item)
+end
+-- HIT Reversarls ---
+
+--[[ 
+CONFIG FOR HIT REVERSALS 
+]]
+
+fillVarNames(reversal_types.HIT)
+-- added normal moves to default page
+local HIT_GUI = require "addon.kof_training.move_data.hit_gui"
+
+for key, item in pairs( HIT_GUI.hit_normals) do
+	table.insert(guipages.hit_reversal_move_active_settings,item)
+end
+local hit_command_normals_move_settings = {
+	title = {
+		text = "Hit Command Normals Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(	interactivegui.previouspage ,2) end,
+	},
+}
+guipages.hit_command_normals_move_settings= hit_command_normals_move_settings
+for key, item in pairs( HIT_GUI.hit_command_normals) do
+	table.insert(guipages.hit_command_normals_move_settings,item)
+end
+--special moves
+local hit_special_move_settings = {
+	title = {
+		text = "Hit Special Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.hit_specials_move_settings= hit_special_move_settings
+for key, item in pairs( HIT_GUI.hit_specials) do
+	table.insert(guipages.hit_specials_move_settings,item)
+end
+--supers
+local hit_super_move_settings = {
+	title = {
+		text = "Hit super Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.hit_supers_move_settings= hit_super_move_settings
+for key, item in pairs( HIT_GUI.hit_supers) do
+	table.insert(guipages.hit_supers_move_settings,item)
+end
+--common 
+
+local hit_common_move_settings = {
+	title = {
+		text = "Hit common Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+--recordings
+local hit_recordings_move_settings = {
+	title = {
+		text = "Hit recordings Move  Settings",
+		x = interactivegui.boxxlength/2 - 40,
+		y = 1,
+	},
+	{
+		text = "<",
+		olcolour = "black",
+		info = "Back",
+		func =  function() CIG(interactivegui.previouspage,1) end,
+	},
+}
+guipages.hit_recordings_move_settings= hit_recordings_move_settings
+for key, item in pairs( HIT_GUI.hit_recordings) do
+	table.insert(guipages.hit_recordings_move_settings,item)
+end
+guipages.hit_commons_move_settings= hit_common_move_settings
+for key, item in pairs( HIT_GUI.hit_commons) do
+	table.insert(guipages.hit_commons_move_settings,item)
 end
 
 -- Function to get the index from the value
@@ -1226,6 +1355,7 @@ end
 
 KOF_CONFIG.GUARD.reversal_moves = getCurrentReversalMoves(reversal_types.GUARD)
 KOF_CONFIG.WAKEUP.reversal_moves = getCurrentReversalMoves(reversal_types.WAKEUP)
+KOF_CONFIG.HIT.reversal_moves = getCurrentReversalMoves(reversal_types.HIT)
 
 
 function deactivateAllDefaultMoves()
