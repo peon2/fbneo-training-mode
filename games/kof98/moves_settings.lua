@@ -115,8 +115,6 @@ moves = {
         guard_current_button = BUTTONS.A,
 		hit_current_button = BUTTONS.A,
         sequence = {
-            {'_'},
-            {'_'},
             {'forward'},
             {'forward'},
             {'_'},

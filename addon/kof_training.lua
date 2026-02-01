@@ -41,6 +41,11 @@ local stateMachine = {
 	current_cpu_action_running = false,
 	gccd_action_running = false,
 	gcab_action_running = false,
+	-- WakeUp Event Manager Data
+	wakeUpEvent = {
+		active = false,
+		handled = false,
+	}
 }
 
 reversal_types = {
@@ -1388,6 +1393,7 @@ end
 
 
 local function isOnWakeUp()
+	gui.text(10, 80, "WakeUp: " .. rw(0x108321))
 	local dummy_in_air_word_address = 0x108321
 	local dummy_in_air = (rw(dummy_in_air_word_address) > 0) and rb(p2hitstatus) == 1
 
@@ -2064,11 +2070,43 @@ local function recover(callback)
 end
 
 
+-- WakeUp Event Manager Logic
+local function updateWakeUpEventStatus(ctx)
+	local is_now_waking_up = isOnWakeUp()
+
+	-- Rising Edge: Event started, reset handled flag
+	if is_now_waking_up and not ctx.wakeUpEvent.active then
+		ctx.wakeUpEvent.handled = false
+	end
+
+	-- Falling Edge: Event ended, reset handled flag
+	if not is_now_waking_up and ctx.wakeUpEvent.active then
+		ctx.wakeUpEvent.handled = false
+	end
+
+	ctx.wakeUpEvent.active = is_now_waking_up
+end
+
+local function shouldTriggerWakeUpAction(ctx, propagate)
+	if not ctx.wakeUpEvent.active then return false end
+
+	-- If we handled this event and we are NOT propagating, don't trigger.
+	if ctx.wakeUpEvent.handled and not propagate then
+		return false
+	end
+
+	return true
+end
+
+local function consumeWakeUpEvent(ctx)
+	ctx.wakeUpEvent.handled = true
+end
+
 local StateHandlers = {}
 
 function StateHandlers.start(ctx)
 	-- RESET / INTERRUPT
-	if playerTwoIsFalling() or playerTwoIsBeingHit() then
+	if playerTwoIsBeingHit() then
 		iddle_time_running = false
 		iddle_finish_time = 0
 		stateMachine.active_wake_up = false
@@ -2103,13 +2141,9 @@ function StateHandlers.start(ctx)
 
 	-- 2. RECOVERY
 	if KOF_CONFIG.RECOVERY.dummy_recovering then
-		if stateMachine.dont_recover then
-			delay(10, function()
-				local res = doNothing()
-				if not res then stateMachine.dont_recover = false end
-				return res
-			end)
-		elseif closeToGround() and wakeUpEnabled() then
+		-- propagate=false: Trigger only once per wakeup event
+		if shouldTriggerWakeUpAction(ctx, false) then
+			consumeWakeUpEvent(ctx)
 			transitionToState("recovering")
 			return
 		end
@@ -2127,7 +2161,9 @@ function StateHandlers.start(ctx)
 
 	-- 4. WAKEUP
 	if KOF_CONFIG.WAKEUP.dummy_waking_up and wakeUpEnabled() then
-		if isOnWakeUp() and stateMachine.active_wake_up == false then
+		-- propagate=false: Trigger only once per wakeup event
+		if shouldTriggerWakeUpAction(ctx, false) and stateMachine.active_wake_up == false then
+			consumeWakeUpEvent(ctx)
 			stateMachine.active_wake_up = true
 			transitionToState("waking_up")
 			return
@@ -2147,6 +2183,14 @@ function StateHandlers.start(ctx)
 	end
 
 	-- 5. HIT REVERSAL TRIGGER
+	-- ... (comments) ...
+
+	-- Safety Reset for Wakeup Flag
+	if not isOnWakeUp() and stateMachine.active_wake_up then
+		stateMachine.active_wake_up = false
+	end
+
+	-- Strategy: Track 'wasHit' in previous frame.
 	-- Logic: If we were being hit, and now we are not, and we are not falling, trigger Hit Reversal.
 	-- (Basic implementation: Rely on hitstun transition logic if feasible, or check hit status edge detection)
 	-- Actually, detecting the transition from "Being Hit" to "Neutral/Action" is best done by tracking state.
@@ -2204,6 +2248,7 @@ function StateHandlers.waking_up(ctx)
 		if isRecording(reversal_name) then
 			if (not reversal.propagates) and recording.playback then
 				transitionToState("start")
+				stateMachine.active_wake_up = true -- Prevent immediate re-entry loop
 				return
 			end
 			if recording.loop then return end
@@ -2214,6 +2259,10 @@ function StateHandlers.waking_up(ctx)
 			recording.recordingslot = _recording
 
 			startWakeupIddleTime()
+			stateMachine.active_wake_up = false
+			stateMachine.isJustGuardRunning = false
+			stateMachine.chosenGuardOption = nil
+			stateMachine.last_do_move_name = nil
 			resetCurrentReversalName()
 			stateMachine.active_wake_up = false
 			stateMachine.isJustGuardRunning = false
@@ -2221,6 +2270,7 @@ function StateHandlers.waking_up(ctx)
 			stateMachine.last_do_move_name = nil
 			stateMachine.is_a_soft_reset = false
 			transitionToState("start")
+			return
 		else
 			delay(reversal.on_wake_up_delay, function()
 				local res = doReversal(reversal.name, reversal.on_wake_up_times)
@@ -2411,6 +2461,8 @@ function StateHandlers.cpu_action(ctx)
 end
 
 function Run() -- runs every frame
+	updateWakeUpEventStatus(stateMachine)
+
 	if KOF_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard then
 		p1CrouchGuard()
 	end
