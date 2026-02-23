@@ -2048,7 +2048,9 @@ local function checkP2FrameAdvantage()
 	end
 end
 
-
+-- Export to frame_data
+_G.get_p1_advantage_state = function() return P1AdvantageState end
+_G.get_p2_advantage_state = function() return P2AdvantageState end
 
 local percentage_of_recovery = 50
 local chosenRecoveryOption = nil -- nil = no decision ye
@@ -2523,7 +2525,6 @@ function KofTrainingRun() -- runs every frame
 
 	-- DEBUG EX ADDRESSES
 	if emu.romname and emu.romname() == "kof2002" then
-
 		-- KOF 2002 EXCEPTION: continuously enforce EX flags while active, as the engine clears active RAM
 		if KOF_CONFIG.UI.APPLIED.PLAYER1_EX then
 			local p1_ex_addr = KOF_CONFIG.get_current_game().offsets.p1_ex_address

@@ -108,6 +108,8 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         -- Traditional Advantage
         self.current_advantage = 0
         self.global_persistent_advantage = 0
+        self.p1_recovery_frames = 0
+        self.p2_stun_frames = 0
         self.advantage_calculating = false
 
         -- New Free Advantage (Counts from when attacker reaches Action 0 until opponent reaches Action 0)
@@ -262,7 +264,7 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
                 self.global_persistent_stun_type = self.opp_current_stun
             end
         else
-            if new_stun_state ~= STUN_STATE.NONE or opp_raw_is_busy then
+            if new_stun_state ~= STUN_STATE.NONE then
                 self.opp_stun_timer = self.opp_stun_timer + 1
                 if new_stun_state == STUN_STATE.BLOCK then self.opp_current_stun = STUN_STATE.BLOCK end
                 self.global_persistent_stun = self.opp_stun_timer
@@ -279,6 +281,8 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
 
             -- Traditional block/hit advantage starts calculating here
             self.current_advantage = 0
+            self.p1_recovery_frames = 0
+            self.p2_stun_frames = 0
             self.advantage_calculating = true
 
             -- New Free Advantage calculation setup
@@ -291,12 +295,16 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
 
         -- Traditional Advantage (Based on explicitly known states)
         if self.advantage_calculating then
-            if p1_busy and not p2_busy then
-                self.current_advantage = self.current_advantage - 1
-            elseif not p1_busy and p2_busy then
-                self.current_advantage = self.current_advantage + 1
+            if p1_busy then
+                self.p1_recovery_frames = self.p1_recovery_frames + 1
             end
+            if p2_busy then
+                self.p2_stun_frames = self.p2_stun_frames + 1
+            end
+
+            self.current_advantage = self.p2_stun_frames - self.p1_recovery_frames
             self.global_persistent_advantage = self.current_advantage
+
             if not p1_busy and not p2_busy then self.advantage_calculating = false end
         end
 
@@ -342,6 +350,8 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
                 self.global_persistent_stun_type = STUN_STATE.NONE
 
                 self.global_persistent_advantage = 0
+                self.p1_recovery_frames = 0
+                self.p2_stun_frames = 0
                 self.advantage_calculating = false
 
                 self.global_persistent_free_advantage = 0
@@ -451,19 +461,23 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
 
         local adv_text = "-"
         local adv_color = "white"
-        if self.global_persistent_hit_frame ~= -1 then
+
+        local shared_adv_state = (self.name == "P1") and (_G.get_p1_advantage_state and _G.get_p1_advantage_state()) or
+        (_G.get_p2_advantage_state and _G.get_p2_advantage_state())
+
+        if shared_adv_state and (shared_adv_state.measuring or shared_adv_state.frame_advantage ~= 0) then
             local adv_suffix = ""
-            if self.global_persistent_stun_type == STUN_STATE.BLOCK then
+            if shared_adv_state.adv_type == "Block" then
                 adv_suffix = " (Block)"
-            elseif self.global_persistent_stun_type == STUN_STATE.HIT then
+            elseif shared_adv_state.adv_type == "Hit" then
                 adv_suffix = " (Hit)"
             end
 
-            if self.global_persistent_advantage > 0 then
-                adv_text = "+" .. self.global_persistent_advantage .. adv_suffix
+            if shared_adv_state.frame_advantage > 0 then
+                adv_text = "+" .. shared_adv_state.frame_advantage .. adv_suffix
                 adv_color = "green"
-            elseif self.global_persistent_advantage < 0 then
-                adv_text = tostring(self.global_persistent_advantage) .. adv_suffix
+            elseif shared_adv_state.frame_advantage < 0 then
+                adv_text = tostring(shared_adv_state.frame_advantage) .. adv_suffix
                 adv_color = "red"
             else
                 adv_text = "0" .. adv_suffix
