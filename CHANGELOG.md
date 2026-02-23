@@ -26,6 +26,12 @@
   - If a character lacks an EX version (e.g., Goro Daimon), the EX button changes to `---` and does nothing.
   - `init.lua` now double-checks on startup and forces the EX flags to `false` if an invalid EX character is somehow requested.
 
+- **KOF 2002 EX Support and Engine Syncing (`config.lua`, `init.lua`)**
+  - Added full character roster mapping for KOF 2002 to `config.lua` alongside offset mapping for P1 and P2 selection nodes (`0x2704` and `0x272A`).
+  - Added explicit KOF 2002 handling to write `0x10` to the EX byte block for EX versions of Shermie, Chris, and Yashiro, and dynamically restore `0x00` when turned off.
+  - Built an architecture to actively fight the KOF 2002 memory engine exclusively whenever EX states are formally "Applied" by continuously clamping `0x02` into the character palette blocks (`0x10A7E3` and `0x10A809`).
+  - Updated `INITIAL_START` savestate loading logic to dynamically assign the `CURRENT_PLAYER` configs directly from the `.fs` memory readout, keeping the UI perfectly in sync with the physical engine loadout instead of overriding it.
+
 ## Bug Fixes
 
 - **Player 2 Character Defaulting to Iori (`init.lua`)**

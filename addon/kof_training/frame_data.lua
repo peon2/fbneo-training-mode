@@ -57,6 +57,7 @@ local IGNORED_ACTIONS = {
     [54] = true,
     [55] = true,
     [56] = true,
+    [79] = true,
     [95] = true,
     [96] = true,
     [157] = true,
@@ -86,6 +87,8 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
     self.opp_hitstatus_addr = opp_hitstatus_addr
     self.opp_blockstun_addr = opp_blockstun_addr
     self.draw_x = draw_x
+    local game_offsets = KOF_CONFIG.get_current_game().offsets
+    self.air_height_addr = base_addr + (game_offsets.air_height or 0x21)
 
     function self:init()
         self.current_state = STATE.IDLE
@@ -111,6 +114,10 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         self.current_free_advantage = 0
         self.global_persistent_free_advantage = 0
         self.free_advantage_calculating = false
+
+        self.current_air_frames = 0
+        self.is_currently_in_air = false
+        self.air_time_history = { 0, 0 }
 
         self.history_log = {}
         self.frozen_log = nil
@@ -212,6 +219,26 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         local status_byte = rb(self.base_addr + OFFSET_STATUS)
         local opp_hitstatus = rb(self.opp_hitstatus_addr)
         local opp_block_val = rb(self.opp_blockstun_addr)
+
+        local current_air_height_word = rw(self.air_height_addr)
+        local is_in_air = (current_air_height_word > 0)
+
+        if is_in_air then
+            if not self.is_currently_in_air then
+                self.current_air_frames = 1
+                self.is_currently_in_air = true
+            else
+                self.current_air_frames = self.current_air_frames + 1
+            end
+        else
+            if self.is_currently_in_air then
+                self.is_currently_in_air = false
+
+                -- Shift history: [oldest, newest] <- [1st, 2nd]
+                self.air_time_history[2] = self.air_time_history[1]
+                self.air_time_history[1] = self.current_air_frames
+            end
+        end
 
         local raw_is_busy = self:is_action_busy()
         local opp_raw_is_busy = self:is_opp_action_busy()
@@ -397,8 +424,8 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         if SHOW_DEBUG_INFO then
             gui.box(x - 2, 58, x + 158, 410, 0x00000080, 0x00000080)
         else
-            -- Taller box to fit Free Adv
-            gui.box(x - 2, 58, x + 88, 168, 0x00000080, 0x00000080)
+            -- Taller box to fit Free Adv and 2 Air Times
+            gui.box(x - 2, 58, x + 88, 188, 0x00000080, 0x00000080)
         end
 
         gui.text(x, 60, self.name .. " Frame Data:", "yellow")
@@ -462,9 +489,14 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         end
         gui.text(x, 142, "Free Adv: " .. string.rep(" ", 2) .. free_adv_text, free_adv_color)
 
+        local air1_text = (self.air_time_history[1] > 0) and tostring(self.air_time_history[1]) or "-"
+        local air2_text = (self.air_time_history[2] > 0) and tostring(self.air_time_history[2]) or "-"
+
+        gui.text(x, 152, "Air Time: " .. string.rep(" ", 2) .. air1_text, "cyan")
+        gui.text(x, 162, "Air Time_2: " .. string.rep(" ", 0) .. air2_text, "cyan")
 
         local action = rb(self.action_addr)
-        gui.text(x, 155, "Action ID:     " .. action, "gray")
+        gui.text(x, 173, "Action ID:     " .. action, "gray")
 
         if SHOW_DEBUG_INFO then
             gui.text(x, 165, "Trigger Box:   " .. self.last_trigger_box, "red")
@@ -499,8 +531,22 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
 end
 
 -- Create both P1 and P2 trackers. P2 gets passed P1's addresses for the "Opponent" arguments
-local p1_tracker = create_tracker("P1", 0x108100, 0x108173, 0x108300, 0x108373, 0x108372, 0x1083E3, 4)
-local p2_tracker = create_tracker("P2", 0x108300, 0x108373, 0x108100, 0x108173, 0x108172, 0x1081E3, 225)
+local current_game = KOF_CONFIG.get_current_game()
+
+local p1_base = current_game.player1_base
+local p2_base = current_game.player2_base
+
+local p1_action = current_game.player1_base + current_game.offsets.action
+local p2_action = current_game.player2_base + current_game.offsets.action
+
+local p1_hitstatus = current_game.player1_base + current_game.offsets.hitstatus
+local p2_hitstatus = current_game.player2_base + current_game.offsets.hitstatus
+
+local p1_blockstun = current_game.player1_base + current_game.offsets.blockstun
+local p2_blockstun = current_game.player2_base + current_game.offsets.blockstun
+local p1_is_in_air = current_game.player1_base + current_game.offsets.air_height
+local p1_tracker = create_tracker("P1", p1_base, p1_action, p2_base, p2_action, p2_hitstatus, p2_blockstun, 4)
+local p2_tracker = create_tracker("P2", p2_base, p2_action, p1_base, p1_action, p1_hitstatus, p1_blockstun, 225)
 
 function frame_data.init()
     p1_tracker:init()
@@ -508,13 +554,23 @@ function frame_data.init()
 end
 
 function frame_data.update()
-    p1_tracker:update()
-    p2_tracker:update()
+    local fd_mode = KOF_CONFIG.DEBUG.FRAMEDATA
+    if fd_mode == 1 or fd_mode == 3 then
+        p1_tracker:update()
+    end
+    if fd_mode == 2 or fd_mode == 3 then
+        p2_tracker:update()
+    end
 end
 
 function frame_data.draw()
-    p1_tracker:draw()
-    p2_tracker:draw()
+    local fd_mode = KOF_CONFIG.DEBUG.FRAMEDATA
+    if fd_mode == 1 or fd_mode == 3 then
+        p1_tracker:draw()
+    end
+    if fd_mode == 2 or fd_mode == 3 then
+        p2_tracker:draw()
+    end
 end
 
 return frame_data

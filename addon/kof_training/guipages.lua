@@ -941,227 +941,233 @@ local total_pages = math.ceil(#characters / chars_per_page)
 if total_pages == 0 then total_pages = 1 end
 
 for page = 1, total_pages do
-    local page_name = "character_select_page_" .. page
-    local page_table = {
-        title = {
-            text = "Character Selecction Settings (Page " .. page .. "/" .. total_pages .. ")",
-            x = interactivegui.boxxlength / 2 - 60,
-            y = 1,
-        },
-        {
-            text = "<",
-            olcolour = "black",
-            info = "Back",
-            func = function() CIG(0, 1) end,
-        },
-    }
-    
-    local start_idx = (page - 1) * chars_per_page + 1
-    local end_idx = math.min(page * chars_per_page, #characters)
-    
-    local row = 0
-    local col = 0
-    for i = start_idx, end_idx do
-        local yloc = 10 + row * 12
-        local basex = 8 + col * 66
-        
-        -- Name button
-        table.insert(page_table, {
-            y = yloc,
-            x = basex,
-            info = { characters[i].name },
-            text = characters[i].short_name:gsub("^%l", string.upper),
-            olcolour = "black",
-            func = function() end,
-            autofunc = function(this) end,
-        })
-        
-        -- P1 button
-        table.insert(page_table, {
-            y = yloc,
-            x = basex + 37,
-            info = { 'P1' },
-            text = "P1",
-            olcolour = "black",
-            func = function()
-                KOF_CONFIG.UI.CURRENT_PLAYER1 = KOF_CONFIG.get_current_game().characters[i]
-            end,
-            autofunc = function(this)
-                if KOF_CONFIG.UI.CURRENT_PLAYER1 == KOF_CONFIG.get_current_game().characters[i] then
-                    this.text = "P1"
-                else
-                    this.text = "-"
-                end
-            end,
-        })
-        
-        -- P2 button
-        table.insert(page_table, {
-            y = yloc,
-            x = basex + 54,
-            info = { 'P2' },
-            text = "P2",
-            olcolour = "black",
-            func = function()
-                KOF_CONFIG.UI.CURRENT_PLAYER2 = KOF_CONFIG.get_current_game().characters[i]
-            end,
-            autofunc = function(this)
-                if KOF_CONFIG.UI.CURRENT_PLAYER2 == KOF_CONFIG.get_current_game().characters[i] then
-                    this.text = "P2"
-                else
-                    this.text = "-"
-                end
-            end,
-        })
-        
-        row = row + 1
-        if row >= 14 then
-            row = 0
-            col = col + 1
-        end
-    end
-    
-    table.insert(page_table, {
-        y = 10,
-        x = 144,
-        info = { 'P1 Ex character' },
-        func = function()
-            if KOF_CONFIG.UI.CURRENT_PLAYER1.has_ex then
-                KOF_CONFIG.UI.PLAYER1_EX = not KOF_CONFIG.UI.PLAYER1_EX
-            end
-        end,
-        text = "P1 Ex",
-        olcolour = "black",
-        autofunc = function(this)
-            if not KOF_CONFIG.UI.CURRENT_PLAYER1.has_ex then
-                this.text = "P1 Character Ex: ---"
-            elseif KOF_CONFIG.UI.PLAYER1_EX == true then
-                this.text = "P1 Character Ex: ON"
-            else
-                this.text = "P1 Character Ex: OFF"
-            end
-        end,
-    })
-    
-    table.insert(page_table, {
-        y = 22,
-        x = 144,
-        info = { 'P2 Ex character' },
-        func = function()
-            if KOF_CONFIG.UI.CURRENT_PLAYER2.has_ex then
-                KOF_CONFIG.UI.PLAYER2_EX = not KOF_CONFIG.UI.PLAYER2_EX
-            end
-        end,
-        text = "P2 Ex",
-        olcolour = "black",
-        autofunc = function(this)
-            if not KOF_CONFIG.UI.CURRENT_PLAYER2.has_ex then
-                this.text = "P2 Character Ex: ---"
-            elseif KOF_CONFIG.UI.PLAYER2_EX == true then
-                this.text = "P2 Character Ex: ON"
-            else
-                this.text = "P2 Character Ex: OFF"
-            end
-        end,
-    })
-    
-    table.insert(page_table, {
-        y = 34,
-        x = 144,
-        info = { 'P1 Mode' },
-        func = function()
-            KOF_CONFIG.UI.PLAYER1_MODE = KOF_CONFIG.UI.PLAYER1_MODE + 1
-            KOF_CONFIG.UI.MODE_HAS_CHANGED = true
-            if KOF_CONFIG.UI.PLAYER1_MODE > 1 then
-                KOF_CONFIG.UI.PLAYER1_MODE = 0
-            end
-        end,
-        text = "P1 Mode",
-        olcolour = "black",
-        autofunc = function(this)
-            if KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.EXTRA then
-                this.text = "P1 Mode: Extra"
-            else
-                this.text = "P1 Mode: Advanced"
-            end
-        end,
-    })
-    
-    table.insert(page_table, {
-        y = 46,
-        x = 144,
-        info = { 'P2 Mode' },
-        func = function()
-            KOF_CONFIG.UI.PLAYER2_MODE = KOF_CONFIG.UI.PLAYER2_MODE + 1
-            KOF_CONFIG.UI.MODE_HAS_CHANGED = true
-            if KOF_CONFIG.UI.PLAYER2_MODE > 1 then
-                KOF_CONFIG.UI.PLAYER2_MODE = 0
-            end
-        end,
-        text = "P2 Mode",
-        olcolour = "black",
-        autofunc = function(this)
-            if KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.EXTRA then
-                this.text = "P2 Mode: Extra"
-            else
-                this.text = "P2 Mode: Advanced"
-            end
-        end,
-    })
-    
-    table.insert(page_table, {
-        y = 58,
-        x = 144,
-        info = { 'Load Matchup' },
-        func = function()
-            KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
-        end,
-        text = ">>> APPLY CHANGES <<<",
-        textcolour = "white",
-        bgcolour = 0x4CAF50FF,
-        olcolour = "black",
-        autofunc = function(this)
-            local pending = false
-            local applied = KOF_CONFIG.UI.APPLIED
-            if KOF_CONFIG.UI.CURRENT_PLAYER1 ~= applied.PLAYER1 then pending = true end
-            if KOF_CONFIG.UI.CURRENT_PLAYER2 ~= applied.PLAYER2 then pending = true end
-            if KOF_CONFIG.UI.PLAYER1_EX ~= applied.PLAYER1_EX then pending = true end
-            if KOF_CONFIG.UI.PLAYER2_EX ~= applied.PLAYER2_EX then pending = true end
-            if KOF_CONFIG.UI.PLAYER1_MODE ~= applied.PLAYER1_MODE then pending = true end
-            if KOF_CONFIG.UI.PLAYER2_MODE ~= applied.PLAYER2_MODE then pending = true end
-    
-            if pending then
-                this.bgcolour = 0xFFB347FF
-            else
-                this.bgcolour = 0x4CAF50FF
-            end
-        end,
-    })
+	local page_name = "character_select_page_" .. page
+	local page_table = {
+		title = {
+			text = "Character Selecction Settings (Page " .. page .. "/" .. total_pages .. ")",
+			x = interactivegui.boxxlength / 2 - 60,
+			y = 1,
+		},
+		{
+			text = "<",
+			olcolour = "black",
+			info = "Back",
+			func = function() CIG(0, 1) end,
+		},
+	}
 
-    if total_pages > 1 then
-        if page > 1 then
-            table.insert(page_table, {
-                y = 90,
-                x = 144,
-                info = { 'Previous Page' },
-                text = "<< Prev Page",
-                olcolour = "black",
-                func = function() CIG("character_select_page_" .. (page - 1), 1) end,
-            })
-        end
-        if page < total_pages then
-            table.insert(page_table, {
-                y = 102,
-                x = 144,
-                info = { 'Next Page' },
-                text = "Next Page >>",
-                olcolour = "black",
-                func = function() CIG("character_select_page_" .. (page + 1), 1) end,
-            })
-        end
-    end
+	local start_idx = (page - 1) * chars_per_page + 1
+	local end_idx = math.min(page * chars_per_page, #characters)
 
-    guipages[page_name] = page_table
+	local row = 0
+	local col = 0
+	for i = start_idx, end_idx do
+		local yloc = 10 + row * 12
+		local basex = 8 + col * 66
+
+		-- Name button
+		table.insert(page_table, {
+			y = yloc,
+			x = basex,
+			info = { characters[i].name },
+			text = characters[i].short_name:gsub("^%l", string.upper),
+			olcolour = "black",
+			func = function() end,
+			autofunc = function(this) end,
+		})
+
+		-- P1 button
+		table.insert(page_table, {
+			y = yloc,
+			x = basex + 37,
+			info = { 'P1' },
+			text = "P1",
+			olcolour = "black",
+			func = function()
+				KOF_CONFIG.UI.CURRENT_PLAYER1 = KOF_CONFIG.get_current_game().characters[i]
+			end,
+			autofunc = function(this)
+				if KOF_CONFIG.UI.CURRENT_PLAYER1 == KOF_CONFIG.get_current_game().characters[i] then
+					this.text = "P1"
+				else
+					this.text = "-"
+				end
+			end,
+		})
+
+		-- P2 button
+		table.insert(page_table, {
+			y = yloc,
+			x = basex + 54,
+			info = { 'P2' },
+			text = "P2",
+			olcolour = "black",
+			func = function()
+				KOF_CONFIG.UI.CURRENT_PLAYER2 = KOF_CONFIG.get_current_game().characters[i]
+			end,
+			autofunc = function(this)
+				if KOF_CONFIG.UI.CURRENT_PLAYER2 == KOF_CONFIG.get_current_game().characters[i] then
+					this.text = "P2"
+				else
+					this.text = "-"
+				end
+			end,
+		})
+
+		row = row + 1
+		if row >= 14 then
+			row = 0
+			col = col + 1
+		end
+	end
+
+	local current_game_config = KOF_CONFIG.get_current_game()
+
+	if current_game_config.has_ex then
+		table.insert(page_table, {
+			y = 10,
+			x = 144,
+			info = { 'P1 Ex character' },
+			func = function()
+				if KOF_CONFIG.UI.CURRENT_PLAYER1.has_ex then
+					KOF_CONFIG.UI.PLAYER1_EX = not KOF_CONFIG.UI.PLAYER1_EX
+				end
+			end,
+			text = "P1 Ex",
+			olcolour = "black",
+			autofunc = function(this)
+				if not KOF_CONFIG.UI.CURRENT_PLAYER1.has_ex then
+					this.text = "P1 Character Ex: ---"
+				elseif KOF_CONFIG.UI.PLAYER1_EX == true then
+					this.text = "P1 Character Ex: ON"
+				else
+					this.text = "P1 Character Ex: OFF"
+				end
+			end,
+		})
+
+		table.insert(page_table, {
+			y = 22,
+			x = 144,
+			info = { 'P2 Ex character' },
+			func = function()
+				if KOF_CONFIG.UI.CURRENT_PLAYER2.has_ex then
+					KOF_CONFIG.UI.PLAYER2_EX = not KOF_CONFIG.UI.PLAYER2_EX
+				end
+			end,
+			text = "P2 Ex",
+			olcolour = "black",
+			autofunc = function(this)
+				if not KOF_CONFIG.UI.CURRENT_PLAYER2.has_ex then
+					this.text = "P2 Character Ex: ---"
+				elseif KOF_CONFIG.UI.PLAYER2_EX == true then
+					this.text = "P2 Character Ex: ON"
+				else
+					this.text = "P2 Character Ex: OFF"
+				end
+			end,
+		})
+	end
+
+	if current_game_config.has_modes then
+		table.insert(page_table, {
+			y = 34,
+			x = 144,
+			info = { 'P1 Mode' },
+			func = function()
+				KOF_CONFIG.UI.PLAYER1_MODE = KOF_CONFIG.UI.PLAYER1_MODE + 1
+				KOF_CONFIG.UI.MODE_HAS_CHANGED = true
+				if KOF_CONFIG.UI.PLAYER1_MODE > 1 then
+					KOF_CONFIG.UI.PLAYER1_MODE = 0
+				end
+			end,
+			text = "P1 Mode",
+			olcolour = "black",
+			autofunc = function(this)
+				if KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+					this.text = "P1 Mode: Extra"
+				else
+					this.text = "P1 Mode: Advanced"
+				end
+			end,
+		})
+
+		table.insert(page_table, {
+			y = 46,
+			x = 144,
+			info = { 'P2 Mode' },
+			func = function()
+				KOF_CONFIG.UI.PLAYER2_MODE = KOF_CONFIG.UI.PLAYER2_MODE + 1
+				KOF_CONFIG.UI.MODE_HAS_CHANGED = true
+				if KOF_CONFIG.UI.PLAYER2_MODE > 1 then
+					KOF_CONFIG.UI.PLAYER2_MODE = 0
+				end
+			end,
+			text = "P2 Mode",
+			olcolour = "black",
+			autofunc = function(this)
+				if KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+					this.text = "P2 Mode: Extra"
+				else
+					this.text = "P2 Mode: Advanced"
+				end
+			end,
+		})
+	end
+
+	table.insert(page_table, {
+		y = 58,
+		x = 144,
+		info = { 'Load Matchup' },
+		func = function()
+			KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
+		end,
+		text = ">>> APPLY CHANGES <<<",
+		textcolour = "white",
+		bgcolour = 0x4CAF50FF,
+		olcolour = "black",
+		autofunc = function(this)
+			local pending = false
+			local applied = KOF_CONFIG.UI.APPLIED
+			if KOF_CONFIG.UI.CURRENT_PLAYER1 ~= applied.PLAYER1 then pending = true end
+			if KOF_CONFIG.UI.CURRENT_PLAYER2 ~= applied.PLAYER2 then pending = true end
+			if KOF_CONFIG.UI.PLAYER1_EX ~= applied.PLAYER1_EX then pending = true end
+			if KOF_CONFIG.UI.PLAYER2_EX ~= applied.PLAYER2_EX then pending = true end
+			if KOF_CONFIG.UI.PLAYER1_MODE ~= applied.PLAYER1_MODE then pending = true end
+			if KOF_CONFIG.UI.PLAYER2_MODE ~= applied.PLAYER2_MODE then pending = true end
+
+			if pending then
+				this.bgcolour = 0xFFB347FF
+			else
+				this.bgcolour = 0x4CAF50FF
+			end
+		end,
+	})
+
+	if total_pages > 1 then
+		if page > 1 then
+			table.insert(page_table, {
+				y = 90,
+				x = 144,
+				info = { 'Previous Page' },
+				text = "<< Prev Page",
+				olcolour = "black",
+				func = function() CIG("character_select_page_" .. (page - 1), 1) end,
+			})
+		end
+		if page < total_pages then
+			table.insert(page_table, {
+				y = 102,
+				x = 144,
+				info = { 'Next Page' },
+				text = "Next Page >>",
+				olcolour = "black",
+				func = function() CIG("character_select_page_" .. (page + 1), 1) end,
+			})
+		end
+	end
+
+	guipages[page_name] = page_table
 end
 
 guipages.character_select_settings = guipages.character_select_page_1

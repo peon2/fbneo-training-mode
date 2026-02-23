@@ -36,8 +36,9 @@ local p2hitstatus = current_game.player2_base + current_game.offsets.hitstatus
 local air_height = current_game.player2_base + current_game.offsets.air_height
 
 -- Calculate relative offset using the new player_stored_index property
-local p1_stored_index_location = current_game.player1_base + current_game.offsets.player_stored_index
-local p2_stored_index_location = p1_stored_index_location + 0x11
+local p1_stored_index_location = current_game.player1_base + (current_game.offsets.player_stored_index or 0)
+local p2_stored_index_location = current_game.offsets.player2_stored_index and
+	(current_game.player1_base + current_game.offsets.player2_stored_index) or (p1_stored_index_location + 0x11)
 
 local stateMachine = {
 	currentState = "start",
@@ -2519,6 +2520,30 @@ function KofTrainingRun() -- runs every frame
 	checkFrameAdvantage()
 	checkP2FrameAdvantage()
 	draw_debug_info()
+
+	-- DEBUG EX ADDRESSES
+	if emu.romname and emu.romname() == "kof2002" then
+
+		-- KOF 2002 EXCEPTION: continuously enforce EX flags while active, as the engine clears active RAM
+		if KOF_CONFIG.UI.APPLIED.PLAYER1_EX then
+			local p1_ex_addr = KOF_CONFIG.get_current_game().offsets.p1_ex_address
+			local p1_color_addr = KOF_CONFIG.get_current_game().offsets.p1_color_address
+			local ex_val = KOF_CONFIG.get_current_game().offsets.ex_value or 0x01
+			if p1_ex_addr then wb(p1_ex_addr, ex_val) end
+			if p1_color_addr then wb(p1_color_addr, 0x02) end
+		end
+
+		if KOF_CONFIG.UI.APPLIED.PLAYER2_EX then
+			local p2_ex_addr = KOF_CONFIG.get_current_game().offsets.p2_ex_address
+			local p2_color_addr = KOF_CONFIG.get_current_game().offsets.p2_color_address
+			local ex_val = KOF_CONFIG.get_current_game().offsets.ex_value or 0x01
+			if p2_ex_addr then wb(p2_ex_addr, ex_val) end
+			if p2_color_addr then wb(p2_color_addr, 0x02) end
+		end
+	end
+
+
+
 	if kof_config_throw_os_on_jump or KOF_CONFIG.CPU.THROW_OS_ON_JUMP then
 		check_jump_approaching(char1, char2)
 		if near_jump_os_action_active then
@@ -2530,21 +2555,40 @@ function KofTrainingRun() -- runs every frame
 		end
 	end
 
-	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED or KOF_CONFIG.CPU.HAS_CHANGED then
-		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
+	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED or KOF_CONFIG.CPU.HAS_CHANGED or KOF_CONFIG.UI.INITIAL_START == true then
 		load_machine_state("addon\\kof_training\\savestates\\" .. emu.romname() .. "_select.fs") -- Replace with your file path
+		if KOF_CONFIG.UI.INITIAL_START then
+			KOF_CONFIG.UI.INITIAL_START = false
+
+			-- Read characters loaded by savestate and sync the UI config
+			local current_game = KOF_CONFIG.get_current_game()
+			local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
+			local p2_id_hex = string.format("0x%02X", rb(p2_stored_index_location))
+
+			for i, char in ipairs(current_game.characters) do
+				if char.code == p1_id_hex then
+					KOF_CONFIG.UI.CURRENT_PLAYER1 = char
+				end
+				if char.code == p2_id_hex then
+					KOF_CONFIG.UI.CURRENT_PLAYER2 = char
+				end
+			end
+
+			return
+		end
+		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
 		if KOF_CONFIG.CPU.HAS_CHANGED then
 			KOF_CONFIG.CPU.HAS_CHANGED = false
 		end
 
-		local level_address = 0x10FD8E
-		wb(level_address, KOF_CONFIG.CPU.current_dificulty)
+		local level_address = KOF_CONFIG.get_current_game().offsets.level_address
+		if level_address then wb(level_address, KOF_CONFIG.CPU.current_dificulty) end
 
-		local stage_address = 0x10A7EA
-		wb(stage_address, STAGES.JAPAN_STREET)
+		local stage_address = KOF_CONFIG.get_current_game().offsets.stage_address
+		if stage_address then wb(stage_address, STAGES.JAPAN_STREET) end
 
-		local music_address = 0x10ED5F
-		wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ)
+		local music_address = KOF_CONFIG.get_current_game().offsets.music_address
+		if music_address then wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ) end
 
 		wb(p1_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
 		wb(p2_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
@@ -2557,22 +2601,49 @@ function KofTrainingRun() -- runs every frame
 		end
 
 		if KOF_CONFIG.UI.PLAYER1_EX then
-			wb(0x10A85A, 0x01)
+			local p1_ex_addr = KOF_CONFIG.get_current_game().offsets.p1_ex_address
+			local p1_color_addr = KOF_CONFIG.get_current_game().offsets.p1_color_address
+			local ex_val = KOF_CONFIG.get_current_game().offsets.ex_value or 0x01
+			if p1_ex_addr then wb(p1_ex_addr, ex_val) end
+			if p1_color_addr then wb(p1_color_addr, 0x02) end
+		else
+			local p1_ex_addr = KOF_CONFIG.get_current_game().offsets.p1_ex_address
+			if p1_ex_addr then wb(p1_ex_addr, 0x00) end
+			local p1_color_addr = KOF_CONFIG.get_current_game().offsets.p1_color_address
+			if p1_color_addr and KOF_CONFIG.get_current_game().has_ex then wb(p1_color_addr, 0x00) end
 		end
+
 		if KOF_CONFIG.UI.PLAYER2_EX then
-			wb(0x10A86B, 0x01)
+			local p2_ex_addr = KOF_CONFIG.get_current_game().offsets.p2_ex_address
+			local p2_color_addr = KOF_CONFIG.get_current_game().offsets.p2_color_address
+			local ex_val = KOF_CONFIG.get_current_game().offsets.ex_value or 0x01
+			if p2_ex_addr then wb(p2_ex_addr, ex_val) end
+			if p2_color_addr then wb(p2_color_addr, 0x02) end
+		else
+			local p2_ex_addr = KOF_CONFIG.get_current_game().offsets.p2_ex_address
+			if p2_ex_addr then wb(p2_ex_addr, 0x00) end
+			local p2_color_addr = KOF_CONFIG.get_current_game().offsets.p2_color_address
+			if p2_color_addr and KOF_CONFIG.get_current_game().has_ex then wb(p2_color_addr, 0x00) end
 		end
+
 		if KOF_CONFIG.UI.MODE_HAS_CHANGED then
 			KOF_CONFIG.UI.MODE_HAS_CHANGED = false
-			if KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.ADVANCED then
-				wb(0x10A84C, 0x00)
-			elseif KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.EXTRA then
-				wb(0x10A84C, 0x01)
+			local p1_mode_addr = KOF_CONFIG.get_current_game().offsets.p1_mode_address
+			local p2_mode_addr = KOF_CONFIG.get_current_game().offsets.p2_mode_address
+
+			if p1_mode_addr then
+				if KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.ADVANCED then
+					wb(p1_mode_addr, 0x00)
+				elseif KOF_CONFIG.UI.PLAYER1_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+					wb(p1_mode_addr, 0x01)
+				end
 			end
-			if KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.ADVANCED then
-				wb(0x10A85D, 0x00)
-			elseif KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.EXTRA then
-				wb(0x10A85D, 0x01)
+			if p2_mode_addr then
+				if KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.ADVANCED then
+					wb(p2_mode_addr, 0x00)
+				elseif KOF_CONFIG.UI.PLAYER2_MODE == KOF_CONFIG.UI.MODES.EXTRA then
+					wb(p2_mode_addr, 0x01)
+				end
 			end
 		end
 
