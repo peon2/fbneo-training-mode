@@ -21,6 +21,12 @@
   - Upon a successful ROM load, `init.lua` synchronizes exactly what mode/character is active.
   - If a user changes a menu toggle (like picking a new opponent) without loading it, the "Apply Changes" button now warns them by turning Light Orange.
 
+- **Multi-Engine Roster Support: KOF '96 & KOF '97 (`config.lua`)**
+  - Added new KOF '96 and KOF '97 dictionary blocks into `config.lua`.
+  - Mapped all `p1_stored_index`, `hitstatus`, `blockstun`, and memory offsets for the '96 and '97 engines so they now natively hook into the training tool.
+  - Characters from both games are now fully selectable from the dynamic training screen menu without any overlapping bugs.
+  - Added support for 97's Advanced and Extra mode switching.
+
 - **EX Character Restrictions (`config.lua`, `guipages.lua`, `init.lua`)**
   - Added a `has_ex` boolean flag to all characters across the KOF engines.
   - If a character lacks an EX version (e.g., Goro Daimon), the EX button changes to `---` and does nothing.
