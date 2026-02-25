@@ -993,6 +993,14 @@ for page = 1, total_pages do
 					elseif KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
 						KOF_CONFIG.UI.CURRENT_STRIKER1 = nil
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
+						if KOF_CONFIG.get_current_game().has_3_strikers then
+							KOF_CONFIG.UI.P1_STRIKER2 = char
+						end
+					elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P1_STRIKER2 == char then
+						KOF_CONFIG.UI.P1_STRIKER2 = nil
+						KOF_CONFIG.UI.P1_STRIKER3 = char
+					elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P1_STRIKER3 == char then
+						KOF_CONFIG.UI.P1_STRIKER3 = nil
 					else
 						KOF_CONFIG.UI.CURRENT_PLAYER1 = char
 					end
@@ -1006,6 +1014,10 @@ for page = 1, total_pages do
 					this.text = "P1"
 				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
 					this.text = "S1"
+				elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P1_STRIKER2 == char then
+					this.text = "S2"
+				elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P1_STRIKER3 == char then
+					this.text = "S3"
 				else
 					this.text = "-"
 				end
@@ -1029,6 +1041,14 @@ for page = 1, total_pages do
 					elseif KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
 						KOF_CONFIG.UI.CURRENT_STRIKER2 = nil
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
+						if KOF_CONFIG.get_current_game().has_3_strikers then
+							KOF_CONFIG.UI.P2_STRIKER2 = char
+						end
+					elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P2_STRIKER2 == char then
+						KOF_CONFIG.UI.P2_STRIKER2 = nil
+						KOF_CONFIG.UI.P2_STRIKER3 = char
+					elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P2_STRIKER3 == char then
+						KOF_CONFIG.UI.P2_STRIKER3 = nil
 					else
 						KOF_CONFIG.UI.CURRENT_PLAYER2 = char
 					end
@@ -1041,7 +1061,11 @@ for page = 1, total_pages do
 				if KOF_CONFIG.UI.CURRENT_PLAYER2 == char then
 					this.text = "P2"
 				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
+					this.text = "S1"
+				elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P2_STRIKER2 == char then
 					this.text = "S2"
+				elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P2_STRIKER3 == char then
+					this.text = "S3"
 				else
 					this.text = "-"
 				end

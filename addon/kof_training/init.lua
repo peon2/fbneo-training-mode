@@ -52,6 +52,15 @@ local p1_striker_mode_location = current_game.offsets.p1_striker_mode_address an
 local p2_striker_mode_location = current_game.offsets.p2_striker_mode_address and
 	(current_game.player1_base + current_game.offsets.p2_striker_mode_address) or nil
 
+local p1_striker2_stored_index_location = current_game.offsets.p1_striker2_stored_index and
+	(current_game.player1_base + current_game.offsets.p1_striker2_stored_index) or nil
+local p1_striker3_stored_index_location = current_game.offsets.p1_striker3_stored_index and
+	(current_game.player1_base + current_game.offsets.p1_striker3_stored_index) or nil
+local p2_striker2_stored_index_location = current_game.offsets.p2_striker2_stored_index and
+	(current_game.player1_base + current_game.offsets.p2_striker2_stored_index) or nil
+local p2_striker3_stored_index_location = current_game.offsets.p2_striker3_stored_index and
+	(current_game.player1_base + current_game.offsets.p2_striker3_stored_index) or nil
+
 local stateMachine = {
 	currentState = "start",
 	lastState = nil,
@@ -2622,6 +2631,25 @@ function KofTrainingRun() -- runs every frame
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
 					end
 				end
+				local p1_s2_hex, p1_s3_hex, p2_s2_hex, p2_s3_hex
+				if current_game.has_3_strikers then
+					if p1_striker2_stored_index_location then
+						p1_s2_hex = string.format("0x%02X",
+							rb(p1_striker2_stored_index_location))
+					end
+					if p1_striker3_stored_index_location then
+						p1_s3_hex = string.format("0x%02X",
+							rb(p1_striker3_stored_index_location))
+					end
+					if p2_striker2_stored_index_location then
+						p2_s2_hex = string.format("0x%02X",
+							rb(p2_striker2_stored_index_location))
+					end
+					if p2_striker3_stored_index_location then
+						p2_s3_hex = string.format("0x%02X",
+							rb(p2_striker3_stored_index_location))
+					end
+				end
 			end
 
 			for i, char in ipairs(current_game.characters) do
@@ -2634,6 +2662,12 @@ function KofTrainingRun() -- runs every frame
 				if current_game.has_strikers then
 					if char.code == sk1_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER1 = char end
 					if char.code == sk2_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER2 = char end
+					if current_game.has_3_strikers then
+						if char.code == p1_s2_hex then KOF_CONFIG.UI.P1_STRIKER2 = char end
+						if char.code == p1_s3_hex then KOF_CONFIG.UI.P1_STRIKER3 = char end
+						if char.code == p2_s2_hex then KOF_CONFIG.UI.P2_STRIKER2 = char end
+						if char.code == p2_s3_hex then KOF_CONFIG.UI.P2_STRIKER3 = char end
+					end
 				end
 			end
 
@@ -2664,6 +2698,34 @@ function KofTrainingRun() -- runs every frame
 				sk2_id_hex = string.format("0x%02X",
 					rb(p2_striker_stored_index_location))
 			end
+			if emu.romname() == "kof2000" then
+				if p1_striker_mode_location then
+					KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = rb(p1_striker_mode_location)
+				end
+				if p2_striker_mode_location then
+					KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
+				end
+			end
+		end
+
+		local p1_s2_hex, p1_s3_hex, p2_s2_hex, p2_s3_hex
+		if current_game.has_3_strikers then
+			if p1_striker2_stored_index_location then
+				p1_s2_hex = string.format("0x%02X",
+					rb(p1_striker2_stored_index_location))
+			end
+			if p1_striker3_stored_index_location then
+				p1_s3_hex = string.format("0x%02X",
+					rb(p1_striker3_stored_index_location))
+			end
+			if p2_striker2_stored_index_location then
+				p2_s2_hex = string.format("0x%02X",
+					rb(p2_striker2_stored_index_location))
+			end
+			if p2_striker3_stored_index_location then
+				p2_s3_hex = string.format("0x%02X",
+					rb(p2_striker3_stored_index_location))
+			end
 		end
 
 		for i, char in ipairs(current_game.characters) do
@@ -2682,8 +2744,15 @@ function KofTrainingRun() -- runs every frame
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
 					end
 				end
+				if current_game.has_3_strikers then
+					if not KOF_CONFIG.UI.P1_STRIKER2 and char.code == p1_s2_hex then KOF_CONFIG.UI.P1_STRIKER2 = char end
+					if not KOF_CONFIG.UI.P1_STRIKER3 and char.code == p1_s3_hex then KOF_CONFIG.UI.P1_STRIKER3 = char end
+					if not KOF_CONFIG.UI.P2_STRIKER2 and char.code == p2_s2_hex then KOF_CONFIG.UI.P2_STRIKER2 = char end
+					if not KOF_CONFIG.UI.P2_STRIKER3 and char.code == p2_s3_hex then KOF_CONFIG.UI.P2_STRIKER3 = char end
+				end
 			end
 		end
+
 
 		local level_address = current_game.offsets.level_address
 		if level_address then wb(level_address, KOF_CONFIG.CPU.current_dificulty) end
@@ -2712,6 +2781,20 @@ function KofTrainingRun() -- runs every frame
 				wb(p2_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER2.code)
 				if p2_striker_mode_location and emu.romname() == "kof2000" then
 					wb(p2_striker_mode_location, KOF_CONFIG.UI.PLAYER2_STRIKER_MODE)
+				end
+			end
+			if KOF_CONFIG.get_current_game().has_3_strikers then
+				if KOF_CONFIG.UI.P1_STRIKER2 and KOF_CONFIG.UI.P1_STRIKER2.code and p1_striker2_stored_index_location then
+					wb(p1_striker2_stored_index_location, KOF_CONFIG.UI.P1_STRIKER2.code)
+				end
+				if KOF_CONFIG.UI.P1_STRIKER3 and KOF_CONFIG.UI.P1_STRIKER3.code and p1_striker3_stored_index_location then
+					wb(p1_striker3_stored_index_location, KOF_CONFIG.UI.P1_STRIKER3.code)
+				end
+				if KOF_CONFIG.UI.P2_STRIKER2 and KOF_CONFIG.UI.P2_STRIKER2.code and p2_striker2_stored_index_location then
+					wb(p2_striker2_stored_index_location, KOF_CONFIG.UI.P2_STRIKER2.code)
+				end
+				if KOF_CONFIG.UI.P2_STRIKER3 and KOF_CONFIG.UI.P2_STRIKER3.code and p2_striker3_stored_index_location then
+					wb(p2_striker3_stored_index_location, KOF_CONFIG.UI.P2_STRIKER3.code)
 				end
 			end
 		end
