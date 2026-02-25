@@ -2523,6 +2523,13 @@ function KofTrainingRun() -- runs every frame
 	checkP2FrameAdvantage()
 	draw_debug_info()
 
+	if emu.romname and emu.romname() == "kof99" then
+		gui.text(20, 150,
+			string.format("P1 Addr: %06X - Val: %02X", p1_stored_index_location, rb(p1_stored_index_location)), "yellow")
+		gui.text(20, 160,
+			string.format("P2 Addr: %06X - Val: %02X", p2_stored_index_location, rb(p2_stored_index_location)), "cyan")
+	end
+
 	-- DEBUG EX ADDRESSES
 	if emu.romname and emu.romname() == "kof2002" then
 		-- KOF 2002 EXCEPTION: continuously enforce EX flags while active, as the engine clears active RAM
