@@ -43,6 +43,10 @@ local p1_striker_stored_index_location = current_game.offsets.striker1_stored_in
 	(current_game.player1_base + current_game.offsets.striker1_stored_index) or nil
 local p2_striker_stored_index_location = current_game.offsets.striker2_stored_index and
 	(current_game.player1_base + current_game.offsets.striker2_stored_index) or nil
+local p1_striker_count_location = current_game.offsets.striker_count_address and
+	(current_game.player1_base + current_game.offsets.striker_count_address) or nil
+local p2_striker_count_location = current_game.offsets.striker_count_address and
+	(current_game.player2_base + current_game.offsets.striker_count_address) or nil
 
 local stateMachine = {
 	currentState = "start",
@@ -2532,6 +2536,15 @@ function KofTrainingRun() -- runs every frame
 			string.format("P1 Addr: %06X - Val: %02X", p1_stored_index_location, rb(p1_stored_index_location)), "yellow")
 		gui.text(20, 160,
 			string.format("P2 Addr: %06X - Val: %02X", p2_stored_index_location, rb(p2_stored_index_location)), "cyan")
+
+		if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS then
+			if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 1 or KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 3 then
+				if p1_striker_count_location then wb(p1_striker_count_location, 0x05) end
+			end
+			if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 2 or KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 3 then
+				if p2_striker_count_location then wb(p2_striker_count_location, 0x05) end
+			end
+		end
 	end
 
 	-- DEBUG EX ADDRESSES
@@ -2587,10 +2600,14 @@ function KofTrainingRun() -- runs every frame
 			local sk2_id_hex = nil
 
 			if current_game.has_strikers then
-				if p1_striker_stored_index_location then sk1_id_hex = string.format("0x%02X",
-						rb(p1_striker_stored_index_location)) end
-				if p2_striker_stored_index_location then sk2_id_hex = string.format("0x%02X",
-						rb(p2_striker_stored_index_location)) end
+				if p1_striker_stored_index_location then
+					sk1_id_hex = string.format("0x%02X",
+						rb(p1_striker_stored_index_location))
+				end
+				if p2_striker_stored_index_location then
+					sk2_id_hex = string.format("0x%02X",
+						rb(p2_striker_stored_index_location))
+				end
 			end
 
 			for i, char in ipairs(current_game.characters) do
@@ -2699,6 +2716,7 @@ function KofTrainingRun() -- runs every frame
 		KOF_CONFIG.UI.APPLIED.PLAYER2 = KOF_CONFIG.UI.CURRENT_PLAYER2
 		KOF_CONFIG.UI.APPLIED.STRIKER1 = KOF_CONFIG.UI.CURRENT_STRIKER1
 		KOF_CONFIG.UI.APPLIED.STRIKER2 = KOF_CONFIG.UI.CURRENT_STRIKER2
+		KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS = KOF_CONFIG.UI.INFINITE_STRIKERS
 		KOF_CONFIG.UI.APPLIED.PLAYER1_EX = KOF_CONFIG.UI.PLAYER1_EX
 		KOF_CONFIG.UI.APPLIED.PLAYER2_EX = KOF_CONFIG.UI.PLAYER2_EX
 		KOF_CONFIG.UI.APPLIED.PLAYER1_MODE = KOF_CONFIG.UI.PLAYER1_MODE

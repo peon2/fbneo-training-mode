@@ -1145,8 +1145,36 @@ for page = 1, total_pages do
 		})
 	end
 
+	if current_game_config.has_strikers then
+		table.insert(page_table, {
+			y = 58,
+			x = 144,
+			info = { 'Infinite Strikers' },
+			func = function()
+				KOF_CONFIG.UI.INFINITE_STRIKERS = KOF_CONFIG.UI.INFINITE_STRIKERS + 1
+				KOF_CONFIG.UI.MODE_HAS_CHANGED = true
+				if KOF_CONFIG.UI.INFINITE_STRIKERS > 3 then
+					KOF_CONFIG.UI.INFINITE_STRIKERS = 0
+				end
+			end,
+			text = "Inf Strikers: Off",
+			olcolour = "black",
+			autofunc = function(this)
+				if KOF_CONFIG.UI.INFINITE_STRIKERS == 1 then
+					this.text = "Inf Strikers: P1"
+				elseif KOF_CONFIG.UI.INFINITE_STRIKERS == 2 then
+					this.text = "Inf Strikers: P2"
+				elseif KOF_CONFIG.UI.INFINITE_STRIKERS == 3 then
+					this.text = "Inf Strikers: Both"
+				else
+					this.text = "Inf Strikers: Off"
+				end
+			end,
+		})
+	end
+
 	table.insert(page_table, {
-		y = 58,
+		y = 70,
 		x = 144,
 		info = { 'Load Matchup' },
 		func = function()
@@ -1168,6 +1196,7 @@ for page = 1, total_pages do
 			if KOF_CONFIG.get_current_game().has_strikers then
 				if KOF_CONFIG.UI.CURRENT_STRIKER1 ~= applied.STRIKER1 then pending = true end
 				if KOF_CONFIG.UI.CURRENT_STRIKER2 ~= applied.STRIKER2 then pending = true end
+				if KOF_CONFIG.UI.INFINITE_STRIKERS ~= applied.INFINITE_STRIKERS then pending = true end
 			end
 
 			if pending then
