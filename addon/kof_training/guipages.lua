@@ -989,8 +989,10 @@ for page = 1, total_pages do
 					if KOF_CONFIG.UI.CURRENT_PLAYER1 == char then
 						KOF_CONFIG.UI.CURRENT_PLAYER1 = nil
 						KOF_CONFIG.UI.CURRENT_STRIKER1 = char
+						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
 					elseif KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
 						KOF_CONFIG.UI.CURRENT_STRIKER1 = nil
+						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
 					else
 						KOF_CONFIG.UI.CURRENT_PLAYER1 = char
 					end
@@ -1023,8 +1025,10 @@ for page = 1, total_pages do
 					if KOF_CONFIG.UI.CURRENT_PLAYER2 == char then
 						KOF_CONFIG.UI.CURRENT_PLAYER2 = nil
 						KOF_CONFIG.UI.CURRENT_STRIKER2 = char
+						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
 					elseif KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
 						KOF_CONFIG.UI.CURRENT_STRIKER2 = nil
+						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
 					else
 						KOF_CONFIG.UI.CURRENT_PLAYER2 = char
 					end
@@ -1155,7 +1159,7 @@ for page = 1, total_pages do
 					KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = KOF_CONFIG.UI.PLAYER1_STRIKER_MODE + 1
 					KOF_CONFIG.UI.MODE_HAS_CHANGED = true
 					local max_mode = (KOF_CONFIG.UI.CURRENT_STRIKER1 and KOF_CONFIG.UI.CURRENT_STRIKER1.has_maniac) and 2 or
-					1
+						1
 					if KOF_CONFIG.UI.PLAYER1_STRIKER_MODE > max_mode then
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
 					end
@@ -1185,7 +1189,7 @@ for page = 1, total_pages do
 					KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = KOF_CONFIG.UI.PLAYER2_STRIKER_MODE + 1
 					KOF_CONFIG.UI.MODE_HAS_CHANGED = true
 					local max_mode = (KOF_CONFIG.UI.CURRENT_STRIKER2 and KOF_CONFIG.UI.CURRENT_STRIKER2.has_maniac) and 2 or
-					1
+						1
 					if KOF_CONFIG.UI.PLAYER2_STRIKER_MODE > max_mode then
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
 					end
