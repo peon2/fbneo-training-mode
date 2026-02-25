@@ -2531,7 +2531,7 @@ function KofTrainingRun() -- runs every frame
 	checkP2FrameAdvantage()
 	draw_debug_info()
 
-	if emu.romname and emu.romname() == "kof99" then
+	if emu.romname and (emu.romname() == "kof99" or emu.romname() == "kof2000") then
 		if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS then
 			if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 1 or KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 3 then
 				if p1_striker_count_location then wb(p1_striker_count_location, 0x05) end
