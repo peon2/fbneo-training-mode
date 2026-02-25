@@ -369,6 +369,36 @@ KOF_CONFIG = {
                 [36] = { name = "Zero", code = "0x23", short_name = "zero" },
             }
         },
+        ["kof2001"] = {
+            name = "The King of Fighters 2001",
+            has_ex = false,
+            has_modes = false,
+            has_strikers = true,
+            player1_base = 0x108100,
+            player2_base = 0x108300,
+            offsets = {
+                hitstatus = 0x72,
+                action = 0x73,
+                status = 0x7C,
+                blockstun = 0xE3,
+                air_height = 0x21,
+                player_stored_index = 0x26FA,
+                player2_stored_index = 0x270F,
+                striker1_stored_index = 0x26FD,
+                striker2_stored_index = 0x2712,
+                p1_striker_mode_address = 0x270A,
+                p2_striker_mode_address = 0x271F,
+                striker_count_address = 0x01E3, -- Relative offset for striker stock
+                obj_ptr_list = 0x10B094 + 0xE90,
+                game_phase = 0x10B094,
+                level_address = 0x10FD8E,
+                stage_address = 0x10A7EA,
+                music_address = 0x10ED5F,
+            },
+            characters = {
+                [1] = { name = "K\'", code = "0x00", short_name = "k" },
+            }
+        },
     },
     SUPPORTED_GAMES = {
         ["kof96"] = true,
@@ -377,6 +407,7 @@ KOF_CONFIG = {
         ["kof98h"] = true,
         ["kof99"] = true,
         ["kof2000"] = true,
+        ["kof2001"] = true,
         ["kof2002"] = true,
     },
 
