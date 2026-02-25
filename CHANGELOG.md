@@ -8,6 +8,7 @@
   - **Whiff Handling:** Moves that start but do not become active (whiffs) are now correctly tracked, registered, and displayed in the frame data output.
   - **Air Time Tracking:** Added Air Time logic to the frame data readout to measure jump/airborne duration in addition to standard grounded frame advantages!
   - **Advantage Calculation Sync:** Bypassed the separate frame advantage calculation logic inside `frame_data` entirely, securely binding its UI directy to `init.lua`'s proven block/hitstun math counter outputs so both visuals perfectly mirror one another.
+  - **Free Advantage Overhaul:** Rewrote the "Free Advantage" logic (number in parentheses on the UI) so its math algorithm calculates perfectly from the hit frame itself. It explicitly calculates the opponent's total stun duration minus the attacker's recovery frames that occurred during that specific stun span.
   - **Options Menu Integration:** Frame data is now fully integrated into the interactive UI menu, allowing it to be permanently disabled or re-enabled at will.
 
 - **Dynamic Paginated Character Layout (`guipages.lua`)**

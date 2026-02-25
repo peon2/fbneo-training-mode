@@ -112,9 +112,10 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         self.p2_stun_frames = 0
         self.advantage_calculating = false
 
-        -- New Free Advantage (Counts from when attacker reaches Action 0 until opponent reaches Action 0)
+        -- New Free Advantage
         self.current_free_advantage = 0
         self.global_persistent_free_advantage = 0
+        self.free_adv_attacker_recovery = 0
         self.free_advantage_calculating = false
 
         self.current_air_frames = 0
@@ -264,7 +265,7 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
                 self.global_persistent_stun_type = self.opp_current_stun
             end
         else
-            if new_stun_state ~= STUN_STATE.NONE then
+            if new_stun_state ~= STUN_STATE.NONE or opp_raw_is_busy then
                 self.opp_stun_timer = self.opp_stun_timer + 1
                 if new_stun_state == STUN_STATE.BLOCK then self.opp_current_stun = STUN_STATE.BLOCK end
                 self.global_persistent_stun = self.opp_stun_timer
@@ -287,6 +288,7 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
 
             -- New Free Advantage calculation setup
             self.current_free_advantage = 0
+            self.free_adv_attacker_recovery = 0
             self.free_advantage_calculating = true
         end
 
@@ -308,19 +310,21 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
             if not p1_busy and not p2_busy then self.advantage_calculating = false end
         end
 
-        -- Free Advantage
+        -- Free Advantage (Counts from Hit Frame)
         if self.free_advantage_calculating then
             local opp_is_stunned = (self.opp_current_stun ~= STUN_STATE.NONE)
 
-            -- Just count up when attacker is free (action 0) and opponent is still stunned
-            if opp_is_stunned and not raw_is_busy then
-                self.current_free_advantage = self.current_free_advantage + 1
-            end
+            if opp_is_stunned then
+                if raw_is_busy then
+                    -- Track how many frames the attacker spent recovering DURING the opponent's stun
+                    self.free_adv_attacker_recovery = (self.free_adv_attacker_recovery or 0) + 1
+                end
 
-            self.global_persistent_free_advantage = self.current_free_advantage
-
-            -- Stop counting when opponent stun ends
-            if not opp_is_stunned then
+                -- Free advantage is the opponent's total stun time minus the attacker's recovery time since the stun started.
+                self.current_free_advantage = self.opp_stun_timer - self.free_adv_attacker_recovery
+                self.global_persistent_free_advantage = self.current_free_advantage
+            else
+                -- Stop calculating when the opponent is no longer stunned.
                 self.free_advantage_calculating = false
             end
         end
@@ -355,6 +359,7 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
 
                 self.global_persistent_free_advantage = 0
                 self.current_free_advantage = 0
+                self.free_adv_attacker_recovery = 0
                 self.free_advantage_calculating = false
 
                 self.current_move = { startup = 1, active = 0, recovery = 0, total = 1, hit_frame = -1 }
