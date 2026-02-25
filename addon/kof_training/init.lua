@@ -2557,11 +2557,18 @@ function KofTrainingRun() -- runs every frame
 	end
 
 	if KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED or KOF_CONFIG.CPU.HAS_CHANGED or KOF_CONFIG.UI.INITIAL_START == true then
-		load_machine_state("addon\\kof_training\\savestates\\" .. emu.romname() .. "_select.fs") -- Replace with your file path
 		if KOF_CONFIG.UI.INITIAL_START then
-			KOF_CONFIG.UI.INITIAL_START = false
+			-- Frame 1: Load savestate and wait
+			if not delay_initial_read then
+				load_machine_state("addon\\kof_training\\savestates\\" .. emu.romname() .. "_select.fs")
+				delay_initial_read = true
+				return
+			end
 
-			-- Read characters loaded by savestate and sync the UI config
+			-- Frame 2: Memory is now populated. Read characters loaded by savestate and sync the UI config
+			KOF_CONFIG.UI.INITIAL_START = false
+			delay_initial_read = false
+
 			local current_game = KOF_CONFIG.get_current_game()
 			local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
 			local p2_id_hex = string.format("0x%02X", rb(p2_stored_index_location))
@@ -2577,6 +2584,9 @@ function KofTrainingRun() -- runs every frame
 
 			return
 		end
+
+		-- If not INITIAL_START (meaning the user changed characters in the UI)
+		load_machine_state("addon\\kof_training\\savestates\\" .. emu.romname() .. "_select.fs")
 		KOF_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
 		if KOF_CONFIG.CPU.HAS_CHANGED then
 			KOF_CONFIG.CPU.HAS_CHANGED = false
