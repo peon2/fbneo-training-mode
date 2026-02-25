@@ -2607,6 +2607,14 @@ function KofTrainingRun() -- runs every frame
 					sk2_id_hex = string.format("0x%02X",
 						rb(p2_striker_stored_index_location))
 				end
+				if emu.romname() == "kof2000" then
+					if p1_striker_mode_location then
+						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = rb(p1_striker_mode_location)
+					end
+					if p2_striker_mode_location then
+						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
+					end
+				end
 			end
 
 			for i, char in ipairs(current_game.characters) do
@@ -2641,20 +2649,32 @@ function KofTrainingRun() -- runs every frame
 		local sk2_id_hex = nil
 
 		if current_game.has_strikers then
-			if p1_striker_stored_index_location then sk1_id_hex = string.format("0x%02X",
-					rb(p1_striker_stored_index_location)) end
-			if p2_striker_stored_index_location then sk2_id_hex = string.format("0x%02X",
-					rb(p2_striker_stored_index_location)) end
+			if p1_striker_stored_index_location then
+				sk1_id_hex = string.format("0x%02X",
+					rb(p1_striker_stored_index_location))
+			end
+			if p2_striker_stored_index_location then
+				sk2_id_hex = string.format("0x%02X",
+					rb(p2_striker_stored_index_location))
+			end
 		end
 
 		for i, char in ipairs(current_game.characters) do
 			if not KOF_CONFIG.UI.CURRENT_PLAYER1 and char.code == p1_id_hex then KOF_CONFIG.UI.CURRENT_PLAYER1 = char end
 			if not KOF_CONFIG.UI.CURRENT_PLAYER2 and char.code == p2_id_hex then KOF_CONFIG.UI.CURRENT_PLAYER2 = char end
 			if current_game.has_strikers then
-				if not KOF_CONFIG.UI.CURRENT_STRIKER1 and char.code == sk1_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER1 =
-					char end
-				if not KOF_CONFIG.UI.CURRENT_STRIKER2 and char.code == sk2_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER2 =
-					char end
+				if not KOF_CONFIG.UI.CURRENT_STRIKER1 and char.code == sk1_id_hex then
+					KOF_CONFIG.UI.CURRENT_STRIKER1 = char
+					if emu.romname() == "kof2000" and p1_striker_mode_location then
+						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = rb(p1_striker_mode_location)
+					end
+				end
+				if not KOF_CONFIG.UI.CURRENT_STRIKER2 and char.code == sk2_id_hex then
+					KOF_CONFIG.UI.CURRENT_STRIKER2 = char
+					if emu.romname() == "kof2000" and p2_striker_mode_location then
+						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
+					end
+				end
 			end
 		end
 
