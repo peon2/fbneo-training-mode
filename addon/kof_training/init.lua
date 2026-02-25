@@ -2632,13 +2632,39 @@ function KofTrainingRun() -- runs every frame
 			KOF_CONFIG.CPU.HAS_CHANGED = false
 		end
 
-		local level_address = KOF_CONFIG.get_current_game().offsets.level_address
+		local current_game = KOF_CONFIG.get_current_game()
+
+		-- Fallback logic: if left blank, fetch the character from the loaded savestate memory
+		local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
+		local p2_id_hex = string.format("0x%02X", rb(p2_stored_index_location))
+		local sk1_id_hex = nil
+		local sk2_id_hex = nil
+
+		if current_game.has_strikers then
+			if p1_striker_stored_index_location then sk1_id_hex = string.format("0x%02X",
+					rb(p1_striker_stored_index_location)) end
+			if p2_striker_stored_index_location then sk2_id_hex = string.format("0x%02X",
+					rb(p2_striker_stored_index_location)) end
+		end
+
+		for i, char in ipairs(current_game.characters) do
+			if not KOF_CONFIG.UI.CURRENT_PLAYER1 and char.code == p1_id_hex then KOF_CONFIG.UI.CURRENT_PLAYER1 = char end
+			if not KOF_CONFIG.UI.CURRENT_PLAYER2 and char.code == p2_id_hex then KOF_CONFIG.UI.CURRENT_PLAYER2 = char end
+			if current_game.has_strikers then
+				if not KOF_CONFIG.UI.CURRENT_STRIKER1 and char.code == sk1_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER1 =
+					char end
+				if not KOF_CONFIG.UI.CURRENT_STRIKER2 and char.code == sk2_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER2 =
+					char end
+			end
+		end
+
+		local level_address = current_game.offsets.level_address
 		if level_address then wb(level_address, KOF_CONFIG.CPU.current_dificulty) end
 
-		local stage_address = KOF_CONFIG.get_current_game().offsets.stage_address
+		local stage_address = current_game.offsets.stage_address
 		if stage_address then wb(stage_address, STAGES.JAPAN_STREET) end
 
-		local music_address = KOF_CONFIG.get_current_game().offsets.music_address
+		local music_address = current_game.offsets.music_address
 		if music_address then wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ) end
 
 		if KOF_CONFIG.UI.CURRENT_PLAYER1 and KOF_CONFIG.UI.CURRENT_PLAYER1.code then
