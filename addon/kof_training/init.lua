@@ -2532,11 +2532,6 @@ function KofTrainingRun() -- runs every frame
 	draw_debug_info()
 
 	if emu.romname and emu.romname() == "kof99" then
-		gui.text(20, 150,
-			string.format("P1 Addr: %06X - Val: %02X", p1_stored_index_location, rb(p1_stored_index_location)), "yellow")
-		gui.text(20, 160,
-			string.format("P2 Addr: %06X - Val: %02X", p2_stored_index_location, rb(p2_stored_index_location)), "cyan")
-
 		if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS then
 			if KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 1 or KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS == 3 then
 				if p1_striker_count_location then wb(p1_striker_count_location, 0x05) end
