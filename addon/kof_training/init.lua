@@ -39,6 +39,10 @@ local air_height = current_game.player2_base + current_game.offsets.air_height
 local p1_stored_index_location = current_game.player1_base + (current_game.offsets.player_stored_index or 0)
 local p2_stored_index_location = current_game.offsets.player2_stored_index and
 	(current_game.player1_base + current_game.offsets.player2_stored_index) or (p1_stored_index_location + 0x11)
+local p1_striker_stored_index_location = current_game.offsets.striker1_stored_index and
+	(current_game.player1_base + current_game.offsets.striker1_stored_index) or nil
+local p2_striker_stored_index_location = current_game.offsets.striker2_stored_index and
+	(current_game.player1_base + current_game.offsets.striker2_stored_index) or nil
 
 local stateMachine = {
 	currentState = "start",
@@ -2579,6 +2583,15 @@ function KofTrainingRun() -- runs every frame
 			local current_game = KOF_CONFIG.get_current_game()
 			local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
 			local p2_id_hex = string.format("0x%02X", rb(p2_stored_index_location))
+			local sk1_id_hex = nil
+			local sk2_id_hex = nil
+
+			if current_game.has_strikers then
+				if p1_striker_stored_index_location then sk1_id_hex = string.format("0x%02X",
+						rb(p1_striker_stored_index_location)) end
+				if p2_striker_stored_index_location then sk2_id_hex = string.format("0x%02X",
+						rb(p2_striker_stored_index_location)) end
+			end
 
 			for i, char in ipairs(current_game.characters) do
 				if char.code == p1_id_hex then
@@ -2586,6 +2599,10 @@ function KofTrainingRun() -- runs every frame
 				end
 				if char.code == p2_id_hex then
 					KOF_CONFIG.UI.CURRENT_PLAYER2 = char
+				end
+				if current_game.has_strikers then
+					if char.code == sk1_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER1 = char end
+					if char.code == sk2_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER2 = char end
 				end
 			end
 
@@ -2608,10 +2625,23 @@ function KofTrainingRun() -- runs every frame
 		local music_address = KOF_CONFIG.get_current_game().offsets.music_address
 		if music_address then wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ) end
 
-		wb(p1_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
-		wb(p2_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
+		if KOF_CONFIG.UI.CURRENT_PLAYER1 and KOF_CONFIG.UI.CURRENT_PLAYER1.code then
+			wb(p1_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER1.code)
+		end
+		if KOF_CONFIG.UI.CURRENT_PLAYER2 and KOF_CONFIG.UI.CURRENT_PLAYER2.code then
+			wb(p2_stored_index_location, KOF_CONFIG.UI.CURRENT_PLAYER2.code)
+		end
 
-		if not KOF_CONFIG.UI.CURRENT_PLAYER1.has_ex then
+		if KOF_CONFIG.get_current_game().has_strikers then
+			if KOF_CONFIG.UI.CURRENT_STRIKER1 and KOF_CONFIG.UI.CURRENT_STRIKER1.code and p1_striker_stored_index_location then
+				wb(p1_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER1.code)
+			end
+			if KOF_CONFIG.UI.CURRENT_STRIKER2 and KOF_CONFIG.UI.CURRENT_STRIKER2.code and p2_striker_stored_index_location then
+				wb(p2_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER2.code)
+			end
+		end
+
+		if not KOF_CONFIG.UI.CURRENT_PLAYER1 or not KOF_CONFIG.UI.CURRENT_PLAYER1.has_ex then
 			KOF_CONFIG.UI.PLAYER1_EX = false
 		end
 		if not KOF_CONFIG.UI.CURRENT_PLAYER2.has_ex then
@@ -2667,6 +2697,8 @@ function KofTrainingRun() -- runs every frame
 
 		KOF_CONFIG.UI.APPLIED.PLAYER1 = KOF_CONFIG.UI.CURRENT_PLAYER1
 		KOF_CONFIG.UI.APPLIED.PLAYER2 = KOF_CONFIG.UI.CURRENT_PLAYER2
+		KOF_CONFIG.UI.APPLIED.STRIKER1 = KOF_CONFIG.UI.CURRENT_STRIKER1
+		KOF_CONFIG.UI.APPLIED.STRIKER2 = KOF_CONFIG.UI.CURRENT_STRIKER2
 		KOF_CONFIG.UI.APPLIED.PLAYER1_EX = KOF_CONFIG.UI.PLAYER1_EX
 		KOF_CONFIG.UI.APPLIED.PLAYER2_EX = KOF_CONFIG.UI.PLAYER2_EX
 		KOF_CONFIG.UI.APPLIED.PLAYER1_MODE = KOF_CONFIG.UI.PLAYER1_MODE

@@ -976,7 +976,7 @@ for page = 1, total_pages do
 			autofunc = function(this) end,
 		})
 
-		-- P1 button
+		-- P1 / SK1 cycler button
 		table.insert(page_table, {
 			y = yloc,
 			x = basex + 37,
@@ -984,18 +984,33 @@ for page = 1, total_pages do
 			text = "P1",
 			olcolour = "black",
 			func = function()
-				KOF_CONFIG.UI.CURRENT_PLAYER1 = KOF_CONFIG.get_current_game().characters[i]
+				local char = KOF_CONFIG.get_current_game().characters[i]
+				if KOF_CONFIG.get_current_game().has_strikers then
+					if KOF_CONFIG.UI.CURRENT_PLAYER1 == char then
+						KOF_CONFIG.UI.CURRENT_PLAYER1 = nil
+						KOF_CONFIG.UI.CURRENT_STRIKER1 = char
+					elseif KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
+						KOF_CONFIG.UI.CURRENT_STRIKER1 = nil
+					else
+						KOF_CONFIG.UI.CURRENT_PLAYER1 = char
+					end
+				else
+					KOF_CONFIG.UI.CURRENT_PLAYER1 = char
+				end
 			end,
 			autofunc = function(this)
-				if KOF_CONFIG.UI.CURRENT_PLAYER1 == KOF_CONFIG.get_current_game().characters[i] then
+				local char = KOF_CONFIG.get_current_game().characters[i]
+				if KOF_CONFIG.UI.CURRENT_PLAYER1 == char then
 					this.text = "P1"
+				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
+					this.text = "S1"
 				else
 					this.text = "-"
 				end
 			end,
 		})
 
-		-- P2 button
+		-- P2 / SK2 cycler button
 		table.insert(page_table, {
 			y = yloc,
 			x = basex + 54,
@@ -1003,11 +1018,26 @@ for page = 1, total_pages do
 			text = "P2",
 			olcolour = "black",
 			func = function()
-				KOF_CONFIG.UI.CURRENT_PLAYER2 = KOF_CONFIG.get_current_game().characters[i]
+				local char = KOF_CONFIG.get_current_game().characters[i]
+				if KOF_CONFIG.get_current_game().has_strikers then
+					if KOF_CONFIG.UI.CURRENT_PLAYER2 == char then
+						KOF_CONFIG.UI.CURRENT_PLAYER2 = nil
+						KOF_CONFIG.UI.CURRENT_STRIKER2 = char
+					elseif KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
+						KOF_CONFIG.UI.CURRENT_STRIKER2 = nil
+					else
+						KOF_CONFIG.UI.CURRENT_PLAYER2 = char
+					end
+				else
+					KOF_CONFIG.UI.CURRENT_PLAYER2 = char
+				end
 			end,
 			autofunc = function(this)
-				if KOF_CONFIG.UI.CURRENT_PLAYER2 == KOF_CONFIG.get_current_game().characters[i] then
+				local char = KOF_CONFIG.get_current_game().characters[i]
+				if KOF_CONFIG.UI.CURRENT_PLAYER2 == char then
 					this.text = "P2"
+				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
+					this.text = "S2"
 				else
 					this.text = "-"
 				end
@@ -1135,6 +1165,10 @@ for page = 1, total_pages do
 			if KOF_CONFIG.UI.PLAYER2_EX ~= applied.PLAYER2_EX then pending = true end
 			if KOF_CONFIG.UI.PLAYER1_MODE ~= applied.PLAYER1_MODE then pending = true end
 			if KOF_CONFIG.UI.PLAYER2_MODE ~= applied.PLAYER2_MODE then pending = true end
+			if KOF_CONFIG.get_current_game().has_strikers then
+				if KOF_CONFIG.UI.CURRENT_STRIKER1 ~= applied.STRIKER1 then pending = true end
+				if KOF_CONFIG.UI.CURRENT_STRIKER2 ~= applied.STRIKER2 then pending = true end
+			end
 
 			if pending then
 				this.bgcolour = 0xFFB347FF
