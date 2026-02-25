@@ -47,6 +47,10 @@ local p1_striker_count_location = current_game.offsets.striker_count_address and
 	(current_game.player1_base + current_game.offsets.striker_count_address) or nil
 local p2_striker_count_location = current_game.offsets.striker_count_address and
 	(current_game.player2_base + current_game.offsets.striker_count_address) or nil
+local p1_striker_mode_location = current_game.offsets.p1_striker_mode_address and
+	(current_game.player1_base + current_game.offsets.p1_striker_mode_address) or nil
+local p2_striker_mode_location = current_game.offsets.p2_striker_mode_address and
+	(current_game.player1_base + current_game.offsets.p2_striker_mode_address) or nil
 
 local stateMachine = {
 	currentState = "start",
@@ -2647,9 +2651,15 @@ function KofTrainingRun() -- runs every frame
 		if KOF_CONFIG.get_current_game().has_strikers then
 			if KOF_CONFIG.UI.CURRENT_STRIKER1 and KOF_CONFIG.UI.CURRENT_STRIKER1.code and p1_striker_stored_index_location then
 				wb(p1_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER1.code)
+				if p1_striker_mode_location and emu.romname() == "kof2000" then
+					wb(p1_striker_mode_location, KOF_CONFIG.UI.PLAYER1_STRIKER_MODE)
+				end
 			end
 			if KOF_CONFIG.UI.CURRENT_STRIKER2 and KOF_CONFIG.UI.CURRENT_STRIKER2.code and p2_striker_stored_index_location then
 				wb(p2_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER2.code)
+				if p2_striker_mode_location and emu.romname() == "kof2000" then
+					wb(p2_striker_mode_location, KOF_CONFIG.UI.PLAYER2_STRIKER_MODE)
+				end
 			end
 		end
 
@@ -2712,6 +2722,8 @@ function KofTrainingRun() -- runs every frame
 		KOF_CONFIG.UI.APPLIED.STRIKER1 = KOF_CONFIG.UI.CURRENT_STRIKER1
 		KOF_CONFIG.UI.APPLIED.STRIKER2 = KOF_CONFIG.UI.CURRENT_STRIKER2
 		KOF_CONFIG.UI.APPLIED.INFINITE_STRIKERS = KOF_CONFIG.UI.INFINITE_STRIKERS
+		KOF_CONFIG.UI.APPLIED.PLAYER1_STRIKER_MODE = KOF_CONFIG.UI.PLAYER1_STRIKER_MODE
+		KOF_CONFIG.UI.APPLIED.PLAYER2_STRIKER_MODE = KOF_CONFIG.UI.PLAYER2_STRIKER_MODE
 		KOF_CONFIG.UI.APPLIED.PLAYER1_EX = KOF_CONFIG.UI.PLAYER1_EX
 		KOF_CONFIG.UI.APPLIED.PLAYER2_EX = KOF_CONFIG.UI.PLAYER2_EX
 		KOF_CONFIG.UI.APPLIED.PLAYER1_MODE = KOF_CONFIG.UI.PLAYER1_MODE
