@@ -2547,6 +2547,13 @@ function KofTrainingRun() -- runs every frame
 	end
 
 	-- DEBUG EX ADDRESSES
+	if emu.romname and emu.romname() == "kof2001" then
+		gui.text(20, 150, string.format("P1 Meter (1081E8): %02X", rb(0x1081E8)), "yellow")
+		gui.text(20, 160, string.format("P1 Toggle (1083CB): %02X", rb(0x1083CB)), "yellow")
+		gui.text(20, 170, string.format("P2 Meter (1083E8): %02X", rb(0x1083E8)), "cyan")
+		gui.text(20, 180, string.format("P2 Toggle (1085CB): %02X", rb(0x1085CB)), "cyan")
+	end
+
 	if emu.romname and emu.romname() == "kof2002" then
 		-- KOF 2002 EXCEPTION: continuously enforce EX flags while active, as the engine clears active RAM
 		if KOF_CONFIG.UI.APPLIED.PLAYER1_EX then
