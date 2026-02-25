@@ -308,20 +308,19 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
             if not p1_busy and not p2_busy then self.advantage_calculating = false end
         end
 
-        -- Free Advantage (Starts counting difference ONLY when one player hits Action 0)
+        -- Free Advantage
         if self.free_advantage_calculating then
             local opp_is_stunned = (self.opp_current_stun ~= STUN_STATE.NONE)
-            -- We just care if the ACTION is 0 or not for attacker, and STUN state for opponent.
-            if not raw_is_busy and opp_is_stunned then
+
+            -- Just count up when attacker is free (action 0) and opponent is still stunned
+            if opp_is_stunned and not raw_is_busy then
                 self.current_free_advantage = self.current_free_advantage + 1
-            elseif raw_is_busy and not opp_is_stunned then
-                self.current_free_advantage = self.current_free_advantage - 1
             end
 
             self.global_persistent_free_advantage = self.current_free_advantage
 
-            -- Stop counting when P1 has recovered AND opponent stun has ended
-            if not raw_is_busy and not opp_is_stunned then
+            -- Stop counting when opponent stun ends
+            if not opp_is_stunned then
                 self.free_advantage_calculating = false
             end
         end
@@ -463,7 +462,7 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         local adv_color = "white"
 
         local shared_adv_state = (self.name == "P1") and (_G.get_p1_advantage_state and _G.get_p1_advantage_state()) or
-        (_G.get_p2_advantage_state and _G.get_p2_advantage_state())
+            (_G.get_p2_advantage_state and _G.get_p2_advantage_state())
 
         if shared_adv_state and (shared_adv_state.measuring or shared_adv_state.frame_advantage ~= 0) then
             local adv_suffix = ""
