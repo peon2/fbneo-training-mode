@@ -988,10 +988,10 @@ for page = 1, total_pages do
 				if KOF_CONFIG.get_current_game().has_strikers then
 					if KOF_CONFIG.UI.CURRENT_PLAYER1 == char then
 						KOF_CONFIG.UI.CURRENT_PLAYER1 = nil
-						KOF_CONFIG.UI.CURRENT_STRIKER1 = char
+						KOF_CONFIG.UI.P1_STRIKER1 = char
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
-					elseif KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
-						KOF_CONFIG.UI.CURRENT_STRIKER1 = nil
+					elseif KOF_CONFIG.UI.P1_STRIKER1 == char then
+						KOF_CONFIG.UI.P1_STRIKER1 = nil
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
 						if KOF_CONFIG.get_current_game().has_3_strikers then
 							KOF_CONFIG.UI.P1_STRIKER2 = char
@@ -1012,7 +1012,7 @@ for page = 1, total_pages do
 				local char = KOF_CONFIG.get_current_game().characters[i]
 				if KOF_CONFIG.UI.CURRENT_PLAYER1 == char then
 					this.text = "P1"
-				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.CURRENT_STRIKER1 == char then
+				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.P1_STRIKER1 == char then
 					this.text = "S1"
 				elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P1_STRIKER2 == char then
 					this.text = "S2"
@@ -1036,10 +1036,10 @@ for page = 1, total_pages do
 				if KOF_CONFIG.get_current_game().has_strikers then
 					if KOF_CONFIG.UI.CURRENT_PLAYER2 == char then
 						KOF_CONFIG.UI.CURRENT_PLAYER2 = nil
-						KOF_CONFIG.UI.CURRENT_STRIKER2 = char
+						KOF_CONFIG.UI.P2_STRIKER1 = char
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
-					elseif KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
-						KOF_CONFIG.UI.CURRENT_STRIKER2 = nil
+					elseif KOF_CONFIG.UI.P2_STRIKER1 == char then
+						KOF_CONFIG.UI.P2_STRIKER1 = nil
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
 						if KOF_CONFIG.get_current_game().has_3_strikers then
 							KOF_CONFIG.UI.P2_STRIKER2 = char
@@ -1060,7 +1060,7 @@ for page = 1, total_pages do
 				local char = KOF_CONFIG.get_current_game().characters[i]
 				if KOF_CONFIG.UI.CURRENT_PLAYER2 == char then
 					this.text = "P2"
-				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.CURRENT_STRIKER2 == char then
+				elseif KOF_CONFIG.get_current_game().has_strikers and KOF_CONFIG.UI.P2_STRIKER1 == char then
 					this.text = "S1"
 				elseif KOF_CONFIG.get_current_game().has_3_strikers and KOF_CONFIG.UI.P2_STRIKER2 == char then
 					this.text = "S2"
@@ -1182,7 +1182,7 @@ for page = 1, total_pages do
 				func = function()
 					KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = KOF_CONFIG.UI.PLAYER1_STRIKER_MODE + 1
 					KOF_CONFIG.UI.MODE_HAS_CHANGED = true
-					local max_mode = (KOF_CONFIG.UI.CURRENT_STRIKER1 and KOF_CONFIG.UI.CURRENT_STRIKER1.has_maniac) and 2 or
+					local max_mode = (KOF_CONFIG.UI.P1_STRIKER1 and KOF_CONFIG.UI.P1_STRIKER1.has_maniac) and 2 or
 						1
 					if KOF_CONFIG.UI.PLAYER1_STRIKER_MODE > max_mode then
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
@@ -1191,7 +1191,7 @@ for page = 1, total_pages do
 				text = "P1 SK: Regular",
 				olcolour = "black",
 				autofunc = function(this)
-					if KOF_CONFIG.UI.CURRENT_STRIKER1 and not KOF_CONFIG.UI.CURRENT_STRIKER1.has_maniac and KOF_CONFIG.UI.PLAYER1_STRIKER_MODE == 2 then
+					if KOF_CONFIG.UI.P1_STRIKER1 and not KOF_CONFIG.UI.P1_STRIKER1.has_maniac and KOF_CONFIG.UI.PLAYER1_STRIKER_MODE == 2 then
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
 					end
 
@@ -1212,7 +1212,7 @@ for page = 1, total_pages do
 				func = function()
 					KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = KOF_CONFIG.UI.PLAYER2_STRIKER_MODE + 1
 					KOF_CONFIG.UI.MODE_HAS_CHANGED = true
-					local max_mode = (KOF_CONFIG.UI.CURRENT_STRIKER2 and KOF_CONFIG.UI.CURRENT_STRIKER2.has_maniac) and 2 or
+					local max_mode = (KOF_CONFIG.UI.P2_STRIKER1 and KOF_CONFIG.UI.P2_STRIKER1.has_maniac) and 2 or
 						1
 					if KOF_CONFIG.UI.PLAYER2_STRIKER_MODE > max_mode then
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
@@ -1221,7 +1221,7 @@ for page = 1, total_pages do
 				text = "P2 SK: Regular",
 				olcolour = "black",
 				autofunc = function(this)
-					if KOF_CONFIG.UI.CURRENT_STRIKER2 and not KOF_CONFIG.UI.CURRENT_STRIKER2.has_maniac and KOF_CONFIG.UI.PLAYER2_STRIKER_MODE == 2 then
+					if KOF_CONFIG.UI.P2_STRIKER1 and not KOF_CONFIG.UI.P2_STRIKER1.has_maniac and KOF_CONFIG.UI.PLAYER2_STRIKER_MODE == 2 then
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
 					end
 
@@ -1284,13 +1284,19 @@ for page = 1, total_pages do
 			if KOF_CONFIG.UI.PLAYER1_MODE ~= applied.PLAYER1_MODE then pending = true end
 			if KOF_CONFIG.UI.PLAYER2_MODE ~= applied.PLAYER2_MODE then pending = true end
 			if KOF_CONFIG.get_current_game().has_strikers then
-				if KOF_CONFIG.UI.CURRENT_STRIKER1 ~= applied.STRIKER1 then pending = true end
-				if KOF_CONFIG.UI.CURRENT_STRIKER2 ~= applied.STRIKER2 then pending = true end
+				if KOF_CONFIG.UI.P1_STRIKER1 ~= applied.P1_STRIKER1 then pending = true end
+				if KOF_CONFIG.UI.P2_STRIKER1 ~= applied.P2_STRIKER1 then pending = true end
 				if KOF_CONFIG.UI.INFINITE_STRIKERS ~= applied.INFINITE_STRIKERS then pending = true end
 
 				if emu.romname() == "kof2000" then
 					if KOF_CONFIG.UI.PLAYER1_STRIKER_MODE ~= applied.PLAYER1_STRIKER_MODE then pending = true end
 					if KOF_CONFIG.UI.PLAYER2_STRIKER_MODE ~= applied.PLAYER2_STRIKER_MODE then pending = true end
+				end
+				if KOF_CONFIG.get_current_game().has_3_strikers then
+					if KOF_CONFIG.UI.P1_STRIKER2 ~= applied.P1_STRIKER2 then pending = true end
+					if KOF_CONFIG.UI.P1_STRIKER3 ~= applied.P1_STRIKER3 then pending = true end
+					if KOF_CONFIG.UI.P2_STRIKER2 ~= applied.P2_STRIKER2 then pending = true end
+					if KOF_CONFIG.UI.P2_STRIKER3 ~= applied.P2_STRIKER3 then pending = true end
 				end
 			end
 

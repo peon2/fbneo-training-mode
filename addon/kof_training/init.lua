@@ -2613,6 +2613,7 @@ function KofTrainingRun() -- runs every frame
 			local p2_id_hex = string.format("0x%02X", rb(p2_stored_index_location))
 			local sk1_id_hex = nil
 			local sk2_id_hex = nil
+			local p1_s2_hex, p1_s3_hex, p2_s2_hex, p2_s3_hex
 
 			if current_game.has_strikers then
 				if p1_striker_stored_index_location then
@@ -2631,7 +2632,6 @@ function KofTrainingRun() -- runs every frame
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
 					end
 				end
-				local p1_s2_hex, p1_s3_hex, p2_s2_hex, p2_s3_hex
 				if current_game.has_3_strikers then
 					if p1_striker2_stored_index_location then
 						p1_s2_hex = string.format("0x%02X",
@@ -2660,8 +2660,8 @@ function KofTrainingRun() -- runs every frame
 					KOF_CONFIG.UI.CURRENT_PLAYER2 = char
 				end
 				if current_game.has_strikers then
-					if char.code == sk1_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER1 = char end
-					if char.code == sk2_id_hex then KOF_CONFIG.UI.CURRENT_STRIKER2 = char end
+					if char.code == sk1_id_hex then KOF_CONFIG.UI.P1_STRIKER1 = char end
+					if char.code == sk2_id_hex then KOF_CONFIG.UI.P2_STRIKER1 = char end
 					if current_game.has_3_strikers then
 						if char.code == p1_s2_hex then KOF_CONFIG.UI.P1_STRIKER2 = char end
 						if char.code == p1_s3_hex then KOF_CONFIG.UI.P1_STRIKER3 = char end
@@ -2732,14 +2732,14 @@ function KofTrainingRun() -- runs every frame
 			if not KOF_CONFIG.UI.CURRENT_PLAYER1 and char.code == p1_id_hex then KOF_CONFIG.UI.CURRENT_PLAYER1 = char end
 			if not KOF_CONFIG.UI.CURRENT_PLAYER2 and char.code == p2_id_hex then KOF_CONFIG.UI.CURRENT_PLAYER2 = char end
 			if current_game.has_strikers then
-				if not KOF_CONFIG.UI.CURRENT_STRIKER1 and char.code == sk1_id_hex then
-					KOF_CONFIG.UI.CURRENT_STRIKER1 = char
+				if not KOF_CONFIG.UI.P1_STRIKER1 and char.code == sk1_id_hex then
+					KOF_CONFIG.UI.P1_STRIKER1 = char
 					if emu.romname() == "kof2000" and p1_striker_mode_location then
 						KOF_CONFIG.UI.PLAYER1_STRIKER_MODE = rb(p1_striker_mode_location)
 					end
 				end
-				if not KOF_CONFIG.UI.CURRENT_STRIKER2 and char.code == sk2_id_hex then
-					KOF_CONFIG.UI.CURRENT_STRIKER2 = char
+				if not KOF_CONFIG.UI.P2_STRIKER1 and char.code == sk2_id_hex then
+					KOF_CONFIG.UI.P2_STRIKER1 = char
 					if emu.romname() == "kof2000" and p2_striker_mode_location then
 						KOF_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
 					end
@@ -2771,14 +2771,14 @@ function KofTrainingRun() -- runs every frame
 		end
 
 		if KOF_CONFIG.get_current_game().has_strikers then
-			if KOF_CONFIG.UI.CURRENT_STRIKER1 and KOF_CONFIG.UI.CURRENT_STRIKER1.code and p1_striker_stored_index_location then
-				wb(p1_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER1.code)
+			if KOF_CONFIG.UI.P1_STRIKER1 and KOF_CONFIG.UI.P1_STRIKER1.code and p1_striker_stored_index_location then
+				wb(p1_striker_stored_index_location, KOF_CONFIG.UI.P1_STRIKER1.code)
 				if p1_striker_mode_location and emu.romname() == "kof2000" then
 					wb(p1_striker_mode_location, KOF_CONFIG.UI.PLAYER1_STRIKER_MODE)
 				end
 			end
-			if KOF_CONFIG.UI.CURRENT_STRIKER2 and KOF_CONFIG.UI.CURRENT_STRIKER2.code and p2_striker_stored_index_location then
-				wb(p2_striker_stored_index_location, KOF_CONFIG.UI.CURRENT_STRIKER2.code)
+			if KOF_CONFIG.UI.P2_STRIKER1 and KOF_CONFIG.UI.P2_STRIKER1.code and p2_striker_stored_index_location then
+				wb(p2_striker_stored_index_location, KOF_CONFIG.UI.P2_STRIKER1.code)
 				if p2_striker_mode_location and emu.romname() == "kof2000" then
 					wb(p2_striker_mode_location, KOF_CONFIG.UI.PLAYER2_STRIKER_MODE)
 				end
