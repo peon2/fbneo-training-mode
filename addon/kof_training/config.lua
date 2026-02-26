@@ -384,13 +384,14 @@ KOF_CONFIG = {
                 blockstun = 0xE3,
                 air_height = 0x21,
                 player_stored_index = 0x26E6,
-                player2_stored_index = 0x2504,
-                p1_striker1_stored_index = 0x26E7,
+                player2_stored_index = 0x2704,
+                striker1_stored_index = 0x26E7,
                 p1_striker2_stored_index = 0x26E8, -- P1 S2
                 p1_striker3_stored_index = 0x26E9, -- P1 S3
-                p2_striker1_stored_index = 0x2705, -- P2 S1 (Standard P2 Striker)
+                striker2_stored_index = 0x2705,    -- P2 S1 (Standard P2 Striker)
                 p2_striker2_stored_index = 0x2706, -- P2 S2
                 p2_striker3_stored_index = 0x2707, -- P2 S3
+                striker_count_address = 0x01E2,    -- Relative offset for striker stock (1082E2 for P1)
                 obj_ptr_list = 0x10B094 + 0xE90,
                 game_phase = 0x10B094,
                 level_address = 0x10FD8E,
@@ -447,7 +448,6 @@ KOF_CONFIG = {
         ["kof96"] = true,
         ["kof97"] = true,
         ["kof98"] = true,
-        ["kof98h"] = true,
         ["kof99"] = true,
         ["kof2000"] = true,
         ["kof2001"] = true,
@@ -768,6 +768,31 @@ KOF_CONFIG = {
             ["wakeup_delay_OS_full"] = 11,
 
         }
+    },
+
+    AI = {
+        enabled = false,
+        current_state = "idle",
+        patterns = {},
+        -- Placeholders for memory addresses that the AI might need (custom hitboxes, etc)
+        -- To be filled in by the user or through memory searching
+        offsets = {
+            -- e.g., opponent_is_in_air_address = 0x...,
+        }
+    },
+
+    TRIAL = {
+        active = false,
+        current_trial_id = nil,
+        score = 0,
+        win_condition_met = false,
+        loss_condition_met = false,
+    },
+
+    CINEMATICS = {
+        active = false,
+        current_dialogue_index = 1,
+        dialogues = {},
     },
 
     -- Dynamic Game Mapping functions
