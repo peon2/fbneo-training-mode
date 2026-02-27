@@ -2882,6 +2882,15 @@ function KofTrainingRun() -- runs every frame
 					wb(p2_mode_addr, 0x01)
 				end
 			end
+
+			if emu.romname() == "kof2000" then
+				if p1_striker_mode_location then
+					wb(p1_striker_mode_location, PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE)
+				end
+				if p2_striker_mode_location then
+					wb(p2_striker_mode_location, PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE)
+				end
+			end
 		end
 
 		PECHAN_CONFIG.UI.APPLIED.PLAYER1 = PECHAN_CONFIG.UI.CURRENT_PLAYER1
