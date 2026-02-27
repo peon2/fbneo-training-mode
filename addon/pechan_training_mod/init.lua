@@ -2574,17 +2574,7 @@ function KofTrainingRun() -- runs every frame
 		end
 	end
 
-	-- DEBUG KOF 2001 ADDRESSES
-	if emu.romname and emu.romname() == "kof2001" then
-		gui.text(10, 150,
-			string.format("P1(10A7E6):%02X  S1:%02X  S2:%02X  S3:%02X", rb(0x10A7E6), rb(0x10A7E7), rb(0x10A7E8),
-				rb(0x10A7E9)), "yellow")
-		gui.text(10, 160, string.format("P1 Inf Strikers (1082E3): %02X", rb(0x1082E3)), "yellow")
-		gui.text(10, 170,
-			string.format("P2(10A804):%02X  S1:%02X  S2:%02X  S3:%02X", rb(0x10A804), rb(0x10A805), rb(0x10A806),
-				rb(0x10A807)), "cyan")
-		gui.text(10, 180, string.format("P2 Inf Strikers (1084E3): %02X", rb(0x1084E3)), "cyan")
-	end
+
 
 	if emu.romname and emu.romname() == "kof2002" then
 		-- KOF 2002 EXCEPTION: continuously enforce EX flags while active, as the engine clears active RAM
