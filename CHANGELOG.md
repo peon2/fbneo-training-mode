@@ -2,6 +2,16 @@
 
 ## Features & Enhancements
 
+- **Configurable Game Options Architecture (`config.lua`, `guipages.lua`, `init.lua`)**
+  - Shifted hardcoded memory addresses for EX characters and mode settings directly into `config.lua` to properly facilitate per-game configurations.
+  - Refactored UI logic inside `guipages.lua` to dynamically evaluate the active game's capabilities, conditionally rendering or hiding EX limits and Mode toggles based on native engine support.
+  - Scaled compatibility to flawlessly accommodate older or restricted titles that fundamentally lack EX variations or alternative routing modes without UI clutter.
+
+- **KOF 2001 4-Slot Striker System Logic (`config.lua`)**
+  - Restored and formalized internal tracking for `INFINITE_STRIKERS` and `STRIKER_MODE`, routing their logic appropriately for the KOF 2001 engine.
+  - Engineered new memory offset mappings (`P1_STRIKER2`, `P1_STRIKER3`, `P2_STRIKER2`, `P2_STRIKER3`) to fully accommodate up to 3 dedicated striker profiles per player.
+  - Successfully laid the infrastructural groundwork to implement a true 4-slot Active Striker selection system across both P1 and P2 seamlessly.
+
 - **Frame Data Accuracy & Display Improvements (`frame_data.lua`)**
   - **"Startup 1" Accuracy Fixed:** Startup frames are now measured correctly, specifically ensuring accuracy for subsequent chained moves.
   - **Display Persistence:** Improved the duration that frame data remains visible on-screen, preventing it from vanishing too quickly while testing.
