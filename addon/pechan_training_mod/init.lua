@@ -56,6 +56,9 @@ local PlayerClass = require("addon.pechan_training_mod.core.player")
 P1 = PlayerClass:new(1, current_game.player1_base, current_game.offsets, "Human")
 P2 = PlayerClass:new(2, current_game.player2_base, current_game.offsets, "Dummy")
 
+HumanPlayer = P1
+DummyPlayer = P2
+
 local air_height = current_game.player2_base + current_game.offsets.air_height
 
 -- Calculate relative offset using the new player_stored_index property
