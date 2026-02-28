@@ -12,12 +12,13 @@ end
 
 -- Load translation module
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
+local tl = translate_mod.tl
 local en_data = require("addon.pechan_training_mod.locales.en")
 local es_data = require("addon.pechan_training_mod.locales.es")
 translate_mod.load_locale("en", en_data)
 translate_mod.load_locale("es", es_data)
--- default to EN
-translate_mod.set_locale("en")
+-- Set the language according to user config
+translate_mod.set_locale(PECHAN_CONFIG.LANGUAGE.current_language)
 
 --[[
 if not _G.pechan_training_mod_tests_run then
@@ -1191,7 +1192,7 @@ local function block()
 	-- Actually, if we are in "blocking" state, we should probably output the Base Action if we are NOT actively blocking.
 	if PECHAN_CONFIG.GUARD.guard_mode == PECHAN_CONFIG.GUARD.MODE_OPTIONS.OFF then
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-			gui.text(10, 50, "Mode: OFF")
+			gui.text(10, 50, tl("ui.debug.mode_off", "Mode: OFF"))
 		end
 		-- Should have transitioned to start, but if here safely:
 		if PECHAN_CONFIG.GUARD.dummy_action == PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then p2Crouch() end
@@ -1238,7 +1239,7 @@ local function block()
 			end
 		else
 			if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-				gui.text(10, 70, "Exec: Base Action")
+				gui.text(10, 70, tl("ui.debug.exec_base_action", "Exec: Base Action"))
 			end
 			-- If not actively blocking (post-sustain or idle), enforce Base Action
 			if PECHAN_CONFIG.GUARD.dummy_action == PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then p2Crouch() end
@@ -1249,7 +1250,7 @@ local function block()
 	-- 3. Check Guard Mode: RANDOM (2)
 	if PECHAN_CONFIG.GUARD.guard_mode == PECHAN_CONFIG.GUARD.MODE_OPTIONS.RANDOM then
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-			gui.text(10, 50, "Mode: RANDOM")
+			gui.text(10, 50, tl("ui.debug.mode_random", "Mode: RANDOM"))
 		end
 		local percentage_of_guard = 50
 
@@ -1329,21 +1330,23 @@ local function block()
 	-- 4. Check Guard Mode: ALL GUARD (3)
 	if PECHAN_CONFIG.GUARD.guard_mode == PECHAN_CONFIG.GUARD.MODE_OPTIONS.ALL_GUARD then
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-			gui.text(10, 50, "Mode: ALL GUARD")
+			gui.text(10, 50, tl("ui.debug.mode_all_guard", "Mode: ALL GUARD"))
 		end
 		-- DYNAMIC STANCE SWITCHING
 		local p1_act = getP1ExecutingAction()
 		local needs_crouch = shouldCrouchGuard(p1_act)
 
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-			gui.text(10, 90, "Stance: " .. (needs_crouch and "LOW" or "HIGH"))
+			gui.text(10, 90,
+				tl("ui.debug.stance",
+					{ stance = (needs_crouch and tl("ui.debug.stance_low", "LOW") or tl("ui.debug.stance_high", "HIGH")) }))
 		end
 
 		-- Initial trigger
 		local isAttackTriggered = P1ActionIsExecuting() or playerTwoInBlockstun()
 		if isAttackTriggered and not stateMachine.isJustGuardRunning then
 			if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-				gui.text(10, 60, "Trigger: NEW (AG)")
+				gui.text(10, 60, tl("ui.debug.trigger_new_ag", "Trigger: NEW (AG)"))
 			end
 			stateMachine.isJustGuardRunning = true
 			current_move_time_counter = 0
@@ -1382,7 +1385,7 @@ local function block()
 	-- 5. Check Guard Mode: 1 HIT GUARD (4)
 	if PECHAN_CONFIG.GUARD.guard_mode == PECHAN_CONFIG.GUARD.MODE_OPTIONS.ONE_HIT_GUARD then
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-			gui.text(10, 50, "Mode: 1 HIT GUARD")
+			gui.text(10, 50, tl("ui.debug.mode_1hit_guard", "Mode: 1 HIT GUARD"))
 		end
 
 		-- Use hitstun counter for more reliable detection
@@ -1415,7 +1418,7 @@ local function block()
 
 		-- STATE 2: GUARDING (after being hit)
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-			gui.text(10, 60, "GUARDING")
+			gui.text(10, 60, tl("ui.debug.guarding", "GUARDING"))
 		end
 
 		-- Start guard immediately when triggered
@@ -2002,8 +2005,8 @@ local function checkFrameAdvantage()
 			elseif P1AdvantageState.frame_advantage < 0 then
 				color = "red"
 			end
-			local label = (P1AdvantageState.adv_type == "Block") and "Block Adv: " or "Hit Adv: "
-			gui.text(20, 40, label .. P1AdvantageState.frame_advantage, color)
+			local label = (P1AdvantageState.adv_type == "Block") and "P1 Block Adv: " or "P1 Hit Adv: "
+			gui.text(20, 60, label .. P1AdvantageState.frame_advantage, color)
 		end
 	end
 end
@@ -2084,8 +2087,8 @@ local function checkP2FrameAdvantage()
 			elseif P2AdvantageState.frame_advantage < 0 then
 				color = "red"
 			end
-			local label = (P2AdvantageState.adv_type == "Block") and "Block Adv: " or "Hit Adv: "
-			gui.text(250, 40, label .. P2AdvantageState.frame_advantage, color)
+			local label = (P2AdvantageState.adv_type == "Block") and "P2 Block Adv: " or "P2 Hit Adv: "
+			gui.text(170, 60, label .. P2AdvantageState.frame_advantage, color)
 		end
 	end
 end
@@ -2724,37 +2727,37 @@ function KofTrainingRun() -- runs every frame
 		if music_address then wb(music_address, MUSIC_TRACKS.FANTASTIC_WALTZ) end
 
 		if PECHAN_CONFIG.UI.CURRENT_PLAYER1 and PECHAN_CONFIG.UI.CURRENT_PLAYER1.code then
-			wb(p1_stored_index_location, PECHAN_CONFIG.UI.CURRENT_PLAYER1.code)
+			wb(p1_stored_index_location, tonumber(PECHAN_CONFIG.UI.CURRENT_PLAYER1.code, 16))
 		end
 		if PECHAN_CONFIG.UI.CURRENT_PLAYER2 and PECHAN_CONFIG.UI.CURRENT_PLAYER2.code then
-			wb(p2_stored_index_location, PECHAN_CONFIG.UI.CURRENT_PLAYER2.code)
+			wb(p2_stored_index_location, tonumber(PECHAN_CONFIG.UI.CURRENT_PLAYER2.code, 16))
 		end
 
 		if PECHAN_CONFIG.get_current_game().has_strikers then
 			if PECHAN_CONFIG.UI.P1_STRIKER1 and PECHAN_CONFIG.UI.P1_STRIKER1.code and p1_striker_stored_index_location then
-				wb(p1_striker_stored_index_location, PECHAN_CONFIG.UI.P1_STRIKER1.code)
+				wb(p1_striker_stored_index_location, tonumber(PECHAN_CONFIG.UI.P1_STRIKER1.code, 16))
 				if p1_striker_mode_location and emu.romname() == "kof2000" then
 					wb(p1_striker_mode_location, PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE)
 				end
 			end
 			if PECHAN_CONFIG.UI.P2_STRIKER1 and PECHAN_CONFIG.UI.P2_STRIKER1.code and p2_striker_stored_index_location then
-				wb(p2_striker_stored_index_location, PECHAN_CONFIG.UI.P2_STRIKER1.code)
+				wb(p2_striker_stored_index_location, tonumber(PECHAN_CONFIG.UI.P2_STRIKER1.code, 16))
 				if p2_striker_mode_location and emu.romname() == "kof2000" then
 					wb(p2_striker_mode_location, PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE)
 				end
 			end
 			if PECHAN_CONFIG.get_current_game().has_3_strikers then
 				if PECHAN_CONFIG.UI.P1_STRIKER2 and PECHAN_CONFIG.UI.P1_STRIKER2.code and p1_striker2_stored_index_location then
-					wb(p1_striker2_stored_index_location, PECHAN_CONFIG.UI.P1_STRIKER2.code)
+					wb(p1_striker2_stored_index_location, tonumber(PECHAN_CONFIG.UI.P1_STRIKER2.code, 16))
 				end
 				if PECHAN_CONFIG.UI.P1_STRIKER3 and PECHAN_CONFIG.UI.P1_STRIKER3.code and p1_striker3_stored_index_location then
-					wb(p1_striker3_stored_index_location, PECHAN_CONFIG.UI.P1_STRIKER3.code)
+					wb(p1_striker3_stored_index_location, tonumber(PECHAN_CONFIG.UI.P1_STRIKER3.code, 16))
 				end
 				if PECHAN_CONFIG.UI.P2_STRIKER2 and PECHAN_CONFIG.UI.P2_STRIKER2.code and p2_striker2_stored_index_location then
-					wb(p2_striker2_stored_index_location, PECHAN_CONFIG.UI.P2_STRIKER2.code)
+					wb(p2_striker2_stored_index_location, tonumber(PECHAN_CONFIG.UI.P2_STRIKER2.code, 16))
 				end
 				if PECHAN_CONFIG.UI.P2_STRIKER3 and PECHAN_CONFIG.UI.P2_STRIKER3.code and p2_striker3_stored_index_location then
-					wb(p2_striker3_stored_index_location, PECHAN_CONFIG.UI.P2_STRIKER3.code)
+					wb(p2_striker3_stored_index_location, tonumber(PECHAN_CONFIG.UI.P2_STRIKER3.code, 16))
 				end
 			end
 		end
@@ -2824,8 +2827,12 @@ function KofTrainingRun() -- runs every frame
 
 		PECHAN_CONFIG.UI.APPLIED.PLAYER1 = PECHAN_CONFIG.UI.CURRENT_PLAYER1
 		PECHAN_CONFIG.UI.APPLIED.PLAYER2 = PECHAN_CONFIG.UI.CURRENT_PLAYER2
-		PECHAN_CONFIG.UI.APPLIED.STRIKER1 = PECHAN_CONFIG.UI.CURRENT_STRIKER1
-		PECHAN_CONFIG.UI.APPLIED.STRIKER2 = PECHAN_CONFIG.UI.CURRENT_STRIKER2
+		PECHAN_CONFIG.UI.APPLIED.P1_STRIKER1 = PECHAN_CONFIG.UI.P1_STRIKER1
+		PECHAN_CONFIG.UI.APPLIED.P2_STRIKER1 = PECHAN_CONFIG.UI.P2_STRIKER1
+		PECHAN_CONFIG.UI.APPLIED.P1_STRIKER2 = PECHAN_CONFIG.UI.P1_STRIKER2
+		PECHAN_CONFIG.UI.APPLIED.P1_STRIKER3 = PECHAN_CONFIG.UI.P1_STRIKER3
+		PECHAN_CONFIG.UI.APPLIED.P2_STRIKER2 = PECHAN_CONFIG.UI.P2_STRIKER2
+		PECHAN_CONFIG.UI.APPLIED.P2_STRIKER3 = PECHAN_CONFIG.UI.P2_STRIKER3
 		PECHAN_CONFIG.UI.APPLIED.INFINITE_STRIKERS = PECHAN_CONFIG.UI.INFINITE_STRIKERS
 		PECHAN_CONFIG.UI.APPLIED.PLAYER1_STRIKER_MODE = PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE
 		PECHAN_CONFIG.UI.APPLIED.PLAYER2_STRIKER_MODE = PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE

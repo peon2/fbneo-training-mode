@@ -22,7 +22,7 @@ if current_game.has_guard then
 	})
 	cur_y = cur_y + 10
 	table.insert(guicustompage, {
-		text = "Action",
+		text = tl("ui.guard.action_title"),
 		x = 8,
 		y = cur_y,
 		olcolour = "black",
@@ -43,7 +43,7 @@ if current_game.has_guard then
 		end,
 	})
 	table.insert(guicustompage, {
-		text = "Guard",
+		text = tl("ui.guard.guard_title"),
 		x = 118,
 		y = cur_y,
 		olcolour = "black",
@@ -78,7 +78,7 @@ if current_game.has_guard then
 	})
 	cur_y = cur_y + 10
 	table.insert(guicustompage, {
-		text = "Toggle Guard Reversal",
+		text = tl("ui.guard.reversal_title"),
 		x = 118,
 		y = cur_y,
 		olcolour = "black",
@@ -105,7 +105,7 @@ end
 if current_game.has_hit_reversal then
 	if not current_game.has_guard then cur_y = cur_y + 10 end
 	table.insert(guicustompage, {
-		text = "Toggle Hit Reversal",
+		text = tl("ui.hit.reversal_title"),
 		x = 8,
 		y = cur_y,
 		olcolour = "black",
@@ -139,7 +139,7 @@ cur_y = cur_y + 10
 
 if current_game.has_wakeup then
 	table.insert(guicustompage, {
-		text = "WakeUp Reversal",
+		text = tl("ui.wakeup.reversal_title"),
 		x = 8,
 		y = cur_y,
 		olcolour = "black",
@@ -173,12 +173,12 @@ end
 
 if current_game.has_recovery then
 	table.insert(guicustompage, {
-		text = "Enable Tech Recovery",
+		text = tl("ui.recovery.tech_title"),
 		x = 118,
 		y = cur_y,
 		olcolour = "black",
 		handle = 2,
-		info = { "Controls how many frames until the character takes to do the reversal", "Because depending on the mo " },
+		info = { tl("ui.info.tech_recovery_1"), tl("ui.info.tech_recovery_2") },
 		func = function()
 			PECHAN_CONFIG.RECOVERY.recovery = PECHAN_CONFIG.RECOVERY.recovery + 1
 			if PECHAN_CONFIG.RECOVERY.recovery > 2 then
@@ -202,7 +202,7 @@ if current_game.has_recovery then
 	})
 	cur_y = cur_y + 10
 	table.insert(guicustompage,
-		{ text = tl("ui.recovery.delay"), x = 8, y = cur_y, olcolour = "black", info = { "this is the delay it will take on frames and the times of the recovery" } })
+		{ text = tl("ui.recovery.delay"), x = 8, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
 	table.insert(guicustompage,
 		{
 			text = "-",
@@ -244,7 +244,7 @@ if current_game.has_recovery then
 		})
 
 	table.insert(guicustompage,
-		{ text = tl("ui.recovery.times"), x = 118, y = cur_y, olcolour = "black", info = { "this is the delay it will take on frames and the times of the recovery" } })
+		{ text = tl("ui.recovery.times"), x = 118, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
 	table.insert(guicustompage,
 		{
 			text = "-",
@@ -313,7 +313,7 @@ if current_game.has_guard then
 			y = left_y + 8,
 			olcolour = "black",
 			handle = 2,
-			info = { "active moves for reversal on guard" },
+			info = { tl("ui.info.reversal_moves") },
 			func = function() end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.GUARD.reversal_moves) do
@@ -444,7 +444,7 @@ if current_game.has_setups_configuration then
 			y = right_y,
 			olcolour = "black",
 			handle = 2,
-			info = { "load here the recorded setup from recording" },
+			info = { tl("ui.info.load_setup") },
 			func = function()
 				CIG("activate_current_recording_setup", 1)
 			end
@@ -457,13 +457,13 @@ if current_game.has_setups_configuration then
 			y = right_y,
 			olcolour = "black",
 			handle = 2,
-			info = { "active moves for reversal on guard" },
+			info = { tl("ui.info.reversal_moves") },
 			func = function()
 				PECHAN_CONFIG.TRAINING.current_configuration = PECHAN_CONFIG.TRAINING.current_configuration + 1; if PECHAN_CONFIG.TRAINING.current_configuration > 11 then PECHAN_CONFIG.TRAINING.current_configuration = -1 end; setDefaultConfig(
 					PECHAN_CONFIG.TRAINING.current_configuration)
 			end,
 			autofunc = function(this)
-				this.text = "Current Conf: " ..
+				this.text = tl("ui.menu.current_conf") .. " " ..
 					getIndexFromConfigValue(PECHAN_CONFIG.TRAINING.current_configuration)
 			end
 		})
@@ -491,7 +491,7 @@ cur_y = math.max(left_y, right_y) + 10
 
 local trial_mode_settings = {
 	title = {
-		text = "Trial Mode (KOF98 Only)",
+		text = tl("ui.menu.trial_mode"),
 		x = interactivegui.boxxlength / 2 - 60,
 		y = 1,
 	},
@@ -517,7 +517,7 @@ guipages.trial_mode_settings = trial_mode_settings
 
 local activate_current_recording_setup = {
 	title = {
-		text = "Activate Recorded setup from recording",
+		text = tl("ui.menu.load_setup"),
 		x = interactivegui.boxxlength / 2 - (#"Activate Recorded setup from recording") * 2,
 		y = 1,
 	},
@@ -599,7 +599,7 @@ end
 
 local cpu_settings = {
 	title = {
-		text = "CPU Settings",
+		text = tl("ui.cpu.title"),
 		x = interactivegui.boxxlength / 2 - 40,
 		y = 1,
 	},
@@ -1028,7 +1028,7 @@ for key, item in pairs(p1_and_dummy_data) do
 end
 local guard_reversal_move_active_settings = {
 	title = {
-		text = "Guard Reversal Move Active Settings",
+		text = tl("ui.reversals.guard_active_title"),
 		x = interactivegui.boxxlength / 2 - 40,
 		y = 1,
 	},
@@ -1061,7 +1061,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 	end
 
 	if player_side == 1 then
-		add_option("Make P1", function()
+		add_option(tl("ui.character.popup.make_p1"), function()
 			PECHAN_CONFIG.UI.P1_STRIKER1 = (PECHAN_CONFIG.UI.P1_STRIKER1 == char) and nil or PECHAN_CONFIG.UI
 				.P1_STRIKER1
 			if PECHAN_CONFIG.get_current_game().has_3_strikers then
@@ -1073,7 +1073,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 			PECHAN_CONFIG.UI.CURRENT_PLAYER1 = char
 		end)
 		if PECHAN_CONFIG.get_current_game().has_strikers then
-			add_option("Make P1 Striker 1", function()
+			add_option(tl("ui.character.popup.make_p1_s1"), function()
 				PECHAN_CONFIG.UI.CURRENT_PLAYER1 = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char) and nil or
 					PECHAN_CONFIG.UI.CURRENT_PLAYER1
 				if PECHAN_CONFIG.get_current_game().has_3_strikers then
@@ -1086,7 +1086,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 				PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
 			end)
 			if PECHAN_CONFIG.get_current_game().has_3_strikers then
-				add_option("Make P1 Striker 2", function()
+				add_option(tl("ui.character.popup.make_p1_s2"), function()
 					PECHAN_CONFIG.UI.CURRENT_PLAYER1 = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char) and nil or
 						PECHAN_CONFIG.UI.CURRENT_PLAYER1
 					PECHAN_CONFIG.UI.P1_STRIKER1 = (PECHAN_CONFIG.UI.P1_STRIKER1 == char) and nil or
@@ -1095,7 +1095,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 						PECHAN_CONFIG.UI.P1_STRIKER3
 					PECHAN_CONFIG.UI.P1_STRIKER2 = char
 				end)
-				add_option("Make P1 Striker 3", function()
+				add_option(tl("ui.character.popup.make_p1_s3"), function()
 					PECHAN_CONFIG.UI.CURRENT_PLAYER1 = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char) and nil or
 						PECHAN_CONFIG.UI.CURRENT_PLAYER1
 					PECHAN_CONFIG.UI.P1_STRIKER1 = (PECHAN_CONFIG.UI.P1_STRIKER1 == char) and nil or
@@ -1106,7 +1106,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 				end)
 			end
 		end
-		add_option("Unassign", function()
+		add_option(tl("ui.character.popup.unassign"), function()
 			if PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char then PECHAN_CONFIG.UI.CURRENT_PLAYER1 = nil end
 			if PECHAN_CONFIG.get_current_game().has_strikers and PECHAN_CONFIG.UI.P1_STRIKER1 == char then
 				PECHAN_CONFIG.UI.P1_STRIKER1 = nil; PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
@@ -1117,7 +1117,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 			end
 		end)
 	else
-		add_option("Make P2", function()
+		add_option(tl("ui.character.popup.make_p2"), function()
 			PECHAN_CONFIG.UI.P2_STRIKER1 = (PECHAN_CONFIG.UI.P2_STRIKER1 == char) and nil or PECHAN_CONFIG.UI
 				.P2_STRIKER1
 			if PECHAN_CONFIG.get_current_game().has_3_strikers then
@@ -1129,7 +1129,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 			PECHAN_CONFIG.UI.CURRENT_PLAYER2 = char
 		end)
 		if PECHAN_CONFIG.get_current_game().has_strikers then
-			add_option("Make P2 Striker 1", function()
+			add_option(tl("ui.character.popup.make_p2_s1"), function()
 				PECHAN_CONFIG.UI.CURRENT_PLAYER2 = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char) and nil or
 					PECHAN_CONFIG.UI.CURRENT_PLAYER2
 				if PECHAN_CONFIG.get_current_game().has_3_strikers then
@@ -1142,7 +1142,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 				PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
 			end)
 			if PECHAN_CONFIG.get_current_game().has_3_strikers then
-				add_option("Make P2 Striker 2", function()
+				add_option(tl("ui.character.popup.make_p2_s2"), function()
 					PECHAN_CONFIG.UI.CURRENT_PLAYER2 = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char) and nil or
 						PECHAN_CONFIG.UI.CURRENT_PLAYER2
 					PECHAN_CONFIG.UI.P2_STRIKER1 = (PECHAN_CONFIG.UI.P2_STRIKER1 == char) and nil or
@@ -1151,7 +1151,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 						PECHAN_CONFIG.UI.P2_STRIKER3
 					PECHAN_CONFIG.UI.P2_STRIKER2 = char
 				end)
-				add_option("Make P2 Striker 3", function()
+				add_option(tl("ui.character.popup.make_p2_s3"), function()
 					PECHAN_CONFIG.UI.CURRENT_PLAYER2 = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char) and nil or
 						PECHAN_CONFIG.UI.CURRENT_PLAYER2
 					PECHAN_CONFIG.UI.P2_STRIKER1 = (PECHAN_CONFIG.UI.P2_STRIKER1 == char) and nil or
@@ -1162,7 +1162,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 				end)
 			end
 		end
-		add_option("Unassign", function()
+		add_option(tl("ui.character.popup.unassign"), function()
 			if PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char then PECHAN_CONFIG.UI.CURRENT_PLAYER2 = nil end
 			if PECHAN_CONFIG.get_current_game().has_strikers and PECHAN_CONFIG.UI.P2_STRIKER1 == char then
 				PECHAN_CONFIG.UI.P2_STRIKER1 = nil; PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
@@ -1404,11 +1404,11 @@ for page = 1, total_pages do
 					end
 
 					if PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE == 1 then
-						this.text = "P1 SK: Alternate"
+						this.text = tl("ui.character.popup.p1_sk_mode.alternate")
 					elseif PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE == 2 then
-						this.text = "P1 SK: Maniac"
+						this.text = tl("ui.character.popup.p1_sk_mode.maniac")
 					else
-						this.text = "P1 SK: Regular"
+						this.text = tl("ui.character.popup.p1_sk_mode.regular")
 					end
 				end,
 			})
@@ -1434,11 +1434,11 @@ for page = 1, total_pages do
 					end
 
 					if PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE == 1 then
-						this.text = "P2 SK: Alternate"
+						this.text = tl("ui.character.popup.p2_sk_mode.alternate")
 					elseif PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE == 2 then
-						this.text = "P2 SK: Maniac"
+						this.text = tl("ui.character.popup.p2_sk_mode.maniac")
 					else
-						this.text = "P2 SK: Regular"
+						this.text = tl("ui.character.popup.p2_sk_mode.regular")
 					end
 				end,
 			})
@@ -1488,28 +1488,28 @@ for page = 1, total_pages do
 			end
 
 			if current_game.has_strikers then
-				if not PECHAN_CONFIG.UI.P1_STRIKER1 then
+				if not (PECHAN_CONFIG.UI.P1_STRIKER1 and PECHAN_CONFIG.UI.P1_STRIKER1.code) then
 					PECHAN_HELPERS.show_error_popup("P1 Striker 1 missing!", page_name, 144, 70)
 					return
 				end
-				if not PECHAN_CONFIG.UI.P2_STRIKER1 then
+				if not (PECHAN_CONFIG.UI.P2_STRIKER1 and PECHAN_CONFIG.UI.P2_STRIKER1.code) then
 					PECHAN_HELPERS.show_error_popup("P2 Striker 1 missing!", page_name, 144, 70)
 					return
 				end
 				if current_game.has_3_strikers then
-					if not PECHAN_CONFIG.UI.P1_STRIKER2 then
+					if not (PECHAN_CONFIG.UI.P1_STRIKER2 and PECHAN_CONFIG.UI.P1_STRIKER2.code) then
 						PECHAN_HELPERS.show_error_popup("P1 Striker 2 missing!", page_name, 144, 70)
 						return
 					end
-					if not PECHAN_CONFIG.UI.P1_STRIKER3 then
+					if not (PECHAN_CONFIG.UI.P1_STRIKER3 and PECHAN_CONFIG.UI.P1_STRIKER3.code) then
 						PECHAN_HELPERS.show_error_popup("P1 Striker 3 missing!", page_name, 144, 70)
 						return
 					end
-					if not PECHAN_CONFIG.UI.P2_STRIKER2 then
+					if not (PECHAN_CONFIG.UI.P2_STRIKER2 and PECHAN_CONFIG.UI.P2_STRIKER2.code) then
 						PECHAN_HELPERS.show_error_popup("P2 Striker 2 missing!", page_name, 144, 70)
 						return
 					end
-					if not PECHAN_CONFIG.UI.P2_STRIKER3 then
+					if not (PECHAN_CONFIG.UI.P2_STRIKER3 and PECHAN_CONFIG.UI.P2_STRIKER3.code) then
 						PECHAN_HELPERS.show_error_popup("P2 Striker 3 missing!", page_name, 144, 70)
 						return
 					end

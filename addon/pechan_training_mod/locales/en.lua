@@ -6,7 +6,7 @@ return {
                 guard_settings = "Guard Settings:",
                 other_settings = "Other Settings:",
                 reversal_settings = "Reversal Move List Settings and information:",
-                p1_dummy_settings = "p1 and dummy settings:",
+                p1_dummy_settings = "Advanced Settings:",
                 char_selection = "Character Selection",
                 cpu_settings = "CPU settings",
                 configurations = "Configurations:",
@@ -14,7 +14,40 @@ return {
                 current_conf = "Current Conf:",
                 trial_mode = "Trial Mode (KOF98)",
             },
+            info = {
+                tech_recovery_1 = "Controls how many frames until the character takes to do the reversal",
+                tech_recovery_2 = "Because depending on the mo ",
+                recovery_delay = "this is the delay it will take on frames and the times of the recovery",
+                reversal_moves = "active moves for reversal",
+                load_setup = "load here the recorded setup from recording",
+                button_used = "Button used to make the move",
+            },
+            moves = {
+                command_normals = "Command Normals",
+                specials = "Specials",
+                supers = "Supers",
+                common = "Common",
+                recordings = "Recordings",
+                title_guard_command = "Guard Command Normals Move Settings",
+                title_wakeup_command = "Wakeup Command Normals Move Settings",
+                title_hit_command = "Hit Command Normals Move Settings",
+                title_guard_specials = "Guard Specials Move Settings",
+                title_wakeup_specials = "Wakeup Specials Move Settings",
+                title_hit_specials = "Hit Specials Move Settings",
+                title_guard_supers = "Guard Supers Move Settings",
+                title_wakeup_supers = "Wakeup Supers Move Settings",
+                title_hit_supers = "Hit Supers Move Settings",
+                title_guard_common = "Guard Commons Move Settings",
+                title_wakeup_common = "Wakeup Commons Move Settings",
+                title_hit_common = "Hit Commons Move Settings",
+                title_guard_recordings = "Guard Recordings Move Settings",
+                title_wakeup_recordings = "Wakeup Recordings Move Settings",
+                title_hit_recordings = "Hit Recordings Move Settings",
+            },
             guard = {
+                action_title = "Action",
+                guard_title = "Guard",
+                reversal_title = "Toggle Guard Reversal",
                 action = {
                     standing = "Action: Standing",
                     crouching = "Action: Crouching",
@@ -33,6 +66,7 @@ return {
                 },
             },
             hit = {
+                reversal_title = "Toggle Hit Reversal",
                 reversal = {
                     off = "Enable Hit Reversal: Off",
                     on = "Enable Hit Reversal: On",
@@ -40,6 +74,7 @@ return {
                 }
             },
             wakeup = {
+                reversal_title = "WakeUp Reversal",
                 reversal = {
                     off = "Wake Up Reversal: Off",
                     on = "Wake Up Reversal: On",
@@ -47,6 +82,7 @@ return {
                 }
             },
             recovery = {
+                tech_title = "Enable Tech Recovery",
                 tech = {
                     off = "Tech Recovery: Off",
                     on = "Tech Recovery: On",
@@ -56,12 +92,13 @@ return {
                 times = "Recovery Times:",
             },
             reversals = {
+                guard_active_title = "Guard Reversal Move Active Settings",
                 guard = "Guard Reversals",
                 wakeup = "WakeUp Reversals",
                 hit = "Hit Reversals",
             },
             p1_dummy = {
-                title = "P1 and Dummy Settings",
+                title = "Advanced Settings",
                 dizzy = {
                     off = "DIZZY: Off",
                     on = "DIZZY: On",
@@ -104,6 +141,27 @@ return {
             },
             character = {
                 title = "Character Selection Settings (Page %{page}/%{total_pages})",
+                popup = {
+                    make_p1 = "Make P1",
+                    make_p1_s1 = "Make P1 Striker 1",
+                    make_p1_s2 = "Make P1 Striker 2",
+                    make_p1_s3 = "Make P1 Striker 3",
+                    make_p2 = "Make P2",
+                    make_p2_s1 = "Make P2 Striker 1",
+                    make_p2_s2 = "Make P2 Striker 2",
+                    make_p2_s3 = "Make P2 Striker 3",
+                    unassign = "Unassign",
+                    p1_sk_mode = {
+                        regular = "P1 SK: Regular",
+                        alternate = "P1 SK: Alternate",
+                        maniac = "P1 SK: Maniac",
+                    },
+                    p2_sk_mode = {
+                        regular = "P2 SK: Regular",
+                        alternate = "P2 SK: Alternate",
+                        maniac = "P2 SK: Maniac",
+                    },
+                },
                 p1_ex = {
                     none = "P1 Character Ex: ---",
                     on = "P1 Character Ex: ON",
@@ -143,6 +201,25 @@ return {
                 state = "Debug State: %{state}",
                 meter = "Debug Meter: %{state}",
                 frame_data = "Debug Frame Data: %{state}",
+                mode_off = "Mode: OFF",
+                mode_on = "Mode: ON",
+                trigger_new = "Trigger: NEW",
+                trigger_sustain = "Trigger: SUSTAIN",
+                guard_on = "Guard: ON",
+                exec_stand_guard = "Exec: Stand Guard",
+                exec_crouch_guard = "Exec: Crouch Guard",
+                exec_base_action = "Exec: Base Action",
+                mode_random = "Mode: RANDOM",
+                mode_all_guard = "Mode: ALL GUARD",
+                stance = "Stance: %{stance}",
+                stance_low = "LOW",
+                stance_high = "HIGH",
+                trigger_new_ag = "Trigger: NEW (AG)",
+                trigger_sustain_ag = "Trigger: SUSTAIN (AG)",
+                all_guard_active = "All Guard: ACTIVE",
+                block_executing = "block is still being executed",
+                mode_1hit_guard = "Mode: 1 HIT GUARD",
+                guarding = "GUARDING",
             }
         }
     }

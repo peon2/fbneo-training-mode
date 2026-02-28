@@ -6,7 +6,7 @@ return {
                 guard_settings = "Ajustes de Guardia:",
                 other_settings = "Otros Ajustes:",
                 reversal_settings = "Ajustes de Reversal y Más Información:",
-                p1_dummy_settings = "Ajustes de J1 y Muñeco:",
+                p1_dummy_settings = "Ajustes Avanzados:",
                 char_selection = "Selección de Personaje",
                 cpu_settings = "Ajustes de CPU",
                 configurations = "Configuraciones:",
@@ -14,7 +14,40 @@ return {
                 current_conf = "Configuración Actual:",
                 trial_mode = "Modo de Prueba (KOF98)",
             },
+            info = {
+                tech_recovery_1 = "Controla cuantos frames tarda el personaje en hacer el reversal",
+                tech_recovery_2 = "Porque dependiendo del movimiento ",
+                recovery_delay = "este es el retraso en frames y las veces de la recuperación",
+                reversal_moves = "movimientos activos para el reversal",
+                load_setup = "cargar aquí la situación grabada",
+                button_used = "Botón utilizado para hacer el movimiento",
+            },
+            moves = {
+                command_normals = "Ataques de Comando",
+                specials = "Especiales",
+                supers = "Super Ataques",
+                common = "Comunes",
+                recordings = "Grabaciones",
+                title_guard_command = "Opcn de Ataques de Comando para reversals",
+                title_wakeup_command = "Opcn de Ataques de Comando para Levantarse",
+                title_hit_command = "Opcn de Ataques de Comando al recibir Golpe",
+                title_guard_specials = "Especiales en Guardia Opciones",
+                title_wakeup_specials = "Especiales al Levantarse Opciones",
+                title_hit_specials = "Especiales al Recibir Golpe Opciones",
+                title_guard_supers = "Supers en Guardia Opciones",
+                title_wakeup_supers = "Supers al Levantarse Opciones",
+                title_hit_supers = "Supers al Recibir Golpe Opciones",
+                title_guard_common = "Movimientos Comunes en Guardia",
+                title_wakeup_common = "Mov. Comunes al Levantarse Opciones",
+                title_hit_common = "Mov. Comunes al Recibir Golpe Opciones",
+                title_guard_recordings = "Grabaciones en Guardia",
+                title_wakeup_recordings = "Grabaciones al Levantarse Opciones",
+                title_hit_recordings = "Grabaciones al Recibir Golpe Opciones",
+            },
             guard = {
+                action_title = "Acción",
+                guard_title = "Guardia",
+                reversal_title = "Reversal de Guardia",
                 action = {
                     standing = "Acción: Parado",
                     crouching = "Acción: Agachado",
@@ -33,6 +66,7 @@ return {
                 },
             },
             hit = {
+                reversal_title = "Reversal de Impacto",
                 reversal = {
                     off = "Reversal de Impacto: Apagado",
                     on = "Reversal de Impacto: Encendido",
@@ -40,6 +74,7 @@ return {
                 }
             },
             wakeup = {
+                reversal_title = "Reversal al Levantarse",
                 reversal = {
                     off = "Reversal al Levantarse: Apagado",
                     on = "Reversal al Levantarse: Encendido",
@@ -47,6 +82,7 @@ return {
                 }
             },
             recovery = {
+                tech_title = "Habilitar Recuperación (Tech)",
                 tech = {
                     off = "Recuperación: Apagada",
                     on = "Recuperación: Encendida",
@@ -56,12 +92,13 @@ return {
                 times = "Veces de Recuperación:",
             },
             reversals = {
+                guard_active_title = "Ajustes de Movimientos Activos de Reversal (Guardia)",
                 guard = "Reversals de Guardia",
                 wakeup = "Reversals al Levantarse",
                 hit = "Reversals de Impacto",
             },
             p1_dummy = {
-                title = "Ajustes de J1 y Muñeco",
+                title = "Ajustes Avanzados",
                 dizzy = {
                     off = "MAREO: Apagado",
                     on = "MAREO: Encendido",
@@ -104,6 +141,27 @@ return {
             },
             character = {
                 title = "Ajustes de Selección de Personajes (Página %{page}/%{total_pages})",
+                popup = {
+                    make_p1 = "Elegir J1",
+                    make_p1_s1 = "Elegir J1 Asistente 1",
+                    make_p1_s2 = "Elegir J1 Asistente 2",
+                    make_p1_s3 = "Elegir J1 Asistente 3",
+                    make_p2 = "Elegir J2",
+                    make_p2_s1 = "Elegir J2 Asistente 1",
+                    make_p2_s2 = "Elegir J2 Asistente 2",
+                    make_p2_s3 = "Elegir J2 Asistente 3",
+                    unassign = "Desasignar",
+                    p1_sk_mode = {
+                        regular = "Asist. J1: Regular",
+                        alternate = "Asist. J1: Alterno",
+                        maniac = "Asist. J1: Maniac",
+                    },
+                    p2_sk_mode = {
+                        regular = "Asist. J2: Regular",
+                        alternate = "Asist. J2: Alterno",
+                        maniac = "Asist. J2: Maniac",
+                    },
+                },
                 p1_ex = {
                     none = "Personaje Ex J1: ---",
                     on = "Personaje Ex J1: SÍ",
@@ -143,6 +201,25 @@ return {
                 state = "Debug Estado: %{state}",
                 meter = "Debug Barra: %{state}",
                 frame_data = "Debug Frame Data: %{state}",
+                mode_off = "Modo: APAGADO",
+                mode_on = "Modo: ENCENDIDO",
+                trigger_new = "Gatillar: NUEVO",
+                trigger_sustain = "Gatillar: MANTENER",
+                guard_on = "Guardia: ENCENDIDO",
+                exec_stand_guard = "Ejec: Guardia Parado",
+                exec_crouch_guard = "Ejec: Guardia Agachado",
+                exec_base_action = "Ejec: Accion Base",
+                mode_random = "Modo: ALEATORIO",
+                mode_all_guard = "Modo: GUARDIA TOTAL",
+                stance = "Postura: %{stance}",
+                stance_low = "BAJA",
+                stance_high = "ALTA",
+                trigger_new_ag = "Gatillar: NUEVO (GT)",
+                trigger_sustain_ag = "Gatillar: MANTENER (GT)",
+                all_guard_active = "Guardia Total: ACTIVA",
+                block_executing = "el bloqueo todavia se esta ejecutando",
+                mode_1hit_guard = "Modo: GUARDIA DE 1 GOLPE",
+                guarding = "CUBRIÉNDOSE",
             }
         }
     }
