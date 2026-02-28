@@ -1051,7 +1051,12 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 		y = 0,
 		olcolour = "black",
 		func = function() end, -- Inactive
-		autofunc = function(this) this.textcolour = "yellow" end,
+		autofunc = function(i)
+			-- Provide a wrapper that sets text colour on the actual menu item
+			return function(this)
+				this.textcolour = "yellow"
+			end
+		end,
 	})
 
 	local function add_option(label, assignment_func)
