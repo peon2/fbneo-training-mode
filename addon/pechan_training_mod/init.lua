@@ -13,7 +13,9 @@ end
 -- Load translation module
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
 local en_data = require("addon.pechan_training_mod.locales.en")
+local es_data = require("addon.pechan_training_mod.locales.es")
 translate_mod.load_locale("en", en_data)
+translate_mod.load_locale("es", es_data)
 -- default to EN
 translate_mod.set_locale("en")
 
