@@ -1048,13 +1048,11 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 	-- Add character name as an inactive but styling "title" entry
 	table.insert(popup_entries, {
 		text = (player_side == 1 and "P1" or "P2") .. ": " .. (char.name or ""),
-		x = -(#((player_side == 1 and "P1" or "P2") .. ": " .. (char.name or "")) * 2), -- Try to center it roughly
-		y = 0,
 		bgcolour = 0x222222FF,
 		olcolour = "white",
+		unselectable = true,
 		func = function() end, -- Inactive
 		autofunc = function(i)
-			-- Provide a wrapper that sets text colour on the actual menu item
 			return function(this)
 				this.textcolour = "yellow"
 			end

@@ -1,62 +1,65 @@
 -- addon/pechan_training_mod/helpers.lua
--- Helper variables and functions for UI elements
--- All overrides are confined to this file; zero changes to core engine files.
+-- All popup logic and UI overrides live here; the core engine files are NOT modified.
 
 PECHAN_HELPERS = PECHAN_HELPERS or {}
 
--- Generates a generic popup menu for errors or context options.
--- Parameters:
---   title        : string shown at the top of the box (non-selectable, purely visual)
+-------------------------------------------------------------------------------
+-- create_context_popup
+--   title        : label at top (non-selectable, yellow text)
 --   entries      : list of { label, action, require_click }
---     require_click: if true, the button only fires on key-DOWN press so the
---                    key-UP that spawned the popup cannot accidentally dismiss it.
---   back_page    : page key to return to on close
---   parent_x/y   : coordinates of the parent button (popup anchors near it)
---   bg_color     : optional ARGB background colour (default dark-grey 0x222222FF)
+--     require_click = true  => fires on key-DOWN only (so a key-UP from the
+--                              spawning action will not accidentally dismiss)
+--   back_page    : page key to CIG to on close
+--   parent_x/y   : screen coords of the parent button (popup anchors here)
+--   bg_color     : ARGB (default 0x222222FF)
+-------------------------------------------------------------------------------
 function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y, bg_color)
     local popup_entries = {}
     local previous_selection = interactivegui.selection
+    bg_color = bg_color or 0x222222FF
+
+    -- Title as item 1 — unselectable (cursor will skip it)
+    if title then
+        table.insert(popup_entries, {
+            text         = title,
+            bgcolour     = bg_color,
+            olcolour     = "white",
+            unselectable = true,
+            func         = function() end,
+            -- autofunc must be a factory: createPopUpMenu calls autofunc(i)
+            autofunc     = function(i) return function(this) this.textcolour = "yellow" end end,
+        })
+    end
 
     for _, entry in ipairs(entries) do
-        local but = {
-            text     = entry.label,
-            bgcolour = 0x333333FF,
-            olcolour = "white",
-        }
-
+        local but = { text = entry.label, bgcolour = bg_color, olcolour = "white" }
         if entry.require_click then
-            -- Only fires on key-DOWN; the key-UP that opened the popup is ignored.
-            but.func = function()
+            -- Fire on key-DOWN; absorb key-UP so the spawning press doesn't dismiss
+            but.func        = function()
                 if entry.action then entry.action() end
                 CIG(back_page, previous_selection)
             end
-            but.releasefunc = function() end -- absorb the key-up so it cannot dismiss
+            but.releasefunc = function() end
         else
-            -- Standard: fires when the key is released (hold-to-show, release-to-pick)
+            -- Standard: fires on key-UP (hold-to-show, release-to-select)
             but.releasefunc = function()
                 if entry.action then entry.action() end
                 CIG(back_page, previous_selection)
             end
         end
-
         table.insert(popup_entries, but)
     end
 
-    local startx = parent_x - 30
-    local starty = parent_y - 20
-
-    -- createPopUpMenu is already overridden below, so bg_color and title flow through
     guipages["helper_popup"] = createPopUpMenu(
         guipages[back_page], nil, nil, nil,
-        popup_entries, startx, starty, nil,
-        bg_color, title
+        popup_entries, parent_x - 30, parent_y - 20, nil, bg_color
     )
 
     if formatGuiTables then formatGuiTables() end
-    CIG("helper_popup", 1)
+    CIG("helper_popup", title and 2 or 1) -- skip title, start on first real button
 end
 
--- Convenience wrapper: error popup with red background, requires explicit OK click.
+-- Error popup: red background, explicit OK click required
 function PECHAN_HELPERS.show_error_popup(message, back_page, parent_x, parent_y)
     PECHAN_HELPERS.create_context_popup(message, {
         { label = "OK", action = function() end, require_click = true }
@@ -64,88 +67,110 @@ function PECHAN_HELPERS.show_error_popup(message, back_page, parent_x, parent_y)
 end
 
 -------------------------------------------------------------------------------
--- ADDON-LAYER MONKEY PATCHES
--- We intercept global functions declared in the core without modifying the
--- core file itself.  Lua's globals are just table entries, so we can wrap them.
+-- MONKEY PATCHES  (global functions wrapped, zero core file edits)
 -------------------------------------------------------------------------------
 
 -- Wrap createPopUpMenu
--- Extra addon-only args (ignored by the real function):
---   [9]  bg_color  ARGB integer for the box background
---   [10] title     string rendered at the top of the box as a non-selectable label
+-- Extra 9th arg: bg_color
+--   When provided the wrapper:
+--   1. Copies direct-function fields (func, releasefunc, bgcolour, …) that the
+--      original ignores or misinterprets as factories back onto the menu items.
+--   2. Injects an other_func that draws a solid background box then redraws all
+--      items on top, so the box appears behind the buttons.
 local _orig_createPopUpMenu = createPopUpMenu
-createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements,
-                           startx, starty, numofelements, bg_color, title)
-    -- Call the original with only its known 8 parameters
+createPopUpMenu = function(BaseMenu, releasefunc_default, selectfunc, autofunc, Elements,
+                           startx, starty, numofelements, bg_color)
     local menu = _orig_createPopUpMenu(
-        BaseMenu, releasefunc, selectfunc, autofunc, Elements,
+        BaseMenu, releasefunc_default, selectfunc, autofunc, Elements,
         startx, starty, numofelements
     )
 
-    -- Measure the widest text (entries + optional title)
-    local max_len = title and #title or 0
-    for _, v in ipairs(menu) do
-        if v.text and #v.text > max_len then
-            max_len = #v.text
-        end
-        -- Push items right and down to leave room for the title row and left padding
-        v.x = (v.x or 0) + 4
-        if title then
-            v.y = (v.y or 0) + 12 -- leave one row for the title
-        else
-            v.y = (v.y or 0) + 4
+    if not bg_color then return menu end -- no extras requested
+
+    -- -----------------------------------------------------------------------
+    -- 1. Fix up fields: the core treats Element.releasefunc/func as factories
+    --    (calls them and stores the return value).  For our direct functions
+    --    that returns nil, destroying our callbacks.  Restore them.
+    -- -----------------------------------------------------------------------
+    if Elements then
+        for i, v in ipairs(Elements) do
+            if menu[i] then
+                if v.releasefunc then menu[i].releasefunc = v.releasefunc end
+                if v.func then menu[i].func = v.func end
+                if v.bgcolour then menu[i].bgcolour = v.bgcolour end
+                if v.olcolour then menu[i].olcolour = v.olcolour end
+                if v.unselectable then menu[i].unselectable = v.unselectable end
+                if v.info then menu[i].info = v.info end
+            end
         end
     end
 
+    -- -----------------------------------------------------------------------
+    -- 2. Compute background box size
+    -- -----------------------------------------------------------------------
+    local max_len    = 0
     local item_count = #menu
-    local title_rows = title and 1 or 0
+    for _, v in ipairs(menu) do
+        if v.text and #v.text > max_len then max_len = #v.text end
+    end
     local bg_w = math.max(48, max_len * 4 + 12)
-    local bg_h = (item_count + title_rows) * 10 + 10
+    local bg_h = item_count * 10 + 8
 
-    -- other_func is called every frame by the draw loop (line 2320 in core).
-    -- We set it directly on the returned menu table — this is safe as createPopUpMenu
-    -- only copies BaseMenu string keys with "a" prefix, so there's no collision.
+    -- -----------------------------------------------------------------------
+    -- 3. other_func: called every frame by the draw loop AFTER items are drawn.
+    --    We draw the solid background box first, then redraw all items on top,
+    --    achieving correct draw order without changing the core's draw loop.
+    -- -----------------------------------------------------------------------
     menu["other_func"] = function()
-        local bx = interactivegui.boxx + startx
-        local by = interactivegui.boxy + starty
+        -- Only run when this exact menu is the active page
+        if guipages[interactivegui.page] ~= menu then return end
 
-        -- Solid background + white border
-        gui.box(bx, by, bx + bg_w, by + bg_h, bg_color or 0x222222FF, "white")
+        local bx     = interactivegui.boxx + startx
+        local by     = interactivegui.boxy + starty
+        local sel    = interactivegui.selection
+        local selcol = interactivegui.selectioncolour
 
-        -- Title text drawn inside the top of the box
-        if title then
-            gui.text(bx + 4, by + 3, title, "yellow")
+        -- Solid background box (drawn behind everything)
+        gui.box(bx, by, bx + bg_w, by + bg_h, bg_color, "white")
+
+        -- Redraw each item on top of the background
+        for idx, v in ipairs(menu) do
+            local ix   = (v.x or startx) + interactivegui.boxx
+            local iy   = (v.y or (starty + (idx - 1) * 10)) + interactivegui.boxy
+            local text = v.text or ""
+            local iw   = #text * 4
+            local ibg  = v.bgcolour or bg_color
+            local iol  = (idx == sel) and selcol or (v.olcolour or "white")
+            gui.box(ix, iy, ix + iw + 4, iy + 10, ibg, iol)
+            gui.text(ix + 3, iy + 2, text, v.textcolour or "white")
         end
     end
 
     return menu
 end
 
--- Wrap changeInteractiveGuiSelection to skip unselectable items.
--- guipages == interactiveguipages (the core assigns them at startup), so we
--- can read the current page via guipages[interactivegui.page] safely.
+-- Wrap changeInteractiveGuiSelection to skip items with unselectable = true.
+-- guipages == interactiveguipages (assigned at core startup), so we read the
+-- current page via guipages[interactivegui.page] safely.
 local _orig_changeInteractiveGuiSelection = changeInteractiveGuiSelection
 changeInteractiveGuiSelection = function(n)
-    -- Determine direction before the call mutates interactivegui.selection
     local dir = 1
     if n and n < interactivegui.selection then dir = -1 end
     if n == 0 then dir = -1 end
 
     _orig_changeInteractiveGuiSelection(n)
 
-    -- After the core lands on a new index, skip over unselectable items
     local page = guipages[interactivegui.page]
     if not page then return end
 
     local guard = 0
     while page[interactivegui.selection] and page[interactivegui.selection].unselectable do
         guard = guard + 1
-        if guard > #page then break end -- failsafe: prevent infinite loop
-
-        local next_idx = interactivegui.selection + dir
-        if next_idx > #page then next_idx = 1 end
-        if next_idx < 1 then next_idx = #page end
-        interactivegui.selection = next_idx
+        if guard > #page then break end
+        local nxt = interactivegui.selection + dir
+        if nxt > #page then nxt = 1 end
+        if nxt < 1 then nxt = #page end
+        interactivegui.selection = nxt
     end
 end
 
