@@ -1043,6 +1043,7 @@ local guard_reversal_move_active_settings = {
 local function generate_character_popup(char, player_side, back_page, parent_x, parent_y)
 	local popup_entries = {}
 	local cur_y = 15
+	local previous_selection = interactivegui.selection
 
 	-- Add character name as an inactive but styling "title" entry
 	table.insert(popup_entries, {
@@ -1068,7 +1069,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 			releasefunc = function()
 				return function()
 					assignment_func()
-					CIG(back_page, interactivegui.selection)
+					CIG(back_page, previous_selection)
 				end
 			end,
 		})

@@ -6,6 +6,7 @@ PECHAN_HELPERS = PECHAN_HELPERS or {}
 -- Generates a generic popup menu for errors or context options
 function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y)
     local popup_entries = {}
+    local previous_selection = interactivegui.selection
 
     -- Add Title (inactive, stylized)
     table.insert(popup_entries, {
@@ -30,7 +31,7 @@ function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x
             releasefunc = function()
                 return function()
                     if entry.action then entry.action() end
-                    CIG(back_page, interactivegui.selection)
+                    CIG(back_page, previous_selection)
                 end
             end,
         })
