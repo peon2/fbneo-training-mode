@@ -779,27 +779,32 @@ local p1_and_dummy_data = {
 	},
 	["2"] =
 	{
-		text = "P1 crouch guard",
+		text = "Dummy Player",
 		x = 10,
 		y = 20,
 		olcolour = "black",
 		handle = 2,
 		func = function()
-			PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED = PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED + 1
-			if PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED > 1 then
-				PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED = 0
-			end
-			if PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED ~= PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.OPTIONS.OFF then
-				PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard = true
+			local opts = PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.OPTIONS
+			if PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == opts.P2 then
+				PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER = opts.P1
 			else
-				PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard = false
+				PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER = opts.P2
+			end
+			-- Update active pointers
+			if PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == opts.P2 then
+				HumanPlayer = P1
+				DummyPlayer = P2
+			else
+				HumanPlayer = P2
+				DummyPlayer = P1
 			end
 		end,
 		autofunc = function(this)
-			if PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED == PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.OPTIONS.OFF then
-				this.text = tl("ui.p1_dummy.p1_crouch_guard.off")
-			elseif PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.ENABLED == PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.OPTIONS.ON then
-				this.text = tl("ui.p1_dummy.p1_crouch_guard.on")
+			if PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.OPTIONS.P1 then
+				this.text = tl("ui.p1_dummy.dummy_player.p1", "Dummy: P1")
+			elseif PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.OPTIONS.P2 then
+				this.text = tl("ui.p1_dummy.dummy_player.p2", "Dummy: P2")
 			end
 		end,
 	},

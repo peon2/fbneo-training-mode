@@ -103,9 +103,9 @@ return {
                     off = "DIZZY: Off",
                     on = "DIZZY: On",
                 },
-                p1_crouch_guard = {
-                    off = "P1_CROUCH_GUARD: Off",
-                    on = "P1_CROUCH_GUARD: On",
+                dummy_player = {
+                    p1 = "Dummy Role: P1",
+                    p2 = "Dummy Role: P2",
                 },
                 counter = {
                     off = "Counter: Off",

@@ -646,12 +646,11 @@ PECHAN_CONFIG = {
         PLAYER1 = {
             ID = 1,
             NAME = "P1",
-            CROUCH_GUARD = {
-                can_crouch_guard = false,
-                ENABLED = 0,
+            DUMMY_CTRL = {
+                PLAYER = 2,
                 OPTIONS = {
-                    OFF = 0,
-                    ON = 1,
+                    P1 = 1,
+                    P2 = 2,
                 }
             },
 

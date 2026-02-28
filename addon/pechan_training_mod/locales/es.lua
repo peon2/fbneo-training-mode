@@ -103,9 +103,9 @@ return {
                     off = "MAREO: Apagado",
                     on = "MAREO: Encendido",
                 },
-                p1_crouch_guard = {
-                    off = "J1_GUARDIA_AGACHADA: Apagado",
-                    on = "J1_GUARDIA_AGACHADA: Encendido",
+                dummy_player = {
+                    p1 = "Rol de Dummy: P1",
+                    p2 = "Rol de Dummy: P2",
                 },
                 counter = {
                     off = "Counter: Apagado",

@@ -2324,9 +2324,7 @@ function KofTrainingRun() -- runs every frame
 
 	updateWakeUpEventStatus(stateMachine)
 
-	if PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard then
-		p1CrouchGuard()
-	end
+
 	--gui.text(20, 30, "block address: " .. rb(P2.addresses.blockstun), "yellow")
 	--justGuard()
 	--108318 - 108319 Dummy stage position from 0020 (left corner) to 02e0  (right corner)
