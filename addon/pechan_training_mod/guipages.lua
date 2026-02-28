@@ -1494,6 +1494,47 @@ for page = 1, total_pages do
 		x = 144,
 		info = { 'Load Matchup' },
 		func = function()
+			local current_game = PECHAN_CONFIG.get_current_game()
+			local current_page = "character_select_page_" .. interactivegui.page
+
+			if not PECHAN_CONFIG.UI.CURRENT_PLAYER1 then
+				PECHAN_HELPERS.show_error_popup("P1 No character selected!", current_page, 144, 70)
+				return
+			end
+			if not PECHAN_CONFIG.UI.CURRENT_PLAYER2 then
+				PECHAN_HELPERS.show_error_popup("P2 No character selected!", current_page, 144, 70)
+				return
+			end
+
+			if current_game.has_strikers then
+				if not PECHAN_CONFIG.UI.P1_STRIKER1 then
+					PECHAN_HELPERS.show_error_popup("P1 Striker 1 missing!", current_page, 144, 70)
+					return
+				end
+				if not PECHAN_CONFIG.UI.P2_STRIKER1 then
+					PECHAN_HELPERS.show_error_popup("P2 Striker 1 missing!", current_page, 144, 70)
+					return
+				end
+				if current_game.has_3_strikers then
+					if not PECHAN_CONFIG.UI.P1_STRIKER2 then
+						PECHAN_HELPERS.show_error_popup("P1 Striker 2 missing!", current_page, 144, 70)
+						return
+					end
+					if not PECHAN_CONFIG.UI.P1_STRIKER3 then
+						PECHAN_HELPERS.show_error_popup("P1 Striker 3 missing!", current_page, 144, 70)
+						return
+					end
+					if not PECHAN_CONFIG.UI.P2_STRIKER2 then
+						PECHAN_HELPERS.show_error_popup("P2 Striker 2 missing!", current_page, 144, 70)
+						return
+					end
+					if not PECHAN_CONFIG.UI.P2_STRIKER3 then
+						PECHAN_HELPERS.show_error_popup("P2 Striker 3 missing!", current_page, 144, 70)
+						return
+					end
+				end
+			end
+
 			PECHAN_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
 		end,
 		text = tl("ui.character.apply_changes"),

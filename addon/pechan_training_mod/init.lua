@@ -2,7 +2,7 @@ assert(rb, "Run fbneo-training-mode.lua")
 
 
 require("addon.pechan_training_mod.config")
-
+require("addon.pechan_training_mod.helpers")
 local rom_name = emu.romname() or "unknown"
 if PECHAN_CONFIG.SUPPORTED_GAMES[rom_name] then
 	print("Pechan's Training mode activated for: " .. rom_name)
@@ -2710,94 +2710,6 @@ function KofTrainingRun() -- runs every frame
 		end
 
 		local current_game = PECHAN_CONFIG.get_current_game()
-
-		-- Fallback logic: if left blank, fetch the character from the loaded savestate memory
-		local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
-		local p2_id_hex = string.format("0x%02X", rb(p2_stored_index_location))
-		local sk1_id_hex = nil
-		local sk2_id_hex = nil
-
-		if current_game.has_strikers then
-			if p1_striker_stored_index_location then
-				sk1_id_hex = string.format("0x%02X",
-					rb(p1_striker_stored_index_location))
-			end
-			if p2_striker_stored_index_location then
-				sk2_id_hex = string.format("0x%02X",
-					rb(p2_striker_stored_index_location))
-			end
-			if emu.romname() == "kof2000" then
-				if p1_striker_mode_location then
-					PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = rb(p1_striker_mode_location)
-				end
-				if p2_striker_mode_location then
-					PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
-				end
-			end
-		end
-
-		local p1_s2_hex, p1_s3_hex, p2_s2_hex, p2_s3_hex
-		if current_game.has_3_strikers then
-			if p1_striker2_stored_index_location then
-				p1_s2_hex = string.format("0x%02X",
-					rb(p1_striker2_stored_index_location))
-			end
-			if p1_striker3_stored_index_location then
-				p1_s3_hex = string.format("0x%02X",
-					rb(p1_striker3_stored_index_location))
-			end
-			if p2_striker2_stored_index_location then
-				p2_s2_hex = string.format("0x%02X",
-					rb(p2_striker2_stored_index_location))
-			end
-			if p2_striker3_stored_index_location then
-				p2_s3_hex = string.format("0x%02X",
-					rb(p2_striker3_stored_index_location))
-			end
-		end
-
-		for i, char in ipairs(current_game.characters) do
-			if not PECHAN_CONFIG.UI.CURRENT_PLAYER1 and char.code == p1_id_hex then
-				PECHAN_CONFIG.UI.CURRENT_PLAYER1 =
-					char
-			end
-			if not PECHAN_CONFIG.UI.CURRENT_PLAYER2 and char.code == p2_id_hex then
-				PECHAN_CONFIG.UI.CURRENT_PLAYER2 =
-					char
-			end
-			if current_game.has_strikers then
-				if not PECHAN_CONFIG.UI.P1_STRIKER1 and char.code == sk1_id_hex then
-					PECHAN_CONFIG.UI.P1_STRIKER1 = char
-					if emu.romname() == "kof2000" and p1_striker_mode_location then
-						PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = rb(p1_striker_mode_location)
-					end
-				end
-				if not PECHAN_CONFIG.UI.P2_STRIKER1 and char.code == sk2_id_hex then
-					PECHAN_CONFIG.UI.P2_STRIKER1 = char
-					if emu.romname() == "kof2000" and p2_striker_mode_location then
-						PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = rb(p2_striker_mode_location)
-					end
-				end
-				if current_game.has_3_strikers then
-					if not PECHAN_CONFIG.UI.P1_STRIKER2 and char.code == p1_s2_hex then
-						PECHAN_CONFIG.UI.P1_STRIKER2 =
-							char
-					end
-					if not PECHAN_CONFIG.UI.P1_STRIKER3 and char.code == p1_s3_hex then
-						PECHAN_CONFIG.UI.P1_STRIKER3 =
-							char
-					end
-					if not PECHAN_CONFIG.UI.P2_STRIKER2 and char.code == p2_s2_hex then
-						PECHAN_CONFIG.UI.P2_STRIKER2 =
-							char
-					end
-					if not PECHAN_CONFIG.UI.P2_STRIKER3 and char.code == p2_s3_hex then
-						PECHAN_CONFIG.UI.P2_STRIKER3 =
-							char
-					end
-				end
-			end
-		end
 
 
 		local level_address = current_game.offsets.level_address
