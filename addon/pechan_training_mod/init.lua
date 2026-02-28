@@ -2605,10 +2605,11 @@ function KofTrainingRun() -- runs every frame
 		end
 	end
 
-	if emu.romname and emu.romname() == "kof2000" then
-		gui.text(10, 160, string.format("P1 Mode (10A80A): %02X", rb(0x10A80A)), "yellow")
-		gui.text(10, 170, string.format("P2 Mode (10A81F): %02X", rb(0x10A81F)), "cyan")
-	end
+	-- Striker mode debug removed
+	-- if emu.romname and emu.romname() == "kof2000" then
+	-- 	gui.text(10, 160, string.format("P1 Mode (10A80A): %02X", rb(0x10A80A)), "yellow")
+	-- 	gui.text(10, 170, string.format("P2 Mode (10A81F): %02X", rb(0x10A81F)), "cyan")
+	-- end
 
 
 
@@ -2627,7 +2628,8 @@ function KofTrainingRun() -- runs every frame
 		if PECHAN_CONFIG.UI.INITIAL_START then
 			-- Frame 1: Load savestate and wait
 			if not delay_initial_read then
-				load_machine_state("addon\\pechan_training_mod\\savestates\\" .. emu.romname() .. "_select.fs")
+				-- No longer auto-loading savestate on initial game start
+				-- load_machine_state("addon\\pechan_training_mod\\savestates\\" .. emu.romname() .. "_select.fs")
 				delay_initial_read = true
 				return
 			end
