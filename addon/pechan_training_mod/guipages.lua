@@ -1045,19 +1045,8 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 	local cur_y = 15
 	local previous_selection = interactivegui.selection
 
-	-- Add character name as an inactive but styling "title" entry
-	table.insert(popup_entries, {
-		text = (player_side == 1 and "P1" or "P2") .. ": " .. (char.name or ""),
-		bgcolour = 0x222222FF,
-		olcolour = "white",
-		unselectable = true,
-		func = function() end, -- Inactive
-		autofunc = function(i)
-			return function(this)
-				this.textcolour = "yellow"
-			end
-		end,
-	})
+	-- Title will be passed to pechanCreatePopUpMenu as a parameter (non-selectable)
+	local popup_title = (player_side == 1 and "P1" or "P2") .. ": " .. (char.name or "")
 
 	local function add_option(label, assignment_func)
 		table.insert(popup_entries, {
@@ -1065,10 +1054,8 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 			bgcolour = 0x222222FF,
 			olcolour = "white",
 			releasefunc = function()
-				return function()
-					assignment_func()
-					CIG(back_page, previous_selection)
-				end
+				assignment_func()
+				CIG(back_page, previous_selection)
 			end,
 		})
 	end
@@ -1187,19 +1174,15 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 		end)
 	end
 
-	-- Create the dynamic popup bound to the current selection. We pass it off to InteractiveGUI by wrapping it.
-	-- `interactiveguipages[interactivegui.page]` is the current character list page
-	-- We pass `guipages[back_page]` to `createPopUpMenu` to inherit its references if needed.
+	-- Use our custom popup function with background box and title support
+	guipages["char_popup"] = pechanCreatePopUpMenu(
+		guipages[back_page], popup_entries,
+		parent_x - 30, parent_y - 20,
+		0x222222FF, popup_title
+	)
 
-	-- We construct the popup on the fly, map it to a temporary string key "char_popup"
-	guipages["char_popup"] = createPopUpMenu(guipages[back_page], nil, nil, nil, popup_entries, parent_x - 30,
-		parent_y - 20)
-
-	-- Re-run the table formatter to ensure navigation inside the popup works
 	if formatGuiTables then formatGuiTables() end
-
-	-- Jump to the newly created popup menu page
-	CIG("char_popup", 2) -- Start at index 2 to skip the title
+	CIG("char_popup", 1) -- Start at index 1 (title is not an entry anymore)
 end
 
 local characters = PECHAN_CONFIG.get_current_game().characters
