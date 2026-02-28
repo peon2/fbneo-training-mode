@@ -2700,8 +2700,9 @@ function KofTrainingRun() -- runs every frame
 		local tbl = joypad.get()
 		local active = {}
 		for k, v in pairs(tbl) do
-			if string.sub(k, 1, 2) == "P" .. player_id and v == 1 then
-				table.insert(active, string.sub(k, 4))
+			if v == 1 then
+				-- Just dump the raw key name exactly as FBNeo provides it
+				table.insert(active, k)
 			end
 		end
 		return table.concat(active, ",")
