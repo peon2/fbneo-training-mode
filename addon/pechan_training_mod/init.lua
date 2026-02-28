@@ -10,6 +10,13 @@ else
 	return
 end
 
+-- Load translation module
+local translate_mod = require("addon.pechan_training_mod.translate_mod")
+local en_data = require("addon.pechan_training_mod.locales.en")
+translate_mod.load_locale("en", en_data)
+-- default to EN
+translate_mod.set_locale("en")
+
 --[[
 if not _G.pechan_training_mod_tests_run then
 	_G.pechan_training_mod_tests_run = true
@@ -2555,6 +2562,7 @@ function KofTrainingRun() -- runs every frame
 	if rom_name == "kof98" then
 		AI.update()
 		Trials.check_conditions()
+		Cinematics.update()
 		Cinematics.draw()
 	end
 
@@ -2596,13 +2604,8 @@ function KofTrainingRun() -- runs every frame
 	end
 
 	if emu.romname and emu.romname() == "kof2000" then
-		-- KOF 2000 EXCEPTION: continuously enforce Striker Modes, as the engine overrides them
-		if PECHAN_CONFIG.UI.APPLIED.PLAYER1_STRIKER_MODE and p1_striker_mode_location then
-			wb(p1_striker_mode_location, PECHAN_CONFIG.UI.APPLIED.PLAYER1_STRIKER_MODE)
-		end
-		if PECHAN_CONFIG.UI.APPLIED.PLAYER2_STRIKER_MODE and p2_striker_mode_location then
-			wb(p2_striker_mode_location, PECHAN_CONFIG.UI.APPLIED.PLAYER2_STRIKER_MODE)
-		end
+		gui.text(10, 160, string.format("P1 Mode (10A80A): %02X", rb(0x10A80A)), "yellow")
+		gui.text(10, 170, string.format("P2 Mode (10A81F): %02X", rb(0x10A81F)), "cyan")
 	end
 
 

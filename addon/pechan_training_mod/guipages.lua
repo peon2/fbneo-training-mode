@@ -500,10 +500,11 @@ local trial_mode_settings = {
 		func = function() CIG(0, 1) end,
 	},
 	{
-		text = "Load Trial 1",
+		text = "Trial 1: The Destined Battle",
 		x = 10,
 		y = 15,
 		olcolour = "black",
+		info = { "Perform a 3-hit combo after the dialogue." },
 		func = function()
 			local Trials = require("addon.pechan_training_mod.ai.trials")
 			Trials.load_trial(1)
@@ -1004,6 +1005,156 @@ local guard_reversal_move_active_settings = {
 	},
 }
 
+local function generate_character_popup(char, player_side, back_page)
+	local popup = {
+		title = {
+			text = (player_side == 1 and "P1" or "P2") .. " Options: " .. (char.name or ""),
+			x = interactivegui.boxxlength / 2 - 80,
+			y = 1,
+		},
+		{
+			text = "<",
+			olcolour = "black",
+			info = "Back",
+			func = function() CIG(back_page, 1) end,
+		},
+	}
+
+	local cur_y = 15
+	local function add_option(label, assignment_func)
+		table.insert(popup, {
+			text = label,
+			x = 10,
+			y = cur_y,
+			olcolour = "black",
+			func = function()
+				assignment_func()
+				CIG(back_page, 1)
+			end,
+			autofunc = function(this) end,
+		})
+		cur_y = cur_y + 12
+	end
+
+	if player_side == 1 then
+		add_option("Make P1", function()
+			PECHAN_CONFIG.UI.P1_STRIKER1 = (PECHAN_CONFIG.UI.P1_STRIKER1 == char) and nil or PECHAN_CONFIG.UI
+			.P1_STRIKER1
+			if PECHAN_CONFIG.get_current_game().has_3_strikers then
+				PECHAN_CONFIG.UI.P1_STRIKER2 = (PECHAN_CONFIG.UI.P1_STRIKER2 == char) and nil or
+				PECHAN_CONFIG.UI.P1_STRIKER2
+				PECHAN_CONFIG.UI.P1_STRIKER3 = (PECHAN_CONFIG.UI.P1_STRIKER3 == char) and nil or
+				PECHAN_CONFIG.UI.P1_STRIKER3
+			end
+			PECHAN_CONFIG.UI.CURRENT_PLAYER1 = char
+		end)
+		if PECHAN_CONFIG.get_current_game().has_strikers then
+			add_option("Make P1 Striker 1", function()
+				PECHAN_CONFIG.UI.CURRENT_PLAYER1 = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char) and nil or
+				PECHAN_CONFIG.UI.CURRENT_PLAYER1
+				if PECHAN_CONFIG.get_current_game().has_3_strikers then
+					PECHAN_CONFIG.UI.P1_STRIKER2 = (PECHAN_CONFIG.UI.P1_STRIKER2 == char) and nil or
+					PECHAN_CONFIG.UI.P1_STRIKER2
+					PECHAN_CONFIG.UI.P1_STRIKER3 = (PECHAN_CONFIG.UI.P1_STRIKER3 == char) and nil or
+					PECHAN_CONFIG.UI.P1_STRIKER3
+				end
+				PECHAN_CONFIG.UI.P1_STRIKER1 = char
+				PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
+			end)
+			if PECHAN_CONFIG.get_current_game().has_3_strikers then
+				add_option("Make P1 Striker 2", function()
+					PECHAN_CONFIG.UI.CURRENT_PLAYER1 = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char) and nil or
+					PECHAN_CONFIG.UI.CURRENT_PLAYER1
+					PECHAN_CONFIG.UI.P1_STRIKER1 = (PECHAN_CONFIG.UI.P1_STRIKER1 == char) and nil or
+					PECHAN_CONFIG.UI.P1_STRIKER1
+					PECHAN_CONFIG.UI.P1_STRIKER3 = (PECHAN_CONFIG.UI.P1_STRIKER3 == char) and nil or
+					PECHAN_CONFIG.UI.P1_STRIKER3
+					PECHAN_CONFIG.UI.P1_STRIKER2 = char
+				end)
+				add_option("Make P1 Striker 3", function()
+					PECHAN_CONFIG.UI.CURRENT_PLAYER1 = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char) and nil or
+					PECHAN_CONFIG.UI.CURRENT_PLAYER1
+					PECHAN_CONFIG.UI.P1_STRIKER1 = (PECHAN_CONFIG.UI.P1_STRIKER1 == char) and nil or
+					PECHAN_CONFIG.UI.P1_STRIKER1
+					PECHAN_CONFIG.UI.P1_STRIKER2 = (PECHAN_CONFIG.UI.P1_STRIKER2 == char) and nil or
+					PECHAN_CONFIG.UI.P1_STRIKER2
+					PECHAN_CONFIG.UI.P1_STRIKER3 = char
+				end)
+			end
+		end
+		add_option("Unassign", function()
+			if PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char then PECHAN_CONFIG.UI.CURRENT_PLAYER1 = nil end
+			if PECHAN_CONFIG.get_current_game().has_strikers and PECHAN_CONFIG.UI.P1_STRIKER1 == char then
+				PECHAN_CONFIG.UI.P1_STRIKER1 = nil; PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
+			end
+			if PECHAN_CONFIG.get_current_game().has_3_strikers then
+				if PECHAN_CONFIG.UI.P1_STRIKER2 == char then PECHAN_CONFIG.UI.P1_STRIKER2 = nil end
+				if PECHAN_CONFIG.UI.P1_STRIKER3 == char then PECHAN_CONFIG.UI.P1_STRIKER3 = nil end
+			end
+		end)
+	else
+		add_option("Make P2", function()
+			PECHAN_CONFIG.UI.P2_STRIKER1 = (PECHAN_CONFIG.UI.P2_STRIKER1 == char) and nil or PECHAN_CONFIG.UI
+			.P2_STRIKER1
+			if PECHAN_CONFIG.get_current_game().has_3_strikers then
+				PECHAN_CONFIG.UI.P2_STRIKER2 = (PECHAN_CONFIG.UI.P2_STRIKER2 == char) and nil or
+				PECHAN_CONFIG.UI.P2_STRIKER2
+				PECHAN_CONFIG.UI.P2_STRIKER3 = (PECHAN_CONFIG.UI.P2_STRIKER3 == char) and nil or
+				PECHAN_CONFIG.UI.P2_STRIKER3
+			end
+			PECHAN_CONFIG.UI.CURRENT_PLAYER2 = char
+		end)
+		if PECHAN_CONFIG.get_current_game().has_strikers then
+			add_option("Make P2 Striker 1", function()
+				PECHAN_CONFIG.UI.CURRENT_PLAYER2 = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char) and nil or
+				PECHAN_CONFIG.UI.CURRENT_PLAYER2
+				if PECHAN_CONFIG.get_current_game().has_3_strikers then
+					PECHAN_CONFIG.UI.P2_STRIKER2 = (PECHAN_CONFIG.UI.P2_STRIKER2 == char) and nil or
+					PECHAN_CONFIG.UI.P2_STRIKER2
+					PECHAN_CONFIG.UI.P2_STRIKER3 = (PECHAN_CONFIG.UI.P2_STRIKER3 == char) and nil or
+					PECHAN_CONFIG.UI.P2_STRIKER3
+				end
+				PECHAN_CONFIG.UI.P2_STRIKER1 = char
+				PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
+			end)
+			if PECHAN_CONFIG.get_current_game().has_3_strikers then
+				add_option("Make P2 Striker 2", function()
+					PECHAN_CONFIG.UI.CURRENT_PLAYER2 = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char) and nil or
+					PECHAN_CONFIG.UI.CURRENT_PLAYER2
+					PECHAN_CONFIG.UI.P2_STRIKER1 = (PECHAN_CONFIG.UI.P2_STRIKER1 == char) and nil or
+					PECHAN_CONFIG.UI.P2_STRIKER1
+					PECHAN_CONFIG.UI.P2_STRIKER3 = (PECHAN_CONFIG.UI.P2_STRIKER3 == char) and nil or
+					PECHAN_CONFIG.UI.P2_STRIKER3
+					PECHAN_CONFIG.UI.P2_STRIKER2 = char
+				end)
+				add_option("Make P2 Striker 3", function()
+					PECHAN_CONFIG.UI.CURRENT_PLAYER2 = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char) and nil or
+					PECHAN_CONFIG.UI.CURRENT_PLAYER2
+					PECHAN_CONFIG.UI.P2_STRIKER1 = (PECHAN_CONFIG.UI.P2_STRIKER1 == char) and nil or
+					PECHAN_CONFIG.UI.P2_STRIKER1
+					PECHAN_CONFIG.UI.P2_STRIKER2 = (PECHAN_CONFIG.UI.P2_STRIKER2 == char) and nil or
+					PECHAN_CONFIG.UI.P2_STRIKER2
+					PECHAN_CONFIG.UI.P2_STRIKER3 = char
+				end)
+			end
+		end
+		add_option("Unassign", function()
+			if PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char then PECHAN_CONFIG.UI.CURRENT_PLAYER2 = nil end
+			if PECHAN_CONFIG.get_current_game().has_strikers and PECHAN_CONFIG.UI.P2_STRIKER1 == char then
+				PECHAN_CONFIG.UI.P2_STRIKER1 = nil; PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
+			end
+			if PECHAN_CONFIG.get_current_game().has_3_strikers then
+				if PECHAN_CONFIG.UI.P2_STRIKER2 == char then PECHAN_CONFIG.UI.P2_STRIKER2 = nil end
+				if PECHAN_CONFIG.UI.P2_STRIKER3 == char then PECHAN_CONFIG.UI.P2_STRIKER3 = nil end
+			end
+		end)
+	end
+
+	guipages["character_options_popup"] = popup
+	if formatGuiTables then formatGuiTables() end
+	CIG("character_options_popup", 1)
+end
+
 local characters = PECHAN_CONFIG.get_current_game().characters
 local chars_per_page = 28
 local total_pages = math.ceil(#characters / chars_per_page)
@@ -1054,28 +1205,7 @@ for page = 1, total_pages do
 			olcolour = "black",
 			func = function()
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
-				if PECHAN_CONFIG.get_current_game().has_strikers then
-					if PECHAN_CONFIG.UI.CURRENT_PLAYER1 == char then
-						PECHAN_CONFIG.UI.CURRENT_PLAYER1 = nil
-						PECHAN_CONFIG.UI.P1_STRIKER1 = char
-						PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
-					elseif PECHAN_CONFIG.UI.P1_STRIKER1 == char then
-						PECHAN_CONFIG.UI.P1_STRIKER1 = nil
-						PECHAN_CONFIG.UI.PLAYER1_STRIKER_MODE = 0
-						if PECHAN_CONFIG.get_current_game().has_3_strikers then
-							PECHAN_CONFIG.UI.P1_STRIKER2 = char
-						end
-					elseif PECHAN_CONFIG.get_current_game().has_3_strikers and PECHAN_CONFIG.UI.P1_STRIKER2 == char then
-						PECHAN_CONFIG.UI.P1_STRIKER2 = nil
-						PECHAN_CONFIG.UI.P1_STRIKER3 = char
-					elseif PECHAN_CONFIG.get_current_game().has_3_strikers and PECHAN_CONFIG.UI.P1_STRIKER3 == char then
-						PECHAN_CONFIG.UI.P1_STRIKER3 = nil
-					else
-						PECHAN_CONFIG.UI.CURRENT_PLAYER1 = char
-					end
-				else
-					PECHAN_CONFIG.UI.CURRENT_PLAYER1 = char
-				end
+				generate_character_popup(char, 1, page_name)
 			end,
 			autofunc = function(this)
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
@@ -1102,28 +1232,7 @@ for page = 1, total_pages do
 			olcolour = "black",
 			func = function()
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
-				if PECHAN_CONFIG.get_current_game().has_strikers then
-					if PECHAN_CONFIG.UI.CURRENT_PLAYER2 == char then
-						PECHAN_CONFIG.UI.CURRENT_PLAYER2 = nil
-						PECHAN_CONFIG.UI.P2_STRIKER1 = char
-						PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
-					elseif PECHAN_CONFIG.UI.P2_STRIKER1 == char then
-						PECHAN_CONFIG.UI.P2_STRIKER1 = nil
-						PECHAN_CONFIG.UI.PLAYER2_STRIKER_MODE = 0
-						if PECHAN_CONFIG.get_current_game().has_3_strikers then
-							PECHAN_CONFIG.UI.P2_STRIKER2 = char
-						end
-					elseif PECHAN_CONFIG.get_current_game().has_3_strikers and PECHAN_CONFIG.UI.P2_STRIKER2 == char then
-						PECHAN_CONFIG.UI.P2_STRIKER2 = nil
-						PECHAN_CONFIG.UI.P2_STRIKER3 = char
-					elseif PECHAN_CONFIG.get_current_game().has_3_strikers and PECHAN_CONFIG.UI.P2_STRIKER3 == char then
-						PECHAN_CONFIG.UI.P2_STRIKER3 = nil
-					else
-						PECHAN_CONFIG.UI.CURRENT_PLAYER2 = char
-					end
-				else
-					PECHAN_CONFIG.UI.CURRENT_PLAYER2 = char
-				end
+				generate_character_popup(char, 2, page_name)
 			end,
 			autofunc = function(this)
 				local char = PECHAN_CONFIG.get_current_game().characters[i]

@@ -635,6 +635,13 @@ PECHAN_CONFIG = {
         },
 
     },
+    LANGUAGE = {
+        current_language = "en",
+        OPTIONS = {
+            EN = "en",
+            ES = "es",
+        },
+    },
     PLAYERS = {
         PLAYER1 = {
             ID = 1,
