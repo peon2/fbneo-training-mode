@@ -102,8 +102,10 @@ createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements
     local bg_w = math.max(48, max_len * 4 + 12)
     local bg_h = (item_count + title_rows) * 10 + 10
 
-    -- Replace the background-draw closure (created by the core) with ours
-    menu["aother_func"] = function()
+    -- other_func is called every frame by the draw loop (line 2320 in core).
+    -- We set it directly on the returned menu table — this is safe as createPopUpMenu
+    -- only copies BaseMenu string keys with "a" prefix, so there's no collision.
+    menu["other_func"] = function()
         local bx = interactivegui.boxx + startx
         local by = interactivegui.boxy + starty
 
