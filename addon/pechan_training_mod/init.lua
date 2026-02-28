@@ -51,8 +51,10 @@ end
 
 local current_game = PECHAN_CONFIG.get_current_game()
 
-local p1hitstatus = current_game.player1_base + current_game.offsets.hitstatus
-local p2hitstatus = current_game.player2_base + current_game.offsets.hitstatus
+-- Base Player Singletons
+local PlayerClass = require("addon.pechan_training_mod.core.player")
+P1 = PlayerClass:new(1, current_game.player1_base, current_game.offsets, "Human")
+P2 = PlayerClass:new(2, current_game.player2_base, current_game.offsets, "Dummy")
 
 local air_height = current_game.player2_base + current_game.offsets.air_height
 
@@ -217,12 +219,8 @@ dummy_reversal = customconfig.dummy_reversal
 dummy_reversal_random = customconfig.dummy_reversal_random ]]
 
 --local reversal_move =0x62 -- 0x63 --standing punch
-local p2move_adress = current_game.player2_base + current_game.offsets.action
-local p2blockstun_address = current_game.player2_base + current_game.offsets.blockstun
 -- p2blockstun_value is handled locally in the updater
 
-local p1move_adress = current_game.player1_base + current_game.offsets.action
-local p1blockstun_address = current_game.player1_base + current_game.offsets.blockstun
 
 -------------------------------------------------
 --- POSIBBLE MEMORIE ADRESSES ----
@@ -237,14 +235,14 @@ local p1blockstun_address = current_game.player1_base + current_game.offsets.blo
 
 
 local function playerOneIsBeingHit()
-	return rb(p1hitstatus) ~= 0
+	return rb(P1.addresses.hitstatus) ~= 0
 end
 
 local function playerTwoIsBeingHit()
-	return rb(p2hitstatus) ~= 0
+	return rb(P2.addresses.hitstatus) ~= 0
 end
 local function dummyMoveIsActive()
-	return rb(p2move_adress) ~= 0
+	return rb(P2.addresses.action) ~= 0
 end
 local last_frame = emu.framecount()
 
@@ -259,7 +257,7 @@ function saveStateLoaded()
 	return false
 end
 
-local base_action_adress = p1hitstatus + 1
+local base_action_adress = P1.addresses.hitstatus + 1
 
 local function P1ActionIsExecuting()
 	local action_filtered = {
@@ -315,10 +313,10 @@ local function P1ActionIsExecuting()
 end
 
 local function getP2RawActionByte()
-	return rb(p2move_adress)
+	return rb(P2.addresses.action)
 end
 local function P2SetAction(action)
-	wb(p2move_adress, action)
+	wb(P2.addresses.action, action)
 end
 local current_p1_base_action = 0
 local past_p1_base_action = 0
@@ -367,7 +365,7 @@ local last_updated_frame = -1
 local blockstun_frames = 0
 local last_blockstun_duration = 0
 local function playerTwoInBlockstun()
-	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
+	if (rb(P2.addresses.blockstun) == 0x20) or (rb(P2.addresses.blockstun) == 0xA0) then
 		local current_frame = emu.framecount()
 		if current_frame ~= last_updated_frame then
 			blockstun_frames = blockstun_frames + 1
@@ -384,7 +382,7 @@ local function playerTwoInBlockstun()
 	return false
 end
 local function p2CurrentBlockstun()
-	if (rb(p2blockstun_address) == 0x20) or (rb(p2blockstun_address) == 0xA0) then
+	if (rb(P2.addresses.blockstun) == 0x20) or (rb(P2.addresses.blockstun) == 0xA0) then
 		local current_frame = emu.framecount()
 		if current_frame ~= p2_blockstun_last_updated_frame then
 			p2_blockstun_last_updated_frame = current_frame
@@ -432,7 +430,7 @@ local p1_blockstun_frames = 0
 local p1_last_updated_frame = -1
 
 local function playerOneInBlockstun()
-	if (rb(p1blockstun_address) == 0x20) or (rb(p1blockstun_address) == 0xA0) then
+	if (rb(P1.addresses.blockstun) == 0x20) or (rb(P1.addresses.blockstun) == 0xA0) then
 		local current_frame = emu.framecount()
 		if current_frame ~= p1_last_updated_frame then
 			p1_blockstun_frames = p1_blockstun_frames + 1
@@ -450,7 +448,7 @@ local function playerOneInBlockstun()
 end
 
 local function p1CurrentBlockstun()
-	if (rb(p1blockstun_address) == 0x20) or (rb(p1blockstun_address) == 0xA0) then
+	if (rb(P1.addresses.blockstun) == 0x20) or (rb(P1.addresses.blockstun) == 0xA0) then
 		local current_frame = emu.framecount()
 		if current_frame ~= p1_blockstun_last_updated_frame then
 			p1_blockstun_last_updated_frame = current_frame
@@ -482,10 +480,10 @@ local p2_last_updated_frame_of_action = -1
 local p2_running_action = false
 local p2_entered_new_action = false
 local p2_last_action_duration = 0
-local p2_base_action_address = p2move_adress -- This seems to be the move address based on usage
+local p2_base_action_address = P2.addresses.action -- This seems to be the move address based on usage
 
 local function P2ActCodeRunning()
-	current_p2_base_action = rb(p2move_adress)
+	current_p2_base_action = rb(P2.addresses.action)
 	if current_p2_base_action == 0x23 then -- Standing/Idle likely
 		return false
 	end
@@ -541,10 +539,10 @@ local function ACTcodesOfFallingActive()
 	return false
 end
 local function playerTwoIsFalling()
-	--[[if rb(p2hitstatus) == 11 then
+	--[[if rb(P2.addresses.hitstatus) == 11 then
 		print ("playerTwoIsFalling")
 	end--]]
-	if rb(p2hitstatus) == 1 or rb(p2hitstatus) == 11 then
+	if rb(P2.addresses.hitstatus) == 1 or rb(P2.addresses.hitstatus) == 11 then
 		if ACTcodesOfFallingActive() then
 			return true
 		end
@@ -1468,7 +1466,7 @@ end
 local function isOnWakeUp()
 	--gui.text(10, 80, "WakeUp: " .. rw(0x108321))
 	local dummy_air_height_word_address = 0x108321
-	local dummy_is_in_air = (rw(dummy_air_height_word_address) > 0) and rb(p2hitstatus) == 1
+	local dummy_is_in_air = (rw(dummy_air_height_word_address) > 0) and rb(P2.addresses.hitstatus) == 1
 
 	return dummy_is_in_air
 end
@@ -1731,8 +1729,10 @@ local char1_screen_position_address = 0x108119
 local char2_screen_position_address = 0x108319
 
 -- Example usage:
-local char1 = Character:new(char1_name, char1_screen_address, char1_screen_position_address, p1hitstatus, p1hitstatus + 1)
-local char2 = Character:new(char2_name, char2_screen_address, char2_screen_position_address, p2hitstatus, p2hitstatus + 1)
+local char1 = Character:new(char1_name, char1_screen_address, char1_screen_position_address, P1.addresses.hitstatus,
+	P1.addresses.hitstatus + 1)
+local char2 = Character:new(char2_name, char2_screen_address, char2_screen_position_address, P2.addresses.hitstatus,
+	P2.addresses.hitstatus + 1)
 
 local function draw_distance_status(character1, character2)
 	local is_close = character1:is_close_to(character2)
@@ -1843,6 +1843,23 @@ local function draw_frame_advantage()
 		gui.text(x, y + 20, "blck d: " .. blockstun_frame_count, color)
 	end
 end
+
+local function draw_player_advantage(player, x, y)
+	if player.advantage_state.measuring or player.advantage_state.frame_advantage ~= 0 then
+		if PECHAN_CONFIG.DEBUG.ADVANTAGE == 1 then
+			local color = "yellow"
+			if player.advantage_state.frame_advantage > 0 then
+				color = "green"
+			elseif player.advantage_state.frame_advantage < 0 then
+				color = "red"
+			end
+			local label = (player.advantage_state.adv_type == "Block") and ("P" .. player.id .. " Block Adv: ") or
+			("P" .. player.id .. " Hit Adv: ")
+			gui.text(x, y, label .. player.advantage_state.frame_advantage, color)
+		end
+	end
+end
+
 local function draw_debug_info()
 	draw_action_code(char1, 30, 180)
 	draw_action_code(char2, 170, 180)
@@ -1852,6 +1869,10 @@ local function draw_debug_info()
 	draw_stun_status(char1, char2)
 	draw_guard_status(char1, char2)
 	--draw_frame_advantage()
+
+	-- Draw new dynamic advantages
+	draw_player_advantage(P1, 20, 60)
+	draw_player_advantage(P2, 170, 60)
 
 	if PECHAN_CONFIG.DEBUG.METER == 1 then
 		gui.text(170, 170, "P1 meter: " .. rb(0x1081e8), "white", "black")
@@ -1921,181 +1942,11 @@ local MUSIC_TRACKS = {
 }
 
 
-
-
-
-local P1AdvantageState = {
-	measuring = false,
-	frame_advantage = 0,
-	last_checked_frame = -1,
-	past_frame_act = 0,
-	p1_recovery_frames = 0,
-	p2_blockstun_frames = 0,
-	adv_type = "Block",
-}
-
 local PECHAN_CONFIG_throw_os_on_jump = false
--- local p1_last_recovery_frames = 0 -- Unused?
--- local latest_blockstun = 0 -- Unused?
-
-local function checkFrameAdvantage()
-	local current_frame = emu.framecount()
-	if current_frame == P1AdvantageState.last_checked_frame then
-		return
-	end
-	P1AdvantageState.last_checked_frame = current_frame
-
-	local act = getP1ExecutingAction()
-	local filtered_act = filterAct(act)
-	local blockstun = p2CurrentBlockstun()
-	local hitstun = p2CurrentHitstun()
-
-	-- 1. DETECTION: Start or Refresh (Multihit)
-	if blockstun == 1 then
-		P1AdvantageState.measuring = true
-		P1AdvantageState.adv_type = "Block"
-		P1AdvantageState.p1_recovery_frames = 0
-		P1AdvantageState.p2_blockstun_frames = 0
-		P1AdvantageState.frame_advantage = 0
-		P1AdvantageState.past_frame_act = filtered_act
-	elseif hitstun == 1 then
-		P1AdvantageState.measuring = true
-		P1AdvantageState.adv_type = "Hit"
-		P1AdvantageState.p1_recovery_frames = 0
-		P1AdvantageState.p2_blockstun_frames = 0
-		P1AdvantageState.frame_advantage = 0
-		P1AdvantageState.past_frame_act = filtered_act
-	end
-
-	if P1AdvantageState.measuring then
-		-- 2. DYNAMIC TRACKING
-		local current_stun = (P1AdvantageState.adv_type == "Block") and blockstun or hitstun
-		if current_stun ~= 0 then
-			P1AdvantageState.p2_blockstun_frames = P1AdvantageState.p2_blockstun_frames + 1
-		end
-
-		if filtered_act ~= 0 then
-			P1AdvantageState.p1_recovery_frames = P1AdvantageState.p1_recovery_frames + 1
-		end
-
-		-- 3. CANCELLATION DETECTION
-		if filtered_act ~= 0 and P1AdvantageState.past_frame_act ~= 0 and filtered_act ~= P1AdvantageState.past_frame_act then
-			-- Different attack started? Reset to track the new one.
-			P1AdvantageState.p1_recovery_frames = 1
-			P1AdvantageState.p2_blockstun_frames = (current_stun > 0) and 1 or 0
-		end
-		P1AdvantageState.past_frame_act = filtered_act
-
-		-- 4. LIVE CALCULATION
-		P1AdvantageState.frame_advantage = P1AdvantageState.p2_blockstun_frames - P1AdvantageState.p1_recovery_frames
-
-		-- 5. TERMINATION
-		-- Stop measuring only when both are back to neutral
-		if (blockstun == 0 and hitstun == 0) and act == 0 then
-			P1AdvantageState.measuring = false
-		end
-	end
-
-	-- Draw advantage result
-	if P1AdvantageState.measuring or P1AdvantageState.frame_advantage ~= 0 then
-		if PECHAN_CONFIG.DEBUG.ADVANTAGE == 1 then
-			local color = "yellow"
-			if P1AdvantageState.frame_advantage > 0 then
-				color = "green"
-			elseif P1AdvantageState.frame_advantage < 0 then
-				color = "red"
-			end
-			local label = (P1AdvantageState.adv_type == "Block") and "P1 Block Adv: " or "P1 Hit Adv: "
-			gui.text(20, 60, label .. P1AdvantageState.frame_advantage, color)
-		end
-	end
-end
-
-local P2AdvantageState = {
-	measuring = false,
-	frame_advantage = 0,
-	last_checked_frame = -1,
-	past_frame_act = 0,
-	recovery_frames_counter = 0,
-	blockstun_frames_counter = 0,
-	adv_type = "Block"
-}
-
-local function checkP2FrameAdvantage()
-	local current_frame = emu.framecount()
-	if current_frame == P2AdvantageState.last_checked_frame then
-		return
-	end
-	P2AdvantageState.last_checked_frame = current_frame
-
-	local act = getP2ExecutingAction()
-	local filtered_act = filterAct(act) -- Using same filter as P1 for now
-	local blockstun = p1CurrentBlockstun()
-	local hitstun = p1CurrentHitstun()
-
-	-- 1. DETECTION
-	if blockstun == 1 then
-		P2AdvantageState.measuring = true
-		P2AdvantageState.adv_type = "Block"
-		P2AdvantageState.recovery_frames_counter = 0
-		P2AdvantageState.blockstun_frames_counter = 0
-		P2AdvantageState.frame_advantage = 0
-		P2AdvantageState.past_frame_act = filtered_act
-	elseif hitstun == 1 then
-		P2AdvantageState.measuring = true
-		P2AdvantageState.adv_type = "Hit"
-		P2AdvantageState.recovery_frames_counter = 0
-		P2AdvantageState.blockstun_frames_counter = 0
-		P2AdvantageState.frame_advantage = 0
-		P2AdvantageState.past_frame_act = filtered_act
-	end
-
-	if P2AdvantageState.measuring then
-		-- 2. DYNAMIC TRACKING
-		local current_stun = (P2AdvantageState.adv_type == "Block") and blockstun or hitstun
-		if current_stun ~= 0 then
-			P2AdvantageState.blockstun_frames_counter = P2AdvantageState.blockstun_frames_counter + 1
-		end
-
-		if filtered_act ~= 0 then
-			P2AdvantageState.recovery_frames_counter = P2AdvantageState.recovery_frames_counter + 1
-		end
-
-		-- 3. CANCELLATION DETECTION
-		if filtered_act ~= 0 and P2AdvantageState.past_frame_act ~= 0 and filtered_act ~= P2AdvantageState.past_frame_act then
-			P2AdvantageState.recovery_frames_counter = 1
-			P2AdvantageState.blockstun_frames_counter = (current_stun > 0) and 1 or 0
-		end
-		P2AdvantageState.past_frame_act = filtered_act
-
-		-- 4. LIVE CALCULATION
-		P2AdvantageState.frame_advantage = P2AdvantageState.blockstun_frames_counter -
-			P2AdvantageState.recovery_frames_counter
-
-		-- 5. TERMINATION
-		if (blockstun == 0 and hitstun == 0) and act == 0 then
-			P2AdvantageState.measuring = false
-		end
-	end
-
-	-- Draw advantage result
-	if P2AdvantageState.measuring or P2AdvantageState.frame_advantage ~= 0 then
-		if PECHAN_CONFIG.DEBUG.ADVANTAGE == 1 then
-			local color = "yellow"
-			if P2AdvantageState.frame_advantage > 0 then
-				color = "green"
-			elseif P2AdvantageState.frame_advantage < 0 then
-				color = "red"
-			end
-			local label = (P2AdvantageState.adv_type == "Block") and "P2 Block Adv: " or "P2 Hit Adv: "
-			gui.text(170, 60, label .. P2AdvantageState.frame_advantage, color)
-		end
-	end
-end
 
 -- Export to frame_data
-_G.get_p1_advantage_state = function() return P1AdvantageState end
-_G.get_p2_advantage_state = function() return P2AdvantageState end
+_G.get_p1_advantage_state = function() return P1.advantage_state end
+_G.get_p2_advantage_state = function() return P2.advantage_state end
 
 local percentage_of_recovery = 50
 local chosenRecoveryOption = nil -- nil = no decision ye
@@ -2543,7 +2394,7 @@ function KofTrainingRun() -- runs every frame
 	if PECHAN_CONFIG.PLAYERS.PLAYER1.CROUCH_GUARD.can_crouch_guard then
 		p1CrouchGuard()
 	end
-	--gui.text(20, 30, "block address: " .. rb(p2blockstun_address), "yellow")
+	--gui.text(20, 30, "block address: " .. rb(P2.addresses.blockstun), "yellow")
 	--justGuard()
 	--108318 - 108319 Dummy stage position from 0020 (left corner) to 02e0  (right corner)
 	if PECHAN_CONFIG.DEBUG.POSITION == 1 then
@@ -2571,8 +2422,8 @@ function KofTrainingRun() -- runs every frame
 		Cinematics.draw()
 	end
 
-	checkFrameAdvantage()
-	checkP2FrameAdvantage()
+	P1:updateAdvantage(P2)
+	P2:updateAdvantage(P1)
 	draw_debug_info()
 
 	if emu.romname and (emu.romname() == "kof99" or emu.romname() == "kof2000" or emu.romname() == "kof2001") then
