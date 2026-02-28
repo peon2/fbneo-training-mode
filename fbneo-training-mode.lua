@@ -295,7 +295,7 @@ do -- file checking logic + global variables/tables
 		for i, v in pairs(joypad.get()) do -- check every button
 			player = i:sub(1, 2)
 			input = i:sub(4)
-			if player == "P1" then                                                      -- assume the same inputs for each player
+			if player == "P1" then                                                       -- assume the same inputs for each player
 				if not translationtable[input] or not translationtable[translationtable[input]] then -- bad button found
 					print(input)
 					print "Translation table malformed"
@@ -394,13 +394,13 @@ do -- file checking logic + global variables/tables
 			for i, v in pairs(c) do -- check buttons
 				player = i:sub(1, 2)
 				input = i:sub(4)
-				if player == "P1" and translationtable[input] == nil then              -- change translation table to not work with [1]
+				if player == "P1" and translationtable[input] == nil then -- change translation table to not work with [1]
 					translationtable[input] = 7 +
-					assert(tonum(input), "Can't make a translation table")             -- bind JUST attack buttons
+						assert(tonum(input), "Can't make a translation table") -- bind JUST attack buttons
 				elseif player == "P2" then
-				else                                                                   -- stuff like dipswitches
+				else                                          -- stuff like dipswitches
 					translationtable[i] = 7 + nbuttons +
-					1                                                                  -- we dont care about any of these but need to make sure they're bound to something
+						1                                     -- we dont care about any of these but need to make sure they're bound to something
 				end
 			end
 			local d = { nil, nil, "icons-taito-32.png", "icons-neogeo-32.png", nil, "icons-capcom-32.png" } -- iconfiles, 3,4,6 buttons
@@ -522,9 +522,9 @@ do -- file checking logic + global variables/tables
 		boxxlength = (config.interactivegui.boxxm - 1) * (emu.screenwidth() / config.interactivegui.boxxd), -- commonly used calculations
 		boxylength = (config.interactivegui.boxym - 1) * (emu.screenheight() / config.interactivegui.boxyd),
 		boxxmid = emu.screenwidth() / config.interactivegui.boxxd +
-		(config.interactivegui.boxxm - 1) * (emu.screenwidth() / config.interactivegui.boxxd) / 2,
+			(config.interactivegui.boxxm - 1) * (emu.screenwidth() / config.interactivegui.boxxd) / 2,
 		boxymid = emu.screenheight() / config.interactivegui.boxyd - 10 +
-		(config.interactivegui.boxym - 1) * (emu.screenheight() / config.interactivegui.boxyd) / 2,
+			(config.interactivegui.boxym - 1) * (emu.screenheight() / config.interactivegui.boxyd) / 2,
 		selectioncolour = config.interactivegui.selectioncolour,
 		movehud = { enabled = false, selected = false, selection = 1 },
 		replayeditor = { inputs = {} },
@@ -842,7 +842,7 @@ do -- file checking logic + global variables/tables
 		end
 
 		-- Inject a background rendering function so the popup doesn't blend into the underlying list
-		local bg_width = 80          -- Estimate width of the popup menu text + padding
+		local bg_width = 80           -- Estimate width of the popup menu text + padding
 		local bg_height = (#menu * 10) + 10 -- Estimate height of the menu based on items inserted
 
 		menu["aother_func"] = function()
@@ -1018,7 +1018,7 @@ do -- file checking logic + global variables/tables
 		table.sort(temp, function(a, b)
 			if a.y == b.y then return a.x < b.x end
 			return a.y < b.y
-		end)                                                                            -- sort both here so the 'A' series lookups can give the exact coords
+		end) -- sort both here so the 'A' series lookups can give the exact coords
 
 		local tab = {}
 		local pos = 1
@@ -1156,7 +1156,7 @@ local healthHandlerP1 = function()
 	if combovars.p1.combo ~= combovars.p1.previouscombo and not modulevars.p1.inhitstun then
 		if combovars.p1.refillhealth == 0 then
 			combovars.p1.refillhealth = math.ceil((modulevars.p1.maxhealth - modulevars.p1.health) /
-			combovars.p1.refillhealthspeed)                                                                                 -- refill speed
+				combovars.p1.refillhealthspeed) -- refill speed
 		end
 	end
 
@@ -1184,7 +1184,7 @@ local meterHandlerP1 = function()
 	if combovars.p2.combo ~= combovars.p2.previouscombo and not modulevars.p2.inhitstun then
 		if combovars.p1.refillmeter == 0 then
 			combovars.p1.refillmeter = math.ceil((modulevars.p1.maxmeter - modulevars.p1.meter) /
-			combovars.p1.refillmeterspeed)                                                                              -- refill speed
+				combovars.p1.refillmeterspeed) -- refill speed
 		end
 	end
 
@@ -1221,7 +1221,7 @@ local comboHandlerP2 = function()
 
 	if combovars.p2.healthdiff ~= 0 and modulevars.p2.inhitstun then
 		combovars.p2.combo = combovars.p2.combo +
-		1                                   -- if theres a difference in health detected and p2 is in a combovars.combo
+			1 -- if theres a difference in health detected and p2 is in a combovars.combo
 	end
 
 	if not modulevars.p2.inhitstun then
@@ -1247,7 +1247,7 @@ local healthHandlerP2 = function()
 	if combovars.p2.combo ~= combovars.p2.previouscombo and not modulevars.p2.inhitstun then
 		if combovars.p2.refillhealth == 0 then
 			combovars.p2.refillhealth = math.ceil((modulevars.p2.maxhealth - modulevars.p2.health) /
-			combovars.p2.refillhealthspeed)                                                                                 -- refill speed
+				combovars.p2.refillhealthspeed) -- refill speed
 		end
 	end
 
@@ -1275,7 +1275,7 @@ local meterHandlerP2 = function()
 	if combovars.p1.combo ~= combovars.p1.previouscombo and not modulevars.p1.inhitstun then
 		if combovars.p2.refillmeter == 0 then
 			combovars.p2.refillmeter = math.ceil((modulevars.p2.maxmeter - modulevars.p2.meter) /
-			combovars.p2.refillmeterspeed)                                                                              -- refill speed
+				combovars.p2.refillmeterspeed) -- refill speed
 		end
 	end
 
@@ -1325,7 +1325,7 @@ local readGUIInputs = function()
 	guiinputs.KB.previousinputs = nil
 	guiinputs.KB.previousinputs = copytable(guiinputs.KB.inputs)
 	guiinputs.KB.inputs = {}
-	for i, v in pairs(input.get()) do -- check every button
+	for i, v in pairs(input.get()) do     -- check every button
 		if i ~= "xmouse" and i ~= "ymouse" then -- mouse not implemented correctly yet
 			guiinputs.KB.inputs[i] = v
 		end
@@ -1349,9 +1349,9 @@ function displayStick(x, y)
 	local a = function(b)
 		if b then return 1 end
 		return 0
-	end                                                    -- bool to num
+	end -- bool to num
 	local dir = 5 + a(guiinputs.P1["up"]) * 3 + a(guiinputs.P1["left"]) * -1 + a(guiinputs.P1["right"]) * 1 +
-	a(guiinputs.P1["down"]) * -3
+		a(guiinputs.P1["down"]) * -3
 	gui.gdoverlay(x, y, stickimgs[dir])
 end
 
@@ -1430,7 +1430,7 @@ local HUDElements = {}
 
 local menuCheck = function()
 	interactivegui.inmenu = interactivegui.enabled or interactivegui.movehud.enabled or
-	interactivegui.replayeditor.enabled
+		interactivegui.replayeditor.enabled
 
 	inputs.properties.p1freeze = interactivegui.inmenu
 	inputs.properties.p2freeze = interactivegui.inmenu
@@ -1440,7 +1440,8 @@ local menuCheck = function()
 
 	-- find elements in HUDelements to adjust
 	if (interactivegui.inmenu and not interactivegui.movehud.enabled and availablefunctions.scrollinginputclear) then
-		scrollingInputClear() end
+		scrollingInputClear()
+	end
 	for _, v in pairs(HUDElements or {}) do
 		if (v.name == "p1scrollinginput" or v.name == "p2scrollinginput") then -- (HP)+(!(I)P) scrolling inputs
 			inputs.properties.scrollinginput.scrollingstate[tonumber(v.name:sub(2, 2))] = ((interactivegui.movehud.enabled and inputs.properties.scrollinginput[v.name]) or ((not interactivegui.inmenu) and inputs.properties.scrollinginput[v.name]))
@@ -1478,7 +1479,7 @@ SERIALISETABLE.p2 = {}
 
 for i, v in pairs(joypad.get()) do -- assemble table in proper order
 	local input
-	if i:sub(1, 2) == "P1" then   -- P1 and P2 should have the same inputs
+	if i:sub(1, 2) == "P1" then    -- P1 and P2 should have the same inputs
 		input = i:sub(4)
 		SERIALISETABLE.p1[#SERIALISETABLE.p1 + 1] = input
 		SERIALISETABLE.p1[input] = #SERIALISETABLE.p1
@@ -1513,7 +1514,7 @@ local serialiseInit = function(recordslot) -- set up compression, reduce the siz
 				recordslot._stable.p2[recordslot._stable.p2[i]] = i - 1
 			end
 			recordslot._stable.p2.len = recordslot._stable.p2.len - 1
-			for i = 1, #recordslot._stable.p2 - recordslot._stable.p2.len do table.remove(recordslot._stable.p2) end                   -- remove garbage
+			for i = 1, #recordslot._stable.p2 - recordslot._stable.p2.len do table.remove(recordslot._stable.p2) end                         -- remove garbage
 			for i, v in pairs(recordslot._stable.p2) do if recordslot._stable.p2[v] == nil and i ~= "len" then recordslot._stable.p2[i] = nil end end -- final check
 		end
 	end
@@ -1525,27 +1526,35 @@ local serialise = function(recordslot)
 		recordslot[i].serial = {}
 		recordslot[i].serial.other = {}
 		for i, v in pairs(recordslot[i].raw.p1 or {}) do
-			if v and recordslot.constants["P1 " .. i] == nil then num = bit.bor(num,
-					bit.lshift(1, recordslot._stable.p1[i] - 1)) end
+			if v and recordslot.constants["P1 " .. i] == nil then
+				num = bit.bor(num,
+					bit.lshift(1, recordslot._stable.p1[i] - 1))
+			end
 		end
 		for i, v in pairs(recordslot[i].raw.p2 or {}) do
-			if v and recordslot.constants["P2 " .. i] == nil then num = bit.bor(num,
-					bit.lshift(1, recordslot._stable.p2[i] - 1 + recordslot._stable.p1.len)) end
+			if v and recordslot.constants["P2 " .. i] == nil then
+				num = bit.bor(num,
+					bit.lshift(1, recordslot._stable.p2[i] - 1 + recordslot._stable.p1.len))
+			end
 		end
-		for j, v in pairs(recordslot[i].raw.other or {}) do                   -- dipswitches aren't boolean so they can't be serialised
+		for j, v in pairs(recordslot[i].raw.other or {}) do                     -- dipswitches aren't boolean so they can't be serialised
 			if recordslot.constants[j] == nil then recordslot[i].serial.other[j] = v end -- only put in the ones we need
 		end
 		--final bit to track direction
-		if recordslot[i].p1facingleft then num = bit.bor(num,
-				bit.lshift(1, recordslot._stable.p1.len + recordslot._stable.p2.len)) end
-		if recordslot[i].p2facingleft then num = bit.bor(num,
-				bit.lshift(1, recordslot._stable.p1.len + recordslot._stable.p2.len + 1)) end
+		if recordslot[i].p1facingleft then
+			num = bit.bor(num,
+				bit.lshift(1, recordslot._stable.p1.len + recordslot._stable.p2.len))
+		end
+		if recordslot[i].p2facingleft then
+			num = bit.bor(num,
+				bit.lshift(1, recordslot._stable.p1.len + recordslot._stable.p2.len + 1))
+		end
 		recordslot[i].serial.player = num
 		if not next(recordslot[i].serial.other) then
 			recordslot[i].serial.other = nil
 			recordslot[i].serial = num
-		end                                                                                                  -- more often than not dipswitches wont change
-		recordslot[i].raw = nil                                                                              -- we can empty this now
+		end               -- more often than not dipswitches wont change
+		recordslot[i].raw = nil -- we can empty this now
 	end
 end
 
@@ -1773,8 +1782,10 @@ togglePlayBack = function(bool, vargs)
 
 		if recording.replayP1 and recording.replayP2 then
 			recordslot.start = recordslot.p1start
-			if (recordslot.start == nil and recordslot.p2start ~= nil) or (recordslot.start > recordslot.p2start) then recordslot.start =
-				recordslot.p2start end
+			if (recordslot.start == nil and recordslot.p2start ~= nil) or (recordslot.start > recordslot.p2start) then
+				recordslot.start =
+					recordslot.p2start
+			end
 		elseif recording.replayP1 then
 			toggleSwapInputs(true)
 			recordslot.start = recordslot.p1start
@@ -1784,9 +1795,9 @@ togglePlayBack = function(bool, vargs)
 		if recordslot.start == recordslot.finish then
 			toggleSwapInputs(false)
 			return
-		end                                                                      -- nothing recorded
+		end                  -- nothing recorded
 
-		recording.startcounter = 0                                               -- randomise starting playback
+		recording.startcounter = 0 -- randomise starting playback
 		if recording.maxstarttime == 0 then
 			recording.starttime = 0
 		else
@@ -1810,7 +1821,7 @@ local playBack = function()
 
 	if recording.starttime > recording.startcounter then -- delay until replay starts
 		gui.text(1, 1, "Slot " .. recording.playbackslot .. " (" .. fc - recordslot.framestart .. "/" .. #recordslot ..
-		")")
+			")")
 		recording.startcounter = recording.startcounter + 1
 		recordslot.framestart = recordslot.framestart + 1
 		return
@@ -1898,7 +1909,7 @@ local delayInputs = function()
 		inputbuffer[1].other = inputs.other
 
 		inputs.setinputs = combinePlayerInputs(inputbuffer[delayinputcount].p1, inputbuffer[delayinputcount].p2,
-			inputbuffer[delayinputcount].other)                                                                                                -- play input
+			inputbuffer[delayinputcount].other) -- play input
 	end
 end
 
@@ -1909,10 +1920,10 @@ setInputs = function()
 	inputs.properties.enableinputset = false
 end
 
-setDirection = function(player, ...)                                                                                          -- getting a player to hold down/up etc.
-	local dir1, dir2 = ...                                                                                                    -- only need to check two inputs at a time
+setDirection = function(player, ...)                                                                                                            -- getting a player to hold down/up etc.
+	local dir1, dir2 = ...                                                                                                                      -- only need to check two inputs at a time
 
-	if type(dir1) == "number" then                                                                                            -- for numpad
+	if type(dir1) == "number" then                                                                                                              -- for numpad
 		local a = { { "Down", "Left" }, { "Down" }, { "Down", "Right" }, { "Left" }, {}, { "Right" }, { "Up", "Left" }, { "Up" }, { "Up", "Right" } } -- numpad
 		dir2 = a[dir1][2]
 		dir1 = a[dir1][1]
@@ -1952,10 +1963,10 @@ local helpButtons = {}
 local helpShell = gd.createFromPng("resources/info/shell.png")
 helpShell = helpShell:gdStr()
 
-if scrollingInputReg then                                                         -- if there's a scrolling input file loaded
+if scrollingInputReg then                                                           -- if there's a scrolling input file loaded
 	local img = gd.createFromPng("inputs/scrolling-input/" .. games[dirname].iconfile) -- always assume we're using a 32x32 tileset image
 	local imgcnt = img:sizeY() / 32
-	local y = img:sizeY() - (nbuttons + 1) * 32                                   -- y of first button, ignoring start
+	local y = img:sizeY() - (nbuttons + 1) * 32                                     -- y of first button, ignoring start
 	--[[
 		Left,
 		Right,
@@ -2061,44 +2072,52 @@ local buttonHandler = function(t)
 	if helpElements.name == nil or t.funcs.name ~= helpElements.name then -- new set of buttons, should be checking using enums
 		helpElements = { name = t.funcs.name }
 
-		t.len = t.len + 1                             -- space for back
+		t.len = t.len + 1                                     -- space for back
 
 		t[t.len] = { name = "BACK", button = "button" .. nbuttons } -- insert back as the last button
 
-		for i, v in ipairs(t.funcs) do t[i].func = v end -- copy across funcs
+		for i, v in ipairs(t.funcs) do t[i].func = v end      -- copy across funcs
 
 		helpElements.more = 0
 		helpElements.block = 0
-		if (t.len > nbuttons or #t.funcs > t.len) then              -- not enough buttons for functions, set up the MORE button
-			local back = t[t.len]                                   -- back button
+		if (t.len > nbuttons or #t.funcs > t.len) then -- not enough buttons for functions, set up the MORE button
+			local back = t[t.len]                -- back button
 			for i = t.len + 1, nbuttons + 1, -1 do
 				t[i] = t[i - 2]
 				t[i - 2] = {}
-			end                                                     -- shunt along
-			t[nbuttons] = back                                      -- put back in place
-			t[nbuttons - 1].name = "MORE"                           -- set attributes for more button
+			end                  -- shunt along
+			t[nbuttons] = back   -- put back in place
+			t[nbuttons - 1].name = "MORE" -- set attributes for more button
 			t[nbuttons - 1].button = "button" .. (nbuttons - 1)
 			t[nbuttons - 1].func = t.funcs.more or
-			moreButtonsFunc                                         -- put more in place, use default if there isn't a specific one
-			helpElements.more = 1                                   -- mark more as being added
-			t.len = t.len + 1                                       -- space for more
+				moreButtonsFunc -- put more in place, use default if there isn't a specific one
+			helpElements.more = 1 -- mark more as being added
+			t.len = t.len + 1 -- space for more
 		end
 		helpElements.funcs = t.funcs
 		helpElements.len = t.len
 		for i = 1, helpElements.len do
-			helpElements[i] = { name = t[i].name, button = buttonHandlerInputs[t[i].button], buttonnum = t[i].button, func =
-			t[i].func }
+			helpElements[i] = {
+				name = t[i].name,
+				button = buttonHandlerInputs[t[i].button],
+				buttonnum = t[i].button,
+				func =
+					t[i].func
+			}
 		end
 		helpElements.len = math.min(nbuttons, helpElements.len)
 		if t.funcs.back then
 			helpElements[helpElements.len].func = t.funcs.back
 		else
-			helpElements[helpElements.len].func = function(but) if guiinputs.P1.previousinputs[but] and not guiinputs.P1[but] then
-					toggleStates({}) end end                                                                                                       -- default for back
+			helpElements[helpElements.len].func = function(but)
+				if guiinputs.P1.previousinputs[but] and not guiinputs.P1[but] then
+					toggleStates({})
+				end
+			end               -- default for back
 		end
 		helpElements.funcs.coin = helpElements.funcs.coin or
-		function() helpElements[math.min(nbuttons, t.len)].func("coin") end                                                                        -- run the back button with coin as default
-		helpElements.len = 0                                                                                                                       -- real length ( account for {} in table )
+			function() helpElements[math.min(nbuttons, t.len)].func("coin") end -- run the back button with coin as default
+		helpElements.len = 0                                          -- real length ( account for {} in table )
 		for _, v in ipairs(helpElements) do
 			if v.name and v.button then helpElements.len = helpElements.len + 1 end
 		end
@@ -2114,8 +2133,12 @@ local drawHelp = function()
 	if not (interactivegui.movehud.enabled or interactivegui.enabled or interactivegui.replayeditor.enabled) then return end
 
 	-- run buttons
-	for i = 1, nbuttons do if helpElements[i] and helpElements[i].func then helpElements[i].func(helpElements[i]
-			.buttonnum) end end                                                                                               -- run all the functions
+	for i = 1, nbuttons do
+		if helpElements[i] and helpElements[i].func then
+			helpElements[i].func(helpElements[i]
+				.buttonnum)
+		end
+	end                -- run all the functions
 	if helpElements.funcs.other then helpElements.funcs.other() end
 	if helpElements.funcs.coin then helpElements.funcs.coin() end
 
@@ -2128,7 +2151,7 @@ local drawHelp = function()
 			helpElements[i].button = helpElements[i].button or i
 			gui.gdoverlay(interactivegui.sw / 2 - offset, interactivegui.sh - 27, helpShell)
 			gui.gdoverlay(interactivegui.sw / 2 - offset + 1, interactivegui.sh - 26, helpButtons
-			[helpElements[i].button])
+				[helpElements[i].button])
 			gui.text(interactivegui.sw / 2 - offset + 9 - #helpElements[i].name:sub(1, 4) * 2, interactivegui.sh - 9,
 				helpElements[i].name:sub(1, 4))
 			offset = offset - 18
@@ -2322,8 +2345,13 @@ local drawInteractiveGUIFuncs = {
 local drawInteractiveGUI = function()
 	if not interactivegui.enabled then return end
 
-	local t = { { name = "SLCT", button = "button1" }, { name = "HKEY", button = "button2" }, {}, funcs =
-	drawInteractiveGUIFuncs }
+	local t = {
+		{ name = "SLCT", button = "button1" },
+		{ name = "HKEY", button = "button2" },
+		{},
+		funcs =
+			drawInteractiveGUIFuncs
+	}
 
 	local boxx, boxy, boxx2, boxy2, bgcolour, olcolour, page, selection
 
@@ -2342,32 +2370,50 @@ local drawInteractiveGUI = function()
 	local w, h, colour
 
 	local barcolour = interactivegui.barcolour
+
+	local function draw_item(i, v)
+		if v.autofunc then
+			v:autofunc()
+		end
+
+		if i ~= interactivegui.selection then
+			v.x = v.x or 0
+			v.y = v.y or 0
+			v.text = v.text or " "
+			v.textcolour = v.textcolour or "white"
+			v.bgcolour = v.bgcolour or bgcolour
+			v.olcolour = v.olcolour or bgcolour
+
+			w, h = #v.text * 4, 10
+
+			if (v.fillpercent) then
+				gui.box(v.x + boxx, v.y + boxy, v.x + boxx + (w + 4) * v.fillpercent, v.y + boxy + h, barcolour)
+				v.bgcolour = nil
+			end
+
+			if v.bgcolour ~= bgcolour or v.olcolour ~= bgcolour then
+				gui.box(v.x + boxx, v.y + boxy, v.x + boxx + w + 4, v.y + boxy + h, v.bgcolour, v.olcolour)
+			end
+			gui.text(v.x + boxx + 3, v.y + boxy + 2, v.text, v.textcolour)
+		end
+	end
+
+	-- Pass 1: Draw string-keyed background elements
 	for i, v in pairs(page) do
-		if i ~= "other_func" and i ~= "aother_func" then -- this should be a function, copied function
-			if v.autofunc then
-				v:autofunc()
-			end
+		if type(i) == "string" and i ~= "other_func" and i ~= "aother_func" then
+			draw_item(i, v)
+		end
+	end
 
-			if i ~= interactivegui.selection then
-				v.x = v.x or 0
-				v.y = v.y or 0
-				v.text = v.text or " "
-				v.textcolour = v.textcolour or "white"
-				v.bgcolour = v.bgcolour or bgcolour
-				v.olcolour = v.olcolour or bgcolour
+	-- Pass 2: Draw the popup's solid enclosing background box
+	if page.aother_func then
+		page.aother_func()
+	end
 
-				w, h = #v.text * 4, 10
-
-				if (v.fillpercent) then
-					gui.box(v.x + boxx, v.y + boxy, v.x + boxx + (w + 4) * v.fillpercent, v.y + boxy + h, barcolour)
-					v.bgcolour = nil
-				end
-
-				if v.bgcolour ~= bgcolour or v.olcolour ~= bgcolour then
-					gui.box(v.x + boxx, v.y + boxy, v.x + boxx + w + 4, v.y + boxy + h, v.bgcolour, v.olcolour)
-				end
-				gui.text(v.x + boxx + 3, v.y + boxy + 2, v.text, v.textcolour)
-			end
+	-- Pass 3: Draw the numeric-keyed localized popup options over the background box
+	for i, v in pairs(page) do
+		if type(i) == "number" then
+			draw_item(i, v)
 		end
 	end
 
@@ -2780,7 +2826,7 @@ local moveHUDInteract = function()
 	local str = "(" .. x .. "," .. y .. ")"
 	local dispx, dispy = x, y - 10
 	if #str * 4 + x > interactivegui.sw then dispx = interactivegui.sw - #str * 4 end -- keep in bounds
-	if dispy < 0 then dispy = 0 end                                        -- keep in bounds
+	if dispy < 0 then dispy = 0 end                                                -- keep in bounds
 	gui.text(dispx, dispy, str, col)
 
 	-- don't display the tooltip if it will cover up elements
@@ -2826,11 +2872,11 @@ toggleReplayEditor = function(bool, vargs)
 		interactivegui.replayeditor.inputs = { [1] = {}, [2] = {}, [3] = {}, [4] = {}, [5] = {} }
 		for j = 1, 5 do
 			local recordslot = recording[j]
-			for i = 1, #recordslot do                                              -- unserialise them all so they can be seen
+			for i = 1, #recordslot do                -- unserialise them all so they can be seen
 				interactivegui.replayeditor.inputs[j][i] = { serial = {} }
-				if (type(recordslot[i].serial) == "number") then                   -- copy across necessary values, two different kinds of serialising
+				if (type(recordslot[i].serial) == "number") then -- copy across necessary values, two different kinds of serialising
 					interactivegui.replayeditor.inputs[j][i].serial.player = recordslot[i]
-					.serial                                                        -- copy across necessary values
+						.serial                      -- copy across necessary values
 					interactivegui.replayeditor.inputs[j][i].serial.other = {}
 				else
 					interactivegui.replayeditor.inputs[j][i].serial.player = recordslot[i].serial.player
@@ -2948,7 +2994,8 @@ local drawReplayEditorFuncs = {
 				reinputs[i + 1].p2facingleft = reinputs[i].p2facingleft
 			end
 
-			local recordslot = recording[recording.recordingslot]                            -- update start/finish for visuals
+			local recordslot = recording
+			[recording.recordingslot]                                                          -- update start/finish for visuals
 			if (recordslot.p2start and interactivegui.replayeditor.editframe < recordslot.p2start) then -- plus one
 				recordslot.p2start = recordslot.p2start + 1
 			end
@@ -3055,7 +3102,7 @@ local drawReplayEditorFuncs = {
 				reinputs[interactivegui.replayeditor.editframe + 1] = { raw = { p1 = {}, p2 = {} } }
 			end
 
-			local recordslot = recording[recording.recordingslot]                            -- update for visuals
+			local recordslot = recording[recording.recordingslot]                              -- update for visuals
 			if (recordslot.p2start and interactivegui.replayeditor.editframe < recordslot.p2start) then -- plus one
 				recordslot.p2start = recordslot.p2start + 1
 			end
@@ -3086,8 +3133,8 @@ local drawReplayEditorFuncs = {
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then                                                   -- invert direction
 			if not interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] then return end -- bad input
 			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe].p2facingleft = not
-			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe]
-			.p2facingleft
+				interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe]
+				.p2facingleft
 
 			interactivegui.replayeditor.changed = interactivegui.replayeditor.changed or {}
 			interactivegui.replayeditor.changed[recording.recordingslot] = true
@@ -3124,10 +3171,14 @@ local drawReplayEditorFuncs = {
 	end,
 	other = function()
 		if interactivegui.replayeditor.framestart then return end
-		if guiinputs.P1.upframecount ~= 0 then interactivegui.replayeditor.editframe = interactivegui.replayeditor
-			.editframe - hudworkingframes(guiinputs.P1.upframecount) end
-		if guiinputs.P1.downframecount ~= 0 then interactivegui.replayeditor.editframe = interactivegui.replayeditor
-			.editframe + hudworkingframes(guiinputs.P1.downframecount) end
+		if guiinputs.P1.upframecount ~= 0 then
+			interactivegui.replayeditor.editframe = interactivegui.replayeditor
+				.editframe - hudworkingframes(guiinputs.P1.upframecount)
+		end
+		if guiinputs.P1.downframecount ~= 0 then
+			interactivegui.replayeditor.editframe = interactivegui.replayeditor
+				.editframe + hudworkingframes(guiinputs.P1.downframecount)
+		end
 	end,
 	name = "drawReplayEditorFuncs",
 }
@@ -3141,22 +3192,33 @@ local drawReplayEditor = function()
 	--use these to control how a grid is drawn, boxes are 16x16
 	local x, y = interactivegui.sw / 2 - (length) * 8, 1
 	local frames = math.floor(((interactivegui.sh - 27) - y) / 16) -
-	1                                                       -- Tooltips are 27px high, avoid drawing under them
+		1 -- Tooltips are 27px high, avoid drawing under them
 
-	t = { { name = "SET" }, { name = "COPY" }, { name = "CLR" }, { name = "DEL" }, { name = "BLNK" }, { name = "<NUM" }, { name = "NUM>" }, { name = "SWP" }, funcs =
-	drawReplayEditorFuncs }
+	t = {
+		{ name = "SET" },
+		{ name = "COPY" },
+		{ name = "CLR" },
+		{ name = "DEL" },
+		{ name = "BLNK" },
+		{ name = "<NUM" },
+		{ name = "NUM>" },
+		{ name = "SWP" },
+		funcs =
+			drawReplayEditorFuncs
+	}
 	buttonHandler(t)
 
 	-- draw in frame numbers
 	if not interactivegui.replayeditor.editframe or interactivegui.replayeditor.editframe < 1 then interactivegui.replayeditor.editframe = 1 end -- failsafe
-	local startframe = interactivegui.replayeditor.editframe                                                                                -- first frame to draw
+	local startframe = interactivegui.replayeditor
+	.editframe                                                                                                                                -- first frame to draw
 	startframe = startframe - math.floor(frames / 2)
-	if not reinputs[startframe + frames] then startframe = #reinputs - frames + 2 end                                                       -- display only one frame out of bounds
-	if startframe < 1 then startframe = 1 end                                                                                               -- failsafe
-	if interactivegui.replayeditor.editframe >= #reinputs + 1 then interactivegui.replayeditor.editframe = #reinputs + 1 end                -- keep selection in bounds
+	if not reinputs[startframe + frames] then startframe = #reinputs - frames + 2 end                                                         -- display only one frame out of bounds
+	if startframe < 1 then startframe = 1 end                                                                                                 -- failsafe
+	if interactivegui.replayeditor.editframe >= #reinputs + 1 then interactivegui.replayeditor.editframe = #reinputs + 1 end                  -- keep selection in bounds
 	for i = 1, frames do
 		if startframe + i - 1 == interactivegui.replayeditor.editframe then
-			gui.box(x, y + 16 * i, x + length * 16, y + 16 * (i + 1), "gray")           -- highlight selected
+			gui.box(x, y + 16 * i, x + length * 16, y + 16 * (i + 1), "gray")                   -- highlight selected
 		end
 		if startframe + i - 1 == recordslot.p2start or startframe + i - 1 == recordslot.p2finish then -- start or end of inputs
 			gui.box(x, y + 16 * i, x + 16, y + 16 * (i + 1), "green")
@@ -3165,10 +3227,10 @@ local drawReplayEditor = function()
 	end
 
 	-- draw grid
-	gui.box(x, y, x + length * 16, y + 16, "blue")  -- blue background
-	gui.line(x, y, x + length * 16, y)              -- top line of top
-	gui.line(x, y + 16, x + length * 16, y + 16)    -- underline of top
-	gui.line(x, y, x, y + 16 + 16 * frames)         -- first vertical line
+	gui.box(x, y, x + length * 16, y + 16, "blue")                   -- blue background
+	gui.line(x, y, x + length * 16, y)                               -- top line of top
+	gui.line(x, y + 16, x + length * 16, y + 16)                     -- underline of top
+	gui.line(x, y, x, y + 16 + 16 * frames)                          -- first vertical line
 	gui.line(x + length * 16, y, x + length * 16, y + 16 + 16 * frames) -- last vertical line
 	gui.text(x + 1, y + 1, "SLOT")
 	gui.text(x + 7, y + 8, recording.recordingslot)
@@ -3176,13 +3238,13 @@ local drawReplayEditor = function()
 		gui.line(x + i * 16, y, x + i * 16, y + 16 + 16 * frames) -- vertical lines
 		gui.gdoverlay(x + i * 16, y, icons[16][i])
 	end
-	for i = 1, frames do                      -- should be the length of frames shown
+	for i = 1, frames do                                         -- should be the length of frames shown
 		gui.line(x, y + 16 + i * 16, x + length * 16, y + 16 + i * 16) -- horizontal lines
 	end
 
-	if startframe + frames > #reinputs + 1 then                                               -- make sure end of replay is on screen
+	if startframe + frames > #reinputs + 1 then -- make sure end of replay is on screen
 		gui.line(x, y + 32 + (#reinputs - startframe) * 16, x + length * 16, y + 32 + (#reinputs - startframe) * 16,
-			"red")                                                                            -- red line marking end of replay
+			"red")                           -- red line marking end of replay
 	end
 
 	gui.box(x, y + 16 + frames * 16, x + 16, y + 32 + frames * 16, "blue") -- draw box with the number of inputs
@@ -3236,8 +3298,13 @@ local readHotkeyIn = function()
 	gui.text((boxx2 + boxx) / 2 - 14, boxy - 8, "HOTKEYS")
 
 	local t = { {}, funcs = readHotkeyInFuncs }
-	if interactiveguipages[interactivegui.page][interactivegui.selection].info then t[1] = { name = "INFO", button =
-		"button1" } end
+	if interactiveguipages[interactivegui.page][interactivegui.selection].info then
+		t[1] = {
+			name = "INFO",
+			button =
+			"button1"
+		}
+	end
 	buttonHandler(t) -- overload inputs
 
 	local highest = 0
@@ -3264,17 +3331,35 @@ end
 
 toggleStates = function(vargs)   -- nil = false, true = true, false = skip
 	if vargs == nil then return end -- bad argument
-	if vargs["swapinputs"] == nil then toggleSwapInputs(false, vargs) elseif vargs["swapinputs"] then toggleSwapInputs(
-		true, vargs) end
-	if vargs["recording"] == nil then toggleRecording(false, vargs) elseif vargs["recording"] then toggleRecording(true,
-			vargs) end
-	if vargs["playback"] == nil then togglePlayBack(false, vargs) elseif vargs["playback"] then togglePlayBack(true,
-			vargs) end
-	if vargs["interactiveguienabled"] == nil then toggleInteractiveGUI(false, vargs) elseif vargs["interactiveguienabled"] then
-		toggleInteractiveGUI(true, vargs) end
+	if vargs["swapinputs"] == nil then
+		toggleSwapInputs(false, vargs)
+	elseif vargs["swapinputs"] then
+		toggleSwapInputs(
+			true, vargs)
+	end
+	if vargs["recording"] == nil then
+		toggleRecording(false, vargs)
+	elseif vargs["recording"] then
+		toggleRecording(true,
+			vargs)
+	end
+	if vargs["playback"] == nil then
+		togglePlayBack(false, vargs)
+	elseif vargs["playback"] then
+		togglePlayBack(true,
+			vargs)
+	end
+	if vargs["interactiveguienabled"] == nil then
+		toggleInteractiveGUI(false, vargs)
+	elseif vargs["interactiveguienabled"] then
+		toggleInteractiveGUI(true, vargs)
+	end
 	if vargs["movehud"] == nil then toggleMoveHUD(false, vargs) elseif vargs["movehud"] then toggleMoveHUD(true, vargs) end
-	if vargs["replayeditor"] == nil then toggleReplayEditor(false, vargs) elseif vargs["replayeditor"] then
-		toggleReplayEditor(true, vargs) end
+	if vargs["replayeditor"] == nil then
+		toggleReplayEditor(false, vargs)
+	elseif vargs["replayeditor"] then
+		toggleReplayEditor(true, vargs)
+	end
 end
 
 setRegisters = function() -- pre-calc stuff
@@ -3314,17 +3399,25 @@ setRegisters = function() -- pre-calc stuff
 
 	if availablefunctions.readplayeronehealth then
 		table.insert(HUDElements,
-			{ name = "p1health", x = function(n)
-				if n then changeConfig("hud", "p1healthx", n, hud) end
-				return hud.p1healthx
-			end, y = function(n)
-				if n then changeConfig("hud", "p1healthy", n, hud) end
-				return hud.p1healthy
-			end, enabled = function(n)
-				if n ~= nil then changeConfig("hud", "p1healthenabled", n, hud) end
-				return hud.p1healthenabled
-			end, drawfunc = function() gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health,
-					hud.p1healthtextcolour) end })
+			{
+				name = "p1health",
+				x = function(n)
+					if n then changeConfig("hud", "p1healthx", n, hud) end
+					return hud.p1healthx
+				end,
+				y = function(n)
+					if n then changeConfig("hud", "p1healthy", n, hud) end
+					return hud.p1healthy
+				end,
+				enabled = function(n)
+					if n ~= nil then changeConfig("hud", "p1healthenabled", n, hud) end
+					return hud.p1healthenabled
+				end,
+				drawfunc = function()
+					gui.text(hud.p1healthx, hud.p1healthy, modulevars.p1.health,
+						hud.p1healthtextcolour)
+				end
+			})
 		if availablefunctions.playeroneinhitstun then
 			table.insert(registers.guiregister, comboHandlerP1)
 		else
@@ -3336,17 +3429,25 @@ setRegisters = function() -- pre-calc stuff
 
 	if availablefunctions.readplayertwohealth then
 		table.insert(HUDElements,
-			{ name = "p2health", x = function(n)
-				if n then changeConfig("hud", "p2healthx", n, hud) end
-				return hud.p2healthx
-			end, y = function(n)
-				if n then changeConfig("hud", "p2healthy", n, hud) end
-				return hud.p2healthy
-			end, enabled = function(n)
-				if n ~= nil then changeConfig("hud", "p2healthenabled", n, hud) end
-				return hud.p2healthenabled
-			end, drawfunc = function() gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health,
-					hud.p2healthtextcolour) end })
+			{
+				name = "p2health",
+				x = function(n)
+					if n then changeConfig("hud", "p2healthx", n, hud) end
+					return hud.p2healthx
+				end,
+				y = function(n)
+					if n then changeConfig("hud", "p2healthy", n, hud) end
+					return hud.p2healthy
+				end,
+				enabled = function(n)
+					if n ~= nil then changeConfig("hud", "p2healthenabled", n, hud) end
+					return hud.p2healthenabled
+				end,
+				drawfunc = function()
+					gui.text(hud.p2healthx, hud.p2healthy, modulevars.p2.health,
+						hud.p2healthtextcolour)
+				end
+			})
 		if availablefunctions.playertwoinhitstun then
 			table.insert(registers.guiregister, comboHandlerP2)
 		else
@@ -3379,16 +3480,22 @@ setRegisters = function() -- pre-calc stuff
 	if modulevars.p2.constants.maxhealth and availablefunctions.readplayertwohealth and availablefunctions.writeplayertwohealth and availablefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, healthHandlerP2)
 		table.insert(HUDElements,
-			{ name = "combocounter", x = function(n)
-				if n then changeConfig("hud", "combotextx", n, hud) end
-				return hud.combotextx
-			end, y = function(n)
-				if n then changeConfig("hud", "combotexty", n, hud) end
-				return hud.combotexty
-			end, enabled = function(n)
-				if n ~= nil then changeConfig("hud", "comboenabled", n, hud) end
-				return hud.comboenabled
-			end, drawfunc = drawcomboHUD })
+			{
+				name = "combocounter",
+				x = function(n)
+					if n then changeConfig("hud", "combotextx", n, hud) end
+					return hud.combotextx
+				end,
+				y = function(n)
+					if n then changeConfig("hud", "combotexty", n, hud) end
+					return hud.combotexty
+				end,
+				enabled = function(n)
+					if n ~= nil then changeConfig("hud", "comboenabled", n, hud) end
+					return hud.comboenabled
+				end,
+				drawfunc = drawcomboHUD
+			})
 	else
 		str = ""
 		if not modulevars.p2.constants.maxhealth then
@@ -3435,16 +3542,22 @@ setRegisters = function() -- pre-calc stuff
 
 	if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter then
 		table.insert(HUDElements,
-			{ name = "p1meter", x = function(n)
-				if n then changeConfig("hud", "p1meterx", n, hud) end
-				return hud.p1meterx
-			end, y = function(n)
-				if n then changeConfig("hud", "p1metery", n, hud) end
-				return hud.p1metery
-			end, enabled = function(n)
-				if n ~= nil then changeConfig("hud", "p1meterenabled", n, hud) end
-				return hud.p1meterenabled
-			end, drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end })
+			{
+				name = "p1meter",
+				x = function(n)
+					if n then changeConfig("hud", "p1meterx", n, hud) end
+					return hud.p1meterx
+				end,
+				y = function(n)
+					if n then changeConfig("hud", "p1metery", n, hud) end
+					return hud.p1metery
+				end,
+				enabled = function(n)
+					if n ~= nil then changeConfig("hud", "p1meterenabled", n, hud) end
+					return hud.p1meterenabled
+				end,
+				drawfunc = function() gui.text(hud.p1meterx, hud.p1metery, modulevars.p1.meter, hud.p1metertextcolour) end
+			})
 		if modulevars.p1.constants.maxmeter and availablefunctions.readplayeronemeter and availablefunctions.writeplayeronemeter and availablefunctions.readplayertwohealth and availablefunctions.playertwoinhitstun then
 			table.insert(registers.registerafter, meterHandlerP1)
 		else
@@ -3463,16 +3576,22 @@ setRegisters = function() -- pre-calc stuff
 
 	if modulevars.p2.constants.maxmeter and availablefunctions.readplayertwometer then
 		table.insert(HUDElements,
-			{ name = "p2meter", x = function(n)
-				if n then changeConfig("hud", "p2meterx", n, hud) end
-				return hud.p2meterx
-			end, y = function(n)
-				if n then changeConfig("hud", "p2metery", n, hud) end
-				return hud.p2metery
-			end, enabled = function(n)
-				if n ~= nil then changeConfig("hud", "p2meterenabled", n, hud) end
-				return hud.p2meterenabled
-			end, drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end })
+			{
+				name = "p2meter",
+				x = function(n)
+					if n then changeConfig("hud", "p2meterx", n, hud) end
+					return hud.p2meterx
+				end,
+				y = function(n)
+					if n then changeConfig("hud", "p2metery", n, hud) end
+					return hud.p2metery
+				end,
+				enabled = function(n)
+					if n ~= nil then changeConfig("hud", "p2meterenabled", n, hud) end
+					return hud.p2meterenabled
+				end,
+				drawfunc = function() gui.text(hud.p2meterx, hud.p2metery, modulevars.p2.meter, hud.p2metertextcolour) end
+			})
 		if availablefunctions.writeplayertwometer and availablefunctions.readplayeronehealth and availablefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, meterHandlerP2)
 		else
@@ -3532,30 +3651,41 @@ setRegisters = function() -- pre-calc stuff
 	--kb
 	local KB = inputs.properties.KB
 	table.insert(HUDElements,
-		{ name = "kb", x = function(n)
-			if n then changeConfig("inputs", "kbinputxoffset", n, KB) end
-			return KB.kbinputxoffset
-		end, y = function(n)
-			if n then changeConfig("inputs", "kbinputyoffset", n, KB) end
-			return KB.kbinputyoffset
-		end, enabled = function(n)
-			if n ~= nil then changeConfig("inputs", "kbstate", n, KB) end
-			return KB.kbstate
-		end, drawfunc = function() drawKB(KB.kbinputxoffset, KB.kbinputyoffset) end })
+		{
+			name = "kb",
+			x = function(n)
+				if n then changeConfig("inputs", "kbinputxoffset", n, KB) end
+				return KB.kbinputxoffset
+			end,
+			y = function(n)
+				if n then changeConfig("inputs", "kbinputyoffset", n, KB) end
+				return KB.kbinputyoffset
+			end,
+			enabled = function(n)
+				if n ~= nil then changeConfig("inputs", "kbstate", n, KB) end
+				return KB.kbstate
+			end,
+			drawfunc = function() drawKB(KB.kbinputxoffset, KB.kbinputyoffset) end
+		})
 
-	if scrollingInputReg then                                                                                                                                                                                                                                                                                        -- if scrolling-input-display.lua is loaded
-		local scroll = inputs.properties.scrollinginput                                                                                                                                                                                                                                                              -- keep it short
+	if scrollingInputReg then                     -- if scrolling-input-display.lua is loaded
+		local scroll = inputs.properties
+		.scrollinginput                           -- keep it short
 		table.insert(HUDElements,
 			{
 				name = "p1scrollinginput",
 				x = function(n)
-					if n then changeConfig("inputs", "scrollinginputxoffset", { n, scroll.scrollinginputxoffset[2] },
-							scroll) end
+					if n then
+						changeConfig("inputs", "scrollinginputxoffset", { n, scroll.scrollinginputxoffset[2] },
+							scroll)
+					end
 					return scroll.scrollinginputxoffset[1]
 				end,
 				y = function(n)
-					if n then changeConfig("inputs", "scrollinginputyoffset", { n, scroll.scrollinginputyoffset[2] },
-							scroll) end
+					if n then
+						changeConfig("inputs", "scrollinginputyoffset", { n, scroll.scrollinginputyoffset[2] },
+							scroll)
+					end
 					return scroll.scrollinginputyoffset[1]
 				end,
 				enabled = function(n)
@@ -3567,34 +3697,57 @@ setRegisters = function() -- pre-calc stuff
 					return scroll.scrollingstate[1]
 				end,
 				drawfunc = function() end,
-				movehud = {                                                                                                                                                                                                                                                                                          -- extra functions for scrolling input
-					{ name = "NUMS", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-							inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
-							changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
-						end end },                                                                                                                                                                                                                                                                                   -- toggle numbers
-					{ name = "INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize < 16 then
-								changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize + 1,
-									inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end end end },                                                                                                                                                                                                                                                                           -- increase size of text (prone to crashing)
-					{ name = "DEC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize > 8 then
-								changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize - 1,
-									inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end end end },                                                                                                                                                                                                                                                                           -- increase size of text (prone to crashing)
+				movehud = { -- extra functions for scrolling input
+					{
+						name = "NUMS",
+						func = function(but)
+							if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+								inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
+								changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
+							end
+						end
+					}, -- toggle numbers
+					{
+						name = "INC",
+						func = function(but)
+							if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+								if inputs.properties.scrollinginput.iconsize < 16 then
+									changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize + 1,
+										inputs.properties.scrollinginput)
+									scrollingInputReload()
+								end
+							end
+						end
+					}, -- increase size of text (prone to crashing)
+					{
+						name = "DEC",
+						func = function(but)
+							if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+								if inputs.properties.scrollinginput.iconsize > 8 then
+									changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize - 1,
+										inputs.properties.scrollinginput)
+									scrollingInputReload()
+								end
+							end
+						end
+					}, -- increase size of text (prone to crashing)
 				}
 			})
 		table.insert(HUDElements,
 			{
 				name = "p2scrollinginput",
 				x = function(n)
-					if n then changeConfig("inputs", "scrollinginputxoffset", { scroll.scrollinginputxoffset[1], n },
-							scroll) end
+					if n then
+						changeConfig("inputs", "scrollinginputxoffset", { scroll.scrollinginputxoffset[1], n },
+							scroll)
+					end
 					return scroll.scrollinginputxoffset[2]
 				end,
 				y = function(n)
-					if n then changeConfig("inputs", "scrollinginputyoffset", { scroll.scrollinginputyoffset[1], n },
-							scroll) end
+					if n then
+						changeConfig("inputs", "scrollinginputyoffset", { scroll.scrollinginputyoffset[1], n },
+							scroll)
+					end
 					return scroll.scrollinginputyoffset[2]
 				end,
 				enabled = function(n)
@@ -3606,21 +3759,40 @@ setRegisters = function() -- pre-calc stuff
 					return scroll.scrollingstate[2]
 				end,
 				drawfunc = function() end,
-				movehud = {                                                                                                                                                                                                                                                                                          -- extra functions for scrolling input
-					{ name = "NUMS", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-							inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
-							changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
-						end end },                                                                                                                                                                                                                                                                                   -- toggle numbers
-					{ name = "INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize < 16 then
-								changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize + 1,
-									inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end end end },                                                                                                                                                                                                                                                                           -- increase size of text (prone to crashing)
-					{ name = "DEC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrollinginput.iconsize > 8 then
-								changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize - 1,
-									inputs.properties.scrollinginput)
-								scrollingInputReload()
-							end end end },                                                                                                                                                                                                                                                                           -- increase size of text (prone to crashing)
+				movehud = { -- extra functions for scrolling input
+					{
+						name = "NUMS",
+						func = function(but)
+							if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+								inputs.properties.scrollinginput.frames = not inputs.properties.scrollinginput.frames
+								changeConfig("inputs", "framenumbersenabled", inputs.properties.scrollinginput.frames)
+							end
+						end
+					}, -- toggle numbers
+					{
+						name = "INC",
+						func = function(but)
+							if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+								if inputs.properties.scrollinginput.iconsize < 16 then
+									changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize + 1,
+										inputs.properties.scrollinginput)
+									scrollingInputReload()
+								end
+							end
+						end
+					}, -- increase size of text (prone to crashing)
+					{
+						name = "DEC",
+						func = function(but)
+							if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
+								if inputs.properties.scrollinginput.iconsize > 8 then
+									changeConfig("inputs", "iconsize", inputs.properties.scrollinginput.iconsize - 1,
+										inputs.properties.scrollinginput)
+									scrollingInputReload()
+								end
+							end
+						end
+					}, -- increase size of text (prone to crashing)
 				}
 			})
 	end
@@ -3628,33 +3800,45 @@ setRegisters = function() -- pre-calc stuff
 	if inputDisplayReg then                    -- simple inputs
 		local simple = inputs.properties.simpleinput -- keep it short
 		table.insert(HUDElements,
-			{ name = "p1simpleinput", x = function(n)
-				if n then changeConfig("inputs", "simpleinputxoffset", { n, simple.simpleinputxoffset[2] }, simple) end
-				return simple.simpleinputxoffset[1]
-			end, y = function(n)
-				if n then changeConfig("inputs", "simpleinputyoffset", { n, simple.simpleinputyoffset[2] }, simple) end
-				return simple.simpleinputyoffset[1]
-			end, enabled = function(n)
-				if n ~= nil then
-					changeConfig("inputs", "simplestate", { n, simple.simplestate[2] }, simple)
-					simple.p1simpleinput = simple.simplestate[1]
-				end
-				return simple.simplestate[1]
-			end, drawfunc = function() end })
+			{
+				name = "p1simpleinput",
+				x = function(n)
+					if n then changeConfig("inputs", "simpleinputxoffset", { n, simple.simpleinputxoffset[2] }, simple) end
+					return simple.simpleinputxoffset[1]
+				end,
+				y = function(n)
+					if n then changeConfig("inputs", "simpleinputyoffset", { n, simple.simpleinputyoffset[2] }, simple) end
+					return simple.simpleinputyoffset[1]
+				end,
+				enabled = function(n)
+					if n ~= nil then
+						changeConfig("inputs", "simplestate", { n, simple.simplestate[2] }, simple)
+						simple.p1simpleinput = simple.simplestate[1]
+					end
+					return simple.simplestate[1]
+				end,
+				drawfunc = function() end
+			})
 		table.insert(HUDElements,
-			{ name = "p2simpleinput", x = function(n)
-				if n then changeConfig("inputs", "simpleinputxoffset", { simple.simpleinputxoffset[1], n }, simple) end
-				return simple.simpleinputxoffset[2]
-			end, y = function(n)
-				if n then changeConfig("inputs", "simpleinputyoffset", { simple.simpleinputyoffset[1], n }, simple) end
-				return simple.simpleinputyoffset[2]
-			end, enabled = function(n)
-				if n ~= nil then
-					changeConfig("inputs", "simplestate", { simple.simplestate[1], n }, simple)
-					simple.p2simpleinput = simple.simplestate[2]
-				end
-				return simple.simplestate[2]
-			end, drawfunc = function() end })
+			{
+				name = "p2simpleinput",
+				x = function(n)
+					if n then changeConfig("inputs", "simpleinputxoffset", { simple.simpleinputxoffset[1], n }, simple) end
+					return simple.simpleinputxoffset[2]
+				end,
+				y = function(n)
+					if n then changeConfig("inputs", "simpleinputyoffset", { simple.simpleinputyoffset[1], n }, simple) end
+					return simple.simpleinputyoffset[2]
+				end,
+				enabled = function(n)
+					if n ~= nil then
+						changeConfig("inputs", "simplestate", { simple.simplestate[1], n }, simple)
+						simple.p2simpleinput = simple.simplestate[2]
+					end
+					return simple.simplestate[2]
+				end,
+				drawfunc = function() end
+			})
 	end
 
 	emu.registerbefore(function()
@@ -3671,9 +3855,9 @@ setRegisters = function() -- pre-calc stuff
 		end
 	end)
 
-	local garbage = function()                -- garbage collection
+	local garbage = function()           -- garbage collection
 		if collectgarbage("count") > 5000 then -- not sure how much garbage fbneo can handle at a time
-			collectgarbage("collect")         -- garbage mostly comes from redoing gdimages in scrolling inputs and replays
+			collectgarbage("collect")    -- garbage mostly comes from redoing gdimages in scrolling inputs and replays
 		end
 	end
 
