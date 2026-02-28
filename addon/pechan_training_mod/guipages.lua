@@ -1295,14 +1295,14 @@ for page = 1, total_pages do
 			x = 144,
 			info = { 'P1 Ex character' },
 			func = function()
-				if PECHAN_CONFIG.UI.CURRENT_PLAYER1.has_ex then
+				if PECHAN_CONFIG.UI.CURRENT_PLAYER1 and PECHAN_CONFIG.UI.CURRENT_PLAYER1.has_ex then
 					PECHAN_CONFIG.UI.PLAYER1_EX = not PECHAN_CONFIG.UI.PLAYER1_EX
 				end
 			end,
 			text = "P1 Ex",
 			olcolour = "black",
 			autofunc = function(this)
-				if not PECHAN_CONFIG.UI.CURRENT_PLAYER1.has_ex then
+				if not PECHAN_CONFIG.UI.CURRENT_PLAYER1 or not PECHAN_CONFIG.UI.CURRENT_PLAYER1.has_ex then
 					this.text = tl("ui.character.p1_ex.none")
 				elseif PECHAN_CONFIG.UI.PLAYER1_EX == true then
 					this.text = tl("ui.character.p1_ex.on")
@@ -1317,14 +1317,14 @@ for page = 1, total_pages do
 			x = 144,
 			info = { 'P2 Ex character' },
 			func = function()
-				if PECHAN_CONFIG.UI.CURRENT_PLAYER2.has_ex then
+				if PECHAN_CONFIG.UI.CURRENT_PLAYER2 and PECHAN_CONFIG.UI.CURRENT_PLAYER2.has_ex then
 					PECHAN_CONFIG.UI.PLAYER2_EX = not PECHAN_CONFIG.UI.PLAYER2_EX
 				end
 			end,
 			text = "P2 Ex",
 			olcolour = "black",
 			autofunc = function(this)
-				if not PECHAN_CONFIG.UI.CURRENT_PLAYER2.has_ex then
+				if not PECHAN_CONFIG.UI.CURRENT_PLAYER2 or not PECHAN_CONFIG.UI.CURRENT_PLAYER2.has_ex then
 					this.text = tl("ui.character.p2_ex.none")
 				elseif PECHAN_CONFIG.UI.PLAYER2_EX == true then
 					this.text = tl("ui.character.p2_ex.on")
