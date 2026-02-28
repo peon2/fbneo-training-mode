@@ -474,11 +474,8 @@ local function ACTcodesOfFallingActive()
 	end
 	return false
 end
-local function playerTwoIsFalling()
-	--[[if rb(P2.addresses.hitstatus) == 11 then
-		print ("playerTwoIsFalling")
-	end--]]
-	if rb(P2.addresses.hitstatus) == 1 or rb(P2.addresses.hitstatus) == 11 then
+local function dummyIsFalling()
+	if rb(DummyPlayer.addresses.hitstatus) == 1 or rb(DummyPlayer.addresses.hitstatus) == 11 then
 		if ACTcodesOfFallingActive() then
 			return true
 		end
@@ -815,7 +812,7 @@ local function doMove(move_name, times, conf)
 	end
 
 
-	local tbl = {}
+	local tbl = joypad.get()
 	local p_prefix = "P" .. DummyPlayer.id .. " "
 	for _, value in ipairs(seq[current_move_index_counter]) do
 		if value == 'forward' then
@@ -901,20 +898,20 @@ end
 local function dummyCrouchForATime()
 	return doMove("CROUCH", 10, true)
 end
-local function p2Crouch()
-	local tbl = {}
+local function dummyCrouch()
+	local tbl = joypad.get()
 	tbl["P" .. DummyPlayer.id .. " Down"] = 1
 	joypad.set(tbl)
 end
 
 local function dummyCrouchGuard()
-	local tbl = {}
+	local tbl = joypad.get()
 	tbl[getBlockingDirection()] = 1
 	tbl["P" .. DummyPlayer.id .. " Down"] = 1
 	joypad.set(tbl)
 end
-local function p1CrouchGuard()
-	local tbl = {}
+local function humanCrouchGuard()
+	local tbl = joypad.get()
 	tbl[getBlockingDirection(PECHAN_CONFIG.PLAYERS.PLAYER1.ID)] = 1
 	tbl["P1 Down"] = 1
 	joypad.set(tbl)
@@ -922,7 +919,7 @@ end
 -- Initial state
 
 
-local function playerOnePressedButtons()
+local function humanPressedButtons()
 	local tbl = joypad.get()
 	local buttonsPressed = false
 	local h_prefix = "P" .. HumanPlayer.id .. " "
@@ -1131,7 +1128,7 @@ local function block()
 			gui.text(10, 50, tl("ui.debug.mode_off", "Mode: OFF"))
 		end
 		-- Should have transitioned to start, but if here safely:
-		if PECHAN_CONFIG.GUARD.dummy_action == PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then p2Crouch() end
+		if PECHAN_CONFIG.GUARD.dummy_action == PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then dummyCrouch() end
 		return
 	end
 
@@ -1178,7 +1175,7 @@ local function block()
 				gui.text(10, 70, tl("ui.debug.exec_base_action", "Exec: Base Action"))
 			end
 			-- If not actively blocking (post-sustain or idle), enforce Base Action
-			if PECHAN_CONFIG.GUARD.dummy_action == PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then p2Crouch() end
+			if PECHAN_CONFIG.GUARD.dummy_action == PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING then dummyCrouch() end
 		end
 		return
 	end
@@ -1219,7 +1216,7 @@ local function block()
 					gui.text(10, 70, "Exec: NoBlock (Base)")
 				end
 				-- Execute Base Action
-				if PECHAN_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
+				if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 
 				-- Release choice if action ends
 				if not (HumanPlayer:isActionExecuting() or playerTwoInBlockstun()) then stateMachine.chosenGuardOption = nil end
@@ -1257,7 +1254,7 @@ local function block()
 			-- Reset
 			if not stateMachine.isJustGuardRunning then
 				stateMachine.chosenGuardOption = nil
-				if PECHAN_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
+				if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 			end
 		end
 		return
@@ -1313,7 +1310,7 @@ local function block()
 				gui.text(10, 70, "Exec: AG Base Action")
 			end
 			-- Post-block or idle: Return to default Action stance
-			if PECHAN_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
+			if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 		end
 		return
 	end
@@ -1341,7 +1338,7 @@ local function block()
 			end
 			-- Do base action while waiting
 			-- Do base action while waiting
-			-- if PECHAN_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
+			-- if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 
 			-- Detect hit → arm the guard
 			if wasHit then
@@ -1394,7 +1391,7 @@ local function block()
 				stateMachine.isJustGuardRunning = true
 				current_move_time_counter = 0
 			end
-			-- if PECHAN_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
+			-- if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 		end
 		return
 	end
@@ -1402,14 +1399,18 @@ end
 
 
 local function isOnWakeUp()
-	--gui.text(10, 80, "WakeUp: " .. rw(0x108321))
-	local dummy_air_height_word_address = 0x108321
-	local dummy_is_in_air = (rw(dummy_air_height_word_address) > 0) and rb(P2.addresses.hitstatus) == 1
-
+	--gui.text(10, 80, "WakeUp: " .. rw(dummy_air_height_address))
+	local current_game = PECHAN_CONFIG.get_current_game()
+	local air_height_offset = current_game.offsets.air_height
+	local dummy_air_height_address = DummyPlayer.base_address + air_height_offset
+	local dummy_is_in_air = (rw(dummy_air_height_address) > 0) and rb(DummyPlayer.addresses.hitstatus) == 1
 	return dummy_is_in_air
 end
 local function closeToGround()
-	return rw(0x108321) < 20000 and (rw(0x108321) > 0)
+	local current_game = PECHAN_CONFIG.get_current_game()
+	local air_height_offset = current_game.offsets.air_height
+	local dummy_air_height_address = DummyPlayer.base_address + air_height_offset
+	return rw(dummy_air_height_address) < 20000 and (rw(dummy_air_height_address) > 0)
 end
 
 local function isWakeUpTime()
@@ -1991,7 +1992,7 @@ function StateHandlers.start(ctx)
 			stateMachine.gccd_random_move_ends = false
 		end
 
-		if PECHAN_CONFIG.CPU.GCAB.dummy_can_gcab and playerTwoIsFalling() then
+		if PECHAN_CONFIG.CPU.GCAB.dummy_can_gcab and dummyIsFalling() then
 			if not stateMachine.gcab_random_move_ends then
 				stateMachine.gcab_action_running = true
 				disableCPU()
@@ -2014,15 +2015,15 @@ function StateHandlers.start(ctx)
 		end
 	end
 	-- 3. HIT REVERSAL CHECK
-	local p2_is_hit = DummyPlayer:isBeingHit()
-	if stateMachine.p2_was_in_hitstun and not p2_is_hit and not playerTwoIsFalling() and not isOnWakeUp() then
+	local dummy_is_hit = DummyPlayer:isBeingHit()
+	if stateMachine.dummy_was_in_hitstun and not dummy_is_hit and not dummyIsFalling() and not isOnWakeUp() then
 		if PECHAN_CONFIG.HIT.reversal ~= PECHAN_CONFIG.HIT.REVERSAL_OPTIONS.OFF then
 			transitionToState("hit_reversal")
-			stateMachine.p2_was_in_hitstun = false
+			stateMachine.dummy_was_in_hitstun = false
 			return
 		end
 	end
-	stateMachine.p2_was_in_hitstun = p2_is_hit
+	stateMachine.dummy_was_in_hitstun = dummy_is_hit
 
 	-- 4. WAKEUP
 	if PECHAN_CONFIG.WAKEUP.dummy_waking_up and wakeUpEnabled() then
@@ -2086,12 +2087,12 @@ function StateHandlers.start(ctx)
 
 	-- STANCE
 	if PECHAN_CONFIG.GUARD.dummy_action == 1 then
-		p2Crouch()
+		dummyCrouch()
 	end
 end
 
 function StateHandlers.blocking(ctx)
-	if playerTwoIsFalling() or isOnWakeUp() then
+	if dummyIsFalling() or isOnWakeUp() then
 		transitionToState("start")
 		return
 	end
@@ -2156,7 +2157,7 @@ function StateHandlers.waking_up(ctx)
 end
 
 function StateHandlers.guard_reversal(ctx)
-	if DummyPlayer:isBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
+	if DummyPlayer:isBeingHit() or dummyIsFalling() or isOnWakeUp() then
 		transitionToState("start")
 		return
 	end
@@ -2195,7 +2196,7 @@ function StateHandlers.guard_reversal(ctx)
 end
 
 function StateHandlers.hit_reversal(ctx)
-	if DummyPlayer:isBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
+	if DummyPlayer:isBeingHit() or dummyIsFalling() or isOnWakeUp() then
 		transitionToState("start")
 		return
 	end
