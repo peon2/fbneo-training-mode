@@ -4,126 +4,113 @@
 PECHAN_HELPERS = PECHAN_HELPERS or {}
 
 -- Generates a generic popup menu for errors or context options
-function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y)
+-- entries: list of { label, action, require_click }
+-- require_click: if true, the button only fires on key-DOWN (not release), so the
+--                existing key-up from opening can't accidentally dismiss it
+-- bg_color: optional ARGB integer for the popup background
+function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y, bg_color)
     local popup_entries = {}
     local previous_selection = interactivegui.selection
+    local startx = parent_x - 30
+    local starty = parent_y - 20
 
-    -- Add Title (inactive, stylized)
-    table.insert(popup_entries, {
-        text = title,
-        x = -(#title * 2) + (#entries > 0 and 20 or 0),
-        y = 0,
-        bgcolour = 0x880000FF,
-        olcolour = "white",
-        func = function() end,
-        autofunc = function(i)
-            return function(this)
-                this.textcolour = "yellow"
-            end
-        end,
-    })
-
+    -- Build the clickable entries (NO title as a selectable item)
     for _, entry in ipairs(entries) do
-        table.insert(popup_entries, {
-            text = entry.label,
+        local but = {
+            text     = entry.label,
             bgcolour = 0x222222FF,
             olcolour = "white",
-            releasefunc = function()
-                return function()
-                    if entry.action then entry.action() end
-                    CIG(back_page, previous_selection)
-                end
-            end,
-        })
+        }
+
+        if entry.require_click then
+            -- Fire on key-DOWN only, ignore the release that spawned this popup
+            but.func = function()
+                if entry.action then entry.action() end
+                CIG(back_page, previous_selection)
+            end
+            but.releasefunc = function() end -- absorb the key-up cleanly
+        else
+            -- Standard behaviour: fires when the key is released
+            but.releasefunc = function()
+                if entry.action then entry.action() end
+                CIG(back_page, previous_selection)
+            end
+        end
+
+        table.insert(popup_entries, but)
     end
 
-    guipages["helper_popup"] = createPopUpMenu(guipages[back_page], nil, nil, nil, popup_entries, parent_x - 30,
-        parent_y - 20)
+    guipages["helper_popup"] = createPopUpMenu(
+        guipages[back_page], nil, nil, nil,
+        popup_entries, startx, starty, nil, bg_color, title
+    )
 
     if formatGuiTables then formatGuiTables() end
-    CIG("helper_popup", #entries > 0 and 2 or 1)
+    CIG("helper_popup", 1)
 end
 
--- Specialty helper for error messages
+-- Specialty helper for error messages (red bg, require explicit OK click)
 function PECHAN_HELPERS.show_error_popup(message, back_page, parent_x, parent_y)
     PECHAN_HELPERS.create_context_popup(message, {
         { label = "OK", action = function() end, require_click = true }
-    }, back_page, parent_x, parent_y, 0x880000FF) -- Dark red background for errors
+    }, back_page, parent_x, parent_y, 0x880000FF)
 end
 
 -----------------------------------------------------------------------------------------
--- CORE ENGINE OVERRIDES (MONKEY PATCHES)
--- These intercept the global fbneo-training-mode.lua UI functions safely at runtime
+-- CORE ENGINE OVERRIDE: createPopUpMenu
+-- Wraps the core function to add:
+--   * per-element padding (+4 x/y)
+--   * dynamic background box sized to the widest text
+--   * custom bg_color support
+--   * optional title drawn as pure text above the options (non-selectable)
+-- The 9th arg (bg_color) and 10th arg (title) are addon-only extensions;
+-- the original core function only reads args 1-8 so this is fully safe.
 -----------------------------------------------------------------------------------------
-
 local original_createPopUpMenu = createPopUpMenu
-createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements, startx, starty, numofelements, bg_color)
-    -- Call the original to spawn the internal table
-    local menu = original_createPopUpMenu(BaseMenu, releasefunc, selectfunc, autofunc, Elements, startx, starty,
-        numofelements)
+createPopUpMenu = function(BaseMenu, releasefunc, selectfunc, autofunc, Elements,
+                           startx, starty, numofelements, bg_color, title)
+    -- Call the original with only its known parameters
+    local menu         = original_createPopUpMenu(
+        BaseMenu, releasefunc, selectfunc, autofunc, Elements,
+        startx, starty, numofelements
+    )
 
-    -- Post-process the popup options to inject padding and measure dynamic width
-    local max_text_len = 0
-    local item_count = 0
+    -- Measure width: consider both entries AND the title if provided
+    local max_text_len = title and #title or 0
+    local item_count   = 0
     for _, v in ipairs(menu) do
-        v.x = v.x + 4
-        v.y = v.y + 4
         if type(v) == "table" and v.text then
             max_text_len = math.max(max_text_len, #v.text)
         end
+        -- Nudge each item down by one row to leave room for the title label
+        if title then
+            v.y = (v.y or 0) + 10
+        end
+        -- Add horizontal padding
+        v.x = (v.x or 0) + 4
         item_count = item_count + 1
     end
 
-    local bg_width = math.max(40, (max_text_len * 4) + 12)
-    local bg_height = (item_count * 10) + 8
+    local title_rows    = title and 1 or 0
+    local bg_width      = math.max(40, (max_text_len * 4) + 12)
+    local bg_height     = ((item_count + title_rows) * 10) + 8
 
-    -- Override the background rendering closure injected by the core
+    -- Replace the core's aother_func with ours: solid bg + title text
     menu["aother_func"] = function()
-        gui.box(
-            interactivegui.boxx + startx,
-            interactivegui.boxy + starty,
-            interactivegui.boxx + startx + bg_width,
-            interactivegui.boxy + starty + bg_height,
-            bg_color or 0x000000FF, -- Custom BG color or fallback to black
-            "white"                 -- White outline
-        )
+        local bx = interactivegui.boxx + startx
+        local by = interactivegui.boxy + starty
+
+        -- Solid background box
+        gui.box(bx, by, bx + bg_width, by + bg_height,
+            bg_color or 0x222222FF, "white")
+
+        -- Draw title inside the box if provided
+        if title then
+            gui.text(bx + 4, by + 3, title, "yellow")
+        end
     end
 
     return menu
-end
-
-local original_changeInteractiveGuiSelection = changeInteractiveGuiSelection
-changeInteractiveGuiSelection = function(n)
-    if not interactivegui.enabled then return end
-    local page = interactiveguipages[interactivegui.page]
-
-    -- Calculate direction
-    local dir = 1
-    if n and n < interactivegui.selection then dir = -1 end
-    if n == 0 then dir = -1 end -- explicit wrap-around backwards
-
-    -- Let core perform the raw index mutation
-    original_changeInteractiveGuiSelection(n)
-
-    -- If the new index landed on an unselectable element, recursively skip forward
-    local start_selection = interactivegui.selection
-    while page[interactivegui.selection] and page[interactivegui.selection].unselectable do
-        local target = interactivegui.selection + dir
-
-        -- Wrap around manually for the skip checks
-        if target > #page then
-            target = 1
-        elseif target < 1 then
-            target = #page
-        end
-
-        interactivegui.selection = target
-
-        if interactivegui.selection == start_selection then
-            interactivegui.selection = 1 -- Failsafe
-            break
-        end
-    end
 end
 
 return PECHAN_HELPERS
