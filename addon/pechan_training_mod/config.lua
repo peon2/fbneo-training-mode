@@ -884,7 +884,8 @@ PECHAN_CONFIG = {
     },
 
     CINEMATICS = {
-        active = false,
+        state = "INACTIVE", -- INACTIVE, LOADING, WAITING, PLAYING, FINISHED
+        wait_timer = 0,
         current_dialogue_index = 1,
         dialogues = {},
     },

@@ -2595,6 +2595,16 @@ function KofTrainingRun() -- runs every frame
 		end
 	end
 
+	if emu.romname and emu.romname() == "kof2000" then
+		-- KOF 2000 EXCEPTION: continuously enforce Striker Modes, as the engine overrides them
+		if PECHAN_CONFIG.UI.APPLIED.PLAYER1_STRIKER_MODE and p1_striker_mode_location then
+			wb(p1_striker_mode_location, PECHAN_CONFIG.UI.APPLIED.PLAYER1_STRIKER_MODE)
+		end
+		if PECHAN_CONFIG.UI.APPLIED.PLAYER2_STRIKER_MODE and p2_striker_mode_location then
+			wb(p2_striker_mode_location, PECHAN_CONFIG.UI.APPLIED.PLAYER2_STRIKER_MODE)
+		end
+	end
+
 
 
 	if PECHAN_CONFIG_throw_os_on_jump or PECHAN_CONFIG.CPU.THROW_OS_ON_JUMP then
