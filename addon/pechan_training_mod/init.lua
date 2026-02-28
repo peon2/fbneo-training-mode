@@ -2685,6 +2685,39 @@ function KofTrainingRun() -- runs every frame
 			print("Warning: No handler for state: " .. tostring(stateMachine.currentState))
 		end
 	end
+
+	-- TEMPORARY DUMMY SWAP DEBUG
+	local DUMMY_SWAP_DEBUG = true
+	if DUMMY_SWAP_DEBUG then
+		local d_addr = string.format("0x%X", DummyPlayer.base_address or 0)
+		local h_addr = string.format("0x%X", HumanPlayer.base_address or 0)
+		local d_cpu = rb((DummyPlayer.base_address or 0) + 0x170)
+		local h_cpu = rb((HumanPlayer.base_address or 0) + 0x170)
+		local d_act = DummyPlayer:getRawActionByte()
+		local h_act = HumanPlayer:getRawActionByte()
+		local d_hit = rb(DummyPlayer.addresses.hitstatus or 0)
+		local h_hit = rb(HumanPlayer.addresses.hitstatus or 0)
+
+		gui.text(10, 30, "--- DUMMY SWAP DEBUG ---", "yellow")
+		gui.text(10, 40,
+			string.format("Dummy: P%s [%s] CPU:%02X Act:%02X Hit:%02X", DummyPlayer.id, d_addr, d_cpu, d_act, d_hit))
+		gui.text(10, 50,
+			string.format("Human: P%s [%s] CPU:%02X Act:%02X Hit:%02X", HumanPlayer.id, h_addr, h_cpu, h_act, h_hit))
+		gui.text(10, 60,
+			"Dummy Left: " ..
+			tostring(DummyPlayer:isFacingLeft()) .. " | Human Left: " .. tostring(HumanPlayer:isFacingLeft()))
+
+		if emu.framecount() % 60 == 0 then
+			local f = io.open("addon/pechan_training_mod/dummy_swap_debug.log", "a")
+			if f then
+				f:write(string.format(
+					"Frame %d | Dummy=P%s[%s, CPU:%02X, Act:%02X, Hit:%02X, L_Face:%s] | Human=P%s[%s, CPU:%02X, Act:%02X, Hit:%02X, L_Face:%s]\n",
+					emu.framecount(), DummyPlayer.id, d_addr, d_cpu, d_act, d_hit, tostring(DummyPlayer:isFacingLeft()),
+					HumanPlayer.id, h_addr, h_cpu, h_act, h_hit, tostring(HumanPlayer:isFacingLeft())))
+				f:close()
+			end
+		end
+	end
 end
 
 if registers and registers.guiregister then
