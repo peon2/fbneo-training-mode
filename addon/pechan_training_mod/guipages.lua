@@ -1049,7 +1049,8 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 		text = (player_side == 1 and "P1" or "P2") .. ": " .. (char.name or ""),
 		x = -(#((player_side == 1 and "P1" or "P2") .. ": " .. (char.name or "")) * 2), -- Try to center it roughly
 		y = 0,
-		olcolour = "black",
+		bgcolour = 0x222222FF,
+		olcolour = "white",
 		func = function() end, -- Inactive
 		autofunc = function(i)
 			-- Provide a wrapper that sets text colour on the actual menu item
@@ -1062,6 +1063,8 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 	local function add_option(label, assignment_func)
 		table.insert(popup_entries, {
 			text = label,
+			bgcolour = 0x222222FF,
+			olcolour = "white",
 			releasefunc = function()
 				return function()
 					assignment_func()
