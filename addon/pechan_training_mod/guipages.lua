@@ -1244,9 +1244,9 @@ for page = 1, total_pages do
 			info = { 'P1' },
 			text = "P1",
 			olcolour = "black",
-			func = function(this)
+			func = function()
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
-				generate_character_popup(char, 1, page_name, this.x, this.y)
+				generate_character_popup(char, 1, page_name, basex + 37, yloc)
 			end,
 			autofunc = function(this)
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
@@ -1271,9 +1271,9 @@ for page = 1, total_pages do
 			info = { 'P2' },
 			text = "P2",
 			olcolour = "black",
-			func = function(this)
+			func = function()
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
-				generate_character_popup(char, 2, page_name, this.x, this.y)
+				generate_character_popup(char, 2, page_name, basex + 54, yloc)
 			end,
 			autofunc = function(this)
 				local char = PECHAN_CONFIG.get_current_game().characters[i]
