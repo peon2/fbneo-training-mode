@@ -905,8 +905,8 @@ PECHAN_CONFIG = {
 
     UI = {
         INITIAL_START = true,
-        CURRENT_PLAYER1 = {},
-        CURRENT_PLAYER2 = {},
+        CURRENT_PLAYER1 = nil,
+        CURRENT_PLAYER2 = nil,
         P1_STRIKER1 = nil,
         P2_STRIKER1 = nil,
         P1_STRIKER2 = nil,
