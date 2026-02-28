@@ -799,6 +799,9 @@ local p1_and_dummy_data = {
 				HumanPlayer = P2
 				DummyPlayer = P1
 			end
+			-- Free both players from CPU lock immediately; the loop will re-hijack the correct Dummy if needed
+			wb(P1.base + 0x170, 0x01)
+			wb(P2.base + 0x170, 0x01)
 		end,
 		autofunc = function(this)
 			if PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.OPTIONS.P1 then

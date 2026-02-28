@@ -158,26 +158,26 @@ local functionRunningFlags = {} -- flag to track whether a function is currently
 -- [[ Core Helper Functions ]]
 local function getFacingDirection()
 	if DummyPlayer:isFacingLeft() then
-		return "P2 Left"
+		return "P" .. DummyPlayer.id .. " Left"
 	end
-	return "P2 Right"
+	return "P" .. DummyPlayer.id .. " Right"
 end
 
 local function getBlockingDirection(player_id)
 	if player_id == nil then
-		player_id = PECHAN_CONFIG.PLAYERS.PLAYER2.ID
+		player_id = DummyPlayer.id
 	end
 
-	if player_id == PECHAN_CONFIG.PLAYERS.PLAYER2.ID then
+	if player_id == DummyPlayer.id then
 		if DummyPlayer:isFacingLeft() then
-			return "P2 Right"
+			return "P" .. DummyPlayer.id .. " Right"
 		end
-		return "P2 Left"
-	elseif player_id == PECHAN_CONFIG.PLAYERS.PLAYER1.ID then
+		return "P" .. DummyPlayer.id .. " Left"
+	elseif player_id == HumanPlayer.id then
 		if HumanPlayer:isFacingLeft() then
-			return "P1 Right"
+			return "P" .. HumanPlayer.id .. " Right"
 		end
-		return "P1 Left"
+		return "P" .. HumanPlayer.id .. " Left"
 	end
 end
 
@@ -674,25 +674,25 @@ end
 --[[*** end of General Functions ***]]
 local function getFacingDirection()
 	if DummyPlayer:isFacingLeft() then
-		return "P2 Left"
+		return "P" .. DummyPlayer.id .. " Left"
 	end
-	return "P2 Right"
+	return "P" .. DummyPlayer.id .. " Right"
 end
 local function getBlockingDirection(player_id)
 	if player_id == nil then
-		player_id = PECHAN_CONFIG.PLAYERS.PLAYER2.ID
+		player_id = DummyPlayer.id
 	end
 
-	if player_id == PECHAN_CONFIG.PLAYERS.PLAYER2.ID then
+	if player_id == DummyPlayer.id then
 		if DummyPlayer:isFacingLeft() then
-			return "P2 Right"
+			return "P" .. DummyPlayer.id .. " Right"
 		end
-		return "P2 Left"
-	elseif player_id == PECHAN_CONFIG.PLAYERS.PLAYER1.ID then
+		return "P" .. DummyPlayer.id .. " Left"
+	elseif player_id == HumanPlayer.id then
 		if HumanPlayer:isFacingLeft() then
-			return "P1 Right"
+			return "P" .. HumanPlayer.id .. " Right"
 		end
-		return "P1 Left"
+		return "P" .. HumanPlayer.id .. " Left"
 	end
 end
 
@@ -816,23 +816,24 @@ local function doMove(move_name, times, conf)
 
 
 	local tbl = {}
+	local p_prefix = "P" .. DummyPlayer.id .. " "
 	for _, value in ipairs(seq[current_move_index_counter]) do
 		if value == 'forward' then
 			tbl[getFacingDirection()] = 1
 		elseif value == 'back' then
 			tbl[getBlockingDirection()] = 1
 		elseif value == 'down' then
-			tbl["P2 Down"] = 1
+			tbl[p_prefix .. "Down"] = 1
 		elseif value == 'up' then
-			tbl["P2 Up"] = 1
+			tbl[p_prefix .. "Up"] = 1
 		elseif value == 'a' then
-			tbl["P2 Button A"] = 1
+			tbl[p_prefix .. "Button A"] = 1
 		elseif value == 'b' then
-			tbl["P2 Button B"] = 1
+			tbl[p_prefix .. "Button B"] = 1
 		elseif value == 'c' then
-			tbl["P2 Button C"] = 1
+			tbl[p_prefix .. "Button C"] = 1
 		elseif value == 'd' then
-			tbl["P2 Button D"] = 1
+			tbl[p_prefix .. "Button D"] = 1
 		end
 	end
 
@@ -902,14 +903,14 @@ local function dummyCrouchForATime()
 end
 local function p2Crouch()
 	local tbl = {}
-	tbl["P2 Down"] = 1
+	tbl["P" .. DummyPlayer.id .. " Down"] = 1
 	joypad.set(tbl)
 end
 
 local function dummyCrouchGuard()
 	local tbl = {}
 	tbl[getBlockingDirection()] = 1
-	tbl["P2 Down"] = 1
+	tbl["P" .. DummyPlayer.id .. " Down"] = 1
 	joypad.set(tbl)
 end
 local function p1CrouchGuard()
@@ -924,19 +925,20 @@ end
 local function playerOnePressedButtons()
 	local tbl = joypad.get()
 	local buttonsPressed = false
+	local h_prefix = "P" .. HumanPlayer.id .. " "
 
-	if (tbl["P1 Button A"] and not previousButtonState["P1 Button A"]) or
-		(tbl["P1 Button B"] and not previousButtonState["P1 Button B"]) or
-		(tbl["P1 Button C"] and not previousButtonState["P1 Button C"]) or
-		(tbl["P1 Button D"] and not previousButtonState["P1 Button D"]) then
+	if (tbl[h_prefix .. "Button A"] and not previousButtonState[h_prefix .. "Button A"]) or
+		(tbl[h_prefix .. "Button B"] and not previousButtonState[h_prefix .. "Button B"]) or
+		(tbl[h_prefix .. "Button C"] and not previousButtonState[h_prefix .. "Button C"]) or
+		(tbl[h_prefix .. "Button D"] and not previousButtonState[h_prefix .. "Button D"]) then
 		buttonsPressed = true
 	end
 
 	-- Update the previous button state for the next frame
-	previousButtonState["P1 Button A"] = tbl["P1 Button A"]
-	previousButtonState["P1 Button B"] = tbl["P1 Button B"]
-	previousButtonState["P1 Button C"] = tbl["P1 Button C"]
-	previousButtonState["P1 Button D"] = tbl["P1 Button D"]
+	previousButtonState[h_prefix .. "Button A"] = tbl[h_prefix .. "Button A"]
+	previousButtonState[h_prefix .. "Button B"] = tbl[h_prefix .. "Button B"]
+	previousButtonState[h_prefix .. "Button C"] = tbl[h_prefix .. "Button C"]
+	previousButtonState[h_prefix .. "Button D"] = tbl[h_prefix .. "Button D"]
 
 	return buttonsPressed
 end
@@ -1480,12 +1482,13 @@ local function toggleGuardBreak()
 	end
 end
 
-local cpu_location = 0x108470
 local function enableCPU()
+	local cpu_location = DummyPlayer.base + 0x170
 	wb(cpu_location, 0x81)
 end
 
 local function disableCPU()
+	local cpu_location = DummyPlayer.base + 0x170
 	wb(cpu_location, 0x01)
 end
 
