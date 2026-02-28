@@ -34,7 +34,7 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
             if v.releasefunc then but.releasefunc = v.releasefunc end
             if v.func then but.func = v.func end
             if v.selectfunc then but.selectfunc = v.selectfunc end
-            if v.autofunc then but.autofunc = v.autofunc(i) end    -- autofunc IS a factory
+            if v.autofunc then but.autofunc = v.autofunc(i) end -- autofunc IS a factory
 
             but.text = v.text or tostring(i)
             but.x = v.x or startx
@@ -64,7 +64,8 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
     -- We draw the solid background box, then the title text on top.
     -- The core draw loop draws all items BEFORE calling other_func, so we
     -- draw everything (box + title + items) in other_func to layer correctly.
-    local items_ref = menu -- capture reference
+    local items_ref = menu   -- capture reference
+    local inner_w = bg_w - 4 -- button width (2px margin each side)
     menu.other_func = function()
         local bx = interactivegui.boxx + startx - 2
         local by = interactivegui.boxy + starty - 2
@@ -72,25 +73,32 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
         -- 1. Solid background box
         gui.box(bx, by, bx + bg_w, by + bg_h, bg_color or 0x222222FF, "white")
 
-        -- 2. Title text inside box
+        -- 2. Title text inside box (centered)
         if title then
-            gui.text(bx + 4, by + 3, title, "yellow")
+            local title_pixel_w = #title * 4
+            local title_x = bx + math.floor((bg_w - title_pixel_w) / 2)
+            gui.text(title_x, by + 3, title, "yellow")
         end
 
-        -- 3. Redraw items on top of box so they appear above it
+        -- 3. Redraw items on top of box — full width, centered text
         local boxx   = interactivegui.boxx
         local boxy   = interactivegui.boxy
         local sel    = interactivegui.selection
         local selcol = interactivegui.selectioncolour
 
         for idx, v in ipairs(items_ref) do
-            local ix = (v.x or 0) + boxx
-            local iy = (v.y or 0) + boxy
+            local ix   = bx + 2 -- left margin inside box
+            local iy   = (v.y or 0) + boxy
             local text = v.text or ""
-            local w = #text * 4
-            local ol = (idx == sel) and selcol or (v.olcolour or "white")
-            gui.box(ix, iy, ix + w + 4, iy + 10, v.bgcolour or bg_color, ol)
-            gui.text(ix + 3, iy + 2, text, v.textcolour or "white")
+            local ol   = (idx == sel) and selcol or (v.olcolour or "white")
+
+            -- Button stretches full inner width
+            gui.box(ix, iy, ix + inner_w, iy + 10, v.bgcolour or bg_color, ol)
+
+            -- Center text within the button
+            local text_pixel_w = #text * 4
+            local text_x = ix + math.floor((inner_w - text_pixel_w) / 2)
+            gui.text(text_x, iy + 2, text, v.textcolour or "white")
         end
     end
 
