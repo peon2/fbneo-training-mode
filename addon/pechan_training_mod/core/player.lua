@@ -52,8 +52,74 @@ function Player:getRawActionByte()
     return rb(self.addresses.action)
 end
 
+function Player:setAction(action)
+    wb(self.addresses.action, action)
+end
+
+function Player:isFacingLeft()
+    if self.id == 1 then
+        if _G.playerOneFacingLeft then return _G.playerOneFacingLeft() end
+    else
+        if _G.playerTwoFacingLeft then return _G.playerTwoFacingLeft() end
+    end
+    return false
+end
+
 function Player:getExecutingAction()
     return rw(self.addresses.action)
+end
+
+function Player:isActionExecuting()
+    local action_filtered = {
+        [0] = true,
+        [1] = true,
+        [2] = true,
+        [3] = true,
+        [4] = true,
+        [5] = true,
+        [6] = true,
+        [7] = true,
+        [8] = true,
+        [9] = true,
+        [10] = true,
+        [11] = true,
+        [12] = true,
+        [13] = true,
+        [14] = true,
+        [15] = true,
+        [16] = true,
+        [17] = true,
+        [18] = true,
+        [19] = true,
+        [20] = true,
+        [21] = true,
+        [22] = true,
+        [23] = true,
+        [24] = true,
+        [45] = true,
+        [46] = true,
+        [47] = true,
+        [48] = true,
+        [49] = true,
+        [50] = true,
+        [51] = true,
+        [52] = true,
+        [53] = true,
+        [54] = true,
+        [55] = true,
+        [56] = true,
+        [79] = true,
+        [157] = true,
+        [158] = true,
+        [159] = true,
+        [232] = true,
+        [233] = true
+    }
+
+    if not action_filtered[self:getRawActionByte()] then
+        return true
+    end
+    return false
 end
 
 function Player:getCurrentBlockstun()
@@ -145,7 +211,7 @@ function Player:updateAdvantage(opponent)
 
         -- 4. LIVE CALCULATION
         self.advantage_state.frame_advantage = self.advantage_state.blockstun_frames -
-        self.advantage_state.recovery_frames
+            self.advantage_state.recovery_frames
 
         -- 5. TERMINATION
         if (op_blockstun == 0 and op_hitstun == 0) and act == 0 then

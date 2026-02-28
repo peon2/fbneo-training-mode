@@ -154,7 +154,7 @@ local functionRunningFlags = {} -- flag to track whether a function is currently
 
 -- [[ Core Helper Functions ]]
 local function getFacingDirection()
-	if playerTwoFacingLeft() then
+	if DummyPlayer:isFacingLeft() then
 		return "P2 Left"
 	end
 	return "P2 Right"
@@ -166,12 +166,12 @@ local function getBlockingDirection(player_id)
 	end
 
 	if player_id == PECHAN_CONFIG.PLAYERS.PLAYER2.ID then
-		if playerTwoFacingLeft() then
+		if DummyPlayer:isFacingLeft() then
 			return "P2 Right"
 		end
 		return "P2 Left"
 	elseif player_id == PECHAN_CONFIG.PLAYERS.PLAYER1.ID then
-		if playerOneFacingLeft() then
+		if HumanPlayer:isFacingLeft() then
 			return "P1 Right"
 		end
 		return "P1 Left"
@@ -234,16 +234,7 @@ dummy_reversal_random = customconfig.dummy_reversal_random ]]
 -- 10837c == 00 think is oponent recovering ko
 
 
-local function playerOneIsBeingHit()
-	return rb(P1.addresses.hitstatus) ~= 0
-end
 
-local function playerTwoIsBeingHit()
-	return rb(P2.addresses.hitstatus) ~= 0
-end
-local function dummyMoveIsActive()
-	return rb(P2.addresses.action) ~= 0
-end
 local last_frame = emu.framecount()
 
 
@@ -259,65 +250,7 @@ end
 
 local base_action_adress = P1.addresses.hitstatus + 1
 
-local function P1ActionIsExecuting()
-	local action_filtered = {
-		[0] = true,
-		[1] = true,
-		[2] = true,
-		[3] = true,
-		[4] = true,
-		[5] = true,
-		[6] = true,
-		[7] = true,
-		[8] = true,
-		[9] = true,
-		[10] = true,
-		[11] = true,
-		[12] = true,
-		[13] = true,
-		[14] = true,
-		[15] = true,
-		[16] = true,
-		[17] = true,
-		[18] = true,
-		[19] = true,
-		[20] = true,
-		[21] = true,
-		[22] = true,
-		[23] = true,
-		[24] = true,
-		[45] = true,
-		[46] = true,
-		[47] = true,
-		[48] = true,
-		[49] = true,
-		[50] = true,
-		[51] = true,
-		[52] = true,
-		[53] = true,
-		[54] = true,
-		[55] = true,
-		[56] = true,
-		[79] = true,
-		[157] = true,
-		[158] = true,
-		[159] = true,
-		[232] = true,
-		[233] = true
-	}
 
-	if not action_filtered[rb(base_action_adress)] then
-		return true
-	end
-	return false
-end
-
-local function getP2RawActionByte()
-	return rb(P2.addresses.action)
-end
-local function P2SetAction(action)
-	wb(P2.addresses.action, action)
-end
 local current_p1_base_action = 0
 local past_p1_base_action = 0
 
@@ -395,7 +328,7 @@ local function p2CurrentBlockstun()
 end
 
 local function p2CurrentHitstun()
-	if playerTwoIsBeingHit() then
+	if DummyPlayer:isBeingHit() then
 		local current_frame = emu.framecount()
 		if current_frame ~= p2_hit_stun_last_updated_frame then
 			p2_hit_stun_last_updated_frame = current_frame
@@ -461,7 +394,7 @@ local function p1CurrentBlockstun()
 end
 
 local function p1CurrentHitstun()
-	if playerOneIsBeingHit() then
+	if HumanPlayer:isBeingHit() then
 		local current_frame = emu.framecount()
 		if current_frame ~= p1_hitstun_last_updated_frame then
 			p1_hitstun_last_updated_frame = current_frame
@@ -737,7 +670,7 @@ end
 
 --[[*** end of General Functions ***]]
 local function getFacingDirection()
-	if playerTwoFacingLeft() then
+	if DummyPlayer:isFacingLeft() then
 		return "P2 Left"
 	end
 	return "P2 Right"
@@ -748,12 +681,12 @@ local function getBlockingDirection(player_id)
 	end
 
 	if player_id == PECHAN_CONFIG.PLAYERS.PLAYER2.ID then
-		if playerTwoFacingLeft() then
+		if DummyPlayer:isFacingLeft() then
 			return "P2 Right"
 		end
 		return "P2 Left"
 	elseif player_id == PECHAN_CONFIG.PLAYERS.PLAYER1.ID then
-		if playerOneFacingLeft() then
+		if HumanPlayer:isFacingLeft() then
 			return "P1 Right"
 		end
 		return "P1 Left"
@@ -1005,7 +938,7 @@ local function playerOnePressedButtons()
 	return buttonsPressed
 end
 local function dummyGuardForATime()
-	if P1ActionIsExecuting() then
+	if HumanPlayer:isActionExecuting() then
 		return doMove('GUARD_BACK', 10, true)
 	end
 end
@@ -1204,7 +1137,7 @@ local function block()
 		end
 		-- ALWAYS GUARD
 		-- Initial trigger: ONLY IF P1 IS EXECUTING OR P2 ENTERED BLOCKSTUN
-		local isAttackTriggered = P1ActionIsExecuting() or playerTwoInBlockstun()
+		local isAttackTriggered = HumanPlayer:isActionExecuting() or playerTwoInBlockstun()
 
 		if (isAttackTriggered) and not stateMachine.isJustGuardRunning then
 			if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
@@ -1260,9 +1193,9 @@ local function block()
 		-- If Block -> Execute Guard (Stand/Crouch based on dummy_action).
 		-- If NoBlock -> Execute Base Action (Stand/Crouch based on dummy_action).
 
-		if P1ActionIsExecuting() or playerTwoInBlockstun() or stateMachine.chosenGuardOption then
+		if HumanPlayer:isActionExecuting() or playerTwoInBlockstun() or stateMachine.chosenGuardOption then
 			-- INITIAL DECISION
-			if not stateMachine.chosenGuardOption and (P1ActionIsExecuting() or playerTwoInBlockstun()) then
+			if not stateMachine.chosenGuardOption and (HumanPlayer:isActionExecuting() or playerTwoInBlockstun()) then
 				local randomNumber = math.random(1, 100)
 				if randomNumber <= percentage_of_guard then
 					stateMachine.chosenGuardOption = "Block"
@@ -1284,7 +1217,7 @@ local function block()
 				if PECHAN_CONFIG.GUARD.dummy_action == 1 then p2Crouch() end
 
 				-- Release choice if action ends
-				if not (P1ActionIsExecuting() or playerTwoInBlockstun()) then stateMachine.chosenGuardOption = nil end
+				if not (HumanPlayer:isActionExecuting() or playerTwoInBlockstun()) then stateMachine.chosenGuardOption = nil end
 			elseif stateMachine.chosenGuardOption == "Block" then
 				-- Initialize Guard if needed
 				if not stateMachine.isJustGuardRunning then
@@ -1341,7 +1274,7 @@ local function block()
 		end
 
 		-- Initial trigger
-		local isAttackTriggered = P1ActionIsExecuting() or playerTwoInBlockstun()
+		local isAttackTriggered = HumanPlayer:isActionExecuting() or playerTwoInBlockstun()
 		if isAttackTriggered and not stateMachine.isJustGuardRunning then
 			if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
 				gui.text(10, 60, tl("ui.debug.trigger_new_ag", "Trigger: NEW (AG)"))
@@ -1390,7 +1323,7 @@ local function block()
 		local hitstun = p2CurrentHitstun()
 		local wasHit = hitstun > 0
 		local isBlocking = playerTwoInBlockstun()
-		local isAttackTriggered = P1ActionIsExecuting() or isBlocking
+		local isAttackTriggered = HumanPlayer:isActionExecuting() or isBlocking
 
 		if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
 			gui.text(10, 110, "Hitstun: " .. hitstun .. " Trig:" .. tostring(one_hit_guard_triggered))
@@ -1475,7 +1408,7 @@ local function closeToGround()
 end
 
 local function isWakeUpTime()
-	if getP2RawActionByte() == 52 then
+	if DummyPlayer:getRawActionByte() == 52 then
 		stateMachine.is_a_soft_reset = true
 		return true
 	elseif stateMachine.is_a_soft_reset then
@@ -1854,7 +1787,7 @@ local function draw_player_advantage(player, x, y)
 				color = "red"
 			end
 			local label = (player.advantage_state.adv_type == "Block") and ("P" .. player.id .. " Block Adv: ") or
-			("P" .. player.id .. " Hit Adv: ")
+				("P" .. player.id .. " Hit Adv: ")
 			gui.text(x, y, label .. player.advantage_state.frame_advantage, color)
 		end
 	end
@@ -2032,7 +1965,7 @@ local StateHandlers = {}
 
 function StateHandlers.start(ctx)
 	-- RESET / INTERRUPT
-	if playerTwoIsBeingHit() then
+	if DummyPlayer:isBeingHit() then
 		iddle_time_running = false
 		iddle_finish_time = 0
 		stateMachine.active_wake_up = false
@@ -2075,7 +2008,7 @@ function StateHandlers.start(ctx)
 		end
 	end
 	-- 3. HIT REVERSAL CHECK
-	local p2_is_hit = playerTwoIsBeingHit()
+	local p2_is_hit = DummyPlayer:isBeingHit()
 	if stateMachine.p2_was_in_hitstun and not p2_is_hit and not playerTwoIsFalling() and not isOnWakeUp() then
 		if PECHAN_CONFIG.HIT.reversal ~= PECHAN_CONFIG.HIT.REVERSAL_OPTIONS.OFF then
 			transitionToState("hit_reversal")
@@ -2098,7 +2031,7 @@ function StateHandlers.start(ctx)
 
 	if PECHAN_CONFIG.GUARD.guard_mode > PECHAN_CONFIG.GUARD.MODE_OPTIONS.OFF and not isOnWakeUp() and not stateMachine.active_wake_up then
 		if PECHAN_CONFIG.GUARD.guard_mode == PECHAN_CONFIG.GUARD.MODE_OPTIONS.ONE_HIT_GUARD then
-			if playerTwoIsBeingHit() then
+			if DummyPlayer:isBeingHit() then
 				transitionToState("blocking")
 				return
 			end
@@ -2217,7 +2150,7 @@ function StateHandlers.waking_up(ctx)
 end
 
 function StateHandlers.guard_reversal(ctx)
-	if playerTwoIsBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
+	if DummyPlayer:isBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
 		transitionToState("start")
 		return
 	end
@@ -2256,7 +2189,7 @@ function StateHandlers.guard_reversal(ctx)
 end
 
 function StateHandlers.hit_reversal(ctx)
-	if playerTwoIsBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
+	if DummyPlayer:isBeingHit() or playerTwoIsFalling() or isOnWakeUp() then
 		transitionToState("start")
 		return
 	end
@@ -2404,14 +2337,14 @@ function KofTrainingRun() -- runs every frame
 		if PECHAN_CONFIG.DEBUG.GUARD == 1 then
 			gui.text(20, 100, "dummy guarding", "yellow")
 		end
-		if getP2RawActionByte() == 2 or getP2RawActionByte() == 1 or getP2RawActionByte() == 46 or getP2RawActionByte() == 47 or getP2RawActionByte() == 48 or getP2RawActionByte() == 49 or getP2RawActionByte() == 50 then
+		if DummyPlayer:getRawActionByte() == 2 or DummyPlayer:getRawActionByte() == 1 or DummyPlayer:getRawActionByte() == 46 or DummyPlayer:getRawActionByte() == 47 or DummyPlayer:getRawActionByte() == 48 or DummyPlayer:getRawActionByte() == 49 or DummyPlayer:getRawActionByte() == 50 then
 			stateMachine.dummy_position = rw(0x108318)
-			if playerTwoFacingLeft then
+			if DummyPlayer:isFacingLeft() then
 				ww(0x108318, stateMachine.dummy_position)
 			else
 				ww(0x108318, stateMachine.dummy_position)
 			end
-			P2SetAction(0)
+			DummyPlayer:setAction(0)
 		end
 	end
 
