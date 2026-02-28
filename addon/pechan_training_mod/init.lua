@@ -2689,6 +2689,52 @@ function KofTrainingRun() -- runs every frame
 			print("Warning: No handler for state: " .. tostring(stateMachine.currentState))
 		end
 	end
+
+	-- TEMPORARY DUMMY SWAP SCROLLING DEBUG & INPUT LOGGER
+	local DUMMY_SWAP_DEBUG = true
+	if DUMMY_SWAP_DEBUG then
+		if _G.swap_debug_lines == nil then _G.swap_debug_lines = {} end
+
+		local function get_active_inputs(player_id)
+			local tbl = joypad.get()
+			local active = {}
+			for k, v in pairs(tbl) do
+				if string.sub(k, 1, 2) == "P" .. player_id and v == 1 then
+					table.insert(active, k)
+				end
+			end
+			return table.concat(active, "|")
+		end
+
+		local d_addr = string.format("%X", DummyPlayer.base_address or 0)
+		local h_addr = string.format("%X", HumanPlayer.base_address or 0)
+		local d_cpu = rb((DummyPlayer.base_address or 0) + 0x170)
+		local h_cpu = rb((HumanPlayer.base_address or 0) + 0x170)
+
+		local d_in = get_active_inputs(DummyPlayer.id)
+		local h_in = get_active_inputs(HumanPlayer.id)
+
+		local line = string.format("F:%d D[%s:%s|C:%02X] %s | H[%s:%s|C:%02X] %s",
+			emu.framecount(), DummyPlayer.id, d_addr, d_cpu, d_in, HumanPlayer.id, h_addr, h_cpu, h_in)
+
+		table.insert(_G.swap_debug_lines, line)
+		if #_G.swap_debug_lines > 15 then
+			table.remove(_G.swap_debug_lines, 1)
+		end
+
+		-- Draw semi-transparent dark background
+		gui.box(0, 20, 320, 160, 0xAA000000, 0x00000000)
+		for i, l in ipairs(_G.swap_debug_lines) do
+			gui.text(5, 20 + (i * 9), l, "yellow")
+		end
+
+		-- Log to file every frame
+		local f = io.open("addon/pechan_training_mod/dummy_swap_debug.log", "a")
+		if f then
+			f:write(line .. "\n")
+			f:close()
+		end
+	end
 end
 
 if registers and registers.guiregister then
