@@ -1483,12 +1483,12 @@ local function toggleGuardBreak()
 end
 
 local function enableCPU()
-	local cpu_location = DummyPlayer.base_address + 0x170
+	local cpu_location = DummyPlayer.base + 0x170
 	wb(cpu_location, 0x81)
 end
 
 local function disableCPU()
-	local cpu_location = DummyPlayer.base_address + 0x170
+	local cpu_location = DummyPlayer.base + 0x170
 	wb(cpu_location, 0x01)
 end
 
