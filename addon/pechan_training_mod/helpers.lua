@@ -38,7 +38,7 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
 
             but.text = v.text or tostring(i)
             but.x = v.x or startx
-            but.y = v.y or (starty + y_offset + (i - 1) * 10)
+            but.y = v.y or (starty + y_offset + (i - 1) * 12)
 
             -- Carry over visual properties
             if v.bgcolour then but.bgcolour = v.bgcolour end
@@ -58,7 +58,7 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
     -- Compute background dimensions
     local item_count = #menu
     local bg_w = math.max(48, max_text_len * 4 + 16)
-    local bg_h = (item_count + title_rows) * 10 + 8
+    local bg_h = (item_count + title_rows) * 12 + 8
 
     -- other_func is called every frame by the draw loop (line 2320 of core).
     -- We draw the solid background box, then the title text on top.
