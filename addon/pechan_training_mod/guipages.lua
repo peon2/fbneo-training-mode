@@ -1187,11 +1187,10 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 
 	-- Create the dynamic popup bound to the current selection. We pass it off to InteractiveGUI by wrapping it.
 	-- `interactiveguipages[interactivegui.page]` is the current character list page
-	-- We pass `guipages[interactivegui.page]` to `createPopUpMenu` to inherit its references if needed.
-	local page_index = tonumber(back_page:match("%d+"))
+	-- We pass `guipages[back_page]` to `createPopUpMenu` to inherit its references if needed.
 
 	-- We construct the popup on the fly, map it to a temporary string key "char_popup"
-	guipages["char_popup"] = createPopUpMenu(guipages[page_index + 3], nil, nil, nil, popup_entries, parent_x - 30,
+	guipages["char_popup"] = createPopUpMenu(guipages[back_page], nil, nil, nil, popup_entries, parent_x - 30,
 		parent_y - 20)
 
 	-- Re-run the table formatter to ensure navigation inside the popup works
