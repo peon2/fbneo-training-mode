@@ -189,6 +189,16 @@ return {
                 apply_changes = ">>> APPLY CHANGES <<<",
                 prev_page = "<< Prev Page",
                 next_page = "Next Page >>",
+                error = {
+                    p1_missing = "P1 No character selected!",
+                    p2_missing = "P2 No character selected!",
+                    p1_s1_missing = "P1 Striker 1 missing!",
+                    p1_s2_missing = "P1 Striker 2 missing!",
+                    p1_s3_missing = "P1 Striker 3 missing!",
+                    p2_s1_missing = "P2 Striker 1 missing!",
+                    p2_s2_missing = "P2 Striker 2 missing!",
+                    p2_s3_missing = "P2 Striker 3 missing!",
+                },
             },
             debug = {
                 block = "Debug Block: %{state}",

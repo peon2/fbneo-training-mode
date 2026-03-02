@@ -1,5 +1,15 @@
 # KOF Training Mode Changelog
 
+## Bug Fixes
+
+- **Input Coupling & P1 Disconnection Fix (`init.lua`, `helpers.lua`)**
+  - Resolved a critical issue where dummy actions (P2) would overwrite the entire input state, causing Player 1 to become unresponsive ("disconnect").
+  - Implemented `pechanJoypadSet` to merge addon inputs into the global `inputs.setinputs` table instead of using `joypad.set` directly.
+  - Relocated training loop logic to `registers.registerbefore` to ensure atomic input merging before the main script applies inputs to the emulator.
+- **1-Hit Guard Crouching Fix (`init.lua`)**
+  - Fixed a bug where the dummy would stand up while waiting for a hit in 1-hit guard mode even if set to crouching.
+  - Decoupled dummy stance logic from Player 1's action state to ensure independent behavior.
+
 ## Features & Enhancements
 
 - **Configurable Game Options Architecture (`config.lua`, `guipages.lua`, `init.lua`)**

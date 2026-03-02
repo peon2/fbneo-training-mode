@@ -799,9 +799,6 @@ local p1_and_dummy_data = {
 				HumanPlayer = P2
 				DummyPlayer = P1
 			end
-			-- Free both players from CPU lock immediately; the loop will re-hijack the correct Dummy if needed
-			wb(P1.base_address + 0x170, 0x01)
-			wb(P2.base_address + 0x170, 0x01)
 		end,
 		autofunc = function(this)
 			if PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.OPTIONS.P1 then
@@ -1487,38 +1484,38 @@ for page = 1, total_pages do
 			local current_game = PECHAN_CONFIG.get_current_game()
 
 			if not PECHAN_CONFIG.UI.CURRENT_PLAYER1 then
-				PECHAN_HELPERS.show_error_popup("P1 No character selected!", page_name, 144, 70)
+				PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_missing"), page_name, 144, 70)
 				return
 			end
 			if not PECHAN_CONFIG.UI.CURRENT_PLAYER2 then
-				PECHAN_HELPERS.show_error_popup("P2 No character selected!", page_name, 144, 70)
+				PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_missing"), page_name, 144, 70)
 				return
 			end
 
 			if current_game.has_strikers then
 				if not (PECHAN_CONFIG.UI.P1_STRIKER1 and PECHAN_CONFIG.UI.P1_STRIKER1.code) then
-					PECHAN_HELPERS.show_error_popup("P1 Striker 1 missing!", page_name, 144, 70)
+					PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_s1_missing"), page_name, 144, 70)
 					return
 				end
 				if not (PECHAN_CONFIG.UI.P2_STRIKER1 and PECHAN_CONFIG.UI.P2_STRIKER1.code) then
-					PECHAN_HELPERS.show_error_popup("P2 Striker 1 missing!", page_name, 144, 70)
+					PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_s1_missing"), page_name, 144, 70)
 					return
 				end
 				if current_game.has_3_strikers then
 					if not (PECHAN_CONFIG.UI.P1_STRIKER2 and PECHAN_CONFIG.UI.P1_STRIKER2.code) then
-						PECHAN_HELPERS.show_error_popup("P1 Striker 2 missing!", page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_s2_missing"), page_name, 144, 70)
 						return
 					end
 					if not (PECHAN_CONFIG.UI.P1_STRIKER3 and PECHAN_CONFIG.UI.P1_STRIKER3.code) then
-						PECHAN_HELPERS.show_error_popup("P1 Striker 3 missing!", page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_s3_missing"), page_name, 144, 70)
 						return
 					end
 					if not (PECHAN_CONFIG.UI.P2_STRIKER2 and PECHAN_CONFIG.UI.P2_STRIKER2.code) then
-						PECHAN_HELPERS.show_error_popup("P2 Striker 2 missing!", page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_s2_missing"), page_name, 144, 70)
 						return
 					end
 					if not (PECHAN_CONFIG.UI.P2_STRIKER3 and PECHAN_CONFIG.UI.P2_STRIKER3.code) then
-						PECHAN_HELPERS.show_error_popup("P2 Striker 3 missing!", page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_s3_missing"), page_name, 144, 70)
 						return
 					end
 				end

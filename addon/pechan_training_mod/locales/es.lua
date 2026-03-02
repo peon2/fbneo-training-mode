@@ -189,6 +189,16 @@ return {
                 apply_changes = ">>> APLICAR CAMBIOS <<<",
                 prev_page = "<< Pág Anterior",
                 next_page = "Sig Pág >>",
+                error = {
+                    p1_missing = "¡J1 No tiene personaje seleccionado!",
+                    p2_missing = "¡J2 No tiene personaje seleccionado!",
+                    p1_s1_missing = "¡J1 Falta Asistente 1!",
+                    p1_s2_missing = "¡J1 Falta Asistente 2!",
+                    p1_s3_missing = "¡J1 Falta Asistente 3!",
+                    p2_s1_missing = "¡J2 Falta Asistente 1!",
+                    p2_s2_missing = "¡J2 Falta Asistente 2!",
+                    p2_s3_missing = "¡J2 Falta Asistente 3!",
+                },
             },
             debug = {
                 block = "Debug Bloqueo: %{state}",
