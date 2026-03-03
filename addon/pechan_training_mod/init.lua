@@ -5,7 +5,7 @@ require("addon.pechan_training_mod.config")
 require("addon.pechan_training_mod.helpers")
 local rom_name = emu.romname() or "unknown"
 if PECHAN_CONFIG.SUPPORTED_GAMES[rom_name] then
-	print("Pechan's Training mode activated for: " .. rom_name)
+	-- print("Pechan's Training mode activated for: " .. rom_name)
 else
 	return
 end
@@ -41,7 +41,7 @@ local frame_data = require("addon.pechan_training_mod.frame_data")
 -- Debug Viewer Module
 DebugViewer = require("addon.pechan_training_mod.utils.debug_viewer")
 DebugViewer.setEnabled(false)
-DebugViewer.log_to_file = true
+DebugViewer.log_to_file = false
 
 -- AI and Trial Mode Modules
 local AI = require("addon.pechan_training_mod.ai.init")
@@ -98,6 +98,10 @@ local stateMachine = {
 	is_a_soft_reset = false,
 	-- Migrated variables
 	active_wake_up = false,
+
+	guardReversalEvent = { active = false, handled = false },
+
+	-- ... rest of stateMachine ...
 	isJustGuardRunning = false,
 	chosenGuardOption = nil,
 	last_do_move_name = nil,
@@ -114,11 +118,6 @@ local stateMachine = {
 	gcab_action_running = false,
 	-- WakeUp Event Manager Data
 	wakeUpEvent = {
-		active = false,
-		handled = false,
-	},
-	-- Guard Reversal Event Manager Data
-	guardReversalEvent = {
 		active = false,
 		handled = false,
 	}
@@ -166,76 +165,7 @@ local cooldowns = {}            -- Table to store cooldowns for different functi
 local functionRunningFlags = {} -- flag to track whether a function is currently running
 
 -- [[ Core Helper Functions ]]
-
--- Returns the effective joypad port ID for the Dummy's joypad.set calls.
--- When the 3-coin input swap is active the physical channels are flipped,
--- so we must use the opposite ID to keep joypad.set targeting the right pad.
-local function getDummyPadId()
-	if inputs and inputs.properties and inputs.properties.enableinputswap then
-		return DummyPlayer.id == 1 and 2 or 1
-	end
-	return DummyPlayer.id
-end
-
-local function getHumanPadId()
-	if inputs and inputs.properties and inputs.properties.enableinputswap then
-		return HumanPlayer.id == 1 and 2 or 1
-	end
-	return HumanPlayer.id
-end
-
-local function getFacingDirection()
-	if DummyPlayer:isFacingLeft() then
-		return "P" .. getDummyPadId() .. " Left"
-	end
-	return "P" .. getDummyPadId() .. " Right"
-end
-
-local function getBlockingDirection(player_id)
-	if player_id == nil then
-		player_id = DummyPlayer.id
-	end
-
-	if player_id == DummyPlayer.id then
-		if DummyPlayer:isFacingLeft() then
-			return "P" .. getDummyPadId() .. " Right"
-		end
-		return "P" .. getDummyPadId() .. " Left"
-	elseif player_id == HumanPlayer.id then
-		if HumanPlayer:isFacingLeft() then
-			return "P" .. getHumanPadId() .. " Right"
-		end
-		return "P" .. getHumanPadId() .. " Left"
-	end
-end
-
-
-local function transitionToState(newState)
-	stateMachine.lastState = stateMachine.currentState
-	stateMachine.currentState = newState
-	if PECHAN_CONFIG.DEBUG.STATE == 1 then
-		print("Transitioned to state:", newState)
-	end
-
-	delay_count = 0
-	if newState == "start" or newState == "blocking" then
-		stateMachine.active_wake_up = false
-	end
-end
-
-local function delay(delay_frames, functionToExecute, ...)
-	if delay_count < delay_frames then
-		delay_count = delay_count + 1
-		return true
-	end
-
-	local res = functionToExecute(...)
-	if res == false then
-		delay_count = 0
-		return false
-	end
-	return true
-end
+-- (Redundant block removed, moved to line 681 for unification)
 --[[ customconfig = {
 	dummy_guard = 0,
 	dummy_random_guard = 0,
@@ -841,8 +771,8 @@ local function doMove(move_name, times, conf)
 	end
 
 
-	local tbl = joypad.get()
-	local p_prefix = "P" .. getDummyPadId() .. " "
+	local tbl = {} -- Surgical Fix: Start with an empty table
+	local p_prefix = "P" .. DummyPlayer.id .. " "
 	for _, value in ipairs(seq[current_move_index_counter]) do
 		if value == 'forward' then
 			tbl[getFacingDirection()] = 1
@@ -928,22 +858,21 @@ local function dummyCrouchForATime()
 	return doMove("CROUCH", 10, true)
 end
 local function dummyCrouch()
-	local tbl = joypad.get()
-	tbl["P" .. getDummyPadId() .. " Down"] = 1
-	pechanJoypadSet(tbl)
+	local p_prefix = "P" .. DummyPlayer.id .. " "
+	pechanJoypadSet({ [p_prefix .. "Down"] = 1 })
 end
 
 local function dummyCrouchGuard()
-	local tbl = joypad.get()
-	tbl[getBlockingDirection()] = 1
-	tbl["P" .. getDummyPadId() .. " Down"] = 1
-	pechanJoypadSet(tbl)
+	pechanJoypadSet({
+		[getBlockingDirection()] = 1,
+		["P" .. DummyPlayer.id .. " Down"] = 1
+	})
 end
 local function humanCrouchGuard()
-	local tbl = joypad.get()
-	tbl[getBlockingDirection(HumanPlayer.id)] = 1
-	tbl["P" .. getHumanPadId() .. " Down"] = 1
-	pechanJoypadSet(tbl)
+	pechanJoypadSet({
+		[getBlockingDirection(PECHAN_CONFIG.PLAYERS.PLAYER1.ID)] = 1,
+		["P1 Down"] = 1
+	})
 end
 -- Initial state
 
@@ -1366,7 +1295,8 @@ local function block()
 				gui.text(10, 60, "IDLE - waiting for hit")
 			end
 			-- Do base action while waiting
-			if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
+			-- Do base action while waiting
+			-- if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 
 			-- Detect hit → arm the guard
 			if wasHit then
@@ -1407,20 +1337,19 @@ local function block()
 				stateMachine.isJustGuardRunning = dummyCrouchGuardForATime()
 			end
 		else
-			-- Guard finished → return to IDLE only when not being hit
-			-- Dummy actions are independent of Player 1's action state.
-			if not wasHit then
+			-- Guard finished → return to IDLE only when both not attacking and not being hit
+			if not isAttackTriggered and not wasHit then
 				one_hit_guard_triggered = false
 				if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
 					gui.text(10, 70, "Returning to IDLE")
 				end
 				transitionToState("start")
 			else
-				-- Still under pressure (hitstun), restart guard
+				-- Still under pressure, restart guard
 				stateMachine.isJustGuardRunning = true
 				current_move_time_counter = 0
 			end
-			if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
+			-- if PECHAN_CONFIG.GUARD.dummy_action == 1 then dummyCrouch() end
 		end
 		return
 	end
@@ -2408,7 +2337,7 @@ function KofTrainingUpdate() -- runs every frame
 	if PECHAN_CONFIG.DEBUG.POSITION == 1 then
 		gui.text(20, 80, "dummy position: " .. stateMachine.dummy_position, "yellow")
 	end
-	--[[ if PECHAN_CONFIG.GUARD.dummy_guarding then
+	if PECHAN_CONFIG.GUARD.dummy_guarding then
 		if PECHAN_CONFIG.DEBUG.GUARD == 1 then
 			gui.text(20, 100, "dummy guarding", "yellow")
 		end
@@ -2421,16 +2350,18 @@ function KofTrainingUpdate() -- runs every frame
 			end
 			DummyPlayer:setAction(0)
 		end
-	end ]]
+	end
 
 	if rom_name == "kof98" then
 		AI.update()
 		Trials.check_conditions()
 		Cinematics.update()
+		Cinematics.draw()
 	end
 
 	P1:updateAdvantage(P2)
 	P2:updateAdvantage(P1)
+	draw_debug_info()
 
 	if emu.romname and (emu.romname() == "kof99" or emu.romname() == "kof2000" or emu.romname() == "kof2001") then
 		local inf_striker_val = (emu.romname() == "kof2001") and 0x04 or 0x05
@@ -2465,6 +2396,8 @@ function KofTrainingUpdate() -- runs every frame
 		end
 	end
 
+
+
 	-- Striker mode debug removed
 	-- if emu.romname and emu.romname() == "kof2000" then
 	-- 	gui.text(10, 160, string.format("P1 Mode (10A80A): %02X", rb(0x10A80A)), "yellow")
@@ -2497,6 +2430,8 @@ function KofTrainingUpdate() -- runs every frame
 			-- Frame 2: Memory is now populated. Read characters loaded by savestate and sync the UI config
 			PECHAN_CONFIG.UI.INITIAL_START = false
 			delay_initial_read = false
+
+
 
 			local current_game = PECHAN_CONFIG.get_current_game()
 			local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
@@ -2732,7 +2667,7 @@ function KofTrainingUpdate() -- runs every frame
 
 	--[[ if PECHAN_CONFIG.CPU.GCAB.dummy_can_gcab then
 		if playerTwoInBlockstun() then
-			disableInternalCPUAI()
+			disableCPU()
 			PECHAN_CONFIG.CPU.dummy_can_fight = false
 			transitionToState("cpu_action")
 		end
@@ -2758,10 +2693,10 @@ function KofTrainingUpdate() -- runs every frame
 	local function get_active_inputs(player_id)
 		local tbl = joypad.get()
 		local active = {}
-		local prefix = "P" .. player_id .. " "
 		for k, v in pairs(tbl) do
-			if v == true and string.sub(k, 1, string.len(prefix)) == prefix then
-				table.insert(active, string.sub(k, string.len(prefix) + 1))
+			if v == 1 then
+				-- Just dump the raw key name exactly as FBNeo provides it
+				table.insert(active, k)
 			end
 		end
 		return table.concat(active, ",")
@@ -2797,6 +2732,7 @@ function KofTrainingDraw()
 	if PECHAN_CONFIG.DEBUG.FRAMEDATA > 0 then
 		frame_data.draw()
 	end
+	DebugViewer.draw()
 end
 
 if registers then

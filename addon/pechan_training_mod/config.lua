@@ -917,6 +917,7 @@ PECHAN_CONFIG = {
         PLAYER2_STRIKER_MODE = 0, -- 0: Regular, 1: Alternate, 2: Maniac
         PLAYER1_EX = false,
         PLAYER2_EX = false,
+        ENABLE_COIN_SWAP = false,
         CHARACTERS_HAS_CHANGED = false,
         current_stage_selected = 1,
         curent_background_music_selected = 1,
@@ -960,7 +961,9 @@ PECHAN_CONFIG = {
         STATE = 0,
         METER = 0,
         FRAMEDATA = 0,
-    }
+
+    },
+
 
 }
 PECHAN_CONFIG.UI.CURRENT_PLAYER1 = PECHAN_CONFIG.get_current_game().characters[1]

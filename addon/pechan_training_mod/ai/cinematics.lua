@@ -50,7 +50,7 @@ local function lock_inputs()
         ["P2 Start"] = false,
         ["P2 Coin"] = false
     }
-    joypad.set(lock)
+    pechanJoypadSet(lock)
 end
 
 function Cinematics.update()

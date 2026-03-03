@@ -799,6 +799,9 @@ local p1_and_dummy_data = {
 				HumanPlayer = P2
 				DummyPlayer = P1
 			end
+			-- Free both players from CPU lock immediately; the loop will re-hijack the correct Dummy if needed
+			wb(P1.base_address + 0x170, 0x01)
+			wb(P2.base_address + 0x170, 0x01)
 		end,
 		autofunc = function(this)
 			if PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.PLAYER == PECHAN_CONFIG.PLAYERS.PLAYER1.DUMMY_CTRL.OPTIONS.P1 then
@@ -860,29 +863,32 @@ local p1_and_dummy_data = {
 			end
 		end,
 	},
-	["lang"] = {
-		text = "Language / Idioma",
+	["15"] = {
+		text = "3-Coin Swap",
 		x = 10,
-		y = 56,
+		y = 68,
 		olcolour = "black",
-		handle = 4,
+		handle = 14,
 		func = function()
-			if PECHAN_CONFIG.LANGUAGE.current_language == PECHAN_CONFIG.LANGUAGE.OPTIONS.EN then
-				PECHAN_CONFIG.LANGUAGE.current_language = PECHAN_CONFIG.LANGUAGE.OPTIONS.ES
-			else
-				PECHAN_CONFIG.LANGUAGE.current_language = PECHAN_CONFIG.LANGUAGE.OPTIONS.EN
+			if toggleStates and inputs and inputs.properties then
+				-- If swap is currently ON, calling toggleStates({}) turns it OFF (and closes menu)
+				-- If swap is OFF, calling toggleStates({swapinputs=true}) turns it ON (and closes menu)
+				if inputs.properties.enableinputswap then
+					toggleStates({})
+				else
+					toggleStates({ swapinputs = true })
+				end
 			end
-			local translate_mod = require("addon.pechan_training_mod.translate_mod")
-			translate_mod.set_locale(PECHAN_CONFIG.LANGUAGE.current_language)
 		end,
 		autofunc = function(this)
-			if PECHAN_CONFIG.LANGUAGE.current_language == PECHAN_CONFIG.LANGUAGE.OPTIONS.EN then
-				this.text = "Language: English"
+			if inputs and inputs.properties and inputs.properties.enableinputswap then
+				this.text = tl("ui.p1_dummy.coin_swap.on")
 			else
-				this.text = "Idioma: Español"
+				this.text = tl("ui.p1_dummy.coin_swap.off")
 			end
 		end,
 	},
+
 	["5"] = {
 		text = "Debug Block",
 		x = 118,
@@ -1483,45 +1489,54 @@ for page = 1, total_pages do
 		func = function()
 			local current_game = PECHAN_CONFIG.get_current_game()
 
-			if not PECHAN_CONFIG.UI.CURRENT_PLAYER1 then
-				PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_missing"), page_name, 144, 70)
+			if not PECHAN_CONFIG.UI.CURRENT_PLAYER1 or PECHAN_CONFIG.UI.CURRENT_PLAYER1.name == "None" then
+				PECHAN_HELPERS.show_error_popup(tl("ui.error.no_character"), page_name, 144, 70)
 				return
 			end
-			if not PECHAN_CONFIG.UI.CURRENT_PLAYER2 then
-				PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_missing"), page_name, 144, 70)
+			if not PECHAN_CONFIG.UI.CURRENT_PLAYER2 or PECHAN_CONFIG.UI.CURRENT_PLAYER2.name == "None" then
+				PECHAN_HELPERS.show_error_popup(tl("ui.error.no_character"), page_name, 144, 70)
 				return
 			end
 
 			if current_game.has_strikers then
 				if not (PECHAN_CONFIG.UI.P1_STRIKER1 and PECHAN_CONFIG.UI.P1_STRIKER1.code) then
-					PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_s1_missing"), page_name, 144, 70)
+					PECHAN_HELPERS.show_error_popup(tl("ui.error.missing_striker", { player = "P1", num = 1 }), page_name,
+						144, 70)
 					return
 				end
 				if not (PECHAN_CONFIG.UI.P2_STRIKER1 and PECHAN_CONFIG.UI.P2_STRIKER1.code) then
-					PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_s1_missing"), page_name, 144, 70)
+					PECHAN_HELPERS.show_error_popup(tl("ui.error.missing_striker", { player = "P2", num = 1 }), page_name,
+						144, 70)
 					return
 				end
 				if current_game.has_3_strikers then
 					if not (PECHAN_CONFIG.UI.P1_STRIKER2 and PECHAN_CONFIG.UI.P1_STRIKER2.code) then
-						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_s2_missing"), page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.error.missing_striker", { player = "P1", num = 2 }),
+							page_name, 144, 70)
 						return
 					end
 					if not (PECHAN_CONFIG.UI.P1_STRIKER3 and PECHAN_CONFIG.UI.P1_STRIKER3.code) then
-						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p1_s3_missing"), page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.error.missing_striker", { player = "P1", num = 3 }),
+							page_name, 144, 70)
 						return
 					end
 					if not (PECHAN_CONFIG.UI.P2_STRIKER2 and PECHAN_CONFIG.UI.P2_STRIKER2.code) then
-						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_s2_missing"), page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.error.missing_striker", { player = "P2", num = 2 }),
+							page_name, 144, 70)
 						return
 					end
 					if not (PECHAN_CONFIG.UI.P2_STRIKER3 and PECHAN_CONFIG.UI.P2_STRIKER3.code) then
-						PECHAN_HELPERS.show_error_popup(tl("ui.character.error.p2_s3_missing"), page_name, 144, 70)
+						PECHAN_HELPERS.show_error_popup(tl("ui.error.missing_striker", { player = "P2", num = 3 }),
+							page_name, 144, 70)
 						return
 					end
 				end
 			end
 
 			PECHAN_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
+			if toggleStates then
+				toggleStates({}) -- Force the menu to close so KofTrainingUpdate can apply the changes
+			end
 		end,
 		text = tl("ui.character.apply_changes"),
 		textcolour = "white",
