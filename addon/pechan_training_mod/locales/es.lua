@@ -116,6 +116,15 @@ return {
                     never = "ROMPTURA DE GUARDIA: Nunca",
                     always = "ROMPTURA DE GUARDIA: Siempre",
                 },
+                coin_swap = {
+                    off = "Intercambio 3-Monedas: Off",
+                    on = "Intercambio 3-Monedas: On",
+                },
+            },
+            error = {
+                no_character = "¡No hay personaje seleccionado!",
+                missing_striker = "¡Falta Asistente %{num} del %{player}!",
+                character_selection_error = "¡Error en la selección de personaje!",
             },
             cpu = {
                 title = "Ajustes de CPU",
@@ -201,6 +210,7 @@ return {
                 state = "Debug Estado: %{state}",
                 meter = "Debug Barra: %{state}",
                 frame_data = "Debug Frame Data: %{state}",
+                autoguard = "Debug Autoguardia: %{state}",
                 mode_off = "Modo: APAGADO",
                 mode_on = "Modo: ENCENDIDO",
                 trigger_new = "Gatillar: NUEVO",

@@ -3,6 +3,29 @@
 
 PECHAN_HELPERS = PECHAN_HELPERS or {}
 
+-- Safe input merging for addons.
+-- Merges a table of inputs into the global `inputs.setinputs` table to avoid overwriting P1 control.
+function pechanJoypadSet(tbl)
+    if inputs and inputs.setinputs then
+        -- If setinputs is empty, it means we are starting a fresh override this frame.
+        -- We must include the hardware inputs so we don't wipe them out for both players.
+        if not next(inputs.setinputs) then
+            if inputs.p1 then for k, v in pairs(inputs.p1) do inputs.setinputs["P1 " .. k] = v end end
+            if inputs.p2 then for k, v in pairs(inputs.p2) do inputs.setinputs["P2 " .. k] = v end end
+            if inputs.other then for k, v in pairs(inputs.other) do inputs.setinputs[k] = v end end
+        end
+
+        for k, v in pairs(tbl) do
+            inputs.setinputs[k] = v
+        end
+        if inputs.properties then
+            inputs.properties.enableinputset = true
+        end
+    else
+        joypad.set(tbl)
+    end
+end
+
 -------------------------------------------------------------------------------
 -- pechanCreatePopUpMenu
 -- A copy of the core createPopUpMenu with two additions:

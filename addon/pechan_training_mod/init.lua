@@ -5,7 +5,7 @@ require("addon.pechan_training_mod.config")
 require("addon.pechan_training_mod.helpers")
 local rom_name = emu.romname() or "unknown"
 if PECHAN_CONFIG.SUPPORTED_GAMES[rom_name] then
-	print("Pechan's Training mode activated for: " .. rom_name)
+	-- print("Pechan's Training mode activated for: " .. rom_name)
 else
 	return
 end
@@ -40,8 +40,8 @@ local frame_data = require("addon.pechan_training_mod.frame_data")
 
 -- Debug Viewer Module
 DebugViewer = require("addon.pechan_training_mod.utils.debug_viewer")
-DebugViewer.setEnabled(true)
-DebugViewer.log_to_file = true
+DebugViewer.setEnabled(false)
+DebugViewer.log_to_file = false
 
 -- AI and Trial Mode Modules
 local AI = require("addon.pechan_training_mod.ai.init")
@@ -98,6 +98,10 @@ local stateMachine = {
 	is_a_soft_reset = false,
 	-- Migrated variables
 	active_wake_up = false,
+
+	guardReversalEvent = { active = false, handled = false },
+
+	-- ... rest of stateMachine ...
 	isJustGuardRunning = false,
 	chosenGuardOption = nil,
 	last_do_move_name = nil,
@@ -161,57 +165,7 @@ local cooldowns = {}            -- Table to store cooldowns for different functi
 local functionRunningFlags = {} -- flag to track whether a function is currently running
 
 -- [[ Core Helper Functions ]]
-local function getFacingDirection()
-	if DummyPlayer:isFacingLeft() then
-		return "P" .. DummyPlayer.id .. " Left"
-	end
-	return "P" .. DummyPlayer.id .. " Right"
-end
-
-local function getBlockingDirection(player_id)
-	if player_id == nil then
-		player_id = DummyPlayer.id
-	end
-
-	if player_id == DummyPlayer.id then
-		if DummyPlayer:isFacingLeft() then
-			return "P" .. DummyPlayer.id .. " Right"
-		end
-		return "P" .. DummyPlayer.id .. " Left"
-	elseif player_id == HumanPlayer.id then
-		if HumanPlayer:isFacingLeft() then
-			return "P" .. HumanPlayer.id .. " Right"
-		end
-		return "P" .. HumanPlayer.id .. " Left"
-	end
-end
-
-local function transitionToState(newState)
-	stateMachine.lastState = stateMachine.currentState
-	stateMachine.currentState = newState
-	if PECHAN_CONFIG.DEBUG.STATE == 1 then
-		print("Transitioned to state:", newState)
-	end
-
-	delay_count = 0
-	if newState == "start" or newState == "blocking" then
-		stateMachine.active_wake_up = false
-	end
-end
-
-local function delay(delay_frames, functionToExecute, ...)
-	if delay_count < delay_frames then
-		delay_count = delay_count + 1
-		return true
-	end
-
-	local res = functionToExecute(...)
-	if res == false then
-		delay_count = 0
-		return false
-	end
-	return true
-end
+-- (Redundant block removed, moved to line 681 for unification)
 --[[ customconfig = {
 	dummy_guard = 0,
 	dummy_random_guard = 0,
@@ -753,13 +707,13 @@ local function dummyCrouchGuard()
 	local tbl = joypad.get()
 	tbl[getBlockingDirection()] = 1
 	tbl["P" .. DummyPlayer.id .. " Down"] = 1
-	joypad.set(tbl)
+	pechanJoypadSet(tbl)
 end
 
 local function dummyGuard()
 	local tbl = joypad.get()
 	tbl[getBlockingDirection()] = 1
-	joypad.set(tbl)
+	pechanJoypadSet(tbl)
 end
 
 
@@ -817,7 +771,7 @@ local function doMove(move_name, times, conf)
 	end
 
 
-	local tbl = joypad.get()
+	local tbl = {} -- Surgical Fix: Start with an empty table
 	local p_prefix = "P" .. DummyPlayer.id .. " "
 	for _, value in ipairs(seq[current_move_index_counter]) do
 		if value == 'forward' then
@@ -839,7 +793,7 @@ local function doMove(move_name, times, conf)
 		end
 	end
 
-	joypad.set(tbl)
+	pechanJoypadSet(tbl)
 	current_move_index_counter = current_move_index_counter + 1
 
 	return true
@@ -904,22 +858,21 @@ local function dummyCrouchForATime()
 	return doMove("CROUCH", 10, true)
 end
 local function dummyCrouch()
-	local tbl = joypad.get()
-	tbl["P" .. DummyPlayer.id .. " Down"] = 1
-	joypad.set(tbl)
+	local p_prefix = "P" .. DummyPlayer.id .. " "
+	pechanJoypadSet({ [p_prefix .. "Down"] = 1 })
 end
 
 local function dummyCrouchGuard()
-	local tbl = joypad.get()
-	tbl[getBlockingDirection()] = 1
-	tbl["P" .. DummyPlayer.id .. " Down"] = 1
-	joypad.set(tbl)
+	pechanJoypadSet({
+		[getBlockingDirection()] = 1,
+		["P" .. DummyPlayer.id .. " Down"] = 1
+	})
 end
 local function humanCrouchGuard()
-	local tbl = joypad.get()
-	tbl[getBlockingDirection(PECHAN_CONFIG.PLAYERS.PLAYER1.ID)] = 1
-	tbl["P1 Down"] = 1
-	joypad.set(tbl)
+	pechanJoypadSet({
+		[getBlockingDirection(PECHAN_CONFIG.PLAYERS.PLAYER1.ID)] = 1,
+		["P1 Down"] = 1
+	})
 end
 -- Initial state
 
@@ -1492,12 +1445,12 @@ local function toggleGuardBreak()
 	end
 end
 
-local function enableCPU()
+local function enableInternalCPUAI()
 	local cpu_location = DummyPlayer.base_address + 0x170
 	wb(cpu_location, 0x81)
 end
 
-local function disableCPU()
+local function disableInternalCPUAI()
 	local cpu_location = DummyPlayer.base_address + 0x170
 	wb(cpu_location, 0x01)
 end
@@ -1977,6 +1930,38 @@ local function consumeWakeUpEvent(ctx)
 	ctx.wakeUpEvent.handled = true
 end
 
+-- Guard Reversal Event Manager Logic
+local function updateGuardReversalEventStatus(ctx)
+	local is_now_blocking = playerTwoInBlockstun()
+
+	-- Rising Edge: Event started, reset handled flag
+	if is_now_blocking and not ctx.guardReversalEvent.active then
+		ctx.guardReversalEvent.handled = false
+	end
+
+	-- Falling Edge: Event ended, reset handled flag
+	if not is_now_blocking and ctx.guardReversalEvent.active then
+		ctx.guardReversalEvent.handled = false
+	end
+
+	ctx.guardReversalEvent.active = is_now_blocking
+end
+
+local function shouldTriggerGuardReversalAction(ctx, propagate)
+	if not ctx.guardReversalEvent.active then return false end
+
+	-- If we handled this event and we are NOT propagating, don't trigger.
+	if ctx.guardReversalEvent.handled and not propagate then
+		return false
+	end
+
+	return true
+end
+
+local function consumeGuardReversalEvent(ctx)
+	ctx.guardReversalEvent.handled = true
+end
+
 local StateHandlers = {}
 
 function StateHandlers.start(ctx)
@@ -1992,7 +1977,7 @@ function StateHandlers.start(ctx)
 		if PECHAN_CONFIG.CPU.GCCD.dummy_can_gccd and playerTwoInBlockstun() then
 			if not stateMachine.gccd_random_move_ends then
 				stateMachine.gccd_action_running = true
-				disableCPU()
+				disableInternalCPUAI()
 				PECHAN_CONFIG.CPU.dummy_can_fight = false
 				transitionToState("cpu_action")
 				return
@@ -2004,7 +1989,7 @@ function StateHandlers.start(ctx)
 		if PECHAN_CONFIG.CPU.GCAB.dummy_can_gcab and dummyIsFalling() then
 			if not stateMachine.gcab_random_move_ends then
 				stateMachine.gcab_action_running = true
-				disableCPU()
+				disableInternalCPUAI()
 				PECHAN_CONFIG.CPU.dummy_can_fight = false
 				transitionToState("cpu_action")
 				return
@@ -2106,7 +2091,8 @@ function StateHandlers.blocking(ctx)
 		return
 	end
 
-	if playerTwoInBlockstun() and PECHAN_CONFIG.GUARD.reversal ~= PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.OFF then
+	if shouldTriggerGuardReversalAction(ctx, false) and PECHAN_CONFIG.GUARD.reversal ~= PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.OFF then
+		consumeGuardReversalEvent(ctx)
 		transitionToState("guard_reversal")
 		return
 	end
@@ -2271,7 +2257,7 @@ function StateHandlers.cpu_action(ctx)
 	if PECHAN_CONFIG.CPU.GCCD.dummy_can_gccd and stateMachine.gccd_action_running then
 		if PECHAN_CONFIG.CPU.GCCD.current_gccd == PECHAN_CONFIG.CPU.GCCD.OPTIONS.ON then
 			if doMove("CD", 3, true) == false then
-				enableCPU()
+				enableInternalCPUAI()
 				stateMachine.current_cpu_action_running = false
 				stateMachine.gccd_action_running = false
 				PECHAN_CONFIG.CPU.dummy_can_fight = true
@@ -2280,7 +2266,7 @@ function StateHandlers.cpu_action(ctx)
 		elseif PECHAN_CONFIG.CPU.GCCD.current_gccd == PECHAN_CONFIG.CPU.GCCD.OPTIONS.RANDOM and not stateMachine.gccd_random_move_ends then
 			if stateMachine.running_randomned_cpu_action_gccd then
 				if doMove("CD", 3, true) == false then
-					enableCPU()
+					enableInternalCPUAI()
 					stateMachine.gccd_random_move_ends = true
 					stateMachine.running_randomned_cpu_action_gccd = false
 					stateMachine.current_cpu_action_running = false
@@ -2292,7 +2278,7 @@ function StateHandlers.cpu_action(ctx)
 					stateMachine.running_randomned_cpu_action_gccd = true
 				else
 					stateMachine.gccd_random_move_ends = true
-					enableCPU()
+					enableInternalCPUAI()
 					PECHAN_CONFIG.CPU.dummy_can_fight = true
 					stateMachine.current_cpu_action_running = false
 					transitionToState("start")
@@ -2304,7 +2290,7 @@ function StateHandlers.cpu_action(ctx)
 	if PECHAN_CONFIG.CPU.GCAB.dummy_can_gcab and stateMachine.gcab_action_running then
 		if PECHAN_CONFIG.CPU.GCAB.current_gcab == PECHAN_CONFIG.CPU.GCAB.OPTIONS.ON then
 			if doMove("AB", 5, true) == false then
-				enableCPU()
+				enableInternalCPUAI()
 				PECHAN_CONFIG.CPU.dummy_can_fight = true
 				stateMachine.current_cpu_action_running = false
 				stateMachine.gcab_action_running = false
@@ -2313,7 +2299,7 @@ function StateHandlers.cpu_action(ctx)
 		elseif PECHAN_CONFIG.CPU.GCAB.current_gcab == PECHAN_CONFIG.CPU.GCAB.OPTIONS.RANDOM and not stateMachine.gcab_random_move_ends then
 			if stateMachine.running_randomned_cpu_action_gcab then
 				if doMove("AB", 5, true) == false then
-					enableCPU()
+					enableInternalCPUAI()
 					stateMachine.gcab_random_move_ends = true
 					stateMachine.running_randomned_cpu_action_gcab = false
 					PECHAN_CONFIG.CPU.dummy_can_fight = true
@@ -2325,7 +2311,7 @@ function StateHandlers.cpu_action(ctx)
 					stateMachine.running_randomned_cpu_action_gcab = true
 				else
 					stateMachine.gccd_random_move_ends = true
-					enableCPU()
+					enableInternalCPUAI()
 					PECHAN_CONFIG.CPU.dummy_can_fight = true
 					stateMachine.current_cpu_action_running = false
 					transitionToState("start")
@@ -2335,10 +2321,14 @@ function StateHandlers.cpu_action(ctx)
 	end
 end
 
-function KofTrainingRun() -- runs every frame
+function KofTrainingUpdate() -- runs every frame
 	--wb(0x02FD3A, 0x68)
 
+	-- Don't inject any dummy inputs while a menu or overlay is active.
+	if interactivegui and interactivegui.inmenu then return end
+
 	updateWakeUpEventStatus(stateMachine)
+	updateGuardReversalEventStatus(stateMachine)
 
 
 	--gui.text(20, 30, "block address: " .. rb(P2.addresses.blockstun), "yellow")
@@ -2406,6 +2396,8 @@ function KofTrainingRun() -- runs every frame
 		end
 	end
 
+
+
 	-- Striker mode debug removed
 	-- if emu.romname and emu.romname() == "kof2000" then
 	-- 	gui.text(10, 160, string.format("P1 Mode (10A80A): %02X", rb(0x10A80A)), "yellow")
@@ -2438,6 +2430,8 @@ function KofTrainingRun() -- runs every frame
 			-- Frame 2: Memory is now populated. Read characters loaded by savestate and sync the UI config
 			PECHAN_CONFIG.UI.INITIAL_START = false
 			delay_initial_read = false
+
+
 
 			local current_game = PECHAN_CONFIG.get_current_game()
 			local p1_id_hex = string.format("0x%02X", rb(p1_stored_index_location))
@@ -2665,9 +2659,9 @@ function KofTrainingRun() -- runs every frame
 	end
 
 	if PECHAN_CONFIG.CPU.dummy_can_fight then
-		enableCPU()
+		enableInternalCPUAI()
 	else
-		disableCPU()
+		disableInternalCPUAI()
 	end
 
 
@@ -2726,12 +2720,37 @@ function KofTrainingRun() -- runs every frame
 	})
 end
 
-if registers and registers.guiregister then
-	table.insert(registers.guiregister, KofTrainingRun)
-	table.insert(registers.guiregister, function()
-		if PECHAN_CONFIG.DEBUG.FRAMEDATA > 0 then
-			frame_data.draw()
+function KofTrainingDraw()
+	if interactivegui and interactivegui.inmenu then return end
+
+	if rom_name == "kof98" then
+		Cinematics.draw()
+	end
+
+	draw_debug_info()
+
+	if PECHAN_CONFIG.DEBUG.FRAMEDATA > 0 then
+		frame_data.draw()
+	end
+	DebugViewer.draw()
+end
+
+if registers then
+	if registers.registerbefore then
+		local setInputsIdx = nil
+		for i, v in ipairs(registers.registerbefore) do
+			if v == setInputs then
+				setInputsIdx = i
+				break
+			end
 		end
-		DebugViewer.draw()
-	end)
+		if setInputsIdx then
+			table.insert(registers.registerbefore, setInputsIdx, KofTrainingUpdate)
+		else
+			table.insert(registers.registerbefore, KofTrainingUpdate)
+		end
+	end
+	if registers.guiregister then
+		table.insert(registers.guiregister, KofTrainingDraw)
+	end
 end

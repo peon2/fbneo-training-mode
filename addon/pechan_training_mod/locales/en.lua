@@ -116,6 +116,15 @@ return {
                     never = "GUARD BREAK: Never",
                     always = "GUARD BREAK: Always",
                 },
+                coin_swap = {
+                    off = "3-Coin Swap: Off",
+                    on = "3-Coin Swap: On",
+                },
+            },
+            error = {
+                no_character = "No character selected!",
+                missing_striker = "%{player} Striker %{num} missing!",
+                character_selection_error = "Character selection error!",
             },
             cpu = {
                 title = "CPU Settings",
@@ -201,6 +210,7 @@ return {
                 state = "Debug State: %{state}",
                 meter = "Debug Meter: %{state}",
                 frame_data = "Debug Frame Data: %{state}",
+                autoguard = "Debug Autoguard: %{state}",
                 mode_off = "Mode: OFF",
                 mode_on = "Mode: ON",
                 trigger_new = "Trigger: NEW",
