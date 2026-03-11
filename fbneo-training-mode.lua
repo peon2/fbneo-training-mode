@@ -1825,11 +1825,21 @@ end
 
 setInputs = function()
 	if inputs.properties.enableinputset then
+		fillUpInputs(inputs.setinputs)
 		joypad.set(inputs.setinputs)
 	end
 	inputs.properties.enableinputset = false
 end
 
+fillUpInputs = function(newinputs) -- fixes generated inputs by readding values ignored by the script
+	local oldinputs = joypad.get()
+	for k, v in pairs(oldinputs) do
+		if newinputs[k] == nil then
+			newinputs[k] = oldinputs[k]
+		end
+	end
+end
+		
 setDirection = function(player, ...) -- getting a player to hold down/up etc.
 	local dir1, dir2 = ... -- only need to check two inputs at a time
 

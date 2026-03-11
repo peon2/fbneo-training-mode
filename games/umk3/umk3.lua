@@ -2,7 +2,6 @@ assert(rb,"Run fbneo-training-mode.lua")
 
 function gamemsg()
 	print "Known issues with UMK3:"
-	print "Coin button also triggers maintenance menu."
 	print "Health doesn't refill on throws."
 	print "Combo counter doesn't increment correctly."
 end
