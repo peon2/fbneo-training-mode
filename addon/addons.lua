@@ -3,3 +3,6 @@ addons_run = {
 	"missions.lua",
 	"rewind.lua",
 }
+DEBUG_addons_run = {
+	"memory_watcher.lua",
+}

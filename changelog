@@ -1,3 +1,273 @@
+v0.26.03
+
+General Usage:
+Added text on-screen to indicate when a game isn't recognised
+
+Overhauled settings, more training mode settings are saved.
+Renamed config files from config.lua to [ROM].config for clarity.
+Two more config files have been added. colour.config and generalsettings.config
+Both of these files are saved in config/ and their settings transfer between games.
+These files can be freely deleted and regenerated fresh, or dropped into another copy of the training mode to share settings.
+Config files now disregard default settings when saving to reduce filesize.
+
+Respaced GUI buttons for centre-alignment.
+Many popups and scrolling options have also been respaced to be more intuitive.
+Buttons are now navigated using cardinal directions, rather than stepping through the buttons on the page.
+'Back' has a history of ten pages now, and pressing 'Back' with no history closes the GUI
+
+Added colour to many GUI elements.
+Added a colour editor to change those colours, new colours are stored in colour.config
+
+Buttons now properly display whether they can be hotkeyed or if info is associated with them at the bottom of the screen.
+Added more buttons for hotkeying, see 'Recording Menu' -> 'Extra Buttons' and 
+
+Added a reset to default ('DFLT') button for each setting
+
+Rearranged some GUI elements to hopefully be more intuitive
+
+'0' no longer displays when P2 is in hitstun.
+Updated the combo logic to be more accurate
+
+Savestates:
+Savestates now save in their game directory and are named after their game
+
+HUD:
+Now navigated using cardinal directions.
+Each HUD Element will has a 'DFLT' button
+
+When control is swapped between P1 and P2, it visibly displays.
+
+Replays:
+The GUI display of the statuses of the slots and which is being played back by what has been updated to hopefully be more clear.
+Reworked some of the buttons to be more clear on
+
+Saved Replays not save with the replay settings.
+Replays are saved as [ROM].replaypack.
+Loaded Replays validate that the ROM name is the same.
+
+Replays on loop with a max delay set randomise their delay now
+
+LUA Hotkeys:
+The LUA hotkeys have been re-done.
+1 -> Replay the selected Slot, if the GUI is open, it instead operates the button.
+2 -> Starts recording into the selected Slot, if the GUI is open, it instead moves the selection to the next button.
+3 -> Swaps the inputs between P1 and P2, if the GUI is open, it instead displays the button info (if applicable).
+4 -> Toggles the GUI On or Off.
+5 -> Opens Mission addon.
+9 -> Reloads GUI.
+
+Addon:
+The addon system was introduced.
+Missions were previously a ssf2xjr1-specific feature, but are now global (LUA key 5)
+A Rewind script was ported for watching replays from fightcade (still buggy!)
+A Memory Watch script was ported to help find memory values (DEBUG mode only!)
+
+Hitboxes:
+Enabled the Garou hitboxes.
+This adds hitboxes for:
+fatfury1, fatfury2, fatfursp, fatfury3, rbff1, rbffspec, rbff2, and garou
+
+aof3:
+Added aof3-hitboxes
+
+cybots:
+Combo detection more consistent, added combo detection for P1 too.
+Cyberbots now defaults to refreshing meter to 0 after a combo, to accommodate charge cancels.
+Added bgm volume control.
+
+dstlk:
+Added bgm volume control.
+
+fatfury1:
+P2 Health is written to correctly now.
+
+fatfury2:
+Combo detection is more consistent.
+
+fatfurysp:
+Made the combo detection more consistent.
+
+hsf2:
+Added bgm volume control.
+
+jojo:
+Added bgm volume control.
+Stand health now displays.
+
+jojoba:
+Added bgm volume control.
+Added child mode button.
+Stand health now displays.
+
+lastblad:
+Training mode no longer breaks when switching characters.
+
+msh:
+Added bgm volume control.
+
+mshvsf:
+Added bgm volume control.
+
+mvsc:
+Added bgm volume control.
+
+nwarr:
+Combo detection more consistent, added combo detection for P1 too.
+Added direction detection for P1 and P2.
+Added bgm volume control.
+
+rabbit:
+Fixed combo detection.
+
+redearth:
+Added a stun bar for both players.
+Added bgm volume control.
+Added sword and shield selection for Leo.
+Added orb selection.
+
+ringdest:
+Added bgm volume control.
+
+rotd:
+Added a stun bar for both players.
+
+sf:
+Fixed health control.
+fbneo-training-mode now reads sf buttons correctly.
+Fixed input display.
+Now has infinite time.
+
+sf2:
+Added combo detection.
+Added bgm volume control.
+
+sf2ce:
+Added combo detection.
+Added bgm volume control.
+
+sfa:
+Hopefully made combo detection more reliable.
+Added bgm volume control.
+
+sfa2:
+Hopefully made combo detection more reliable.
+Added bgm volume control.
+
+sfa3:
+Added bgm volume control.
+
+sfiii:
+Training mode no longer breaks when switching characters.
+Character stun now displays on the screen.
+Combo detection is much more reliable.
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+Added option to play as Gill from character select.
+
+sfiii2:
+Training mode no longer breaks when switching characters.
+Character stun now displays on the screen.
+Combo detection is much more reliable.
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+
+sfiii3:
+Training mode no longer breaks when switching characters.
+Character stun now displays on the screen.
+Combo detection is much more reliable.
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+Clock no longer flashes if it goes under 30 seconds before the script activates.
+
+sgemf:
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+
+ssf2t:
+Changed bgm toggle to volume control.
+
+vhunt2:
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+
+vsav:
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+
+vsav2:
+Meter control now controls stocks and the bar.
+Added bgm volume control.
+
+wakuwak7:
+Meter control now controls stocks and the bar.
+Added buttons to pick boss characters at character select.
+
+xmcota:
+Added bgm volume control.
+Added buttons to pick boss characters at character select.
+
+xmvsf:
+Added bgm volume control.
+Added buttons to pick secret characters at character select.
+
+Added Support for:
+Blood Storm (bloodstm)
+Blood Warrior (bloodwar)
+Fight Fever (fightfev)
+Hippodrome (hippodrm)
+Jackie Chan — The Kung-Fu Master (jchan)
+Mobile Suit Gundam (msgundam) (disabled)
+Schmeiser Robo (schmeisr)
+Street Fighter III: 3rd Strike Widescreen (sfiii3ws)
+Street Fighter Zero 2 (sfz2al)
+Super Street Fighter II: The New Challengers (ssf2)
+The Eye of Typhoon (teot)
+Time Killers (timekill)
+Top Ranking Stars (trstar)
+Violence Fight (viofight)
+World Heroes (wh1)
+World Heroes 2 (wh2)
+World Heroes 2 Jet (wh2j)
+
+Notes for developers:
+This version comes with several major reworks of functionality.
+Be warned that many of the global function signatures have changed. e.g. CIG -> changePageAndSelection
+New values exposed for writing guipages, see interactivegui.boxxhalflength, LETTER_WIDTH etc.
+Renamed some game paths to better match ROM names.
+Settings no longer save in DEBUG mode (settings are still loaded, however).
+New system of adding custom config settings for saving.
+New system for adding custom HUD Elements.
+Added a 'text item' for drawing text to the screen for a number of frames, see addTextItem()
+Added functions to allow game luas to regenerate constants for the training mode.
+i.e. Picking a new character that has a different max health from the previous character can now be handled.
+Examine sfiii3.lua and its guipages.lua to see these new option in action, alongside the new colour system and spacing buttons.
+
+
+Contributions:
+
+Thanks to pireatesephiroth:
+Fix to stop umk3 and mwarr (and other games!) from crashing due to input mismanagement
+
+Thanks to UnliquidSnake:
+Adding support for sfz2al (Street Fighter Zero 2)
+
+Thanks to poliva:
+Numerous fixes
+Implementing the addon system
+Porting my rewind script as an addon
+Generalising the ssf2xjr1 mission addon
+
+Thanks to guruslum:
+For providing memory values for fatfursp, fatfury1, and fatfury2
+
+Thanks to Xenn:
+For providing aof3-hitboxes.lua
+
+Thanks to bola385:
+For providing me mutecodes.txt which allowed me to make bgm control for cps2 and cps3 games.
+
+If you have contributed and have not been mentioned since the last version, please reach out to me.
+
 v0.22.10.28
 
 General Usage:

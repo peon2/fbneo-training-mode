@@ -8,8 +8,8 @@ function gamemsg()
 	print "Combos not tracked"
 end
 
-local p1health = 0xFF83E9
-local p2health = 0xFF86E9
+local p1health = 0xFF86B6
+local p2health = 0xFF86E0
 
 local p1direction = 0xFFE437
 local p2direction = 0xFFEA37
@@ -31,25 +31,49 @@ translationtable = {
 	["Right"] = 2,
 	["Up"] = 3,
 	["Down"] = 4,
-	["Weak Punch"] = 5,
-	["Medium Punch"] = 6,
-	["Strong Punch"] = 7,
-	["Weak Kick"] = 8,
-	["Medium Kick"] = 9,
-	["Strong Kick"] = 10,
+	["Button 1"] = 5,
+	["Button 2"] = 6,
+	["Button 3"] = 7,
+	["Button 4"] = 8,
+	["Button 5"] = 9,
+	["Button 6"] = 10,
 	["Coin"] = 11,
 	["Start"] = 12,
 }
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=34,
-		p1healthy=23,
-		p1healthenabled=true,
-		p2healthx=339,
-		p2healthy=23,
-		p2healthenabled=true,
+		health = {
+			P1 = {
+				x = 277,
+				y = 24,
+				enabled = true
+			},
+			P2 = {
+				x = 277,
+				y = 40,
+				enabled = true
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -75,23 +99,23 @@ end
 --]]
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	return rw(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	ww(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health)
+	return rw(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	ww(p2health, health)
 end
 
 local infiniteTime = function()
-	ww(0xFF9498,0x0909)
+	wdw(0xFF8E19, 0x70707000)
 end
 
 function Run() -- runs every frame

@@ -3,26 +3,42 @@ assert(rb,"Run fbneo-training-mode.lua")
 p1maxhealth = 0xff
 p2maxhealth = 0xff
 
-p1maxmeter = 0xff
-p2maxmeter = 0xff
+local meterbarmax = 0xFFFF
+local meterstockmax = 7
 
-local p1health1 = 0x10014A
-local p1health2 = 0x10014B
+p1maxmeter = meterbarmax*meterstockmax
+p2maxmeter = meterbarmax*meterstockmax
 
-local p2health1 = 0x10028A
-local p2health2 = 0x10028B
+local p1health = 0x10014A
+local p2health = 0x10028A
 
-local p1meter1 = 0x100156
-local p1meter2 = 0x100517
- 
-local p2meter1 = 0x100296
-local p2meter2 = 0x100297
+local p1meterbar = 0x100156
+local p1meterstocks = 0x100159
 
-local p1stocks = 0x100159
-local p2stocks = 0x100299
+local p2meterbar = 0x100296
+local p2meterstocks = 0x100299
 
 local p1combocounter = 0x10679d
 local p2combocounter = 0x1067c7
+
+local p1direction = 0x100119
+local p2direction = 0x100259
+
+character = {
+	RAI	= 0,
+	ARINA = 1,
+	SLASH = 2,
+	DANDY_J = 3,
+	TESS = 4,
+	MAURU = 5,
+	POLITANK_Z = 6,
+	FERNANDEZ = 7,
+	BONUS_KUN = 8
+}
+local p1characterid = 0x106997
+local p2characterid = 0x1069A1
+p1characterpick = nil
+p2characterpick = nil
 
 translationtable = {
 	"left",
@@ -51,30 +67,70 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=140,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=27,
-		p1healthy=21,
-		p1healthenabled=true,
-		p2healthx=266,
-		p2healthy=21,
-		p2healthenabled=true,
-		p1meterx=121,
-		p1metery=200,
-		p1meterenabled=true,
-		p2meterx=180,
-		p2metery=200,
-		p2meterenabled=true,
+		combotext = {
+			x=140,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 27,
+				y = 21,
+				enabled = true,
+			},
+			P2 = {
+				x = 266,
+				y = 21,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 98,
+				y = 191,
+				enabled = false,
+			},
+			P2 = {
+				x = 185,
+				y = 191,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+			refillmeterspeed = 1
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+			refillmeterspeed = 1
+		}
+	}
 }
 
 function playerOneFacingLeft()
-	return rb(0x100119) == 0
+	return rb(p1direction) == 0
 end
 
 function playerTwoFacingLeft()
-	return rb(0x100259) == 0
+	return rb(p2direction) == 0
 end
 
 function playerOneInHitstun()
@@ -86,53 +142,64 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth(health)
-	return rb(p1health1)
+	return rb(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health1, health)
-	wb(p1health2, health)
+	wb(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health1)
+	return rb(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health1, health)
-	wb(p2health2, health)
+	wb(p2health, health)
 end
 
 function readPlayerOneMeter()
-	return rb(0x1004BE)
+	return rb(p1meterstocks)*meterbarmax + rw(p1meterbar)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter1, meter)
-	wb(p1meter2, meter)
-	wb(p1stocks, 0x07)
+	if meter > p1maxmeter then
+		meter = p1maxmeter
+	end
+	local bar = meter%meterbarmax
+	local stocks = meter/meterbarmax
+	wb(p1meterbar, bar)
+	wb(p1meterstocks, stocks)
 end
 
 function readPlayerTwoMeter()
-	return rb(0x1005BE)
+	return rb(p2meterstocks)*meterbarmax + rw(p2meterbar)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter1, meter)
-	wb(p2meter2, meter)
-	wb(p2stocks, 0x07)
+	if meter > p2maxmeter then
+		meter = p2maxmeter
+	end
+	local bar = meter%meterbarmax
+	local stocks = meter/meterbarmax
+	wb(p2meterbar, bar)
+	wb(p2meterstocks, stocks)
 end
 
-
-function infiniteTime()
-	wb(0x100B02,0x9B)
+local function infiniteTime()
+	wb(0x100B02, 0x9B)
 end
 
-function maxCredits()
+local function maxCredits()
 	wb(0xD00034, 0x99)
 end
 
 function Run() -- runs every frame
 	infiniteTime()
 	maxCredits()
+	if p1characterpick then
+		wb(p1characterid, p1characterpick)
+	end
+	if p2characterpick then
+		wb(p2characterid, p2characterpick)
+	end
 end

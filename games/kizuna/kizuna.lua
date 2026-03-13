@@ -5,7 +5,6 @@ p2maxhealth = 0xC0
 
 
 local p1health = 0x108313
-
 local p2health = 0x108513
 
 local p1combocounter = 0x108554
@@ -37,16 +36,42 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=138,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=34,
-		p1healthy=19,
-		p1healthenabled=true,
-		p2healthx=259,
-		p2healthy=19,
-		p2healthenabled=true,
+		combotext = {
+			x=138,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 34,
+				y = 19,
+				enabled = true,
+			},
+			P2 = {
+				x = 259,
+				y = 19,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true
+		}
+	}
 }
 
 

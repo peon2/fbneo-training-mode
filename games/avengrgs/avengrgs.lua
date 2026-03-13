@@ -7,10 +7,12 @@ p1maxmeter = 0x02
 p2maxmeter = 0x02
 
 local p1health = 0x00108DCD
-
 local p2health = 0x00108F7D
 
-
+function gamemsg()
+	print "Known issues with avengrgs:"
+	print "No combo detection"
+end
 
 translationtable = {
 	"left",
@@ -39,19 +41,69 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=28,
-		p1healthy=11,
-		p1healthenabled=true,
-		p2healthx=283,
-		p2healthy=11,
-		p2healthenabled=true,
-        p1meterx=44,
-		p1metery=18,
-		p1meterenabled=true,
-		p2meterx=290,
-		p2metery=18,
-		p2meterenabled=true,
+		health = {
+			P1 = {
+				x = 28,
+				y = 11,
+				enabled = true,
+			},
+			P2 = {
+				x = 283,
+				y = 11,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 44,
+				y = 18,
+				enabled = true,
+			},
+			P2 = {
+				x = 290,
+				y = 18,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		}
+	},
+	inputs = {
+		simple = {
+			P1 = {
+				x = 2,
+				y = 224,
+				enabled = true
+			},
+			P2 = {
+				x = 273,
+				y = 224,
+				enabled = true
+			}
+		}
+	}
 }
 
 function playerOneFacingleft()
@@ -60,6 +112,12 @@ end
 
 function playerTwoFacingLeft()
 	return rb(0x00108ee8) == 0x0A
+end
+
+function _playerOneInHitstun()
+end
+
+function _playerTwoInHitstun()
 end
 
 function readPlayerOneHealth(health)

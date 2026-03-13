@@ -138,7 +138,15 @@ local profile = {
 		box.vval  = f.scale * memory.readwordsigned(box.hitbox_ptr + 0x2)
 		box.hrad  = f.scale * memory.readbyte(box.hitbox_ptr + 0x4)
 		box.vrad  = f.scale * memory.readbyte(box.hitbox_ptr + 0x5)
-
+ 
+ --[[ peon2: 
+	In Red Earth, 0x676B320 is a dummy 'attack' hitbox for Leo's Sword.
+	The Sword's actually hitbox is a 'proj. attack' hitbox.
+	These don't both need to display.
+--]]
+		if box.hitbox_ptr == 0x676B320 then
+			return
+		end
 		if box.hval == 0 and box.vval == 0 and box.hrad == 0 and box.vrad == 0 then
 			return
 		elseif obj.box_scale then
@@ -152,6 +160,11 @@ local profile = {
 		box.right  = box.hval + box.hrad
 		box.top    = box.vval - box.vrad
 		box.bottom = box.vval + box.vrad
+		
+		if box.bottom == 265 then
+			print(string.format("%X", obj.hitbox_ptr))
+			print(string.format("%X", box.hitbox_ptr))
+		end
 
 		table.insert(obj, box)
 	end,

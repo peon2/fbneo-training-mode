@@ -14,8 +14,28 @@ local p2meter = 0xFF4595
 local p1combocounter = 0xFF4110
 local p2combocounter = 0xFF4510
 
-local p1direction = 0xFF404d
-local p2direction = 0xFF444d
+local p1direction = 0xFF404D
+local p2direction = 0xFF444D
+
+character = {
+	WOLVERINE		= 0x00,
+	PSYLOCKE		= 0x02,
+	COLOSSUS		= 0x04,
+	CYCLOPS			= 0x06,
+	STORM			= 0x08,
+	ICEMAN			= 0x0A,
+	SPIRAL			= 0x0C,
+	SILVER_SAMURAI	= 0x0E,
+	OMEGA_RED		= 0x10,
+	SENTINEL		= 0x12,
+	JUGGERNAUT		= 0X14,
+	MAGNETO			= 0x16,
+	AKUMA			= 0x18
+}
+local p1characterid = 0xFF4051
+local p2characterid = 0xFF4451
+p1characterpick = nil
+p2characterpick = nil
 
 translationtable = {
 	"left",
@@ -46,30 +66,68 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=180,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=34,
-		p1healthy=20,
-		p1healthenabled=true,
-		p2healthx=338,
-		p2healthy=20,
-		p2healthenabled=true,
-		p1meterx=170,
-		p1metery=30,
-		p1meterenabled=true,
-		p2meterx=211,
-		p2metery=30,
-		p2meterenabled=true,
+		combotext = {
+			x=180,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 34,
+				y = 20,
+				enabled = true,
+			},
+			P2 = {
+				x = 338,
+				y = 20,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 170,
+				y = 30,
+				enabled = false,
+			},
+			P2 = {
+				x = 211,
+				y = 30,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true
+		}
+	}
 }
 
 function playerOneFacingLeft()
-	return rb(0xFF404d)==0
+	return rb(p1direction)==0
 end
 
 function playerTwoFacingLeft()
-	return rb(0xFF444d)==0
+	return rb(p2direction)==0
 end
 
 function playerOneInHitstun()
@@ -116,6 +174,33 @@ function infiniteTime()
 	wb(0xFF4808,0x99)
 end
 
+local xmcota = {}
+
+initConfigTable("xmcota", xmcota, "config")
+createConfigValue(
+	"xmcotamusicvolume",
+	"musicvolume",
+	50,
+	xmcota,
+	xmcota,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF019
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
 function Run()
+	setMusicVolume(xmcota.musicvolume)
 	infiniteTime()
+	if p1characterpick then
+		wb(p1characterid, p1characterpick)
+	end
+	if p2characterpick then
+		wb(p2characterid, p2characterpick)
+	end
 end

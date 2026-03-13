@@ -6,6 +6,8 @@
 --print("Lua hotkey 3: toggle hitbox axis")
 --print("Lua hotkey 4: toggle pushboxes")
 
+-- edited by peon2 to work with the fbneo-training-mode
+
 local boxes = {
 	["vulnerability"] = {color = 0x7777FF, fill = 0x40, outline = 0xFF},
 	       ["attack"] = {color = 0xFF0000, fill = 0x40, outline = 0xFF},
@@ -34,7 +36,7 @@ local globals = {
 --------------------------------------------------------------------------------
 -- game-specific modules
 
-local rb, rbs, rw, rws, rd, fc = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword, emu.framecount
+local fc = emu.framecount
 local game, buffer, box_buffer, throw_buffer
 local offset, any_true, get_obj, set_vulnerable, set_harmless, insert_throw, define_box, gr
 local a,v,p,g,t,x = "attack","vulnerability","push","guard","throw","undefined"
@@ -62,7 +64,7 @@ local profile = {
 	end,
 	update_object = function(obj)
 		obj.flip_x = bit.band(rb(obj.base + 0x47), 0x01) > 0 and 1 or -1
-		obj.hitbox_ptr = rd(obj.base + 0xB2)
+		obj.hitbox_ptr = rdw(obj.base + 0xB2)
 		obj.num_boxes = (bit.band(obj.hitbox_ptr, 0xFFFFFF) > 0 and rw(obj.hitbox_ptr)) or 0
 		obj.scale = rb(obj.base + 0x4B) + 1
 		obj.char_id = rw(obj.base + 0x30)
@@ -79,7 +81,7 @@ local profile = {
 		{base = 0x003ABE, func = function() --vulnerability
 			set_vulnerable() end}, 
 		{base = 0x009A9A, func = function() --throws
-			if rd(gr("a7")) == 0x00755E then
+			if rdw(gr("a7")) == 0x00755E then
 				insert_throw({range = rw(gr("a0"))})
 			end
 		end}, 
@@ -115,7 +117,7 @@ local profile = {
 		obj.flip_x = bit.bxor(obj.flip_x, rb(obj.base + 0x67))
 		obj.flip_x = bit.band(obj.flip_x, 1) > 0 and 1 or -1
 		local hitbox_ptr_offset = rw(obj.base + 0x88)
-		obj.hitbox_ptr = rd(obj.base + 0x8A) + bit.band(hitbox_ptr_offset, 0x0FFF) * 6
+		obj.hitbox_ptr = rdw(obj.base + 0x8A) + bit.band(hitbox_ptr_offset, 0x0FFF) * 6
 		obj.num_boxes = bit.rshift(bit.band(hitbox_ptr_offset, 0xF000), 12)
 		obj.scale = rb(obj.base + 0x63) + 1
 		obj.char_id = rw(obj.base + 0x5C)
@@ -137,7 +139,7 @@ local profile = {
 		{base = 0x028904, func = function() --vulnerability
 			set_vulnerable() end},
 		{base = 0x013E14, func = function() --ground throws
-			local stack = rd(gr("a7") + 0x8)
+			local stack = rdw(gr("a7") + 0x8)
 			for _, throw_type in ipairs({
 				{ptr = 0x026320, level = 0}, --HP throw
 				{ptr = 0x0274DC, level = 0}, --HK throw
@@ -155,7 +157,7 @@ local profile = {
 			end
 			end},
 		{base = 0x0263BC, base = 0x013EFE, func = function() --jubei/laurence airthrow
-			local stack = rd(gr("a7"))
+			local stack = rdw(gr("a7"))
 			if stack == 0x0199B8 and memory.readwordsigned(gr("a4") + offset.pos_y) > 0 then
 				insert_throw({ptr = gr("a0")})
 			end
@@ -181,7 +183,7 @@ local profile = {
 	},
 	update_object = function(obj)
 		obj.flip_x = rbs(obj.base + 0x62) < 0 and -1 or 1
-		obj.hitbox_ptr = rd(obj.base + 0x8A)
+		obj.hitbox_ptr = rdw(obj.base + 0x8A)
 		obj.num_boxes  = bit.rshift(obj.hitbox_ptr, 24)
 		obj.scale = rb(obj.base + 0x65) + 1
 		obj.char_id = rw(obj.base + 0x5C)
@@ -190,12 +192,12 @@ local profile = {
 		return bit.btst(5, rb(obj.base + 0x7C)) == 0
 	end,
 	process_throw = function(obj, box)
-		obj.opp_base = rd(obj.base + 0xA8)
+		obj.opp_base = rdw(obj.base + 0xA8)
 		obj.opp_id = rw(obj.opp_base + 0x5C)
 		obj.side = rbs(obj.base + 0x62) < 0 and 1 or -1
 		if box.ground then
-			box.ptr = rd(0x027268 + obj.char_id * 4) + bit.lshift(box.ground, 3) + rb(obj.base + 0x92)
-			box.ptr = rd(0x0271DC + rb(box.ptr) * 4)
+			box.ptr = rdw(0x027268 + obj.char_id * 4) + bit.lshift(box.ground, 3) + rb(obj.base + 0x92)
+			box.ptr = rdw(0x0271DC + rb(box.ptr) * 4)
 			for _, throw_type in ipairs({
 				0x02C066, --F/B+HP
 				0x02C0BA, --B+HK jubei
@@ -206,7 +208,7 @@ local profile = {
 				0x02D7A6, --B+HK bear
 			}) do
 				if box.ptr == throw_type then
-					local range = rd(0x064892 + obj.char_id * 4)
+					local range = rdw(0x064892 + obj.char_id * 4)
 					range = rws(range + (obj.opp_id - 1) * 0xA)
 					box.right = range * obj.flip_x
 					return
@@ -214,9 +216,9 @@ local profile = {
 			end
 			return false
 		elseif box.air then
-			local ptr = rd(0x027F70 + obj.char_id * 4) + box.air
+			local ptr = rdw(0x027F70 + obj.char_id * 4) + box.air
 			ptr = rb(ptr) * 4 + box.offset
-			ptr = rd(ptr)
+			ptr = rdw(ptr)
 			for _, throw_type in ipairs({
 				0x02C210, --jubei
 				0x02C354, --mai
@@ -224,7 +226,7 @@ local profile = {
 				0x02C624, --laurence
 			}) do
 				if ptr == throw_type then
-					ptr = rd(0x06491A + obj.char_id * 4)
+					ptr = rdw(0x06491A + obj.char_id * 4)
 					ptr = ptr + obj.opp_id * 0x18
 					box.top    = -rws(ptr - 0x6)
 					box.bottom = -rws(ptr - 0x8)
@@ -234,7 +236,7 @@ local profile = {
 			end
 			return false
 		elseif box.tier then
-			local range = rd(0x064892 + obj.char_id * 4)
+			local range = rdw(0x064892 + obj.char_id * 4)
 			range = rws(range + (obj.opp_id - 1) * 0xA + (box.tier - 1) * 2)
 			box.right = range * obj.flip_x
 		end
@@ -357,11 +359,11 @@ local profile = {
 		return bit.btst(4, rb(obj.base + 0x6A)) == 0 or rb(obj.base + 0xA8) > 0
 	end,
 	process_throw = function(obj, box)
-		obj.opp_base = rd(obj.base + 0x94)
+		obj.opp_base = rdw(obj.base + 0x94)
 		obj.opp_id = rw(obj.opp_base + 0x10)
 		obj.side = rbs(obj.base + 0x58) < 0 and -1 or 1
 		if box.d7 then --ground throws
-			box.address = rd(0x06CBB0 + (game.clones[emu.romname()] or 0) + obj.char_id * 4)
+			box.address = rdw(0x06CBB0 + (game.clones[emu.romname()] or 0) + obj.char_id * 4)
 			local range = (obj.opp_id - 1) * 0xC
 			range = range + bit.band(box.d7 - 0x60, 0x07) * 2
 			range = rws(box.address + range)
@@ -455,7 +457,7 @@ local profile = {
 			(not obj.projectile and rb(obj.base + 0xB6) == 0)
 	end,
 	process_throw = function(obj, box)
-		obj.opp_base = rd(obj.base + 0x96)
+		obj.opp_base = rdw(obj.base + 0x96)
 		obj.opp_id = rw(obj.opp_base + 0x10)
 		obj.side = rbs(obj.base + 0x58) < 0 and -1 or 1
 		if box.pushbox_ptr then --ground throws
@@ -494,7 +496,7 @@ local profile = {
 		{base = 0x073DF2, func = function() --ground throws
 			local pc = gr("pc")
 			insert_throw({
-				pushbox_ptr = rd(pc + 0x2), 
+				pushbox_ptr = rdw(pc + 0x2), 
 				range_ptr = pc + 0xD6, 
 				d7 = bit.band(gr("d7"), 0xFFFF), 
 		}) end},
@@ -551,13 +553,13 @@ local profile = {
 			(not obj.projectile and rb(obj.base + 0xB6) == 0)
 	end,
 	process_throw = function(obj, box)
-		obj.opp_base = rd(obj.base + 0x96)
+		obj.opp_base = rdw(obj.base + 0x96)
 		obj.opp_id = rw(obj.opp_base + 0x10)
 		obj.side = rbs(obj.base + 0x58) < 0 and -1 or 1
 		if box.ptr then --ground
 			local range = (rb(obj.base + 0x58) == rb(obj.opp_base + 0x58) and 0x4) or 0x3
-			range = math.abs(rbs(rd(box.ptr + 0x02) + bit.lshift(obj.opp_id, 3) + range) * 4)
-			range = range + rbs(rd(box.ptr + 0x02) + bit.lshift(obj.char_id, 3) + 0x3) * -4
+			range = math.abs(rbs(rdw(box.ptr + 0x02) + bit.lshift(obj.opp_id, 3) + range) * 4)
+			range = range + rbs(rdw(box.ptr + 0x02) + bit.lshift(obj.char_id, 3) + 0x3) * -4
 			box.d7 = (box.d7 == 0x65 and 0x3) or bit.band(box.d7 - 0x60, 0x7)
 			range = range + rbs(box.ptr + 0xD2 + obj.char_id * 4 + box.d7)
 			box.right = range * obj.side
@@ -744,7 +746,7 @@ for game in ipairs(profile) do
 		obj.flip_x = rws(obj.base + 0x6A) < 0 and 1 or 0
 		obj.flip_x = bit.bxor(obj.flip_x, bit.band(rb(obj.base + 0x71), 1))
 		obj.flip_x = obj.flip_x > 0 and 1 or -1
-		obj.hitbox_ptr = rd(obj.base + 0x7A)
+		obj.hitbox_ptr = rdw(obj.base + 0x7A)
 		obj.num_boxes  = bit.rshift(obj.hitbox_ptr, 24)
 		obj.scale      = rb(obj.base + 0x73) + 1
 		obj.char_id    = rw(obj.base + 0x10)
@@ -923,7 +925,7 @@ local update_object = function(f, obj)
 	obj.pos_z = rws(obj.base + offset.pos_z)
 	obj.pos_y = emu.screenheight() - rws(obj.base + offset.pos_y) - obj.pos_z
 	obj.pos_y = game.adjust_y(f, obj.pos_y)
-	obj.ptr   = rd(obj.base)
+	obj.ptr   = rdw(obj.base)
 	game.update_object(obj)
 	local f = buffer[fc()-1] or buffer[fc()]
 	obj.vulnerable = f.vulnerable[obj.base]
@@ -971,7 +973,7 @@ local read_projectiles = {
 				return
 			end
 			prev_address = obj.base
-			local hitbox_ptr = bit.band(rd(obj.base + 0xB2), 0xFFFFFF)
+			local hitbox_ptr = bit.band(rdw(obj.base + 0xB2), 0xFFFFFF)
 			if hitbox_ptr > 0 and rw(hitbox_ptr + game.box.header) ~= 0x0006 then --back plane obstacle
 				table.insert(f, update_object(f, obj))
 			end
@@ -980,9 +982,9 @@ local read_projectiles = {
 
 	["fatal fury 2"] = function(f)
 		for p = 1, game.number_players do
-			local obj = {base = rd(game.player_base + offset.player_space * (p-1) + game.obj_ptr_offset)}
+			local obj = {base = rdw(game.player_base + offset.player_space * (p-1) + game.obj_ptr_offset)}
 			obj.projectile = true
-			local ptr = rd(obj.base)
+			local ptr = rdw(obj.base)
 			while obj.base > 0 do
 				local inst = rw(ptr)
 				if inst == 0x4E75 then --rts
@@ -999,9 +1001,9 @@ local read_projectiles = {
 	["garou"] = function(f)
 		local offset = 0
 		while true do
-			local obj = {base = rd(game.obj_ptr_list + offset)}
+			local obj = {base = rdw(game.obj_ptr_list + offset)}
 			obj.projectile = true
-			if obj.base == 0 or rw(rd(obj.base)) == 0x4E75 then --rts instruction
+			if obj.base == 0 or rw(rdw(obj.base)) == 0x4E75 then --rts instruction
 				return
 			end
 			for _, old_obj in ipairs(f) do
@@ -1065,7 +1067,7 @@ local update_hitboxes = function()
 	end
 end
 
-
+--[[
 emu.update_func( function()
 	globals.register_count = (globals.register_count or 0) + 1
 	globals.last_frame = globals.last_frame or fc()
@@ -1077,7 +1079,7 @@ emu.update_func( function()
 	end
 	globals.last_frame = fc()
 end)
-
+--]]
 
 --------------------------------------------------------------------------------
 -- draw the hitboxes
@@ -1133,15 +1135,15 @@ local render_hitboxes = function()
 	end
 end
 
-
+--[[
 gui.register(function()
 	render_hitboxes()
 end)
-
+--]]
 
 --------------------------------------------------------------------------------
 -- hotkey functions
-
+--[[
 input.registerhotkey(1, function()
 	globals.blank_screen = not globals.blank_screen
 	render_hitboxes()
@@ -1168,7 +1170,7 @@ input.registerhotkey(4, function()
 	render_hitboxes()
 	emu.message((globals.draw_pushboxes and "showing" or "hiding") .. " pushboxes")
 end)
-
+--]]
 
 --------------------------------------------------------------------------------
 -- initialize on game startup
@@ -1190,13 +1192,13 @@ end
 
 
 local whatgame = function()
-	print()
+	--print()
 	game = nil
 	initialize_bps()
 	initialize_buffers()
 	for _, module in ipairs(profile) do
 		if emu.romname() == module.game or emu.parentname() == module.game then
-			print("drawing hitboxes for " .. emu.gamename())
+			--print("drawing hitboxes for " .. emu.gamename())
 			game = module
 			globals.pushbox_base = game.push and game.push.box_data + (game.push[emu.romname()] or 0)
 			if not emu.registerfuncs then
@@ -1213,9 +1215,9 @@ local whatgame = function()
 			return
 		end
 	end
-	print("unsupported game: " .. emu.gamename())
+	--print("unsupported game: " .. emu.gamename())
 end
-
+--[[
 
 savestate.registerload(function()
 	initialize_buffers()
@@ -1225,3 +1227,26 @@ end)
 emu.registerstart(function()
 	whatgame()
 end)
+--]]
+--------------------------------------------
+
+whatgame()
+
+function hitboxesReg() 
+	if hitboxes.enabled then
+		render_hitboxes()
+	end
+end
+
+function hitboxesRegAfter()
+	globals.register_count = (globals.register_count or 0) + 1
+	globals.last_frame = globals.last_frame or fc()
+	if globals.register_count == 1 then
+		update_hitboxes()
+	end
+	if globals.last_frame < fc() then
+		globals.register_count = 0
+	end
+	globals.last_frame = fc()
+	--updateHitboxes()
+end

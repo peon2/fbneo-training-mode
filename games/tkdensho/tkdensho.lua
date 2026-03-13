@@ -7,12 +7,15 @@ p1maxmeter = 0x0B
 p2maxmeter = 0x0B
 
 local p1health = 0x2004A4
-
 local p2health = 0x200534
 
 local p1combocounter = 0x2004A0
-
 local p2combocounter = 0x200530
+
+function gamemsg()
+	print "Known issues with tkdensho:"
+	print "Due to how damage calculation is performed in this game, the combo counter is wrong"
+end
 
 translationtable = {
 	"left",
@@ -41,22 +44,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=145,
-		combotexty=39,
-		comboenabled=true,
-		p1healthx=18,
-		p1healthy=20,
-		p1healthenabled=true,
-		p2healthx=290,
-		p2healthy=20,
-		p2healthenabled=true,
-		p1meterx=100,
-		p1metery=208,
-		p1meterenabled=true,
-		p2meterx=214,
-		p2metery=208,
-		p2meterenabled=true,
+		combotext = {
+			x=145,
+			y=49,
+			enabled=false,
+		},
+		health = {
+			P1 = {
+				x = 18,
+				y = 20,
+				enabled = true,
+			},
+			P2 = {
+				x = 290,
+				y = 20,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 100,
+				y = 208,
+				enabled = true,
+			},
+			P2 = {
+				x = 214,
+				y = 208,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -79,12 +120,12 @@ function readPlayerOneHealth(health)
 	return rb(p1health)
 end
 
-function writePlayerOneHealth(health)
-	wb(p1health, health)
-end
-
 function readPlayerTwoHealth(health)
 	return rb(p2health)
+end
+
+function writePlayerOneHealth(health)
+	wb(p1health, health)
 end
 
 function writePlayerTwoHealth(health)
