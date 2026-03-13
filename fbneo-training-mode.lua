@@ -4,7 +4,7 @@ DISABLE_SCROLLING_INPUT = false
 -- true, do use it
 -- false, don't use it
 
-FBNEO_TRAINING_MODE_VERSION = "v0.26.03"
+FBNEO_TRAINING_MODE_VERSION = "v0.26.03.13"
 
 --DEBUG = true
 ROM = emu.romname()
