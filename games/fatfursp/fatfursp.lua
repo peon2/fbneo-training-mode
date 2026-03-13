@@ -107,11 +107,11 @@ end
 
 -- Thanks to Guruslum for these hitstun values
 function playerOneInHitstun()
-	return rb(0x100496)~=0
+	return (rb(0x1004A0) + bit.band(rb(0x1004FD), 0x3F))~=0
 end
 
 function playerTwoInHitstun()
-	return rb(0x100596)~=0
+	return (rb(0x1005A0) + bit.band(rb(0x1005FD), 0x3F))~=0
 end
 
 function readPlayerOneHealth()
