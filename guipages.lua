@@ -1450,12 +1450,12 @@ if gamefunctions.writeplayertwohealth and gamevars.P2.constants.maxhealth then -
 	local len = #tostring(gamevars.P2.constants.maxhealth)
 	local uf = 	function(n, k)
 		if n then
-			local maxhealth = getConfig("p2maxhealth")+n
-			changeConfig("p2maxhealth", maxhealth)
+			local maxhealth = getConfigValue("p2healthmax")+n
+			changeConfig("p2healthmax", maxhealth)
 			return maxhealth
 		end
 		if k then
-			changeConfig("p2maxhealth", k)
+			changeConfig("p2healthmax", k)
 			return k
 		end
 		return gamevars.P2.maxhealth

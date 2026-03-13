@@ -1153,6 +1153,8 @@ function setConfigDefault(id, default)
 end
 
 function resetConfig(id)
+	assert(id, "Attempt to reset a nil config item.")
+	assert(configitems[id], "Config Item: '"..id.."' does not exist.")
 	local configitem = configitems[id]
 	local changed = configitem.config.changed -- remember status
 	local value = configitem.varpointer[configitem.name]

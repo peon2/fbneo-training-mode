@@ -1,4 +1,8 @@
 v0.26.03.13
+fatfursp:
+Updated the combo counter to be more consistent.
+Changed the character select to allow picking Ryo Sakazaki.
+
 sf2:
 Added stun control and a stunbar on screen for P1 and P2.
 
