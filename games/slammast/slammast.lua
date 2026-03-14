@@ -7,10 +7,9 @@ local p1health = 0xFF9157
 local p2health = 0xFF9357
 
 function gamemsg()
+	print "Note that slammast doesn't have meter and only supports P1 and P2"
 	print "Known issues with slammast:"
 	print "Doesn't track combos"
-	print "Note that slammast doesn't have meter"
-	print "Only supports P1 and P2"
 end
 
 translationtable = {
@@ -36,13 +35,37 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=50,
-		p1healthy=33,
-		p1healthenabled=true,
-		p2healthx=356,
-		p2healthy=33,
-		p2healthenabled=true,
+		health = {
+			P1 = {
+				x = 50,
+				y = 33,
+				enabled = true,
+			},
+			P2 = {
+				x = 356,
+				y = 33,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()

@@ -43,8 +43,8 @@ function back() -- Should be modified since "back" could be mapped to another bu
 	end
 end
 
-if dirname == "" then
-	dirname = emu.romname()
+if gamename == "" then
+	gamename = emu.romname()
 end
 
 --------------------------------------------------
@@ -297,7 +297,7 @@ createTextfield = function(BaseMenu, name, x, y, max_length, characters_set, tex
 	end
 	tf.func = function()
 		tf:exit()
-		CIG(interactivegui.previouspage, interactivegui.previousselection)
+		changePageAndSelection(interactivegui.previouspage, interactivegui.previousselection)
 	end
 
 	menu[1] = tf
@@ -317,7 +317,7 @@ local missions_button = {
 			"When you select a mission, its savestate is loaded regularly",
 			"and the dummy performs the actions saved in the replay"
 		},
-		func = 	function() CIG("missions_hub", 1) end,
+		func = 	function() changePageAndSelection("missions_hub", 1) end,
 	}
 insertAddonButton(missions_button)
 ------------------------------------------
@@ -336,7 +336,7 @@ local missions_hub = {
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func =  function() CIG("addonpage1",1) end,
+		func =  function() changePageAndSelection("addonpage1",1) end,
 	},
 	{
 		text = "Delete the selected missions",
@@ -356,7 +356,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 35,
 			olcolour = "black",
 			handle = 1,
-			func = 	function() CIG("blanka_missions_page", 1) end,
+			func = 	function() changePageAndSelection("blanka_missions_page", 1) end,
 		},
 		{
 			text = "Boxer",
@@ -364,7 +364,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 50,
 			olcolour = "black",
 			handle = 2,
-			func = 	function() CIG("boxer_missions_page", 1) end,
+			func = 	function() changePageAndSelection("boxer_missions_page", 1) end,
 		},
 		{
 			text = "Cammy",
@@ -372,7 +372,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 65,
 			olcolour = "black",
 			handle = 3,
-			func = 	function() CIG("cammy_missions_page", 1) end,
+			func = 	function() changePageAndSelection("cammy_missions_page", 1) end,
 		},
 		{
 			text = "Chun Li",
@@ -380,7 +380,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 80,
 			olcolour = "black",
 			handle = 4,
-			func = 	function() CIG("chunli_missions_page", 1) end,
+			func = 	function() changePageAndSelection("chunli_missions_page", 1) end,
 		},
 		{
 			text = "Claw",
@@ -388,7 +388,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 35,
 			olcolour = "black",
 			handle = 5,
-			func = 	function() CIG("claw_missions_page", 1) end,
+			func = 	function() changePageAndSelection("claw_missions_page", 1) end,
 		},
 		{
 			text = "Dhalsim",
@@ -396,7 +396,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 50,
 			olcolour = "black",
 			handle = 6,
-			func = 	function() CIG("dhalsim_missions_page", 1) end,
+			func = 	function() changePageAndSelection("dhalsim_missions_page", 1) end,
 		},
 		{
 			text = "Dictator",
@@ -404,7 +404,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 65,
 			olcolour = "black",
 			handle = 7,
-			func = 	function() CIG("dictator_missions_page", 1) end,
+			func = 	function() changePageAndSelection("dictator_missions_page", 1) end,
 		},
 		{
 			text = "Dee Jay",
@@ -412,7 +412,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 80,
 			olcolour = "black",
 			handle = 8,
-			func = 	function() CIG("deejay_missions_page", 1) end,
+			func = 	function() changePageAndSelection("deejay_missions_page", 1) end,
 		},
 		{
 			text = "Fei Long",
@@ -420,7 +420,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 35,
 			olcolour = "black",
 			handle = 9,
-			func = 	function() CIG("feilong_missions_page", 1) end,
+			func = 	function() changePageAndSelection("feilong_missions_page", 1) end,
 		},
 		{
 			text = "Guile",
@@ -428,7 +428,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 50,
 			olcolour = "black",
 			handle = 10,
-			func = 	function() CIG("guile_missions_page", 1) end,
+			func = 	function() changePageAndSelection("guile_missions_page", 1) end,
 		},
 		{
 			text = "Honda",
@@ -436,7 +436,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 65,
 			olcolour = "black",
 			handle = 11,
-			func = 	function() CIG("ehonda_missions_page", 1) end,
+			func = 	function() changePageAndSelection("ehonda_missions_page", 1) end,
 		},
 		{
 			text = "Ken",
@@ -444,7 +444,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 80,
 			olcolour = "black",
 			handle = 12,
-			func = 	function() CIG("ken_missions_page", 1) end,
+			func = 	function() changePageAndSelection("ken_missions_page", 1) end,
 		},
 		{
 			text = "Ryu",
@@ -452,7 +452,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 35,
 			olcolour = "black",
 			handle = 13,
-			func = 	function() CIG("ryu_missions_page", 1) end,
+			func = 	function() changePageAndSelection("ryu_missions_page", 1) end,
 		},
 		{
 			text = "Sagat",
@@ -460,7 +460,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 50,
 			olcolour = "black",
 			handle = 14,
-			func = 	function() CIG("sagat_missions_page", 1) end,
+			func = 	function() changePageAndSelection("sagat_missions_page", 1) end,
 		},
 		{
 			text = "T-Hawk",
@@ -468,7 +468,7 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 65,
 			olcolour = "black",
 			handle = 15,
-			func = 	function() CIG("thawk_missions_page", 1) end,
+			func = 	function() changePageAndSelection("thawk_missions_page", 1) end,
 		},
 		{
 			text = "Zangief",
@@ -476,18 +476,18 @@ if (emu.romname() == 'ssf2xjr1') then
 			y = 80,
 			olcolour = "black",
 			handle = 16,
-			func = 	function() CIG("zangief_missions_page", 1) end,
+			func = 	function() changePageAndSelection("zangief_missions_page", 1) end,
 		},
 	}
 else
 	missions_hub_characters = {
 		{
-			text = dirname,
+			text = gamename,
 			x = 35,
 			y = 35,
 			olcolour = "black",
 			handle = 1,
-			func = 	function() CIG("game_missions_page", 1) end,
+			func = 	function() changePageAndSelection("game_missions_page", 1) end,
 		},
 	}
 end
@@ -509,12 +509,12 @@ local function makeCharacterPage(character)
 			text = "<",
 			olcolour = "black",
 			info = "Back",
-			func =  function() CIG("missions_hub",1) end,
+			func =  function() changePageAndSelection("missions_hub",1) end,
 		},
 	}
 end
 
-local characters_name = { dirname };
+local characters_name = { gamename };
 local characters = characters_name;
 if (emu.romname() == 'ssf2xjr1') then
 	characters =
@@ -580,7 +580,7 @@ if (emu.romname() == 'ssf2xjr1') then
 	guipages.thawk_missions_page = missions_page["thawk"]
 	guipages.zangief_missions_page = missions_page["zangief"]
 else
-	guipages.game_missions_page = missions_page[dirname]
+	guipages.game_missions_page = missions_page[gamename]
 end
 
 -- Inserting buttons in those pages
@@ -607,10 +607,10 @@ end
 
 local function createMissionsFile(character)
 	-- Create empty missions_list.lua file if one does not exist
-	if not fexists("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua") then
-		os.execute("mkdir games\\"..dirname.."\\missions_saved\\"..character) -- windows
-		os.execute("mkdir games/"..dirname.."/missions_saved/"..character) -- posix
-		local file = io.open("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua", "w")
+	if not fexists("games/"..gamename.."/missions_saved/"..character.."/missions_list.lua") then
+		os.execute("mkdir games\\"..gamename.."\\missions_saved\\"..character) -- windows
+		os.execute("mkdir games/"..gamename.."/missions_saved/"..character) -- posix
+		local file = io.open("games/"..gamename.."/missions_saved/"..character.."/missions_list.lua", "w")
 		file:write("missions_list[\""..character.."\"] = {}\n---------------------------------------------------------")
 		file:close()
 	end
@@ -618,7 +618,7 @@ end
 
 for i = 1, #characters do
 	createMissionsFile(characters[i])
-	dofile("games/"..dirname.."/missions_saved/"..characters[i].."/missions_list.lua")
+	dofile("games/"..gamename.."/missions_saved/"..characters[i].."/missions_list.lua")
 	insertMissionsButtons(characters[i])
 end
 
@@ -629,7 +629,7 @@ interactivegui.boxxlength = 2*(emu.screenwidth()/4) -- a temporary modification 
 local save_mission = {
 		title = {
 			text = "Save Mission",
-			x = interactivegui.boxxlength/2 - 25,
+			x = interactivegui.boxxlength/2 - #"Save Mission"*LETTER_HALFWIDTH,
 			y = 1,
 		},
 		infos = {
@@ -638,47 +638,42 @@ local save_mission = {
 			y = 82,
 		},
 		{
-			text = "Name : ",
+			text = "Name: ",
 			x = 20,
 			y = 20,
-			fillpercent = 0,
-			olcolour = "white",
+			olcolour = colour.olcolour,
 			info = {
 				"Name of your mission",
 				"Use Up and Down to select a character, Right to validate"
 			},
-			func = 	function()
-						CIG("save_name")
-					end,
+			func = function()
+				changePageAndSelection("save_name")
+			end,
 		},
 		slots = {
-			text = "Replay slots : ",
+			text = "Replay slots: ",
 			x = 20,
 			y = 35,
-			fillpercent = 0,
-			olcolour = "white",
 			info = "",
 		},
 		{
-			text = "Frames between two replays : ",
+			text = "Frames between two replays: ",
 			x = 20,
 			y = 50,
-			fillpercent = 0,
-			olcolour = "white",
+			olcolour = colour.olcolour,
 			info = {
 				"Controls how many frames should be left after a replay end and before",
 				"the savestate is loaded again"
 			},
-			func = 	function()
-						CIG("save_frame")
-					end,
+			func = function()
+				changePageAndSelection("save_frame")
+			end,
 		},
 		{
 			text = "Save",
 			x = 80,
 			y = 68,
-			fillpercent = 0,
-			olcolour = "black",
+			olcolour = colour.olcolour,
 			info = {
 				"Saves your mission in your game's directory"
 			},
@@ -753,7 +748,7 @@ local function insertSlotButtons()
 			table.insert(save_mission, slot_buttons[i])
 		end
 	end
-	formatGuiTables()
+	formatGUITables()
 end
 
 local slots_checked = {}
@@ -886,19 +881,19 @@ local function handlePopUp()
 	end
 end
 
-local mission_path = "games/"..dirname.."/missions_saved/"
+local mission_path = "games/"..gamename.."/missions_saved/"
 
 local function makeMissionButton(_mission_name, _mission_frame_delay)
 	if (emu.romname() == 'ssf2xjr1') then
 		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tautoblock = "..autoblock_selector..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..readCharacterName(gamestate.P1).."\"], ".._mission_name..")".."\n--END"
 	else
-		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..dirname.."\"], ".._mission_name..")".."\n--END"
+		return "\n".._mission_name.." = {\n".."\t\ttext = \"".._mission_name.."\",\n".."\t\tolcolour = \"black\",\n".."\t\tfillpercent = 0,\n".."\t\tchecked = false,\n".."\t\tslots_nb = "..#slots_checked..",\n".."\t\tframe_delay = ".._mission_frame_delay..",\n".."\t\tmission_text = \"\",\n".."\t\tfunc = function() ".._mission_name..".checked = not ".._mission_name..".checked end,\n".."\t\tautofunc = function(this)\n\t\t\tif this.checked then\n\t\t\t\tthis.fillpercent = 1\n\t\t\telseif not this.checked then\n\t\t\t\tthis.fillpercent = 0\n\t\t\tend\n\t\tend,\n}\ntable.insert(missions_list[\""..gamename.."\"], ".._mission_name..")".."\n--END"
 	end
 end
 
 local r_frame = 0
 local function loadMissionTakeover()
-	local character = dirname
+	local character = gamename
 	if (emu.romname() == 'ssf2xjr1') then
 		character = readCharacterName(gamestate.P1)
 	end
@@ -907,7 +902,7 @@ end
 
 local function saveMission()
 	-- reading the save popup inputs
-	local character = dirname
+	local character = gamename
 	if (emu.romname() == 'ssf2xjr1') then
 		character = readCharacterName(gamestate.P1)
 	end
@@ -956,9 +951,9 @@ local function saveMission()
 		for i = 1, #missions_list[character] do
 			missions_list[character][i] = nil
 		end
-		dofile("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua")
+		dofile("games/"..gamename.."/missions_saved/"..character.."/missions_list.lua")
 		insertMissionsButtons(character)
-		formatGuiTables()
+		formatGUITables()
 		closePopUp()
 	end
 end
@@ -971,7 +966,7 @@ local frame_delay = 0
 local timer = 0
 local random_slot = 1
 
-local function playMission(mission) -- mission[1] = dirname / [2] = mission's name
+local function playMission(mission) -- mission[1] = gamename / [2] = mission's name
 	if frame_delay < 3 then frame_delay = 3 end -- to be sure that we can reroll a mission
 	if not recording.playback then
 		timer = timer + 1
@@ -1085,11 +1080,11 @@ local function deleteMission()
 			for j = 1, #missions_list[characters[i]] do
 				missions_list[characters[i]][j] = nil
 			end
-			dofile("games/"..dirname.."/missions_saved/"..characters[i].."/missions_list.lua")
+			dofile("games/"..gamename.."/missions_saved/"..characters[i].."/missions_list.lua")
 			insertMissionsButtons(characters[i])
 		end
 		toggleInteractiveGUI(false, {})
-		formatGuiTables()
+		formatGUITables()
 		local s = ""
 		if #missions_checked_deletion > 1 then
 			s = "s"
@@ -1125,10 +1120,10 @@ local function stockMissionsCheckedForDeletion()
 end
 
 local Elements = {
-	{text = "No", releasefunc = function() return function()  CIG(interactivegui.previouspage, interactivegui.previousselection) interactivegui.previouspage = interactivegui.page interactivegui.previousselection = interactivegui.selection clearMissionsCheckedForDeletion() resetErrorMsg() end end},
-	{text = "Yes", releasefunc = function() return function() CIG(interactivegui.previouspage, interactivegui.previousselection) interactivegui.previouspage = interactivegui.page interactivegui.previousselection = interactivegui.selection deleteMission() resetErrorMsg() end end},
+	{text = "No", releasefunc = function() return function()  changePageAndSelection(interactivegui.previouspage, interactivegui.previousselection) interactivegui.previouspage = interactivegui.page interactivegui.previousselection = interactivegui.selection clearMissionsCheckedForDeletion() resetErrorMsg() end end},
+	{text = "Yes", releasefunc = function() return function() changePageAndSelection(interactivegui.previouspage, interactivegui.previousselection) interactivegui.previouspage = interactivegui.page interactivegui.previousselection = interactivegui.selection deleteMission() resetErrorMsg() end end},
 }
-guipages.delete = createPopUpMenu(guipages.missions_hub, nil, nil, nil, Elements, 125, 125)
+guipages.delete = createPopUpMenu(guipages.missions_hub, Elements, 125, 125)
 guipages.delete[2].x = guipages.delete[1].x + 15
 guipages.delete[2].y = guipages.delete[1].y
 
@@ -1143,7 +1138,7 @@ guipages.missions_hub[2].func = function()
 			s = "s"
 		end
 		guipages.missions_hub.infos.text = #missions_checked_deletion.." mission"..s.." will be deleted, are you sure ?"
-		CIG("delete",1)
+		changePageAndSelection("delete",1)
 	end
 end
 

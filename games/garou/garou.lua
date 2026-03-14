@@ -9,11 +9,6 @@ p2maxmeter = 0x80
 local p1direction = 0x100458
 local p2direction = 0x100558
 
-function gamemsg()
-	print "Known issues with garou:"
-	print "hitboxes don't currently work"
-end
-
 translationtable = {
 	"left",
 	"right",
@@ -41,22 +36,58 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=145,
-		combotexty=40,
-		comboenabled=true,
-		p1healthx=6,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=303,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=90,
-		p1metery=208,
-		p1meterenabled=true,
-		p2meterx=222,
-		p2metery=208,
-		p2meterenabled=true,
+		combotext = {
+			y=40
+		},
+		health = {
+			P1 = {
+				x = 6,
+				y = 16,
+				enabled = true,
+			},
+			P2 = {
+				x = 303,
+				y = 16,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 90,
+				y = 208,
+				enabled = true,
+			},
+			P2 = {
+				x = 222,
+				y = 208,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -115,5 +146,8 @@ function maxCredits()
 	wb(0x10E008, 0x09)
 	wb(0x10E009, 0x09)
 end
-require('addon.garou_training')
 
+function Run() -- runs every frame
+	infiniteTime()
+	maxCredits()
+end

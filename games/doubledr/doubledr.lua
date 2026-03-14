@@ -2,7 +2,7 @@ assert(rb,"Run fbneo-training-mode.lua")
 
 p1maxhealth = 0x6800 -- word
 p2maxhealth = 0x6800
--- health tends towards 0x6800 from 0 as damage is taken
+-- health goes to 0x6800 from 0 as damage is taken
 
 p1maxmeter = 0x6800 - rw(0x100450)
 p2maxmeter = 0x6800 - rw(0x100550)
@@ -43,22 +43,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=142,
-		combotexty=50,
-		comboenabled=true,
-		p1healthx=43,
-		p1healthy=24,
-		p1healthenabled=true,
-		p2healthx=258,
-		p2healthy=24,
-		p2healthenabled=true,
-		p1meterx=120,
-		p1metery=35,
-		p1meterenabled=true,
-		p2meterx=193,
-		p2metery=35,
-		p2meterenabled=true,
+		combotext = {
+			x=142,
+			y=50,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 43,
+				y = 24,
+				enabled = true,
+			},
+			P2 = {
+				x = 258,
+				y = 24,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 120,
+				y = 35,
+				enabled = true,
+			},
+			P2 = {
+				x = 193,
+				y = 35,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()

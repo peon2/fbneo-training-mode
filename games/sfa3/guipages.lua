@@ -1,10 +1,26 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+local music = {
+	text = "Music Volume",
+	rawx = interactivegui.boxxhalflength,
+	x = 10,
+	y = 150,
+	fillpercent = 0,
+	olcolour = "black",
+	info = "Controls how loud the music is",
+	func = function()
+		changePageAndSelection("sfa3music")
+	end,
+	autofunc = function(this)
+		this.text = string.format("Music Volume: %3d", getConfigValue("sfa3musicvolume"))
+		this.x = this.rawx-#this.text*LETTER_HALFWIDTH
+		this.fillpercent = getConfigValue("sfa3musicvolume")/100
+	end,
+}
+
 guicustompage = {
 	title = {
-		text = "Street Fighter Alpha 3 - Training Mode Settings",
-		x = interactivegui.boxxlength/2 - (#"Street Fighter Alpha 3 - Training Mode Settings")*2,
-		y = 1,
+		text = "Street Fighter Alpha 3 - Training Mode Settings"
 	},
 	guielements.leftarrow,
 	guielements.rightarrow,
@@ -100,7 +116,26 @@ guicustompage = {
 				end
 			end,
 	},
+	music
 }
+
+guipages.sfa3music = createScrollingBar(guicustompage, "Music Volume: 00", music.rawx - #"Music Volume: 000"*LETTER_HALFWIDTH, music.y, 0, 100, nil,
+	function(n, k)
+		if n then
+			local volume = getConfigValue("sfa3musicvolume")
+			changeConfig("sfa3musicvolume", volume+n)
+			return volume
+		end
+		if k then
+			changeConfig("sfa3musicvolume", k)
+			return k
+		end
+		return getConfigValue("sfa3musicvolume")
+	end,
+	function(this)
+		this.text = string.format("Music Volume: %3d", getConfigValue("sfa3musicvolume"))
+	end
+)
 ------------------------------------------
 -- Add-on
 ------------------------------------------

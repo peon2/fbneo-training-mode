@@ -1,22 +1,47 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
+-- Uses values taken from https://www.mamecheat.co.uk/
+
+REPLAY_SAVESTATE_INTERVAL = 300
+
 p1maxhealth = 0xA0
 p2maxhealth = 0xA0
-p1maxmeter = rb(0x200ED3D)
-p2maxmeter = rb(0x200ED69)
 
+local p1maxbarsize
+local p2maxbarsize
+
+local function setSFIII2Constants()
+	p1maxbarsize = rb(0x200ED31)
+	p2maxbarsize = rb(0x200ED5D)
+	p1maxmeter = rb(0x200ED3D) * p1maxbarsize -- Max stocks * Max bar size
+	p2maxmeter = rb(0x200ED69) * p2maxbarsize
+
+	p1maxstun = rb(0x200ED77)
+	p2maxstun = rb(0x200ED8B)
+end
+
+setSFIII2Constants()
 
 local p1health = 0x200E5A3
 local p2health = 0x200E9AF
 
-local p1meter = 0x200ED3F
-local p2meter = 0x200ED6B
+local p1meterbar = 0x200ED35
+local p1meterstocks = 0x200ED3F
+
+local p2meterbar = 0x200ED61
+local p2meterstocks = 0x200ED6B
 
 local p1direction = 0x200E50E 
 local p2direction = 0x200E91A
 
-local p1combocounter = 0x200EE45
-local p2combocounter = 0x200EEED
+local p1hitstun = 0x2024124
+local p2hitstun = 0x2024125
+
+local p1stunned = 0x2024092
+local p2stunned = 0x20240AA
+
+local p1stunbar = 0x200ED7D
+local p2stunbar = 0x200ED91
 
 translationtable = {
 	"left",
@@ -47,17 +72,63 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=175,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=10,
-		p1healthy=17,
-		p1healthenabled=true,
-		p2healthx=363,
-		p2healthy=17,
-		p2healthenabled=true,
+		combotext = {
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 10,
+				y = 17,
+				enabled = true,
+			},
+			P2 = {
+				x = 363,
+				y = 17,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 41,
+				y = 209,
+				enabled = true,
+			},
+			P2 = {
+				x = 334,
+				y = 209,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
+
+local sfiii2 = { stun = { P1 = {}, P2 = {}, hud = { P1 = {}, P2 = {} } } }
+local colours = {}
 
 function playerOneFacingLeft()
 	return rb(p1direction)==0
@@ -68,11 +139,11 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	return rb(p2combocounter)~=0
+	return rb(p1hitstun)~=0 or rb(p1stunned)~=0
 end
 
 function playerTwoInHitstun()
-	return rb(p1combocounter)~=0
+	return rb(p2hitstun)~=0 or rb(p2stunned)~=0
 end
 
 function readPlayerOneHealth()
@@ -92,25 +163,269 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter)
+	return rb(p1meterstocks)*p1maxbarsize + rb(p1meterbar)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+	local bar = meter%p1maxbarsize
+	local stocks = meter/p1maxbarsize
+	wb(p1meterbar, bar)
+	wb(p1meterstocks, stocks)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rb(p2meterstocks)*p2maxbarsize + rb(p2meterbar)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	local bar = meter%p2maxbarsize
+	local stocks = meter/p2maxbarsize
+	wb(p2meterbar, bar)
+	wb(p2meterstocks, stocks)
 end
 
-local infiniteTime = function()
-	wb(0x2010167, 0x64)
+local function readPlayerOneStun()
+	return rb(p1stunbar, stun)
+end
+
+local function readPlayerTwoStun()
+	return rb(p2stunbar, stun)
+end
+
+local function writePlayerOneStun(stun)
+	wb(p1stunbar, stun)
+end
+
+local function writePlayerTwoStun(stun)
+	wb(p2stunbar, stun)
+end
+
+local function setMusicVolume(volume) -- squeeze from 0 to 100
+	volume = math.floor( (volume*0x80)/100 )
+	wb(0x20731D6, volume)
+end
+
+local timer = 0x2010167
+local timemax = 0x63
+
+local function infiniteTime()
+	wb(0x2010167, timemax-1)
 end
 
 function Run() -- runs every frame
+	wb(0x206510D, 0x02) -- unlock Akuma
+	if (rb(timer) == timemax) then -- should be checking if char/super has changed instead...
+		setSFIII2Constants()
+		setGameConstants()
+		reloadGUIPages()
+		-- Reset these changeable values
+		changeConfig("sfiii2stunp1", 0)
+		changeConfig("sfiii2stunp2", 0)
+	end
+	if sfiii2.stun.P1.enabled then
+		if sfiii2.stun.P1.aftercombo then
+			if not playerOneInHitstun() then
+				writePlayerOneStun(sfiii2.stun.P1.value)
+			end
+		else
+			writePlayerOneStun(sfiii2.stun.P1.value)
+		end
+	end
+
+	if sfiii2.stun.P2.enabled then
+		if sfiii2.stun.P2.aftercombo then
+			if not playerTwoInHitstun() then
+				writePlayerTwoStun(sfiii2.stun.P2.value)
+			end
+		else
+			writePlayerTwoStun(sfiii2.stun.P2.value)
+		end
+	end
 	infiniteTime()
+	setMusicVolume(sfiii2.musicvolume)
 end
+
+
+initConfigTable("sfiii2", sfiii2, "config")
+createConfigValue(
+	"sfiii2stunenabledp1",
+	"enabled",
+	true,
+	sfiii2.stun.P1,
+	sfiii2.stun.P1,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunenabledp2",
+	"enabled",
+	true,
+	sfiii2.stun.P2,
+	sfiii2.stun.P2,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunaftercombop1",
+	"aftercombo",
+	true,
+	sfiii2.stun.P1,
+	sfiii2.stun.P1,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunaftercombop2",
+	"aftercombo",
+	true,
+	sfiii2.stun.P2,
+	sfiii2.stun.P2,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunp1",
+	"value",
+	0,
+	sfiii2.stun.P1,
+	sfiii2.stun.P1,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunp2",
+	"value",
+	0,
+	sfiii2.stun.P2,
+	sfiii2.stun.P2,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunxp1",
+	"x",
+	84,
+	sfiii2.stun.hud.P1,
+	sfiii2.stun.hud.P1,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunxp2",
+	"x",
+	285,
+	sfiii2.stun.hud.P2,
+	sfiii2.stun.hud.P2,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunyp1",
+	"y",
+	24,
+	sfiii2.stun.hud.P1,
+	sfiii2.stun.hud.P1,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunyp2",
+	"y",
+	24,
+	sfiii2.stun.hud.P2,
+	sfiii2.stun.hud.P2,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunhudenabledp1",
+	"enabled",
+	true,
+	sfiii2.stun.hud.P1,
+	sfiii2.stun.hud.P1,
+	"config"
+)
+createConfigValue(
+	"sfiii2stunhudenabledp2",
+	"enabled",
+	true,
+	sfiii2.stun.hud.P2,
+	sfiii2.stun.hud.P2,
+	"config"
+)
+createConfigValue(
+	"sfiii2musicvolume",
+	"musicvolume",
+	25,
+	sfiii2,
+	sfiii2,
+	"config"
+)
+initConfigTable("sfiii2", colours, "colourconfig")
+createConfigValue(
+	"sfiii2stuncolourp1",
+	"stunp1",
+	0xFF0000FF,
+	colours,
+	colours,
+	"colourconfig",
+	"Stun Colour P1"
+)
+createConfigValue(
+	"sfiii2stuncolourp2",
+	"stunp2",
+	0x00FFFFFF,
+	colours,
+	colours,
+	"colourconfig",
+	"Stun Colour P2"
+)
+
+createHUDElement(
+	"p1stun",
+	function(n)
+		if n then
+			changeConfig("sfiii2stunxp1", n)
+		end
+		return sfiii2.stun.hud.P1.x
+	end,
+	function(n)
+		if n then
+			changeConfig("sfiii2stunyp1", n)
+		end
+		return sfiii2.stun.hud.P1.y
+	end,
+	function(n)
+		if n~=nil then
+			changeConfig("sfiii2stunenabledp1", n)
+		end
+		return sfiii2.stun.P1.enabled
+	end,
+	function()
+		resetConfig("sfiii2stunxp1")
+		resetConfig("sfiii2stunyp1")
+		resetConfig("sfiii2stunenabledp1")
+	end,
+	function()
+		gui.text(sfiii2.stun.hud.P1.x, sfiii2.stun.hud.P1.y, readPlayerOneStun(), colours.stunp1)
+	end
+)
+createHUDElement(
+	"p2stun",
+	function(n)
+		if n then
+			changeConfig("sfiii2stunxp2", n)
+		end
+		return sfiii2.stun.hud.P2.x
+	end,
+	function(n)
+		if n then
+			changeConfig("sfiii2stunyp2", n)
+		end
+		return sfiii2.stun.hud.P2.y
+	end,
+	function(n)
+		if n~=nil then
+			changeConfig("sfiii2stunenabledp2", n)
+		end
+		return sfiii2.stun.P2.enabled
+	end,
+	function()
+		resetConfig("sfiii2stunxp2")
+		resetConfig("sfiii2stunyp2")
+		resetConfig("sfiii2stunenabledp2")
+	end,
+	function()
+		gui.text(sfiii2.stun.hud.P2.x, sfiii2.stun.hud.P2.y, readPlayerTwoStun(), colours.stunp2)
+	end
+)

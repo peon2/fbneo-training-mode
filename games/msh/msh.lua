@@ -40,19 +40,55 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=18,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=355,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=31,
-		p1metery=26,
-		p1meterenabled=true,
-		p2meterx=350,
-		p2metery=26,
-		p2meterenabled=true,
+		health = {
+			P1 = {
+				x = 18,
+				y = 16,
+				enabled = true,
+			},
+			P2 = {
+				x = 355,
+				y = 16,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 31,
+				y = 26,
+				enabled = true,
+			},
+			P2 = {
+				x = 350,
+				y = 26,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function readPlayerOneHealth()
@@ -101,8 +137,28 @@ function gemsPlayerOne()
 
 end
 
-function Run() -- runs every frame
+local msh = {}
 
+initConfigTable("msh", msh, "config")
+createConfigValue(
+	"mshmusicvolume",
+	"musicvolume",
+	50,
+	msh,
+	msh,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF019
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
+function Run() -- runs every frame
+	setMusicVolume(msh.musicvolume)
 	infiniteTime()
 
 	for gemMem = 0xFF41B6, 0xFF41BB, 1 do

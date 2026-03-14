@@ -1,5 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
--- ssf2x training mode by @pof
+-- hsf2x training mode by @pof
 
 p1maxhealth = 144
 p2maxhealth = 144
@@ -54,22 +54,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=178,
-		combotexty=49,
-		comboenabled=true,
-		p1healthx=34,
-		p1healthy=23,
-		p1healthenabled=true,
-		p2healthx=339,
-		p2healthy=23,
-		p2healthenabled=true,
-		p1meterx=82,
-		p1metery=207,
-		p1meterenabled=true,
-		p2meterx=294,
-		p2metery=207,
-		p2meterenabled=true,
+		combotext = {
+			x=178,
+			y=49,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 34,
+				y = 23,
+				enabled = true,
+			},
+			P2 = {
+				x = 339,
+				y = 23,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 82,
+				y = 207,
+				enabled = true,
+			},
+			P2 = {
+				x = 294,
+				y = 207,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -272,7 +310,7 @@ local autoBlock = function()
 
 	-- neutral when opponent is neutral, crouching or landing
 	if (p1action == 0 or p1action == 2 or p1action==6) then
-		setDirection(2,5)
+		setHoldDirection({})
 		forceblock = false
 		if autoblock_selector == 2 and canblock == true then
 			canblock = false
@@ -288,7 +326,7 @@ local autoBlock = function()
 		-- block: auto
 		if autoblock_selector == 2 and canblock == false then
 			if p2action == 14 then
-				setDirection(2,5)
+				setHoldDirection({})
 				canblock = true
 			end
 			return
@@ -307,16 +345,16 @@ local autoBlock = function()
 
 		local p1crouching = player1Crouching()
 		if playerOneFacingLeft() and p1crouching then
-			setDirection(2,1)
+			setHoldDirection({"down", "left"})
 		end
 		if playerTwoFacingLeft() and p1crouching then
-			setDirection(2,3)
+			setHoldDirection({"down", "right"})
 		end
 		if playerOneFacingLeft() and not p1crouching then
-			setDirection(2,4)
+			setHoldDirection({"left"})
 		end
 		if playerTwoFacingLeft() and not p1crouching then
-			setDirection(2,6)
+			setHoldDirection({"right"})
 		end
 		if DEBUG then print("ground block @ p1action=" .. p1action .. " | inputs=" .. p1inputs .. " | distance=" .. distance) end
 		return
@@ -352,14 +390,14 @@ local autoBlock = function()
 
 		if (p1attacking or forceblock) then
 			if playerOneFacingLeft() then
-				setDirection(2,4)
+				setHoldDirection({"left"})
 			else
-				setDirection(2,6)
+				setHoldDirection({"right"})
 			end
 			if DEBUG then print("block high @ p1action=" .. p1action .. " | p2action=" .. p2action .. " | inputs=" .. p1inputs .. "/" .. p1buttons .. " | distance=" .. distance .. " | p1attacking=" .. tostring(p1attacking) .. " | forceblock=" .. tostring(forceblock)) end
 			return
 		end
-		setDirection(2,5)
+		setHoldDirection({})
 		if DEBUG then print("neutral @ p1action=" .. p1action .. " | p2action=" .. p2action .. " | inputs=" .. p1inputs .. "/" .. p1buttons .. " | distance=" .. distance .. " | p1attacking=" .. tostring(p1attacking) .. " | forceblock=" .. tostring(forceblock)) end
 		forceblock = false
 		return
@@ -367,7 +405,7 @@ local autoBlock = function()
 
 	-- stop blocking
 	if (distance >= 265 or p1action == 2) then
-		setDirection(2,5)
+		setHoldDirection({})
 		if DEBUG then print("neutral-4 @ p1action=" .. p1action .. " | inputs=" .. p1inputs .. " | distance=" .. distance) end
 		forceblock = false
 		return
@@ -393,6 +431,26 @@ local p2DizzyControl = function()
 
 end
 
+local hsf2 = {}
+
+initConfigTable("hsf2", hsf2, "config")
+createConfigValue(
+	"hsf2musicvolume",
+	"musicvolume",
+	25,
+	hsf2,
+	hsf2,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF019
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
 function Run() -- runs every frame
 
 	-- attacker state (ff833f or +0x400 for p2): 0 idle, 2 crouching, 4 jumping, 10 doing a normal attack or throw, 12 on hitstun (doing an special attack)
@@ -414,4 +472,5 @@ function Run() -- runs every frame
 	stageSelect()
 	p2DizzyControl()
 	prev_p1action = p1action
+	setMusicVolume(hsf2.musicvolume)
 end

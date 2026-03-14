@@ -9,13 +9,16 @@ p2maxmeter = 0x68
 local p1health = 0x81C67F
 local p2health = 0x81C7BB
 
-
 local p1meter = 0x80DAA1
- 
 local p2meter = 0x80DC5D
 
 local p1stocks = 0x80DA99
 local p2stocks = 0x80DC55
+
+function gamemsg()
+	print "Known issues with martmast:"
+	print "No combo detection"
+end
 
 translationtable = {
 	"left",
@@ -44,19 +47,69 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=42,
-		p1healthy=14,
-		p1healthenabled=true,
-		p2healthx=395,
-		p2healthy=14,
-		p2healthenabled=true,
-        p1meterx=160,
-		p1metery=212,
-		p1meterenabled=true,
-		p2meterx=272,
-		p2metery=212,
-		p2meterenabled=true,
+		health = {
+			P1 = {
+				x = 42,
+				y = 15,
+				enabled = true,
+			},
+			P2 = {
+				x = 395,
+				y = 15,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 160,
+				y = 212,
+				enabled = true,
+			},
+			P2 = {
+				x = 278,
+				y = 212,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		}
+	},
+	inputs = {
+		simple = {
+			P1 = {
+				x = 44,
+				y = 194,
+				enabled = true
+			},
+			P2 = {
+				x = 344,
+				y = 194,
+				enabled = true
+			}
+		}
+	}
 }
 
 function playerTwoFacingLeft()
