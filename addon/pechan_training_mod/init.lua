@@ -32,8 +32,6 @@ end
 --]]
 
 DBIndex = require("addon.pechan_training_mod.db_lua.db.index")
-require("addon.pechan_training_mod.moves_settings")
-require("addon.pechan_training_mod.guipages")
 local frame_data = require("addon.pechan_training_mod.frame_data")
 
 -- Debug Viewer Module
@@ -509,6 +507,14 @@ function loadSetupFromFile(recording_slot_number, setup_name)
 	end
 end
 
+function saveTrialSetup()
+	local setup = buildSetup()
+	setup.base_name = "trial"
+	-- Ensure DBIndex is available
+	local DBIndex = DBIndex or require("addon.pechan_training_mod.db_lua.db.index")
+	DBIndex.createSetup(setup, true, false) -- isTrial = true, isReplay = false
+end
+
 function isRecordingEmpty()
 	local t = recording
 	for i = 1, 5 do
@@ -615,7 +621,7 @@ function applySetup(setup)
 		end
 
 		PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-		formatGuiTables()
+		formatGUITables()
 	end
 	if setup.guard then
 		resetReversals(PECHAN_CONFIG.MOVES_VAR_NAMES, "GUARD")
@@ -633,7 +639,7 @@ function applySetup(setup)
 		end
 
 		PECHAN_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
-		formatGuiTables()
+		formatGUITables()
 	end
 	if setup.hit then
 		resetReversals(PECHAN_CONFIG.MOVES_VAR_NAMES, "HIT")
@@ -651,7 +657,7 @@ function applySetup(setup)
 		end
 
 		PECHAN_CONFIG["HIT"].reversal_moves = getCurrentReversalMoves("HIT")
-		formatGuiTables()
+		formatGUITables()
 	end
 end
 
@@ -2963,3 +2969,6 @@ if registers and registers.guiregister then
 	table.insert(registers.guiregister, KofTrainingUpdate)
 	table.insert(registers.guiregister, KofTrainingDraw)
 end
+
+require("addon.pechan_training_mod.moves_settings")
+require("addon.pechan_training_mod.guipages")

@@ -169,7 +169,7 @@ function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x
         bg_color, title
     )
 
-    if formatGuiTables then formatGuiTables() end
+    if formatGUITables then formatGUITables() end
     CIG("helper_popup", 1)
 end
 

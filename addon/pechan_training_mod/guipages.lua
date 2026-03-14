@@ -1,6 +1,7 @@
 local current_game = PECHAN_CONFIG.get_current_game()
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
 local tl = translate_mod.tl
+local CIG = changePageAndSelection
 
 local menu_title_text = "Pechan's Training Mode - " .. (current_game.name or "Unknown Game")
 
@@ -1007,7 +1008,7 @@ buildSetupPages(trial_setups, "activate_trial_recording_setup", "Trial Setups", 
 function refreshTrialSetupMenu()
 	local setups = DBIndex.loadAllSetups(true)
 	buildSetupPages(setups, "activate_trial_recording_setup", "Trial Setups", "trial_mode_settings", false)
-	formatGuiTables()
+	formatGUITables()
 end
 
 local DBIndex = DBIndex or require("addon.pechan_training_mod.db_lua.db.index")
@@ -1018,7 +1019,7 @@ buildSetupPages(setups, "activate_current_recording_setup", tl("ui.menu.load_set
 function refreshSetupMenu()
 	local new_setups = DBIndex.loadAllSetups()
 	buildSetupPages(new_setups, "activate_current_recording_setup", tl("ui.menu.load_setup"), 0, true)
-	formatGuiTables()
+	formatGUITables()
 end
 
 local replay_setups = DBIndex.loadAllSetups(false, true) -- isTrial = false, isReplay = true
@@ -1027,7 +1028,7 @@ buildSetupPages(replay_setups, "activate_replay_recording_setup", "Replay Setups
 function refreshReplaySetupMenu()
 	local setups = DBIndex.loadAllSetups(false, true)
 	buildSetupPages(setups, "activate_replay_recording_setup", "Replay Setups", "managerecordings", false)
-	formatGuiTables()
+	formatGUITables()
 end
 
 local cpu_settings = {
@@ -1643,7 +1644,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 		0x222222FF, popup_title
 	)
 
-	if formatGuiTables then formatGuiTables() end
+	if formatGUITables then formatGUITables() end
 	CIG("char_popup", 1) -- Start at index 1 (title is not an entry anymore)
 end
 
@@ -2073,11 +2074,25 @@ end
 
 
 if guipages then
-	-- Insert button into Main Menu (Page 1)
-	table.insert(guipages, guicustompage)
+	local custom_page_inserted = false
+	for i = #guipages, 1, -1 do
+		local page = guipages[i]
+		if page.title and page.title.text and (string.find(page.title.text, "King of Fighters") or string.find(page.title.text, "king of fighters") or string.find(page.title.text, "Training Mode Settings")) then
+			if not custom_page_inserted then
+				guipages[i] = guicustompage
+				custom_page_inserted = true
+			else
+				table.remove(guipages, i)
+			end
+		end
+	end
+
+	if not custom_page_inserted then
+		table.insert(guipages, guicustompage)
+	end
 
 	-- Refresh layout to auto-calculate position and update navigation
-	if formatGuiTables then
-		formatGuiTables()
+	if formatGUITables then
+		formatGUITables()
 	end
 end
