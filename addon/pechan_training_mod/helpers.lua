@@ -134,6 +134,8 @@ end
 function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y, bg_color)
     local popup_entries = {}
     local previous_selection = interactivegui.selection
+    local saved_prev_page = interactivegui.previouspage
+    local saved_prev_sel = interactivegui.previousselection
     bg_color = bg_color or 0x222222FF
 
     for _, entry in ipairs(entries) do
@@ -146,12 +148,16 @@ function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x
             but.func        = function()
                 if entry.action then entry.action() end
                 CIG(back_page, previous_selection)
+                interactivegui.previouspage = saved_prev_page
+                interactivegui.previousselection = saved_prev_sel
             end
             but.releasefunc = function() end
         else
             but.releasefunc = function()
                 if entry.action then entry.action() end
                 CIG(back_page, previous_selection)
+                interactivegui.previouspage = saved_prev_page
+                interactivegui.previousselection = saved_prev_sel
             end
         end
         table.insert(popup_entries, but)
@@ -197,6 +203,22 @@ changeInteractiveGuiSelection = function(n)
         if nxt < 1 then nxt = #page end
         interactivegui.selection = nxt
     end
+end
+
+function PECHAN_HELPERS.get_available_savestates()
+    local rom = emu.romname()
+    local states = {}
+
+    -- Check slots 01-10 only, as requested
+    for i = 1, 10 do
+        local slot_str = string.format("%02d", i)
+        local path = "../savestates/" .. rom .. " slot " .. slot_str .. ".fs"
+        if fexists(path) then
+            table.insert(states, { label = "Slot " .. i, path = path, slot = i })
+        end
+    end
+
+    return states
 end
 
 return PECHAN_HELPERS

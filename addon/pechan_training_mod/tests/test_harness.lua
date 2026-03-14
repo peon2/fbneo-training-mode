@@ -36,6 +36,14 @@ function M.setup()
         writeword = _G.ww
     }
 
+    -- Task List:
+    -- - [x] Research existing game implementation (`kof98`) <!-- id: 0 -->
+    -- - [x] Research UI rendering for conditional visibility <!-- id: 1 -->
+    -- - [x] Create implementation plan for `aof3` support and UI flags <!-- id: 2 -->
+    -- - [x] Implement conditional visibility for training mode areas <!-- id: 3 -->
+    -- - [/] Add aof3 character data and addresses <!-- id: 4 -->
+    -- - [ ] Verify changes <!-- id: 5 -->
+
     _G.joypad = {
         get = function() return mock_joypad end,
         set = function(tbl)

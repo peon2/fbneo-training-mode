@@ -1402,22 +1402,26 @@ function deactivateAllDefaultMoves()
 		PECHAN_CONFIG.MOVES_VAR_NAMES[reversal_types.GUARD][index] = PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
 	end
 
-
 	for index, value in pairs(PECHAN_CONFIG.MOVES_VAR_NAMES[reversal_types.WAKEUP]) do
 		PECHAN_CONFIG.MOVES_VAR_NAMES[reversal_types.WAKEUP][index] = PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
 	end
 
-	PECHAN_CONFIG.WAKEUP.reversal_moves = getCurrentReversalMoves(reversal_types.GUARD)
-	PECHAN_CONFIG.GUARD.reversal_moves  = getCurrentReversalMoves(reversal_types.WAKEUP)
+	for index, value in pairs(PECHAN_CONFIG.MOVES_VAR_NAMES[reversal_types.HIT]) do
+		PECHAN_CONFIG.MOVES_VAR_NAMES[reversal_types.HIT][index] = PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF
+	end
+
+	PECHAN_CONFIG.GUARD.reversal_moves = getCurrentReversalMoves(reversal_types.GUARD)
+	PECHAN_CONFIG.WAKEUP.reversal_moves = getCurrentReversalMoves(reversal_types.WAKEUP)
+	PECHAN_CONFIG.HIT.reversal_moves = getCurrentReversalMoves(reversal_types.HIT)
 end
 
 function resetAllConfiguration()
 	deactivateAllDefaultMoves()
-	PECHAN_CONFIG.GUARD.standing_guard = 0
-	PECHAN_CONFIG.GUARD.crouch_guard = 0
+	PECHAN_CONFIG.GUARD.dummy_action = PECHAN_CONFIG.GUARD.ACTION_OPTIONS.STANDING
+	PECHAN_CONFIG.GUARD.guard_mode = PECHAN_CONFIG.GUARD.MODE_OPTIONS.OFF
 	PECHAN_CONFIG.GUARD.dummy_guarding = false
-	PECHAN_CONFIG.GUARD.random_guard = 0
 	PECHAN_CONFIG.GUARD.reversal = PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.OFF
+
 	PECHAN_CONFIG.WAKEUP.dummy_waking_up = false
 	PECHAN_CONFIG.WAKEUP.reversal = PECHAN_CONFIG.WAKEUP.REVERSAL_OPTIONS.OFF
 
@@ -1518,14 +1522,14 @@ function setDefaultConfig(configName)
 
 		enableReversalMove(move_name, reversal_types.WAKEUP)
 		-- reload reversal moves
-		PECHAN_CONFIG.WAKEUP.reversal_moves     = getCurrentReversalMoves(reversal_types.WAKEUP)
+		PECHAN_CONFIG.WAKEUP.reversal_moves  = getCurrentReversalMoves(reversal_types.WAKEUP)
 		--activate guard reversal
-		PECHAN_CONFIG.GUARD.dummy_guarding      = true
-		PECHAN_CONFIG.GUARD.reversal            = PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.ON
+		PECHAN_CONFIG.GUARD.dummy_guarding   = true
+		PECHAN_CONFIG.GUARD.reversal         = PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.ON
 		--activate crouch guard
-		PECHAN_CONFIG.GUARD.crouch_guard        = 1
+		PECHAN_CONFIG.GUARD.dummy_action     = PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING
 		-- activate guard random
-		PECHAN_CONFIG.GUARD.random_guard        = 1
+		PECHAN_CONFIG.GUARD.guard_mode       = PECHAN_CONFIG.GUARD.MODE_OPTIONS.RANDOM
 		-- activate throw C on guard
 		local move_name                      = "THROW_C"
 		local current_reversal_move          = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
@@ -1540,8 +1544,8 @@ function setDefaultConfig(configName)
 		PECHAN_CONFIG.GUARD.dummy_guarding = true
 		PECHAN_CONFIG.GUARD.reversal = PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.ON
 		--activate crouch guard
-		PECHAN_CONFIG.GUARD.crouch_guard = 1
-		-- activate throw C on guard
+		PECHAN_CONFIG.GUARD.dummy_action = PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING
+		PECHAN_CONFIG.GUARD.guard_mode = PECHAN_CONFIG.GUARD.MODE_OPTIONS.ON
 		local move_name = "THROW_C"
 		local current_reversal_move = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
 		current_reversal_move.on_guard_delay = 10
@@ -1554,8 +1558,9 @@ function setDefaultConfig(configName)
 		--activate guard reversal
 		PECHAN_CONFIG.GUARD.dummy_guarding = true
 		PECHAN_CONFIG.GUARD.reversal = PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.ON
-		--activate crouch guard
-		PECHAN_CONFIG.GUARD.standing_guard = 1
+		--activate standing guard
+		PECHAN_CONFIG.GUARD.dummy_action = PECHAN_CONFIG.GUARD.ACTION_OPTIONS.STANDING
+		PECHAN_CONFIG.GUARD.guard_mode = PECHAN_CONFIG.GUARD.MODE_OPTIONS.ON
 		-- activate throw C on guard
 		local move_name = "THROW_C"
 		local current_reversal_move = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
@@ -1569,10 +1574,10 @@ function setDefaultConfig(configName)
 		--activate guard reversal
 		PECHAN_CONFIG.GUARD.dummy_guarding = true
 		PECHAN_CONFIG.GUARD.reversal = PECHAN_CONFIG.GUARD.REVERSAL_OPTIONS.RANDOM
-		--activate crouch guard
-		PECHAN_CONFIG.GUARD.standing_guard = 1
+		--activate standing guard
+		PECHAN_CONFIG.GUARD.dummy_action = PECHAN_CONFIG.GUARD.ACTION_OPTIONS.STANDING
 		-- activate guard random
-		PECHAN_CONFIG.GUARD.random_guard = 1
+		PECHAN_CONFIG.GUARD.guard_mode = PECHAN_CONFIG.GUARD.MODE_OPTIONS.RANDOM
 		-- activate throw C on guard
 		local move_name = "CR_GUARD"
 		local current_reversal_move = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal(move_name)
@@ -1594,7 +1599,8 @@ function setDefaultConfig(configName)
 	elseif configName == PECHAN_CONFIG.TRAINING.CONFIGURATIONS["wakeup_whiff_cr_c"] then
 		--activate crouch guard
 		PECHAN_CONFIG.GUARD.dummy_guarding = true
-		PECHAN_CONFIG.GUARD.crouch_guard = 1
+		PECHAN_CONFIG.GUARD.dummy_action = PECHAN_CONFIG.GUARD.ACTION_OPTIONS.CROUCHING
+		PECHAN_CONFIG.GUARD.guard_mode = PECHAN_CONFIG.GUARD.MODE_OPTIONS.ON
 		--activate wake up random
 		PECHAN_CONFIG.WAKEUP.dummy_waking_up = true
 		PECHAN_CONFIG.WAKEUP.reversal = PECHAN_CONFIG.WAKEUP.REVERSAL_OPTIONS.ON

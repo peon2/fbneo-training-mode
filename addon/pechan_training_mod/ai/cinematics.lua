@@ -8,23 +8,28 @@ function Cinematics.init()
     print("Cinematics Module Initialized")
 end
 
-function Cinematics.start_sequence(trial)
+function Cinematics.start_sequence(scenes, setup, wait_time)
     PECHAN_CONFIG.CINEMATICS.state = "LOADING"
-    PECHAN_CONFIG.CINEMATICS.wait_timer = trial.delay_before_dialogue or 120
-    PECHAN_CONFIG.CINEMATICS.dialogues = trial.dialogues or {}
-    PECHAN_CONFIG.CINEMATICS.current_dialogue_index = 1
+    PECHAN_CONFIG.CINEMATICS.wait_timer = wait_time or 60
+    PECHAN_CONFIG.CINEMATICS.scenes = scenes or {}
+    PECHAN_CONFIG.CINEMATICS.current_scene_index = 1
+    PECHAN_CONFIG.CINEMATICS.current_dialog_index = 1
 
-    local current_game = PECHAN_CONFIG.get_current_game()
-    for _, char in ipairs(current_game.characters) do
-        if char.code == trial.character1 then
-            PECHAN_CONFIG.UI.CURRENT_PLAYER1 = char
+    if setup then
+        local current_game = PECHAN_CONFIG.get_current_game()
+        for _, char in ipairs(current_game.characters) do
+            if char.code == setup.character1 then
+                PECHAN_CONFIG.UI.CURRENT_PLAYER1 = char
+            end
+            if char.code == setup.character2 then
+                PECHAN_CONFIG.UI.CURRENT_PLAYER2 = char
+            end
         end
-        if char.code == trial.character2 then
-            PECHAN_CONFIG.UI.CURRENT_PLAYER2 = char
-        end
+        PECHAN_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
+    else
+        -- If no setup, we skip characters_has_changed and go straight to waiting
+        PECHAN_CONFIG.UI.CHARACTERS_HAS_CHANGED = false
     end
-
-    PECHAN_CONFIG.UI.CHARACTERS_HAS_CHANGED = true
 end
 
 local function lock_inputs()
@@ -82,23 +87,67 @@ function Cinematics.update()
 end
 
 function Cinematics.advance_dialogue()
-    PECHAN_CONFIG.CINEMATICS.current_dialogue_index = PECHAN_CONFIG.CINEMATICS.current_dialogue_index + 1
+    local scenes = PECHAN_CONFIG.CINEMATICS.scenes
+    local s_idx = PECHAN_CONFIG.CINEMATICS.current_scene_index
+    local d_idx = PECHAN_CONFIG.CINEMATICS.current_dialog_index
 
-    if PECHAN_CONFIG.CINEMATICS.current_dialogue_index > #PECHAN_CONFIG.CINEMATICS.dialogues then
+    if not scenes[s_idx] then
+        PECHAN_CONFIG.CINEMATICS.state = "FINISHED"
+        return
+    end
+
+    local dialogs = scenes[s_idx].dialog
+    d_idx = d_idx + 1
+
+    if d_idx > #dialogs then
+        d_idx = 1
+        s_idx = s_idx + 1
+    end
+
+    if s_idx > #scenes then
         PECHAN_CONFIG.CINEMATICS.state = "FINISHED"
         print("Cinematic sequence ended.")
+    else
+        PECHAN_CONFIG.CINEMATICS.current_scene_index = s_idx
+        PECHAN_CONFIG.CINEMATICS.current_dialog_index = d_idx
     end
 end
 
 function Cinematics.draw()
     if PECHAN_CONFIG.CINEMATICS.state ~= "PLAYING" then return end
 
-    local d = PECHAN_CONFIG.CINEMATICS.dialogues[PECHAN_CONFIG.CINEMATICS.current_dialogue_index]
-    if d then
-        gui.box(20, 180, 360, 220, 0x000000BB, 0xFFFFFFFF)
-        gui.text(25, 185, d.speaker .. ":", d.color or "yellow", 0x000000FF)
-        gui.text(25, 195, d.text, "white", 0x000000FF)
-        gui.text(320, 210, "Press A", "gray", 0x000000FF)
+    local s_idx = PECHAN_CONFIG.CINEMATICS.current_scene_index
+    local d_idx = PECHAN_CONFIG.CINEMATICS.current_dialog_index
+    local scene = PECHAN_CONFIG.CINEMATICS.scenes[s_idx]
+
+    if scene and scene.dialog and scene.dialog[d_idx] then
+        local d = scene.dialog[d_idx]
+        local owner_id = scene.owner_id
+
+        -- Box positioning
+        local y1, y2 = 180, 220
+        if owner_id == -1 then
+            y1, y2 = 80, 120 -- Narrator box in middle
+        end
+
+        gui.box(20, y1, 360, y2, 0x000000BB, 0xFFFFFFFF)
+
+        if owner_id == -1 then
+            -- Narrator centering
+            gui.text(190 - (#d.text * 2), y1 + 10, d.text, d.color or "yellow", 0x000000FF)
+        else
+            local speaker = "Unknown"
+            if owner_id == 1 then
+                speaker = (PECHAN_CONFIG.UI.CURRENT_PLAYER1 and PECHAN_CONFIG.UI.CURRENT_PLAYER1.name) or "P1"
+            elseif owner_id == 2 then
+                speaker = (PECHAN_CONFIG.UI.CURRENT_PLAYER2 and PECHAN_CONFIG.UI.CURRENT_PLAYER2.name) or "P2"
+            end
+
+            gui.text(25, y1 + 5, speaker .. ":", d.color or "yellow", 0x000000FF)
+            gui.text(25, y1 + 15, d.text, "white", 0x000000FF)
+        end
+
+        gui.text(320, y2 - 10, "Press A", "gray", 0x000000FF)
     end
 end
 

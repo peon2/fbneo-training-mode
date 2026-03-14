@@ -10,7 +10,8 @@ return {
                 char_selection = "Character Selection",
                 cpu_settings = "CPU settings",
                 configurations = "Configurations:",
-                load_setup = "Load Recorded Setup:",
+                load_setup = "Recorded Setups:",
+                no_setup = "Setup:",
                 current_conf = "Current Conf:",
                 trial_mode = "Trial Mode (KOF98)",
             },
@@ -120,6 +121,15 @@ return {
                     off = "3-Coin Swap: Off",
                     on = "3-Coin Swap: On",
                 },
+                recording = {
+                    loop = {
+                        off = "Loop Recording: Off",
+                        on = "Loop Recording: On",
+                    },
+                    reload_state = "State: %{state}",
+                    none = "None",
+                    popup_title = "Select Savestate Slot",
+                },
             },
             error = {
                 no_character = "No character selected!",
@@ -200,6 +210,7 @@ return {
                 next_page = "Next Page >>",
             },
             debug = {
+                master = "Master Debug: %{state}",
                 block = "Debug Block: %{state}",
                 advantage = "Debug Advantage: %{state}",
                 action = "Debug Action: %{state}",

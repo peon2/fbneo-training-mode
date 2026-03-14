@@ -10,7 +10,10 @@ return {
                 char_selection = "Selección de Personaje",
                 cpu_settings = "Ajustes de CPU",
                 configurations = "Configuraciones:",
-                load_setup = "Cargar Situación Grabada:",
+                guard_break = "Guard Break:",
+                coin_swap = "Boton de Fichas como Opciones:",
+                load_setup = "Situaciones Grabadas:",
+                no_setup = "Situación Grabada:",
                 current_conf = "Configuración Actual:",
                 trial_mode = "Modo de Prueba (KOF98)",
             },
@@ -120,6 +123,15 @@ return {
                     off = "Intercambio 3-Monedas: Off",
                     on = "Intercambio 3-Monedas: On",
                 },
+                recording = {
+                    loop = {
+                        off = "Bucle de Grabación: Apagado",
+                        on = "Bucle de Grabación: Encendido",
+                    },
+                    reload_state = "Estado: %{state}",
+                    none = "Ninguno",
+                    popup_title = "Seleccionar Slot de Estado",
+                },
             },
             error = {
                 no_character = "¡No hay personaje seleccionado!",
@@ -200,6 +212,7 @@ return {
                 next_page = "Sig Pág >>",
             },
             debug = {
+                master = "Debug Maestro: %{state}",
                 block = "Debug Bloqueo: %{state}",
                 advantage = "Debug Ventaja: %{state}",
                 action = "Debug Acción: %{state}",
