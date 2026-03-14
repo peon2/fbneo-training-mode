@@ -2,10 +2,12 @@ local current_game = PECHAN_CONFIG.get_current_game()
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
 local tl = translate_mod.tl
 
+local menu_title_text = "Pechan's Training Mode - " .. (current_game.name or "Unknown Game")
+
 guicustompage = {
 	title = {
-		text = tl("ui.menu.title"),
-		x = interactivegui.boxxlength / 2 - (#"Pechan's Training Mode Settings") * 2,
+		text = menu_title_text,
+		x = interactivegui.boxxlength / 2 - (#menu_title_text) * 2,
 		y = 1,
 	},
 	guielements.leftarrow,
@@ -77,6 +79,7 @@ if current_game.has_guard then
 		end,
 	})
 	cur_y = cur_y + 10
+
 	table.insert(guicustompage, {
 		text = tl("ui.guard.reversal_title"),
 		x = 118,
@@ -103,7 +106,6 @@ if current_game.has_guard then
 end
 
 if current_game.has_hit_reversal then
-	if not current_game.has_guard then cur_y = cur_y + 10 end
 	table.insert(guicustompage, {
 		text = tl("ui.hit.reversal_title"),
 		x = 8,
@@ -129,14 +131,8 @@ if current_game.has_hit_reversal then
 	})
 end
 
-if current_game.has_other_settings then
-	cur_y = cur_y + 15
-	table.insert(guicustompage, {
-		text = tl("ui.menu.other_settings"),
-		x = 2,
-		y = cur_y,
-	})
-	cur_y = cur_y + 10
+if (current_game.has_guard or current_game.has_hit_reversal) then
+    cur_y = cur_y + 10
 end
 
 if current_game.has_wakeup then
@@ -202,7 +198,13 @@ if current_game.has_recovery then
 			end
 		end,
 	})
-	cur_y = cur_y + 10
+end
+
+if (current_game.has_wakeup or current_game.has_recovery) then
+    cur_y = cur_y + 10
+end
+
+if current_game.has_recovery then
 	table.insert(guicustompage,
 		{ text = tl("ui.recovery.delay"), x = 8, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
 	table.insert(guicustompage,
@@ -286,6 +288,17 @@ if current_game.has_recovery then
 					PECHAN_CONFIG.RECOVERY.times + 1
 			end
 		})
+    cur_y = cur_y + 10
+end
+
+if current_game.has_other_settings then
+	cur_y = cur_y + 2
+	table.insert(guicustompage, {
+		text = tl("ui.menu.other_settings"),
+		x = 2,
+		y = cur_y,
+	})
+	cur_y = cur_y + 10
 end
 
 cur_y = cur_y + 8

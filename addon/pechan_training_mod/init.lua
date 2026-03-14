@@ -12,11 +12,9 @@ end
 
 -- Load translation module
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
-local tl = translate_mod.tl
 local en_data = require("addon.pechan_training_mod.locales.en")
 local es_data = require("addon.pechan_training_mod.locales.es")
-translate_mod.load_locale("en", en_data)
-translate_mod.load_locale("es", es_data)
+translate_mod:load_locales({ en = en_data.en, es = es_data.es })
 -- Set the language according to user config
 translate_mod.set_locale(PECHAN_CONFIG.LANGUAGE.current_language)
 
