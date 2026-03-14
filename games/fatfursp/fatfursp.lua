@@ -134,6 +134,14 @@ function infiniteTime()
 	ww(0x10092a, 0x6030)
 end
 
-function Run() -- runs every frame
-	infiniteTime()
+if ROM == "fatfurspbh" then
+	Run = function() -- runs every frame
+		infiniteTime()
+	end
+else
+	wb(0x10FD82, 0x00) -- Set the Neogeo to AES
+	Run = function() -- runs every frame
+		infiniteTime()
+		wb(0x10E063, 0xFF) -- Unlock Ryo
+	end
 end

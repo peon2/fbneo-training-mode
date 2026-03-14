@@ -97,7 +97,7 @@ local games = {
 	fatfury1 = {"fatfury1", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	fatfury2 = {"fatfury2", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	fatfury3 = {"fatfury3", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfursp = {"fatfursp", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	fatfursp = {"fatfursp", "fatfurspbh", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	fightfev = {"fightfev", iconfile = "icons-neogeo-32.png"},
 	galaxyfg = {"galaxyfg", iconfile = "icons-neogeo-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -1118,6 +1118,7 @@ function getConfigItemsFiltered(filter) -- returns configitems by comparing the 
 end
 
 function getConfigValue(id)
+	assert(configitems[id], "Config Item: '"..id.."' does not exist.")
 	local configitem = configitems[id]
 	local name = configitem.name
 	return configitem.configpointer[name], configitem.varpointer and configitem.varpointer[name], configitem.default
@@ -1602,6 +1603,49 @@ end
 -- CHECK IF GUIPAGES EXISTS AND OPEN
 -- DEFINE FUNCTIONS USED BY GUIPAGES
 ----------------------------------------------
+
+local function changeGUIPage(n)
+	if not interactivegui.enabled then return end
+	n = n or interactivegui.page+1
+
+	if guipages[n] then -- if the page exists go there
+		interactivegui.page = n
+	else -- otherwise try to wrap-around
+		if n == 0 then
+			interactivegui.page = #guipages -- goto last
+		elseif n == #guipages+1 then
+			interactivegui.page = 1 -- goto first
+		end -- otherwise do nothing
+	end
+
+	local page = guipages[interactivegui.page]
+
+	if interactivegui.selection > #page then -- make sure selection is in bounds
+		interactivegui.selection = #page
+	elseif interactivegui.selection < 1 then
+		interactivegui.selection = 1
+	end
+end
+
+local function changeGUISelection(n)
+	if not interactivegui.enabled then return end
+	local page = guipages[interactivegui.page] -- current page
+	if (#page<=1) then
+		interactivegui.selection = 1
+		return
+	end
+	n = n or interactivegui.selection+1
+
+	if page[n] then -- if the selection exists go there
+		interactivegui.selection = n
+	else -- otherwise try to wrap around
+		if n == 0 then
+			interactivegui.selection = #page -- goto last
+		elseif n == #page+1 then
+			interactivegui.selection = 1 -- goto first
+		end -- otherwise do nothing
+	end
+end
 
 local helpElements = {}
 local buttonHandlerInputs = {}
@@ -3280,49 +3324,6 @@ local function drawGUI()
 			garbagecount.disp = math.floor(disp*100)/100
 		end
 		gui.text(interactivegui.boxx+1, interactivegui.boxy2-7, "kB:"..garbagecount.disp)
-	end
-end
-
-local function changeGUIPage(n)
-	if not interactivegui.enabled then return end
-	n = n or interactivegui.page+1
-
-	if guipages[n] then -- if the page exists go there
-		interactivegui.page = n
-	else -- otherwise try to wrap-around
-		if n == 0 then
-			interactivegui.page = #guipages -- goto last
-		elseif n == #guipages+1 then
-			interactivegui.page = 1 -- goto first
-		end -- otherwise do nothing
-	end
-
-	local page = guipages[interactivegui.page]
-
-	if interactivegui.selection > #page then -- make sure selection is in bounds
-		interactivegui.selection = #page
-	elseif interactivegui.selection < 1 then
-		interactivegui.selection = 1
-	end
-end
-
-local function changeGUISelection(n)
-	if not interactivegui.enabled then return end
-	local page = guipages[interactivegui.page] -- current page
-	if (#page<=1) then
-		interactivegui.selection = 1
-		return
-	end
-	n = n or interactivegui.selection+1
-
-	if page[n] then -- if the selection exists go there
-		interactivegui.selection = n
-	else -- otherwise try to wrap around
-		if n == 0 then
-			interactivegui.selection = #page -- goto last
-		elseif n == #page+1 then
-			interactivegui.selection = 1 -- goto first
-		end -- otherwise do nothing
 	end
 end
 

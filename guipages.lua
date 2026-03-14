@@ -427,8 +427,8 @@ local p2health = {
 		end
 	end,
 }
-local p2healthmaxlen = #tostring(gamevars.P2.constants.maxhealth)
-local p2healthmax = {
+local p2maxhealthlen = #tostring(gamevars.P2.constants.maxhealth)
+local p2maxhealth = {
 	text = "Max Health",
 	rawx = interactivegui.boxxhalflength,
 	y = 120,
@@ -436,17 +436,17 @@ local p2healthmax = {
 	olcolour = colour.olcolour,
 	info = "Controls how much Health P2 gains",
 	reset = function()
-		resetConfig("p2healthmax")
+		resetConfig("p2maxhealth")
 	end,
 	func = function()
-		changePageAndSelection("p2healthmax")
+		changePageAndSelection("p2maxhealth")
 	end,
 	autofunc = function(this)
 		local str = ""
 		local health = gamevars.P2.maxhealth
 		local healthlen = #tostring(health)
-		if healthlen < p2healthmaxlen then
-			for i = 1, p2healthmaxlen-healthlen do
+		if healthlen < p2maxhealthlen then
+			for i = 1, p2maxhealthlen-healthlen do
 				str = str .. " "
 			end
 			str = str .. health
@@ -1101,7 +1101,7 @@ end
 
 if gamefunctions.writeplayertwohealth and gamevars.P2.constants.maxhealth then -- if health is set up in file
 	table.insert(guipages[guipagenames.Players], p2health)
-	table.insert(guipages[guipagenames.Players], p2healthmax)
+	table.insert(guipages[guipagenames.Players], p2maxhealth)
 end
 
 if gamevars.P2.constants.maxmeter and gamefunctions.readplayertwometer and gamefunctions.writeplayertwometer then
@@ -1446,25 +1446,25 @@ if gamefunctions.writeplayertwohealth and gamevars.P2.constants.maxhealth then -
 	)
 end
 
-if gamefunctions.writeplayertwohealth and gamevars.P2.constants.maxhealth then -- p2healthmax
+if gamefunctions.writeplayertwohealth and gamevars.P2.constants.maxhealth then -- p2maxhealth
 	local len = #tostring(gamevars.P2.constants.maxhealth)
 	local uf = 	function(n, k)
 		if n then
-			local maxhealth = getConfigValue("p2healthmax")+n
-			changeConfig("p2healthmax", maxhealth)
+			local maxhealth = getConfigValue("p2maxhealth")+n
+			changeConfig("p2maxhealth", maxhealth)
 			return maxhealth
 		end
 		if k then
-			changeConfig("p2healthmax", k)
+			changeConfig("p2maxhealth", k)
 			return k
 		end
 		return gamevars.P2.maxhealth
 	end
-	guipages.p2healthmax = createScrollingBar(
+	guipages.p2maxhealth = createScrollingBar(
 		guipages[guipagenames.Players],
 		"Max Health: "..gamevars.P2.constants.maxhealth,
-		p2healthmax.rawx - #("Max Health: "..gamevars.P2.constants.maxhealth)*LETTER_HALFWIDTH,
-		p2healthmax.y,
+		p2maxhealth.rawx - #("Max Health: "..gamevars.P2.constants.maxhealth)*LETTER_HALFWIDTH,
+		p2maxhealth.y,
 		1,
 		gamevars.P2.constants.maxhealth,
 		0,
@@ -1482,7 +1482,7 @@ if gamefunctions.writeplayertwohealth and gamevars.P2.constants.maxhealth then -
 				str = health
 			end
 			this.text = "Max Health: "..str
-			this.x = p2healthmax.rawx - #this.text*LETTER_HALFWIDTH
+			this.x = p2maxhealth.rawx - #this.text*LETTER_HALFWIDTH
 		end
 	)
 end
