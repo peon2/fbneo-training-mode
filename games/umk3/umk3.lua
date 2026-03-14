@@ -2,7 +2,6 @@ assert(rb,"Run fbneo-training-mode.lua")
 
 function gamemsg()
 	print "Known issues with UMK3:"
-	print "Coin button also triggers maintenance menu."
 	print "Health doesn't refill on throws."
 	print "Combo counter doesn't increment correctly."
 end
@@ -68,16 +67,42 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=185,
-		combotexty=38,
-		comboenabled=false,
-		p1healthx=8,
-		p1healthy=27,
-		p1healthenabled=true,
-		p2healthx=381,
-		p2healthy=27,
-		p2healthenabled=true
+		combotext = {
+			x=185,
+			y=38,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 8,
+				y = 27,
+				enabled = true,
+			},
+			P2 = {
+				x = 381,
+				y = 27,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true
+		}
+	}
 }
 
 function playerOneFacingLeft()

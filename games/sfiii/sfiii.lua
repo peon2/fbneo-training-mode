@@ -1,24 +1,47 @@
 assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being run
 
+-- Uses values taken from https://www.mamecheat.co.uk/
+
 REPLAY_SAVESTATE_INTERVAL = 300
 
 p1maxhealth = 0xA0
 p2maxhealth = 0xA0
-p1maxmeter = rb(0x200D951)
-p2maxmeter = rb(0x200D971)
+local p1maxbarsize
+local p2maxbarsize
 
+local function setSFIIIConstants()
+	p1maxbarsize = rb(0x200D945)
+	p2maxbarsize = rb(0x200D965)
+
+	p1maxmeter = rb(0x200D951) * p1maxbarsize -- Max stocks * Max bar size
+	p2maxmeter = rb(0x200D971) * p2maxbarsize
+
+	p1maxstun = rb(0x200D97F)
+	p2maxstun = rb(0x200D993)
+end
+
+setSFIIIConstants()
 
 local p1health = 0x200D22B
 local p2health = 0x200D603
 
-local p1meter = 0x200D953
-local p2meter = 0x200D973
+local p1meterbar = 0x200D949
+local p1meterstocks = 0x200D953
 
-local p1direction = 0x200D196 
+local p2meterbar = 0x200D969
+local p2meterstocks = 0x200D973
+
+local p1direction = 0x200D196
 local p2direction = 0x200D197
 
-local p1combocounter = 0x200DA4D
-local p2combocounter = 0x200D6CD
+local p1combocounter = 0x200DB9D
+local p2combocounter = 0x200DAF5
+
+local p1stunned = 0x201DC8E
+local p2stunned = 0x201DCA6
+
+local p1stunbar = 0x200D985
+local p2stunbar = 0x200D999
 
 translationtable = {
 	"left",
@@ -49,17 +72,63 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=176,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=9,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=364,
-		p2healthy=16,
-		p2healthenabled=true,
+		combotext = {
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 9,
+				y = 16,
+				enabled = true,
+			},
+			P2 = {
+				x = 364,
+				y = 16,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 41,
+				y = 210,
+				enabled = true,
+			},
+			P2 = {
+				x = 334,
+				y = 210,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
+
+local sfiii = { stun = { P1 = {}, P2 = {}, hud = { P1 = {}, P2 = {} } } }
+local colours = {}
 
 function playerOneFacingLeft()
 	return rb(p1direction)==0
@@ -70,11 +139,11 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	return rb(p2combocounter)~=0
+	return (rb(p2combocounter)~=0 or rb(p1stunned)~=0)
 end
 
 function playerTwoInHitstun()
-	return rb(p1combocounter)~=0
+	return (rb(p1combocounter)~=0 or rb(p2stunned)~=0)
 end
 
 function readPlayerOneHealth()
@@ -94,25 +163,292 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter)
+	return rb(p1meterstocks)*p1maxbarsize + rb(p1meterbar)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+	local bar = meter%p1maxbarsize
+	local stocks = meter/p1maxbarsize
+	wb(p1meterbar, bar)
+	wb(p1meterstocks, stocks)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rb(p2meterstocks)*p2maxbarsize + rb(p2meterbar)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	local bar = meter%p2maxbarsize
+	local stocks = meter/p2maxbarsize
+	wb(p2meterbar, bar)
+	wb(p2meterstocks, stocks)
 end
 
-local infiniteTime = function()
-	wb(0x200EB33, 0x64)
+local function readPlayerOneStun()
+	return rb(p1stunbar, stun)
+end
+
+local function readPlayerTwoStun()
+	return rb(p2stunbar, stun)
+end
+
+local function writePlayerOneStun(stun)
+	wb(p1stunbar, stun)
+end
+
+local function writePlayerTwoStun(stun)
+	wb(p2stunbar, stun)
+end
+
+local function setMusicVolume(volume) -- squeeze from 0 to 100
+	if volume < 0 then volume = 0 end
+	if volume > 100 then volume = 100 end
+	volume = math.floor( (volume*0x80)/100 )
+	wb(0x206CE16, volume)
+end
+
+local timer = 0x200EB33
+local timemax = 0x63
+
+local function infiniteTime()
+	wb(timer, 0x63-1)
 end
 
 function Run() -- runs every frame
+	if (rb(timer) == timemax) then -- should be checking if char/super has changed instead...
+		setSFIIIConstants()
+		setGameConstants()
+		reloadGUIPages()
+		infiniteTime()
+		-- Reset these changeable values
+		changeConfig("sfiiistunp1", 0)
+		changeConfig("sfiiistunp2", 0)
+	end
+	if sfiii.stun.P1.enabled then
+		if sfiii.stun.P1.aftercombo then
+			if not playerOneInHitstun() then
+				writePlayerOneStun(sfiii.stun.P1.value)
+			end
+		else
+			writePlayerOneStun(sfiii.stun.P1.value)
+		end
+	end
+	
+	if sfiii.stun.P2.enabled then
+		if sfiii.stun.P2.aftercombo then
+			if not playerTwoInHitstun() then
+				writePlayerTwoStun(sfiii.stun.P2.value)
+			end
+		else
+			writePlayerTwoStun(sfiii.stun.P2.value)
+		end
+	end
 	infiniteTime()
+	setMusicVolume(sfiii.musicvolume)
+	if sfiii.p1gill then
+		wb(0x200EB43, 0x0)
+	end
+	if sfiii.p2gill then
+		wb(0x200EB44, 0x0)
+	end
 end
+
+initConfigTable("sfiii", sfiii, "config")
+createConfigValue(
+	"sfiiistunenabledp1",
+	"enabled",
+	true,
+	sfiii.stun.P1,
+	sfiii.stun.P1,
+	"config"
+)
+createConfigValue(
+	"sfiiistunenabledp2",
+	"enabled",
+	true,
+	sfiii.stun.P2,
+	sfiii.stun.P2,
+	"config"
+)
+createConfigValue(
+	"sfiiistunaftercombop1",
+	"aftercombo",
+	true,
+	sfiii.stun.P1,
+	sfiii.stun.P1,
+	"config"
+)
+createConfigValue(
+	"sfiiistunaftercombop2",
+	"aftercombo",
+	true,
+	sfiii.stun.P2,
+	sfiii.stun.P2,
+	"config"
+)
+createConfigValue(
+	"sfiiistunp1",
+	"value",
+	0,
+	sfiii.stun.P1,
+	sfiii.stun.P1,
+	"config"
+)
+createConfigValue(
+	"sfiiistunp2",
+	"value",
+	0,
+	sfiii.stun.P2,
+	sfiii.stun.P2,
+	"config"
+)
+createConfigValue(
+	"sfiiistunxp1",
+	"x",
+	84,
+	sfiii.stun.hud.P1,
+	sfiii.stun.hud.P1,
+	"config"
+)
+createConfigValue(
+	"sfiiistunxp2",
+	"x",
+	285,
+	sfiii.stun.hud.P2,
+	sfiii.stun.hud.P2,
+	"config"
+)
+createConfigValue(
+	"sfiiistunyp1",
+	"y",
+	24,
+	sfiii.stun.hud.P1,
+	sfiii.stun.hud.P1,
+	"config"
+)
+createConfigValue(
+	"sfiiistunyp2",
+	"y",
+	24,
+	sfiii.stun.hud.P2,
+	sfiii.stun.hud.P2,
+	"config"
+)
+createConfigValue(
+	"sfiiistunhudenabledp1",
+	"enabled",
+	true,
+	sfiii.stun.hud.P1,
+	sfiii.stun.hud.P1,
+	"config"
+)
+createConfigValue(
+	"sfiiistunhudenabledp2",
+	"enabled",
+	true,
+	sfiii.stun.hud.P2,
+	sfiii.stun.hud.P2,
+	"config"
+)
+createConfigValue(
+	"sfiiip1gill",
+	"p1gill",
+	false,
+	sfiii,
+	sfiii,
+	"config"
+)
+createConfigValue(
+	"sfiiip2gill",
+	"p2gill",
+	false,
+	sfiii,
+	sfiii,
+	"config"
+)
+createConfigValue(
+	"sfiiimusicvolume",
+	"musicvolume",
+	25,
+	sfiii,
+	sfiii,
+	"config"
+)
+initConfigTable("sfiii", colours, "colourconfig")
+createConfigValue(
+	"sfiiistuncolourp1",
+	"stunp1",
+	0xFF0000FF,
+	colours,
+	colours,
+	"colourconfig",
+	"Stun Colour P1"
+)
+createConfigValue(
+	"sfiiistuncolourp2",
+	"stunp2",
+	0x00FFFFFF,
+	colours,
+	colours,
+	"colourconfig",
+	"Stun Colour P2"
+)
+
+createHUDElement(
+	"p1stun",
+	function(n)
+		if n then
+			changeConfig("sfiiistunxp1", n)
+		end
+		return sfiii.stun.hud.P1.x
+	end,
+	function(n)
+		if n then
+			changeConfig("sfiiistunyp1", n)
+		end
+		return sfiii.stun.hud.P1.y
+	end,
+	function(n)
+		if n~=nil then
+			changeConfig("sfiiistunenabledp1", n)
+		end
+		return sfiii.stun.P1.enabled
+	end,
+	function()
+		resetConfig("sfiiistunxp1")
+		resetConfig("sfiiistunyp1")
+		resetConfig("sfiiistunenabledp1")
+	end,
+	function()
+		gui.text(sfiii.stun.hud.P1.x, sfiii.stun.hud.P1.y, readPlayerOneStun(), colours.stunp1)
+	end
+)
+createHUDElement(
+	"p2stun",
+	function(n)
+		if n then
+			changeConfig("sfiiistunxp2", n)
+		end
+		return sfiii.stun.hud.P2.x
+	end,
+	function(n)
+		if n then
+			changeConfig("sfiiistunyp2", n)
+		end
+		return sfiii.stun.hud.P2.y
+	end,
+	function(n)
+		if n~=nil then
+			changeConfig("sfiiistunenabledp2", n)
+		end
+		return sfiii.stun.P2.enabled
+	end,
+	function()
+		resetConfig("sfiiistunxp2")
+		resetConfig("sfiiistunyp2")
+		resetConfig("sfiiistunenabledp2")
+	end,
+	function()
+		gui.text(sfiii.stun.hud.P2.x, sfiii.stun.hud.P2.y, readPlayerTwoStun(), colours.stunp2)
+	end
+)

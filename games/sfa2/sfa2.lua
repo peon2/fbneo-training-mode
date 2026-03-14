@@ -43,22 +43,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=180,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=18,
-		p1healthy=18,
-		p1healthenabled=true,
-		p2healthx=355,
-		p2healthy=18,
-		p2healthenabled=true,
-		p1meterx=176,
-		p1metery=210,
-		p1meterenabled=true,
-		p2meterx=205,
-		p2metery=210,
-		p2meterenabled=true,
+		combotext = {
+			x=176,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 18,
+				y = 18,
+				enabled = true,
+			},
+			P2 = {
+				x = 355,
+				y = 18,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 176,
+				y = 209,
+				enabled = true,
+			},
+			P2 = {
+				x = 197,
+				y = 209,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -77,17 +115,36 @@ function playerTwoInHitstun()
 	return rb(0xff885e)~=0
 end
 
+--[[
+	SFA2 seems to desync randomly on the frames it takes damage and updates it's combo counter, frameskipping issue?
+	Adding 4f of buffer in reading health seems to make it more accurate without adding too many false positives
+--]]
+local prevHealth = { P1 = {}, P2 = {} }
+local healthhistorylen = 4
+for i = 1, healthhistorylen do
+	prevHealth.P1[i] = rw(p1health)
+	prevHealth.P2[i] = rw(p2health)
+end
+
 function readPlayerOneHealth()
-	return rw(p1health)
+	for i = 1, healthhistorylen do
+		prevHealth.P1[i+1] = prevHealth.P1[i]
+	end
+	prevHealth.P1[1] = rw(p1health)
+	return prevHealth.P1[healthhistorylen+1]
+end
+
+function readPlayerTwoHealth()
+	for i = 1, healthhistorylen do
+		prevHealth.P2[i+1] = prevHealth.P2[i]
+	end
+	prevHealth.P2[1] = rw(p2health)
+	return prevHealth.P2[healthhistorylen+1]
 end
 
 function writePlayerOneHealth(health)
 	ww(p1health, health)
 	ww(p1redhealth, health)
-end
-
-function readPlayerTwoHealth()
-	return rw(p2health)
 end
 
 function writePlayerTwoHealth(health)
@@ -115,6 +172,27 @@ local infiniteTime = function()
 	wb(0xff8109, 99)
 end
 
-function Run() -- runs every frame
+local sfa2 = {}
+
+initConfigTable("sfa2", sfa2, "config")
+createConfigValue(
+	"sfa2musicvolume",
+	"musicvolume",
+	50,
+	sfa2,
+	sfa2,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF019
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
+function Run()
+	setMusicVolume(sfa2.musicvolume)
 	infiniteTime()
 end

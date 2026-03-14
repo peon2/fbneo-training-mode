@@ -7,10 +7,8 @@ p1maxmeter = 0x40
 p2maxmeter = 0x40
 
 function gamemsg()
-	print "Known issues with samsh5sp:"
-	print "gui does not show up"
-	print "no hitboxes currently"
-	print "only way to toggle p1 health is to edit code"
+	print "Known issues with samsho5sp:"
+	print "Doesn't track combos"
 end
 
 translationtable = {
@@ -40,19 +38,55 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		p1healthx=9,
-		p1healthy=24,
-		p1healthenabled=true,
-		p2healthx=284,
-		p2healthy=24,
-		p2healthenabled=true,
-		p1meterx=98,
-		p1metery=210,
-		p1meterenabled=true,
-		p2meterx=199,
-		p2metery=210,
-		p2meterenabled=true,
+		health = {
+			P1 = {
+				x = 9,
+				y = 24,
+				enabled = true,
+			},
+			P2 = {
+				x = 284,
+				y = 24,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 98,
+				y = 210,
+				enabled = true,
+			},
+			P2 = {
+				x = 199,
+				y = 210,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function readPlayerOneHealth()
