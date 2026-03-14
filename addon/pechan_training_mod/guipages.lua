@@ -15,11 +15,11 @@ guicustompage = {
 local cur_y = 15
 
 if current_game.has_guard then
-	table.insert(guicustompage, {
+	guicustompage.guard_settings = {
 		text = tl("ui.menu.guard_settings"),
 		x = 2,
 		y = cur_y,
-	})
+	}
 	cur_y = cur_y + 10
 	table.insert(guicustompage, {
 		text = tl("ui.guard.action_title"),
@@ -130,11 +130,11 @@ if current_game.has_hit_reversal then
 end
 
 cur_y = cur_y + 15
-table.insert(guicustompage, {
+guicustompage.other_settings = {
 	text = tl("ui.menu.other_settings"),
 	x = 2,
 	y = cur_y,
-})
+}
 cur_y = cur_y + 10
 
 if current_game.has_wakeup then
@@ -200,9 +200,8 @@ if current_game.has_recovery then
 			end
 		end,
 	})
-	cur_y = cur_y + 10
-	table.insert(guicustompage,
-		{ text = tl("ui.recovery.delay"), x = 8, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
+	cur_y = cur_y + 11
+	guicustompage.recovery_delay = { text = tl("ui.recovery.delay"), x = 8, y = cur_y, info = { tl("ui.info.recovery_delay") } }
 	table.insert(guicustompage,
 		{
 			text = "-",
@@ -217,19 +216,17 @@ if current_game.has_recovery then
 				end
 			end
 		})
-	table.insert(guicustompage,
-		{
+	guicustompage.recovery_delay_value = {
 			text = tostring(PECHAN_CONFIG.RECOVERY.delay),
 			x = 40 + 45,
 			y = cur_y,
-			olcolour = "black",
 			info = {},
 			func = function() end,
 			autofunc = function(
 				this)
 				this.text = tostring(PECHAN_CONFIG.RECOVERY.delay)
 			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "+",
@@ -243,8 +240,7 @@ if current_game.has_recovery then
 			end
 		})
 
-	table.insert(guicustompage,
-		{ text = tl("ui.recovery.times"), x = 118, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
+	guicustompage.recovery_times = {text = tl("ui.recovery.times"), x = 118, y = cur_y, info = { tl("ui.info.recovery_delay") } }
 	table.insert(guicustompage,
 		{
 			text = "-",
@@ -259,19 +255,17 @@ if current_game.has_recovery then
 				end
 			end
 		})
-	table.insert(guicustompage,
-		{
+	guicustompage.recovery_times_values = {
 			text = tostring(PECHAN_CONFIG.RECOVERY.times),
 			x = 150 + 45,
 			y = cur_y,
-			olcolour = "black",
 			info = {},
 			func = function() end,
 			autofunc = function(
 				this)
 				this.text = tostring(PECHAN_CONFIG.RECOVERY.times)
 			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "+",
@@ -286,35 +280,32 @@ if current_game.has_recovery then
 		})
 end
 
-cur_y = cur_y + 8
-table.insert(guicustompage, { text = tl("ui.menu.reversal_settings"), x = 2, y = cur_y })
+cur_y = cur_y + 12
+guicustompage.reversal_settings = { text = tl("ui.menu.reversal_settings"), x = 2, y = cur_y }
 cur_y = cur_y + 12
 
 local left_y = cur_y
 local right_y = cur_y
 
 if current_game.has_guard then
-	table.insert(guicustompage,
-		{
+	guicustompage.reversals_guard = {
 			text = tl("ui.reversals.guard"),
-			x = 8,
+			x = 2,
 			y = left_y,
-			olcolour = "black",
 			handle = 9,
-			func = function()
-				CIG(
-					"guard_reversal_move_active_settings", 1)
-			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "()",
 			x = 8,
-			y = left_y + 8,
+			y = left_y + 11,
 			olcolour = "black",
 			handle = 2,
 			info = { tl("ui.info.reversal_moves") },
-			func = function() end,
+			func = function()
+				CIG(
+					"guard_reversal_move_active_settings", 1)
+			end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.GUARD.reversal_moves) do
 					txt = txt ..
@@ -322,29 +313,27 @@ if current_game.has_guard then
 				end; this.text = "(" .. txt .. ")"
 			end
 		})
-	left_y = left_y + 18
+	left_y = left_y + 22
 end
 
 if current_game.has_wakeup then
-	table.insert(guicustompage,
-		{
+	guicustompage.reversals_wakeup = {
 			text = tl("ui.reversals.wakeup"),
-			x = 8,
+			x = 2,
 			y = left_y,
 			handle = 9,
-			func = function()
-				CIG(
-					"wakeup_reversal_move_active_settings", 1)
-			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "()",
 			x = 8,
-			y = left_y + 8,
+			y = left_y + 11,
 			olcolour = "black",
 			handle = 8,
-			func = function() end,
+			func = function()
+				CIG(
+					"wakeup_reversal_move_active_settings", 1)
+			end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.WAKEUP.reversal_moves) do
 					txt = txt ..
@@ -352,29 +341,27 @@ if current_game.has_wakeup then
 				end; this.text = "(" .. txt .. ")"
 			end
 		})
-	left_y = left_y + 18
+	left_y = left_y + 22
 end
 
 if current_game.has_hit_reversal then
-	table.insert(guicustompage,
-		{
+	guicustompage.reversal_hit = {
 			text = tl("ui.reversals.hit"),
-			x = 8,
+			x = 2,
 			y = left_y,
 			handle = 9,
-			func = function()
-				CIG(
-					"hit_reversal_move_active_settings", 1)
-			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "()",
 			x = 8,
-			y = left_y + 8,
+			y = left_y + 11,
 			olcolour = "black",
 			handle = 8,
-			func = function() end,
+			func = function()
+				CIG(
+					"hit_reversal_move_active_settings", 1)
+			end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.HIT.reversal_moves) do
 					txt = txt ..
@@ -382,8 +369,11 @@ if current_game.has_hit_reversal then
 				end; this.text = "(" .. txt .. ")"
 			end
 		})
-	left_y = left_y + 18
+	left_y = left_y + 22
 end
+
+guicustompage.menu_configurations = { text = tl("ui.menu.configurations"), x = 118, y = right_y }
+right_y = right_y + 12
 
 if current_game.has_dummy_settings then
 	table.insert(guicustompage,
@@ -432,9 +422,6 @@ if current_game.has_cpu_settings then
 		})
 	right_y = right_y + 12
 end
-
-table.insert(guicustompage, { text = tl("ui.menu.configurations"), x = 118, y = right_y })
-right_y = right_y + 12
 
 if current_game.has_setups_configuration then
 	table.insert(guicustompage,
