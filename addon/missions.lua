@@ -1212,3 +1212,5 @@ local function missions()
 end
 
 table.insert(registers.registerbefore, missions)
+
+formatGUITables()
