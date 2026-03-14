@@ -3283,7 +3283,7 @@ local function drawGUI()
 	end
 end
 
-local function changeGUIPage(n)
+function changeGUIPage(n)
 	if not interactivegui.enabled then return end
 	n = n or interactivegui.page+1
 
@@ -3306,7 +3306,7 @@ local function changeGUIPage(n)
 	end
 end
 
-local function changeGUISelection(n)
+function changeGUISelection(n)
 	if not interactivegui.enabled then return end
 	local page = guipages[interactivegui.page] -- current page
 	if (#page<=1) then
