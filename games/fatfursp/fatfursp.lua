@@ -139,10 +139,9 @@ if ROM == "fatfurspbh" then
 		infiniteTime()
 	end
 else
+	wb(0x10FD82, 0x00) -- Set the Neogeo to AES
 	Run = function() -- runs every frame
 		infiniteTime()
-		wb(0x10FD82, 0x00)
-		wb(0x10FD82, 0x00)
-		wb(0x10E063, 0xFF)
+		wb(0x10E063, 0xFF) -- Unlock Ryo
 	end
 end

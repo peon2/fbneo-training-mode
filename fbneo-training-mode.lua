@@ -97,7 +97,7 @@ local games = {
 	fatfury1 = {"fatfury1", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	fatfury2 = {"fatfury2", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	fatfury3 = {"fatfury3", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfursp = {"fatfursp", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	fatfursp = {"fatfursp", "fatfurspbh", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
 	fightfev = {"fightfev", iconfile = "icons-neogeo-32.png"},
 	galaxyfg = {"galaxyfg", iconfile = "icons-neogeo-32.png"},
 	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -1118,6 +1118,7 @@ function getConfigItemsFiltered(filter) -- returns configitems by comparing the 
 end
 
 function getConfigValue(id)
+	assert(configitems[id], "Config Item: '"..id.."' does not exist.")
 	local configitem = configitems[id]
 	local name = configitem.name
 	return configitem.configpointer[name], configitem.varpointer and configitem.varpointer[name], configitem.default
