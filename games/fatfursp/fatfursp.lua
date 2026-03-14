@@ -134,6 +134,15 @@ function infiniteTime()
 	ww(0x10092a, 0x6030)
 end
 
-function Run() -- runs every frame
-	infiniteTime()
+if ROM == "fatfurspbh" then
+	Run = function() -- runs every frame
+		infiniteTime()
+	end
+else
+	Run = function() -- runs every frame
+		infiniteTime()
+		wb(0x10FD82, 0x00)
+		wb(0x10FD82, 0x00)
+		wb(0x10E063, 0xFF)
+	end
 end
