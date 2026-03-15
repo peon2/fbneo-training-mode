@@ -52,17 +52,61 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=146,
-		combotexty=37,
-		comboenabled=true,
-		p1healthx=25,
-		p1healthy=21,
-		p1healthenabled=true,
-		p2healthx=50,
-		p2healthy=21,
-		p2healthenabled=true,
+	hud = {
+		combotext = {
+			x=146,
+			y=37,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 50,
+				y = 21,
+				enabled = true,
+			},
+			P2 = {
+				x = 259,
+				y = 21,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 112,
+				y = 226,
+				enabled = true,
+			},
+			P2 = {
+				x = 202,
+				y = 226,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function roundStart()

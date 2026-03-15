@@ -36,16 +36,42 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=144,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=49,
-		p1healthy=17,
-		p1healthenabled=true,
-		p2healthx=264,
-		p2healthy=17,
-		p2healthenabled=true,
+		combotext = {
+			x=144,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 49,
+				y = 17,
+				enabled = true,
+			},
+			P2 = {
+				x = 264,
+				y = 17,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -56,12 +82,13 @@ function playerTwoFacingLeft()
 	return rb(p2direction)==0
 end
 
+-- Thanks to Guruslum for these hitstun values
 function playerOneInHitstun()
-	return rb(0x1003A9)~=0 -- damage animation
+	return rb(0x100301)~=1
 end
 
 function playerTwoInHitstun()
-	return rb(0x1004A9)~=0 -- damage animation?
+	return rb(0x100401)~=1
 end
 
 function readPlayerOneHealth()

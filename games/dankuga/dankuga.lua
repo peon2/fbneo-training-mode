@@ -52,22 +52,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=147,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=35,
-		p1healthy=18,
-		p1healthenabled=true,
-		p2healthx=274,
-		p2healthy=18,
-		p2healthenabled=true,
-        p1meterx=29,
-		p1metery=47,
-		p1meterenabled=true,
-		p2meterx=278,
-		p2metery=47,
-		p2meterenabled=true,
+		combotext = {
+			x=147,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 35,
+				y = 18,
+				enabled = true,
+			},
+			P2 = {
+				x = 274,
+				y = 18,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 29,
+				y = 47,
+				enabled = false,
+			},
+			P2 = {
+				x = 278,
+				y = 47,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function Hitboxes()

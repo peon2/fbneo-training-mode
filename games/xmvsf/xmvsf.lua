@@ -30,6 +30,32 @@ local p2combocounter = 0xff4510
 local p1direction = 0xff404b -- 0 is facing left, both chars share the same direction flag
 local p2direction = 0xff444b
 
+character = {
+	WOLVERINE		= 0x00,
+	CYCLOPS			= 0x02,
+	STORM			= 0x04,
+	ROGUE			= 0x06,
+	GAMBIT			= 0x08,
+	SABRETOOTH		= 0x0A,
+	JUGGERNAUT		= 0x0C,
+	MAGNETO			= 0x0E,
+	APOCALYPSE		= 0x10,
+	RYU				= 0x12,
+	KEN				= 0x14,
+	CHUN_LI			= 0x16,
+	DHALSIM			= 0x18,
+	ZANGIEF			= 0x1A,
+	M_BISON			= 0x1C,
+	AKUMA			= 0x1E,
+	CHARLIE			= 0x20,
+	CAMMY			= 0x22,
+	ALPHA_CHUN_LI	= 0x24
+}
+local p1characterid = 0xFF4053
+local p2characterid = 0xFF4453
+p1characterpick = nil -- don't really need to save these
+p2characterpick = nil
+
 translationtable = {
 	"left",
 	"right",
@@ -59,22 +85,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=178,
-		combotexty=53,
-		comboenabled=true,
-		p1healthx=157,
-		p1healthy=20,
-		p1healthenabled=true,
-		p2healthx=215,
-		p2healthy=20,
-		p2healthenabled=true,
-		p1meterx=179,
-		p1metery=209,
-		p1meterenabled=true,
-		p2meterx=202,
-		p2metery=209,
-		p2meterenabled=true,
+		combotext = {
+			x=180,
+			y=53,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 157,
+				y = 20,
+				enabled = true,
+			},
+			P2 = {
+				x = 215,
+				y = 20,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 179,
+				y = 209,
+				enabled = false,
+			},
+			P2 = {
+				x = 202,
+				y = 209,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -139,10 +203,37 @@ function writePlayerTwoMeter(meter)
     ww(0xff4612, 0x90) -- percentage of bar
 end
 
-function infiniteTime()
+local function infiniteTime()
 	wb(0xff5008,0x99)
 end
 
+local xmvsf = {}
+
+initConfigTable("xmvsf", xmvsf, "config")
+createConfigValue(
+	"xmvsfmusicvolume",
+	"musicvolume",
+	50,
+	xmvsf,
+	xmvsf,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF027
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
 function Run()
+	setMusicVolume(xmvsf.musicvolume)
 	infiniteTime()
+	if p1characterpick then
+		wb(p1characterid, p1characterpick)
+	end
+	if p2characterpick then
+		wb(p2characterid, p2characterpick)
+	end
 end

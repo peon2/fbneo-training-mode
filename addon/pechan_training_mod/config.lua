@@ -1,3 +1,52 @@
+local COMMON_KOF_ACTION_FILTERS = {
+    [0] = true,
+    [1] = true,
+    [2] = true,
+    [3] = true,
+    [4] = true,
+    [5] = true,
+    [6] = true,
+    [7] = true,
+    [8] = true,
+    [9] = true,
+    [10] = true,
+    [11] = true,
+    [12] = true,
+    [13] = true,
+    [14] = true,
+    [15] = true,
+    [16] = true,
+    [17] = true,
+    [18] = true,
+    [19] = true,
+    [20] = true,
+    [21] = true,
+    [22] = true,
+    [23] = true,
+    [24] = true,
+    [45] = true,
+    [46] = true,
+    [47] = true,
+    [48] = true,
+    [49] = true,
+    [50] = true,
+    [51] = true,
+    [52] = true,
+    [53] = true,
+    [54] = true,
+    [55] = true,
+    [56] = true,
+    [79] = true,
+    [157] = true,
+    [158] = true,
+    [159] = true,
+    [232] = true,
+    [233] = true
+}
+
+local COMMON_KOF_GUARD_BUTTONS = { "Button A", "Button B", "Button C", "Button D" }
+local COMMON_KOF_BLOCKSTUN_VALUES = { 0x20, 0xA0 }
+
 PECHAN_CONFIG = {
     GAMES = {
         ["kof98"] = {
@@ -14,6 +63,10 @@ PECHAN_CONFIG = {
             has_trials = true,
             has_ex = true,
             has_modes = true,
+            has_replays = true,
+            has_configurations = true,
+            has_other_settings = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -33,6 +86,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA,
                 music_address = 0x10ED5F,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "Kyo Kusanagi", code = "0x00", short_name = "kyo", has_ex = true },
                 [2] = { name = "Benimaru Nikaido", code = "0x01", short_name = "beni" },
@@ -88,6 +143,10 @@ PECHAN_CONFIG = {
             has_trials = false,
             has_ex = true,
             has_modes = true,
+            has_replays = true,
+            has_configurations = true,
+            has_other_settings = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -107,6 +166,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA, -- Need to verify for kof97
                 music_address = 0x10ED5F, -- Need to verify for kof97
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "Kyo Kusanagi", code = "0x00", short_name = "kyo", has_ex = true },
                 [2] = { name = "Benimaru Nikaido", code = "0x01", short_name = "beni" },
@@ -157,6 +218,10 @@ PECHAN_CONFIG = {
             has_trials = false,
             has_ex = false,
             has_modes = false,
+            has_replays = true,
+            has_configurations = true,
+            has_other_settings = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -172,6 +237,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA,
                 music_address = 0x10ED5F,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "Kyo Kusanagi", code = "0x00", short_name = "kyo" },
                 [2] = { name = "Benimaru Nikaido", code = "0x01", short_name = "beni" },
@@ -218,6 +285,10 @@ PECHAN_CONFIG = {
             has_trials = false,
             has_ex = true,
             has_modes = false,
+            has_replays = true,
+            has_configurations = true,
+            has_other_settings = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -239,6 +310,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA,
                 music_address = 0x10ED5F,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "Kyo", code = "0x00", short_name = "kyo" },
                 [2] = { name = "Benimaru", code = "0x01", short_name = "beni" },
@@ -298,6 +371,7 @@ PECHAN_CONFIG = {
             has_ex = false,
             has_modes = false,
             has_strikers = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -317,6 +391,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA,
                 music_address = 0x10ED5F,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "K\'", code = "0x00", short_name = "k" },
                 [2] = { name = "Maxima", code = "0x01", short_name = "maxima" },
@@ -369,6 +445,7 @@ PECHAN_CONFIG = {
             has_ex = false,
             has_modes = false,
             has_strikers = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -390,6 +467,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA,
                 music_address = 0x10ED5F,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "K\'", code = "0x00", short_name = "k" },
                 [2] = { name = "Maxima", code = "0x01", short_name = "maxima" },
@@ -445,6 +524,10 @@ PECHAN_CONFIG = {
             has_modes = false,
             has_strikers = true,
             has_3_strikers = true,
+            has_replays = true,
+            has_configurations = true,
+            has_other_settings = true,
+            has_frame_data = true,
             player1_base = 0x108100,
             player2_base = 0x108300,
             offsets = {
@@ -468,6 +551,8 @@ PECHAN_CONFIG = {
                 stage_address = 0x10A7EA,
                 music_address = 0x10ED5F,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "K\'", code = "0x00", short_name = "k" },
                 [2] = { name = "Maxima", code = "0x01", short_name = "maxima" },
@@ -523,8 +608,10 @@ PECHAN_CONFIG = {
             has_character_selection = false,
             has_cpu_settings = false,
             has_dummy_settings = false,
-            has_setups_configuration = false,
             has_trials = false,
+            has_replays = false,
+            has_configurations = false,
+            has_other_settings = false,
             player1_base = 0x10A84E, -- Placeholder
             player2_base = 0x10A84E, -- Placeholder
             offsets = {
@@ -532,8 +619,73 @@ PECHAN_CONFIG = {
                 action = 0x0,
                 blockstun = 0x0,
             },
+            action_filtered = COMMON_KOF_ACTION_FILTERS,
+            guard_buttons = COMMON_KOF_GUARD_BUTTONS,
             characters = {
                 [1] = { name = "Terry Bogard", code = "0x00", short_name = "terry" }
+            }
+        },
+        ["aof3"] = {
+            name = "Art of Fighting 3",
+            has_guard = true,
+            has_wakeup = false,
+            has_recovery = false,
+            has_hit_reversal = false,
+            has_dizzy = false,
+            has_character_selection = true,
+            has_cpu_settings = false,
+            has_dummy_settings = false,
+            has_setups_configuration = false,
+            has_trials = false,
+            has_replays = true,
+            has_configurations = false,
+            has_other_settings = false,
+            has_frame_data = false,
+            guard_duration = 10,
+            guard_buttons = { "Button A", "Button B", "Button C" },
+            player1_base = 0x100478, -- Base calculated from P1 action address
+            player2_base = 0x100578, -- P2 base address
+            blockstun_values = { 0x1F, 0x1A, 0x1B },
+            hitstun_values = { 0x1B, 0x1A },
+            offsets = {
+                hitstatus = 0x4A,
+                action = 0x1,                  -- Reading the byte at 100479
+                blockstun = 0x4A,
+                air_height = -0x56,            -- 0x100422 - 0x100478
+                player_stored_index = 0x4795,  -- 0x104C0D - 0x100478
+                player2_stored_index = 0x4797, -- 0x104C0F - 0x100478
+            },
+            action_filtered = {
+                [0] = true,
+                [1] = true,
+                [2] = true,
+                [3] = true,
+                [4] = true,
+                [5] = true,
+                [6] = true,
+                [7] = true,
+                [8] = true,
+                [9] = true,
+                [0x0D] = true,
+                [0x0E] = true,
+                [0x44] = true,
+                [0x50] = true,
+                [0x51] = true,
+                [0x52] = true,
+                [0x53] = true,
+                [0x23] = true
+            },
+            characters = {
+                [1] = { name = "Robert Garcia", code = "0x00", short_name = "robert" },
+                [2] = { name = "Ryo Sakazaki", code = "0x01", short_name = "ryo" },
+                [3] = { name = "Karman Cole", code = "0x02", short_name = "karman" },
+                [4] = { name = "Kazumi Todoh", code = "0x03", short_name = "todoh" },
+                [5] = { name = "Rody Birts", code = "0x04", short_name = "rody" },
+                [6] = { name = "Lenny Creston", code = "0x05", short_name = "lenny" },
+                [7] = { name = "Wang Koh San", code = "0x06", short_name = "wang" },
+                [8] = { name = "Jin Fuha", code = "0x07", short_name = "jin" },
+                [9] = { name = "Sinclair", code = "0x08", short_name = "sinclair" },
+                [10] = { name = "Wyler", code = "0x09", short_name = "wyler" },
             }
         },
     },
@@ -546,6 +698,7 @@ PECHAN_CONFIG = {
         ["kof2000"] = true,
         ["kof2001"] = true,
         ["kof2002"] = true,
+        ["aof3"] = true,
     },
 
     GUARD = {
@@ -679,6 +832,33 @@ PECHAN_CONFIG = {
         },
 
 
+    },
+    RECORDING = {
+        loop = false,
+        cooldown = 10,
+        slots = {
+            [1] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },
+            [2] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },
+            [3] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },
+            [4] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },
+            [5] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },
+        },
+    },
+    CINEMATICS = {
+        state = "INACTIVE", -- INACTIVE, LOADING, WAITING, PLAYING, FINISHED
+        wait_timer = 0,
+        scenes = {},
+        current_scene_index = 1,
+        current_dialog_index = 1,
+    },
+    TRIAL = {
+        active = false,
+        current_trial_id = 0,
+        score = 0,
+        hits = 0,
+        win_condition_met = false,
+        loss_condition_met = false,
+        outro_triggered = false,
     },
     CPU = {
         HAS_CHANGED = false,
@@ -881,21 +1061,6 @@ PECHAN_CONFIG = {
         }
     },
 
-    TRIAL = {
-        active = false,
-        current_trial_id = nil,
-        score = 0,
-        win_condition_met = false,
-        loss_condition_met = false,
-    },
-
-    CINEMATICS = {
-        state = "INACTIVE", -- INACTIVE, LOADING, WAITING, PLAYING, FINISHED
-        wait_timer = 0,
-        current_dialogue_index = 1,
-        dialogues = {},
-    },
-
     -- Dynamic Game Mapping functions
     get_current_game = function()
         local rname = emu.romname and emu.romname() or "kof98"
@@ -951,6 +1116,7 @@ PECHAN_CONFIG = {
             OFF = 0,
             ON = 1,
         },
+        ENABLED = 0,
         BLOCK = 0,
         ADVANTAGE = 0,
         ACTION = 0,

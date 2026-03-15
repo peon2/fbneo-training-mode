@@ -1,11 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-function gamemsg()
-	print "Known issues with mwarr:"
-	print "Messing with player inputs (recording, replaying, opening the menu) freezes the game"
-	print "Game unfreezes when controls are returned back to normal"
-end
-
 p1maxhealth = 0x0100 -- word
 p2maxhealth = 0x0100
 
@@ -52,22 +46,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=170,
-		combotexty=45,
-		comboenabled=true,
-		p1healthx=40,
-		p1healthy=21,
-		p1healthenabled=true,
-		p2healthx=317,
-		p2healthy=21,
-		p2healthenabled=true,
-		p1meterx=155,
-		p1metery=225,
-		p1meterenabled=true,
-		p2meterx=203,
-		p2metery=225,
-		p2meterenabled=true,
+		combotext = {
+			x=170,
+			y=45,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 40,
+				y = 21,
+				enabled = true,
+			},
+			P2 = {
+				x = 317,
+				y = 21,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 155,
+				y = 225,
+				enabled = false,
+			},
+			P2 = {
+				x = 203,
+				y = 225,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()

@@ -4,3 +4,6 @@ addons_run = {
 	"rewind.lua",
 	"pechan_training_mod/init.lua",
 }
+DEBUG_addons_run = {
+	"memory_watcher.lua",
+}

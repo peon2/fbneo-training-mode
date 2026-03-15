@@ -1,5 +1,7 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+-- edited by peon2 to work with fbneo-training-mode.lua; this script was taken from: https://github.com/Jesuszilla/mame-rr-scripts/
+
 --[[
 Scrolling input display Lua script
 requires the Lua gd library (http://luaforge.net/projects/lua-gd/)
@@ -16,8 +18,8 @@ http://code.google.com/p/gens-rerecording/downloads/list
 version      = "11/10/2010"
 
 function toggleshowframes()
-	margin_top = 16 - inputs.properties.scrollinginput.iconsize
-	if inputs.properties.scrollinginput.frames then
+	margin_top = 16 - inputs.properties.scrolling.iconsize
+	if inputs.properties.scrolling.framesenabled then
 		margin_left  = 0.4    --space from the left of the screen, in tiles, for player 1
 		margin_right = 7      --space from the right of the screen, in tiles, for player 2
 	else
@@ -57,6 +59,24 @@ gamekeys = {
 		{     "LK",      "B",     "A",        "x",    "Weak Kick", "Button 4" },
 		{     "MK",      "A",     "B",   "circle",  "Medium Kick", "Button 5" },
 		{     "HK",      "R",     "C",       "r2",  "Strong Kick", "Button 6" },
+		{      "S", "select",  "none",    "start",        "Start",    "Start" },
+	},
+	{ set =
+		{ "sf1",   snes9x,    gens,       pcsx,            fba,       mame },
+		{      "l",   "left",  "left",     "left",         "Left",     "Left" },
+		{      "r",  "right", "right",    "right",        "Right",    "Right" },
+		{      "u",     "up",    "up",       "up",           "Up",       "Up" },
+		{      "d",   "down",  "down",     "down",         "Down",     "Down" },
+		{     "ul"},
+		{     "ur"},
+		{     "dl"},
+		{     "dr"},
+		{     "LP",      "Y",     "X",   "square",   "Button 1", "Button 1" },
+		{     "MP",      "X",     "Y", "triangle", "Button 2", "Button 2" },
+		{     "HP",      "L",     "Z",       "r1", "Button 3", "Button 3" },
+		{     "LK",      "B",     "A",        "x",    "Button 4", "Button 4" },
+		{     "MK",      "A",     "B",   "circle",  "Button 5", "Button 5" },
+		{     "HK",      "R",     "C",       "r2",  "Button 6", "Button 6" },
 		{      "S", "select",  "none",    "start",        "Start",    "Start" },
 	},
 	{ set =
@@ -168,6 +188,39 @@ gamekeys = {
 		{      "HP", "triangle", "Button 2", "Button 2" },
 		{      "LK",        "x", "Button 3", "Button 3" },
 		{      "HK",   "circle", "Button 4", "Button 4" },
+		{      "S",    "start",    "Start",    "Start" },
+	},
+	{ set =
+		{ "trstar",       pcsx,        fba,       mame },
+		{      "l",     "left",     "Left",     "Left" },
+		{      "r",    "right",    "Right",    "Right" },
+		{      "u",       "up",       "Up",       "Up" },
+		{      "d",     "down",     "Down",     "Down" },
+		{     "ul"},
+		{     "ur"},
+		{     "dl"},
+		{     "dr"},
+		{      "LP",   "square", "Button 1", "Button 1" },
+		{      "MP", "triangle", "Button 2", "Button 2" },
+		{      "HP",        "x", "Button 3", "Button 3" },
+		{      "4",   "circle", "Button 4", "Button 4" },
+		{      "S",    "start",    "Start",    "Start" },
+	},
+	{ set =
+		{ "bloodstm",       pcsx,        fba,       mame },
+		{      "l",     "left",     "Left",     "Left" },
+		{      "r",    "right",    "Right",    "Right" },
+		{      "u",       "up",       "Up",       "Up" },
+		{      "d",     "down",     "Down",     "Down" },
+		{     "ul"},
+		{     "ur"},
+		{     "dl"},
+		{     "dr"},
+		{      "LP",   "square", "Button 1", "Button 1" },
+		{      "HP", "triangle", "Button 2", "Button 2" },
+		{      "B",        "x", "Button 3", "Button 3" },
+		{      "LK",        "x", "Button 4", "Button 4" },
+		{      "HK",        "x", "Button 5", "Button 5" },
 		{      "S",    "start",    "Start",    "Start" },
 	},
 	{ set =
@@ -301,6 +354,65 @@ gamekeys = {
 		{      "4",    "High Kick",  "Button 3" },
 		{     "RN",    "Run",        "Button 6" },
 		{      "S",    "Start",      "Start" },
+	},
+	{ set =
+		{"hippodrm",     fba,       mame    },
+		{		"l",    "Left",     "Left"  },
+		{		"r",    "Right",    "Right" },
+		{		"u",    "Up",       "Up"    },
+		{		"d",    "Down",     "Down"  },
+		{		"ul"},
+		{		"ur"},
+		{		"dl"},
+		{		"dr"},
+		{		"A",		"Fire 1",	"Fire 1" },
+		{		"J",		"Fire 2",	"Fire 2" },
+		{		"1",    	"Fire 3",	"Fire 3" },
+		{		"2",		"Fire 4",	"Fire 4" },
+		{		"3",		"Fire 5",	"Fire 5" },
+	},
+	{ set =
+		{"timekill",     fba,       mame    },
+		{		"l",    "Left",     "Left"  },
+		{		"r",    "Right",    "Right" },
+		{		"u",    "Up",       "Up"    },
+		{		"d",    "Down",     "Down"  },
+		{		"ul"},
+		{		"ur"},
+		{		"dl"},
+		{		"dr"},
+		{		"A",		"Button 1",	"Button 1" },
+		{		"J",		"Button 2",	"Button 2" },
+		{		"1",    	"Button 3",	"Button 3" },
+		{		"2",		"Button 4",	"Button 4" },
+		{		"3",		"Button 5",	"Button 5" },
+	},
+	{ set =
+		{"viofight",     fba,       mame    },
+		{		"l",    "Left",     "Left"  },
+		{		"r",    "Right",    "Right" },
+		{		"u",    "Up",       "Up"    },
+		{		"d",    "Down",     "Down"  },
+		{		"ul"},
+		{		"ur"},
+		{		"dl"},
+		{		"dr"},
+		{		"P",		"Button 1",	"Button 1" },
+		{		"J",		"Button 2",	"Button 2" },
+		{		"K",    	"Button 3",	"Button 3" },
+	},
+	{ set =
+		{"msgundam",     fba,       mame    },
+		{		"l",    "Left",     "Left"  },
+		{		"r",    "Right",    "Right" },
+		{		"u",    "Up",       "Up"    },
+		{		"d",    "Down",     "Down"  },
+		{		"ul"},
+		{		"ur"},
+		{		"dl"},
+		{		"dr"},
+		{		"A",		"Button 1",	"Button 1" },
+		{		"B",		"Button 2",	"Button 2" },
 	},
 }
 

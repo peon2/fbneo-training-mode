@@ -6,19 +6,30 @@ p2maxhealth = 0xC8
 p1maxmeter = 0xD8
 p2maxmeter = 0xD8
 
-local p1health = 0x1024CF	-- health + 3 is red health
+local p1uid = 0x1023D2
+local p2uid = 0x10225A
+
+local p1health = p1uid + 0xFD -- health + 3 is red health
 local p1char2health = 0x1027BF
-local p2health = 0x102357
+local p2health = p2uid + 0xFD
 local p2char2health = 0x102067
 
-local p1meter = 0x1024E3
-local p2meter = 0x10236B
+local p1stun = p1uid + 0x10B -- double word, but we only care about the first byte. The previous dw is char 2 stun
+local p2stun = p2uid + 0x10B
 
-local p1direction = 0x102427
-local p2direction = 0x1022AF
+local p1meter = p1uid + 0x111
+local p2meter = p2uid + 0x111
+
+local p1direction = p1uid + 0x55
+local p2direction = p2uid + 0x55
 
 local p1combocounter = 0x102351
 local p2combocounter = 0x1024C9
+
+local p1constants = p1uid+0xe6 -- I'm not sure what this is, but it's a pointer to what seems to be some character constants
+local p2constants = p2uid+0xe6
+
+local maxstunoffset = 0x5 -- max stun is stored as a little-endian word, we only care about the high byte
 
 translationtable = {
 	"left",
@@ -47,23 +58,63 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=146,
-		combotexty=37,
-		comboenabled=true,
-		p1healthx=40,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=268,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=94,
-		p1metery=206,
-		p1meterenabled=true,
-		p2meterx=216,
-		p2metery=206,
-		p2meterenabled=true,
+		combotext = {
+			x=146,
+			y=37,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 40,
+				y = 16,
+				enabled = true,
+			},
+			P2 = {
+				x = 268,
+				y = 16,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 94,
+				y = 206,
+				enabled = true,
+			},
+			P2 = {
+				x = 216,
+				y = 206,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
+
+local rotd = { stun = { P1 = {}, P2 = {} } }
 
 function playerOneFacingLeft()
 	return bit.band(rb(p1direction), 1)
@@ -115,16 +166,152 @@ function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
 end
 
-local function stunMeter()
-	P2StunMeter = rb(0x102365)
-	gui.text(147,67, "Stun: " ..P2StunMeter, "green")
+local function readPlayerOneStun()
+	return rb(p1stun)
 end
 
+local function readPlayerTwoStun()
+	return rb(p2stun)
+end
+
+local function readPlayerOneMaxStun()
+	return rb(rdw(p1constants)+maxstunoffset)
+end
+
+local function readPlayerTwoMaxStun()
+	return rb(rdw(p2constants)+maxstunoffset)
+end
+
+local maxtime = 0x3CFF
 function infiniteTime()
-	ww(0x106B11, 0x3CFF)
+	ww(0x106B11, maxtime)
 end
 
 function Run() -- runs every frame
-	stunMeter()
 	infiniteTime()
 end
+
+initConfigTable("rotd", rotd, "config")
+createConfigValue(
+	"rotdstunenabledp1",
+	"enabled",
+	false,
+	rotd.stun.P1,
+	rotd.stun.P1,
+	"config"
+)
+createConfigValue(
+	"rotdstunxp1",
+	"x",
+	20,
+	rotd.stun.P1,
+	rotd.stun.P1,
+	"config"
+)
+createConfigValue(
+	"rotdstunyp1",
+	"y",
+	50,
+	rotd.stun.P1,
+	rotd.stun.P1,
+	"config"
+)
+
+createConfigValue(
+	"rotdstunenabledp2",
+	"enabled",
+	true,
+	rotd.stun.P2,
+	rotd.stun.P2,
+	"config"
+)
+createConfigValue(
+	"rotdstunxp2",
+	"x",
+	184,
+	rotd.stun.P2,
+	rotd.stun.P2,
+	"config"
+)
+createConfigValue(
+	"rotdstunyp2",
+	"y",
+	50,
+	rotd.stun.P2,
+	rotd.stun.P2,
+	"config"
+)
+
+local function drawStunBar(player)
+	local stunfunc = { P1 = readPlayerOneStun, P2 = readPlayerTwoStun }
+	local stun = stunfunc[player]()
+	local maxstunfunc = { P1 = readPlayerOneMaxStun, P2 = readPlayerTwoMaxStun }
+	local maxstun = maxstunfunc[player]()
+	local xoffset = rotd.stun[player].x + #"100"*LETTER_WIDTH
+	local heigth = LETTER_HEIGHT-2
+	gui.box(xoffset, rotd.stun[player].y, xoffset+maxstun, rotd.stun[player].y+heigth, nil, "grey")
+	if stun>0 then
+		gui.box(xoffset+1, rotd.stun[player].y+1, xoffset+stun-1, rotd.stun[player].y+heigth-1, "cyan", nil)
+	end
+	gui.text(rotd.stun[player].x, rotd.stun[player].y, stun, "red")
+end
+
+createHUDElement(
+	"p1stun",
+	function(n)
+		if n then
+			changeConfig("rotdstunxp1", n)
+		end
+		return rotd.stun.P1.x
+	end,
+	function(n)
+		if n then
+			changeConfig("rotdstunyp1", n)
+		end
+		return rotd.stun.P1.y
+	end,
+	function(n)
+		if n~=nil then
+			changeConfig("rotdstunenabledp1", n)
+		end
+		return rotd.stun.P1.enabled
+	end,
+	function()
+		resetConfig("rotdstunxp1")
+		resetConfig("rotdstunyp1")
+		resetConfig("rotdstunenabledp1")
+	end,
+	function()
+		drawStunBar("P1")
+	end
+)
+
+createHUDElement(
+	"p2stun",
+	function(n)
+		if n then
+			changeConfig("rotdstunxp2", n)
+		end
+		return rotd.stun.P2.x
+	end,
+	function(n)
+		if n then
+			changeConfig("rotdstunyp2", n)
+		end
+		return rotd.stun.P2.y
+	end,
+	function(n)
+		if n~=nil then
+			changeConfig("rotdstunenabledp2", n)
+		end
+		return rotd.stun.P2.enabled
+	end,
+	function()
+		resetConfig("rotdstunxp2")
+		resetConfig("rotdstunyp2")
+		resetConfig("rotdstunenabledp2")
+	end,
+	function()
+		drawStunBar("P2")
+	end
+)

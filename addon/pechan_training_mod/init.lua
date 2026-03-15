@@ -12,11 +12,9 @@ end
 
 -- Load translation module
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
-local tl = translate_mod.tl
 local en_data = require("addon.pechan_training_mod.locales.en")
 local es_data = require("addon.pechan_training_mod.locales.es")
-translate_mod.load_locale("en", en_data)
-translate_mod.load_locale("es", es_data)
+translate_mod:load_locales({ en = en_data.en, es = es_data.es })
 -- Set the language according to user config
 translate_mod.set_locale(PECHAN_CONFIG.LANGUAGE.current_language)
 
@@ -34,8 +32,6 @@ end
 --]]
 
 DBIndex = require("addon.pechan_training_mod.db_lua.db.index")
-require("addon.pechan_training_mod.moves_settings")
-require("addon.pechan_training_mod.guipages")
 local frame_data = require("addon.pechan_training_mod.frame_data")
 
 -- Debug Viewer Module
@@ -100,6 +96,7 @@ local stateMachine = {
 	active_wake_up = false,
 
 	guardReversalEvent = { active = false, handled = false },
+	recording_cooldown_counter = 0,
 
 	-- ... rest of stateMachine ...
 	isJustGuardRunning = false,
@@ -510,6 +507,14 @@ function loadSetupFromFile(recording_slot_number, setup_name)
 	end
 end
 
+function saveTrialSetup()
+	local setup = buildSetup()
+	setup.base_name = "trial"
+	-- Ensure DBIndex is available
+	local DBIndex = DBIndex or require("addon.pechan_training_mod.db_lua.db.index")
+	DBIndex.createSetup(setup, true, false) -- isTrial = true, isReplay = false
+end
+
 function isRecordingEmpty()
 	local t = recording
 	for i = 1, 5 do
@@ -540,7 +545,21 @@ function buildSetup()
 		stored_id = getPlayerStoredId(2)
 	}
 
+	-- Core Configs
+	setup.WAKEUP_CONFIG = PECHAN_CONFIG["WAKEUP"]
+	setup.GUARD_CONFIG = PECHAN_CONFIG["GUARD"]
+	setup.HIT_CONFIG = PECHAN_CONFIG["HIT"]
+	setup.RECOVERY_CONFIG = PECHAN_CONFIG["RECOVERY"]
+	setup.RECORDING_CONFIG = PECHAN_CONFIG["RECORDING"]
+
 	setup.recording_var_states = {}
+	for i = 1, 5 do
+		setup.recording_var_states[i] = {}
+		-- We use WAKEUP as the source for variable states as they are shared/mirrored usually
+		setup.recording_var_states[i].value = (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"] or {})["REC_" .. i] or 0
+		local reversal = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i)
+		setup.recording_var_states[i].propagates = (reversal and reversal.propagates) and reversal.propagates or {}
+	end
 
 	return setup
 end
@@ -562,14 +581,19 @@ function applySetup(setup)
 	local rom = emu.romname()
 	local base = setup.base_name
 
-	local savestatePath =
-		"addon/pechan_training_mod/db_lua/db/" .. rom .. "/savestates/" .. base .. ".fs"
+	local savestatePath = setup.savestate_path
+	if not savestatePath then
+		savestatePath = "addon/pechan_training_mod/db_lua/db/" .. rom .. "/savestates/" .. base .. ".fs"
+	end
 
 	-- 1. Load savestate
 	if fexists(savestatePath) then
 		savestate.load(savestatePath)
 	else
-		print("Savestate not found:", savestatePath)
+		-- Only print error if it's NOT a replay (replays might not have a main savestate)
+		if not setup.isReplay then
+			print("Savestate not found:", savestatePath)
+		end
 	end
 
 	-- 2. Load recordings into active slots
@@ -586,44 +610,65 @@ function applySetup(setup)
 	if setup.RECOVERY_CONFIG ~= nil then
 		PECHAN_CONFIG.RECOVERY = setup.RECOVERY_CONFIG
 	end
+	if setup.RECORDING_CONFIG ~= nil then
+		PECHAN_CONFIG.RECORDING = setup.RECORDING_CONFIG
+		-- Update the core loop variable based on the addon's setting
+		recording.loop = false -- Addon handles its own loop logic
+	end
+	formatGUITables()
 	if setup.wakeup then
 		resetReversals(PECHAN_CONFIG.MOVES_VAR_NAMES, "WAKEUP")
-		dumpTable(PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"])
-		for i = 1, 5 do
-			PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_" .. i] = setup.recording_var_states[i].value
-			PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i).propagates = setup.recording_var_states[i]
-				.propagates
+		if setup.recording_var_states then
+			for i = 1, math.min(5, #setup.recording_var_states) do
+				local state = setup.recording_var_states[i]
+				if state then
+					PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_" .. i] = state.value or 0
+					local reversal = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i)
+					if reversal then
+						reversal.propagates = state.propagates or {}
+					end
+				end
+			end
 		end
 
 		PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-		formatGuiTables()
+		formatGUITables()
 	end
 	if setup.guard then
 		resetReversals(PECHAN_CONFIG.MOVES_VAR_NAMES, "GUARD")
-		dumpTable(PECHAN_CONFIG.MOVES_VAR_NAMES["GUARD"])
-		for i = 1, 5 do
-			PECHAN_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_" .. i] = setup.recording_var_states[i].value
-			PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i).propagates = setup.recording_var_states[i]
-				.propagates
+		if setup.recording_var_states then
+			for i = 1, math.min(5, #setup.recording_var_states) do
+				local state = setup.recording_var_states[i]
+				if state then
+					PECHAN_CONFIG.MOVES_VAR_NAMES["GUARD"]["REC_" .. i] = state.value or 0
+					local reversal = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i)
+					if reversal then
+						reversal.propagates = state.propagates or {}
+					end
+				end
+			end
 		end
 
 		PECHAN_CONFIG["GUARD"].reversal_moves = getCurrentReversalMoves("GUARD")
-		formatGuiTables()
+		formatGUITables()
 	end
 	if setup.hit then
 		resetReversals(PECHAN_CONFIG.MOVES_VAR_NAMES, "HIT")
-		dumpTable(PECHAN_CONFIG.MOVES_VAR_NAMES["HIT"])
-		for i = 1, 5 do
-			if setup.recording_var_states[i] then
-				PECHAN_CONFIG.MOVES_VAR_NAMES["HIT"]["REC_" .. i] = setup.recording_var_states[i].value
-				PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i).propagates = setup.recording_var_states
-					[i]
-					.propagates
+		if setup.recording_var_states then
+			for i = 1, math.min(5, #setup.recording_var_states) do
+				local state = setup.recording_var_states[i]
+				if state then
+					PECHAN_CONFIG.MOVES_VAR_NAMES["HIT"]["REC_" .. i] = state.value or 0
+					local reversal = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_" .. i)
+					if reversal then
+						reversal.propagates = state.propagates or {}
+					end
+				end
 			end
 		end
 
 		PECHAN_CONFIG["HIT"].reversal_moves = getCurrentReversalMoves("HIT")
-		formatGuiTables()
+		formatGUITables()
 	end
 end
 
@@ -1068,6 +1113,161 @@ local function shouldCrouchGuard(act_code)
 end
 
 
+local guardTracker = {
+	state = 0, -- 0: idle, 1: blockstun, 2: guard hold
+	act_code = 0,
+	blockstun_frames = 0,
+	guard_hold_frames = 0,
+	log_history = {}
+}
+
+local TimelineTracker = {
+	history = {},
+	max_frames = 60
+}
+
+local function updateTimeline()
+	local p1_act = getP1ExecutingAction()
+	if not p1_act then p1_act = 0 end
+
+	local p2_stun = playerTwoInBlockstun() and 1 or 0
+	local p2_guard = stateMachine.isJustGuardRunning and 1 or 0
+
+	local data = {
+		act = p1_act,
+		stun = p2_stun,
+		guard = p2_guard
+	}
+
+	table.insert(TimelineTracker.history, 1, data)
+	if #TimelineTracker.history > TimelineTracker.max_frames then
+		table.remove(TimelineTracker.history)
+	end
+end
+
+local function drawTimelinePanel()
+	if PECHAN_CONFIG.DEBUG.BLOCK ~= 1 then return end
+
+	local start_x = 180
+	local start_y = 40
+	local width = 80
+	local height = 80
+
+	-- BG Box
+	gui.box(start_x - 5, start_y - 5, start_x + width + 5, start_y + height + 25, 0xC0000000, "white")
+
+	-- Title and Registers
+	gui.text(start_x, start_y, "DEBUG PANEL", "yellow")
+	gui.text(start_x, start_y + 10, string.format("P1 Act Addr: 0x%X", P1.addresses.action or 0), "cyan")
+	gui.text(start_x, start_y + 20, string.format("P2 Stn Addr: 0x%X", P2.addresses.blockstun or 0), "red")
+
+	-- Timeline Drawing
+	local timeline_y = start_y + 40
+	local timeline_h = 40
+
+	-- Draw Axis
+	gui.line(start_x, timeline_y + timeline_h, start_x + 60, timeline_y + timeline_h, "white")
+
+	for i, data in ipairs(TimelineTracker.history) do
+		local x = start_x + 60 - i
+		if x >= start_x then
+			-- P1 Act (Green dots/lines)
+			local act_h = math.min(data.act / 4, timeline_h)
+			gui.line(x, timeline_y + timeline_h - act_h, x, timeline_y + timeline_h - act_h, "green")
+
+			-- P2 Stun (Red bars)
+			if data.stun == 1 then
+				gui.line(x, timeline_y + timeline_h, x, timeline_y + timeline_h - 10, "red")
+			end
+
+			-- P2 Guard (Blue bars, slightly offset)
+			if data.guard == 1 then
+				gui.line(x, timeline_y + timeline_h + 2, x, timeline_y + timeline_h + 8, "blue")
+			end
+		end
+	end
+
+	gui.text(start_x, timeline_y + timeline_h + 10, "STUN(R) | GUARD(B)", "white")
+end
+
+local function updateGuardTracker()
+	local p1_act = getP1ExecutingAction()
+	if not p1_act then p1_act = 0 end
+
+	local p2_in_stun = playerTwoInBlockstun()
+
+	if p2_in_stun then
+		if guardTracker.state == 0 or guardTracker.state == 2 then
+			guardTracker.state = 1
+			guardTracker.act_code = p1_act
+			guardTracker.blockstun_frames = 1
+			guardTracker.guard_hold_frames = 0
+		else
+			guardTracker.blockstun_frames = guardTracker.blockstun_frames + 1
+			-- Latch onto the first non-zero act code during stun if we missed it
+			if p1_act ~= 0 and guardTracker.act_code == 0 then
+				guardTracker.act_code = p1_act
+			end
+		end
+	elseif stateMachine.isJustGuardRunning then
+		if guardTracker.state == 1 then
+			guardTracker.state = 2
+			guardTracker.guard_hold_frames = 1
+		elseif guardTracker.state == 2 then
+			guardTracker.guard_hold_frames = guardTracker.guard_hold_frames + 1
+		end
+	else
+		if guardTracker.state == 1 or guardTracker.state == 2 then
+			local log_msg = string.format("Act: %d | Stun: %d | Hold: %d", guardTracker.act_code,
+				guardTracker.blockstun_frames, guardTracker.guard_hold_frames)
+
+			-- Add to running history
+			table.insert(guardTracker.log_history, 1, log_msg)
+			if #guardTracker.log_history > 10 then
+				table.remove(guardTracker.log_history)
+			end
+
+			local f = io.open("addon/pechan_training_mod/guard_log.txt", "a")
+			if f then
+				f:write(string.format("P1 Act Code: %d | Blockstun: %d frames | Guard Hold Cooldown: %d frames\n",
+					guardTracker.act_code, guardTracker.blockstun_frames, guardTracker.guard_hold_frames))
+				f:close()
+			end
+			guardTracker.state = 0
+		end
+	end
+end
+
+local function drawGuardTracker()
+	local p1_act = getP1ExecutingAction()
+	if not p1_act then p1_act = 0 end
+
+	-- Only display the current act code if Debug Action is enabled
+	if PECHAN_CONFIG.DEBUG.ACTION == 1 then
+		gui.text(10, 80, string.format("Act Code: %3d", p1_act))
+	end
+
+	-- Display real-time trackers if guard mode is active or debug is on
+	if PECHAN_CONFIG.GUARD.guard_mode > 0 or PECHAN_CONFIG.DEBUG.BLOCK == 1 then
+		gui.text(10, 95,
+			string.format("Stun: %3d | Hold: %3d", guardTracker.blockstun_frames, guardTracker.guard_hold_frames))
+	end
+
+	-- Always Render Log History Box if it has data
+	if #guardTracker.log_history > 0 then
+		local box_start_y = 110
+		local line_height = 10
+		local box_height = #guardTracker.log_history * line_height + 4
+
+		-- Draw background box (0xC0000000 is translucent black in FBNeo AARRGGBB format)
+		gui.box(8, box_start_y, 160, box_start_y + box_height, 0xC0000000, "white")
+
+		for i, msg in ipairs(guardTracker.log_history) do
+			gui.text(10, box_start_y + 2 + ((i - 1) * line_height), msg)
+		end
+	end
+end
+
 local function block()
 	stateMachine.active_wake_up = false
 	iddle_time_running = false
@@ -1107,13 +1307,15 @@ local function block()
 			current_move_time_counter = 0
 		end
 
-		if isAttackTriggered and (stateMachine.last_do_move_name == "GUARD_BACK" or stateMachine.last_do_move_name == "CROUCH_GUARD") then
-			if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
-				gui.text(10, 60, "Trigger: SUSTAIN")
-				gui.text(10, 103, "Guard: ON")
+		-- SUSTAIN LOGIC
+		-- Fix: prevent the timer from expiring if an attack is executing or dummy is in stun
+		local human_is_idle = not HumanPlayer:isActionExecuting()
+		local is_in_blockstun = playerTwoInBlockstun()
+
+		if not human_is_idle or is_in_blockstun then
+			if stateMachine.last_do_move_name == "GUARD_BACK" or stateMachine.last_do_move_name == "CROUCH_GUARD" then
+				current_move_time_counter = 0 -- Sustain
 			end
-			current_move_time_counter = 0 -- Sustain
-			stateMachine.isJustGuardRunning = true
 		end
 
 		if stateMachine.isJustGuardRunning then
@@ -1243,6 +1445,8 @@ local function block()
 			current_move_time_counter = 0
 		end
 
+		-- SUSTAIN LOGIC
+		-- Fix: prevent the timer from expiring if an attack is executing or dummy is in stun
 		if isAttackTriggered and (stateMachine.last_do_move_name == "GUARD_BACK" or stateMachine.last_do_move_name == "CROUCH_GUARD") then
 			if PECHAN_CONFIG.DEBUG.BLOCK == 1 then
 				gui.text(10, 60, "Trigger: SUSTAIN (AG)")
@@ -1464,22 +1668,6 @@ local kofTogglePlayBack = function(bool, vargs)
 	recording.playbackslot = nil
 
 	local _rs = recording.recordingslot
-	-- i dont want the recording to change based on the randomize of the hud screen been selected
-	--[[ if recording.randomise then
-		local b = false
-		for i = 1, 5 do if recording[i][1] then b = true end end
-		if not b then return end
-		local pos
-		_playbackslot = nil
-		while _playbackslot==nil do -- keep running until we get a valid slot
-			pos = math.random(5)
-			if recording[pos][1] then -- check if there's something in here
-				_playbackslot = pos
-			end
-		end
-		-- make sure the recordslot is properly serialised if using randomise
-		recording.recordingslot = _playbackslot
-	end ]]
 
 	if vargs then vargs.playback = false end
 	toggleStates(vargs)
@@ -1527,10 +1715,10 @@ local kofTogglePlayBack = function(bool, vargs)
 		end                  -- nothing recorded
 
 		recording.startcounter = 0 -- randomise starting playback
-		if recording.maxstarttime == 0 then
+		if (recording.maxstarttime or 0) == 0 then
 			recording.starttime = 0
 		else
-			recording.starttime = math.random(recording.maxstarttime + 1) - 1 -- [0,maxstarttime]
+			recording.starttime = math.random((recording.maxstarttime or 0) + 1) - 1 -- [0,maxstarttime]
 		end
 	end
 end
@@ -2321,14 +2509,69 @@ function StateHandlers.cpu_action(ctx)
 	end
 end
 
+local function pickRandomRecordingSlot()
+	local candidates = {}
+	local totalWeight = 0
+	for i = 1, 5 do
+		local slotConfig = PECHAN_CONFIG.RECORDING.slots[i]
+		if slotConfig.enabled and (recording[i] and (recording[i].p1start or recording[i].p2start)) then
+			table.insert(candidates, { index = i, weight = slotConfig.weight or 1 })
+			totalWeight = totalWeight + (slotConfig.weight or 1)
+		end
+	end
+
+	if #candidates == 0 then return nil end
+	if #candidates == 1 then return candidates[1].index end
+
+	local roll = math.random(totalWeight)
+	local currentSum = 0
+	for _, candidate in ipairs(candidates) do
+		currentSum = currentSum + candidate.weight
+		if roll <= currentSum then
+			return candidate.index
+		end
+	end
+	return candidates[1].index
+end
+
 function KofTrainingUpdate() -- runs every frame
 	--wb(0x02FD3A, 0x68)
 
 	-- Don't inject any dummy inputs while a menu or overlay is active.
 	if interactivegui and interactivegui.inmenu then return end
+	updateTimeline()
+	PECHAN_CONFIG.DEBUG.BLOCK = 1 -- Force debug on so user sees the on-screen logs
+	updateGuardTracker()
 
 	updateWakeUpEventStatus(stateMachine)
 	updateGuardReversalEventStatus(stateMachine)
+
+	-- Auto-start loop recording if enabled and not already playing (handles wait frames)
+	if PECHAN_CONFIG.RECORDING.loop and not recording.enabled then
+		if not recording.playback then
+			if stateMachine.recording_cooldown_counter >= (PECHAN_CONFIG.RECORDING.cooldown or 0) then
+				local nextSlot = pickRandomRecordingSlot()
+				if nextSlot then
+					-- Reload state ONLY at the start of the playback loop
+					local slotConfig = PECHAN_CONFIG.RECORDING.slots[nextSlot]
+					if slotConfig and slotConfig.savestate_reload_path and slotConfig.savestate_reload_slot and slotConfig.savestate_reload_slot >= 0 then
+						savestate.load(slotConfig.savestate_reload_path)
+						if interactivegui then interactivegui.inmenu = false end
+					end
+
+					recording.recordingslot = nextSlot
+					kofTogglePlayBack(true, {})
+				end
+				stateMachine.recording_cooldown_counter = 0
+			else
+				stateMachine.recording_cooldown_counter = stateMachine.recording_cooldown_counter + 1
+			end
+		else
+			stateMachine.recording_cooldown_counter = 0
+		end
+	else
+		stateMachine.recording_cooldown_counter = 0
+	end
 
 
 	--gui.text(20, 30, "block address: " .. rb(P2.addresses.blockstun), "yellow")
@@ -2727,30 +2970,27 @@ function KofTrainingDraw()
 		Cinematics.draw()
 	end
 
-	draw_debug_info()
+	if PECHAN_CONFIG.DEBUG.ENABLED == 1 then
+		draw_debug_info()
 
-	if PECHAN_CONFIG.DEBUG.FRAMEDATA > 0 then
-		frame_data.draw()
+		if PECHAN_CONFIG.DEBUG.FRAMEDATA > 0 then
+			frame_data.draw()
+		end
+		drawGuardTracker()
+		drawTimelinePanel()
 	end
+	
 	DebugViewer.draw()
 end
 
 if registers then
 	if registers.registerbefore then
-		local setInputsIdx = nil
-		for i, v in ipairs(registers.registerbefore) do
-			if v == setInputs then
-				setInputsIdx = i
-				break
-			end
-		end
-		if setInputsIdx then
-			table.insert(registers.registerbefore, setInputsIdx, KofTrainingUpdate)
-		else
-			table.insert(registers.registerbefore, KofTrainingUpdate)
-		end
+		table.insert(registers.registerbefore, KofTrainingUpdate)
 	end
-	if registers.guiregister then
-		table.insert(registers.guiregister, KofTrainingDraw)
+	if registers.interactiveguiregister then
+		table.insert(registers.interactiveguiregister, KofTrainingDraw)
 	end
 end
+
+require("addon.pechan_training_mod.moves_settings")
+require("addon.pechan_training_mod.guipages")

@@ -1,4 +1,5 @@
 PECHAN_HELPERS = PECHAN_HELPERS or {}
+local CIG = changePageAndSelection
 
 -- Safe input merging for addons.
 -- Merges a table of inputs into the global `inputs.setinputs` table to avoid overwriting P1 control.
@@ -31,7 +32,7 @@ end
 --   3. Does NOT call releasefunc/func/etc as factories — stores them directly
 -- This function completely replaces createPopUpMenu for our addon popups.
 -------------------------------------------------------------------------------
-function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, title)
+function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, title, back_page_name)
     local menu = {}
 
     -- Copy base menu with "a" prefix (same as original)
@@ -81,16 +82,31 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
     local bg_h = (item_count + title_rows) * 12 + 8
 
     -- other_func is called every frame by the draw loop (line 2320 of core).
-    -- We draw the solid background box, then the title text on top.
-    -- The core draw loop draws all items BEFORE calling other_func, so we
-    -- draw everything (box + title + items) in other_func to layer correctly.
     local items_ref = menu   -- capture reference
     local inner_w = bg_w - 4 -- button width (2px margin each side)
     menu.other_func = function()
-        local bx = interactivegui.boxx + startx - 2
-        local by = interactivegui.boxy + starty - 2
+        local boxx = interactivegui.boxx
+        local boxy = interactivegui.boxy
+        local bx   = boxx + startx - 2
+        local by   = boxy + starty - 2
 
-        -- 1. Solid background box
+        -- 0. Draw the parent page items first (so the menu doesn't "vanish")
+        if back_page_name and guipages[back_page_name] then
+            for _, v in ipairs(guipages[back_page_name]) do
+                local ix = v.x + boxx
+                local iy = v.y + boxy
+                local col = 0x888888FF -- dimmed
+                if v.text then
+                    gui.text(ix, iy, v.text, col)
+                    -- If parent has a red border (active slot), draw it even while popup is open
+                    if v.olcolour == "red" then
+                        gui.box(ix - 2, iy - 2, ix + (#v.text * 4) + 2, iy + 10, 0, "red")
+                    end
+                end
+            end
+        end
+
+        -- 1. Solid background box for the popup
         gui.box(bx, by, bx + bg_w, by + bg_h, bg_color or 0x222222FF, "white")
 
         -- 2. Title text inside box (centered)
@@ -100,11 +116,9 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
             gui.text(title_x, by + 3, title, "yellow")
         end
 
-        -- 3. Redraw items on top of box — full width, centered text
-        local boxx   = interactivegui.boxx
-        local boxy   = interactivegui.boxy
+        -- 3. Redraw popup items on top of box — full width, centered text
         local sel    = interactivegui.selection
-        local selcol = interactivegui.selectioncolour
+        local selcol = interactivegui.selectioncolour or "red"
 
         for idx, v in ipairs(items_ref) do
             local ix   = bx + 2 -- left margin inside box
@@ -121,16 +135,17 @@ function pechanCreatePopUpMenu(BaseMenu, Elements, startx, starty, bg_color, tit
             gui.text(text_x, iy + 2, text, v.textcolour or "white")
         end
     end
-
     return menu
 end
 
 -------------------------------------------------------------------------------
 -- create_context_popup
 -------------------------------------------------------------------------------
-function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y, bg_color)
+function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x, parent_y, bg_color, on_close)
     local popup_entries = {}
     local previous_selection = interactivegui.selection
+    local saved_prev_page = interactivegui.previouspage
+    local saved_prev_sel = interactivegui.previousselection
     bg_color = bg_color or 0x222222FF
 
     for _, entry in ipairs(entries) do
@@ -142,13 +157,19 @@ function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x
         if entry.require_click then
             but.func        = function()
                 if entry.action then entry.action() end
+                if on_close then on_close() end
                 CIG(back_page, previous_selection)
+                interactivegui.previouspage = saved_prev_page
+                interactivegui.previousselection = saved_prev_sel
             end
             but.releasefunc = function() end
         else
             but.releasefunc = function()
                 if entry.action then entry.action() end
+                if on_close then on_close() end
                 CIG(back_page, previous_selection)
+                interactivegui.previouspage = saved_prev_page
+                interactivegui.previousselection = saved_prev_sel
             end
         end
         table.insert(popup_entries, but)
@@ -157,10 +178,10 @@ function PECHAN_HELPERS.create_context_popup(title, entries, back_page, parent_x
     guipages["helper_popup"] = pechanCreatePopUpMenu(
         guipages[back_page], popup_entries,
         parent_x - 30, parent_y - 20,
-        bg_color, title
+        bg_color, title, back_page
     )
 
-    if formatGuiTables then formatGuiTables() end
+    if formatGUITables then formatGUITables() end
     CIG("helper_popup", 1)
 end
 
@@ -194,6 +215,22 @@ changeInteractiveGuiSelection = function(n)
         if nxt < 1 then nxt = #page end
         interactivegui.selection = nxt
     end
+end
+
+function PECHAN_HELPERS.get_available_savestates()
+    local rom = emu.romname()
+    local states = {}
+
+    -- Check slots 01-10 only, as requested
+    for i = 1, 10 do
+        local slot_str = string.format("%02d", i)
+        local path = "../savestates/" .. rom .. " slot " .. slot_str .. ".fs"
+        if fexists(path) then
+            table.insert(states, { label = "Slot " .. i, path = path, slot = i })
+        end
+    end
+
+    return states
 end
 
 return PECHAN_HELPERS
