@@ -581,14 +581,19 @@ function applySetup(setup)
 	local rom = emu.romname()
 	local base = setup.base_name
 
-	local savestatePath =
-		"addon/pechan_training_mod/db_lua/db/" .. rom .. "/savestates/" .. base .. ".fs"
+	local savestatePath = setup.savestate_path
+	if not savestatePath then
+		savestatePath = "addon/pechan_training_mod/db_lua/db/" .. rom .. "/savestates/" .. base .. ".fs"
+	end
 
 	-- 1. Load savestate
 	if fexists(savestatePath) then
 		savestate.load(savestatePath)
 	else
-		print("Savestate not found:", savestatePath)
+		-- Only print error if it's NOT a replay (replays might not have a main savestate)
+		if not setup.isReplay then
+			print("Savestate not found:", savestatePath)
+		end
 	end
 
 	-- 2. Load recordings into active slots
@@ -605,6 +610,12 @@ function applySetup(setup)
 	if setup.RECOVERY_CONFIG ~= nil then
 		PECHAN_CONFIG.RECOVERY = setup.RECOVERY_CONFIG
 	end
+	if setup.RECORDING_CONFIG ~= nil then
+		PECHAN_CONFIG.RECORDING = setup.RECORDING_CONFIG
+		-- Update the core loop variable based on the addon's setting
+		recording.loop = false -- Addon handles its own loop logic
+	end
+	formatGUITables()
 	if setup.wakeup then
 		resetReversals(PECHAN_CONFIG.MOVES_VAR_NAMES, "WAKEUP")
 		if setup.recording_var_states then
@@ -1704,10 +1715,10 @@ local kofTogglePlayBack = function(bool, vargs)
 		end                  -- nothing recorded
 
 		recording.startcounter = 0 -- randomise starting playback
-		if recording.maxstarttime == 0 then
+		if (recording.maxstarttime or 0) == 0 then
 			recording.starttime = 0
 		else
-			recording.starttime = math.random(recording.maxstarttime + 1) - 1 -- [0,maxstarttime]
+			recording.starttime = math.random((recording.maxstarttime or 0) + 1) - 1 -- [0,maxstarttime]
 		end
 	end
 end
@@ -2541,6 +2552,13 @@ function KofTrainingUpdate() -- runs every frame
 			if stateMachine.recording_cooldown_counter >= (PECHAN_CONFIG.RECORDING.cooldown or 0) then
 				local nextSlot = pickRandomRecordingSlot()
 				if nextSlot then
+					-- Reload state ONLY at the start of the playback loop
+					local slotConfig = PECHAN_CONFIG.RECORDING.slots[nextSlot]
+					if slotConfig and slotConfig.savestate_reload_path and slotConfig.savestate_reload_slot and slotConfig.savestate_reload_slot >= 0 then
+						savestate.load(slotConfig.savestate_reload_path)
+						if interactivegui then interactivegui.inmenu = false end
+					end
+
 					recording.recordingslot = nextSlot
 					kofTogglePlayBack(true, {})
 				end
@@ -2965,9 +2983,13 @@ function KofTrainingDraw()
 	DebugViewer.draw()
 end
 
-if registers and registers.guiregister then
-	table.insert(registers.guiregister, KofTrainingUpdate)
-	table.insert(registers.guiregister, KofTrainingDraw)
+if registers then
+	if registers.registerbefore then
+		table.insert(registers.registerbefore, KofTrainingUpdate)
+	end
+	if registers.interactiveguiregister then
+		table.insert(registers.interactiveguiregister, KofTrainingDraw)
+	end
 end
 
 require("addon.pechan_training_mod.moves_settings")

@@ -467,26 +467,40 @@ table.insert(guipages["managerecordings"], {
 })
 
 table.insert(guipages["managerecordings"], {
-	text = "Wait Frames: 0",
+	text = "-",
 	x = 100,
 	y = 15,
 	olcolour = "black",
 	handle = 1,
-	info = { "Frames to wait after dummy is idle before restarting recording. (Right: +5, Left: -5)" },
+	info = { "Decrease wait frames (-5)" },
 	func = function()
-		local step = 5
-		if guiinputs and guiinputs.P1 and guiinputs.P1.left then
-			step = -5
-		end
-		PECHAN_CONFIG.RECORDING.cooldown = PECHAN_CONFIG.RECORDING.cooldown + step
-		if PECHAN_CONFIG.RECORDING.cooldown < 0 then
-			PECHAN_CONFIG.RECORDING.cooldown = 0
-		elseif PECHAN_CONFIG.RECORDING.cooldown > 600 then
-			PECHAN_CONFIG.RECORDING.cooldown = 600
-		end
+		PECHAN_CONFIG.RECORDING.cooldown = math.max(0, PECHAN_CONFIG.RECORDING.cooldown - 5)
 	end,
+})
+
+table.insert(guipages["managerecordings"], {
+	text = "Wait Frames: 10",
+	x = 112,
+	y = 15,
+	olcolour = "black",
+	handle = 1,
+	unselectable = true,
+	info = { "Frames to wait after dummy is idle before restarting recording" },
+	func = function() end,
 	autofunc = function(this)
-		this.text = "Wait Frames: " .. PECHAN_CONFIG.RECORDING.cooldown
+		this.text = "Wait: " .. PECHAN_CONFIG.RECORDING.cooldown
+	end,
+})
+
+table.insert(guipages["managerecordings"], {
+	text = "+",
+	x = 150,
+	y = 15,
+	olcolour = "black",
+	handle = 1,
+	info = { "Increase wait frames (+5)" },
+	func = function()
+		PECHAN_CONFIG.RECORDING.cooldown = math.min(600, PECHAN_CONFIG.RECORDING.cooldown + 5)
 	end,
 })
 
@@ -577,6 +591,7 @@ for i = 1, 5 do
 		handle = 1,
 		info = { "Reload a savestate slot before this recording playback starts." },
 		func = function()
+			PECHAN_CONFIG.RECORDING.active_slot = i
 			local states = PECHAN_HELPERS.get_available_savestates()
 			local entries = {
 				{
@@ -597,7 +612,7 @@ for i = 1, 5 do
 				})
 			end
 			PECHAN_HELPERS.create_context_popup(tl("ui.p1_dummy.recording.popup_title"), entries, "managerecordings", 115,
-				current_ry + 10)
+				current_ry + 10, nil, function() PECHAN_CONFIG.RECORDING.active_slot = nil end)
 		end,
 		autofunc = function(this)
 			local slot = PECHAN_CONFIG.RECORDING.slots[i].savestate_reload_slot
@@ -606,6 +621,13 @@ for i = 1, 5 do
 				state_text = "Slot " .. slot
 			end
 			this.text = tl("ui.p1_dummy.recording.reload_state", { state = state_text })
+
+			-- Visual feedback: red border when active
+			if PECHAN_CONFIG.RECORDING.active_slot == i then
+				this.olcolour = "red"
+			else
+				this.olcolour = "black"
+			end
 		end,
 	})
 	ry = ry + 12

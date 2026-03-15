@@ -835,7 +835,7 @@ PECHAN_CONFIG = {
     },
     RECORDING = {
         loop = false,
-        cooldown = 0,
+        cooldown = 10,
         slots = {
             [1] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },
             [2] = { enabled = false, weight = 1, savestate_reload_slot = -1, savestate_reload_path = nil },

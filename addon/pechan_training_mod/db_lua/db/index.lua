@@ -2,8 +2,12 @@
 
 local M = {}
 
+local function toWinPath(path)
+    return path:gsub("/", "\\")
+end
+
 local function ensureDir(path)
-    os.execute('mkdir "' .. path .. '"')
+    os.execute('mkdir "' .. toWinPath(path) .. '"')
 end
 
 local function normalizeBooleanField(tbl, field)
@@ -70,6 +74,8 @@ function M.createSetup(setup, isTrial, isReplay)
         if not fexists(setupFile) then
             setup.base_name = base_name
             setup.savestate_path = stateFile
+            setup.isTrial = isTrial
+            setup.isReplay = isReplay
 
             -- Save main savestate (if not independent replay)
             if not isReplay then
@@ -88,7 +94,8 @@ function M.createSetup(setup, isTrial, isReplay)
 
                         if fexists(source) then
                             -- Windows copy command
-                            os.execute('copy /Y "' .. source .. '" "' .. dest .. '"')
+                            os.execute('copy /Y "' .. toWinPath(source) .. '" "' .. toWinPath(dest) .. '"')
+                            slot_info.savestate_reload_path = dest
                         end
                     end
                 end
@@ -118,7 +125,7 @@ function M.loadAllSetups(isTrial, isReplay)
     local setups = {}
 
     -- Windows (FBNeo/MAME on Windows)
-    local p = io.popen('dir "' .. setupsFolder .. '" /b')
+    local p = io.popen('dir "' .. toWinPath(setupsFolder) .. '" /b')
 
     if not p then
         return setups

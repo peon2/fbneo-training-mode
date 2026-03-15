@@ -1614,10 +1614,10 @@ local kofTogglePlayBack = function(bool, vargs)
 		end                  -- nothing recorded
 
 		recording.startcounter = 0 -- randomise starting playback
-		if recording.maxstarttime == 0 then
+		if (recording.maxstarttime or 0) == 0 then
 			recording.starttime = 0
 		else
-			recording.starttime = math.random(recording.maxstarttime + 1) - 1 -- [0,maxstarttime]
+			recording.starttime = math.random((recording.maxstarttime or 0) + 1) - 1 -- [0,maxstarttime]
 		end
 	end
 end
