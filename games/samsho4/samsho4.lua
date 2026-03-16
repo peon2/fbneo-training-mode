@@ -12,11 +12,21 @@ local p2health = 0x108643
 local p1meter = 0x10844C
 local p2meter = 0x10864C
 
-local p1combocounter = 0x10855e
-local p2combocounter = 0x10875e
+local p1data -- some sort of memory block
+local p2data
+local hitstunoffset = 0x20
+local directionoffset = 0x0F
 
-local p1direction = 0x10360f
-local p2direction = 0x103a0f
+local function newRound()
+	p1data = rdw(0x108330) -- always seems to be 0x103600
+	p2data = rdw(0x108334) -- always seems to be 0x103A00
+end
+
+newRound()
+
+--local p1combocounter = 0x10855e
+--local p2combocounter = 0x10875e
+
 
 translationtable = {
 	"left",
@@ -46,8 +56,7 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x=144,
-			y=55,
+			y=50,
 			enabled=true,
 		},
 		health = {
@@ -78,11 +87,13 @@ gamedefaultconfig = {
 	gamevars = {
 		P1 = {
 			maxhealth = p1maxhealth,
-			maxmeter = p1maxmeter
+			maxmeter = p1maxmeter,
+			refillhealthspeed = 1, -- Samsho4 already has a gradual health fill
 		},
 		P2 = {
 			maxhealth = p2maxhealth,
-			maxmeter = p2maxmeter
+			maxmeter = p2maxmeter,
+			refillhealthspeed = 1,
 		}
 	},
 	combovars = {
@@ -95,26 +106,40 @@ gamedefaultconfig = {
 		P2 = {
 			instantrefillhealth = false,
 			refillhealthenabled = true,
-			instantrefillmeter = false,
+			instantrefillmeter = true,
 			refillmeterenabled = true,
+		}
+	},
+	inputs = {
+		simple = {
+			P1 = {
+				x = 58,
+				y = 193,
+				enabled = true
+			},
+			P2 = {
+				x = 205,
+				y = 193,
+				enabled = true
+			}
 		}
 	}
 }
 
 function playerOneFacingLeft()
-	return rb(p1direction)==2
+	return rb(p1data + directionoffset)==2
 end
 
 function playerTwoFacingLeft()
-	return rb(p2direction)==2
+	return rb(p2data + directionoffset)==2
 end
 
 function playerOneInHitstun()
-	return rb(p2combocounter)~=0
+	return rb(p1data+hitstunoffset)==3
 end
 
 function playerTwoInHitstun()
-	return rb(p1combocounter)~=0
+	return rb(p2data+hitstunoffset)==3
 end
 
 function readPlayerOneHealth()
@@ -149,10 +174,16 @@ function writePlayerTwoMeter(meter)
 	wb(p2meter, meter)
 end
 
+local timer = 0x108368
+local maxtime = 0x60
+
 function infiniteTime()
-	ww(0x108368, 0x6000)
+	wb(timer, maxtime-1)
 end
 
 function Run()
+	if (rb(timer) == maxtime) then
+		newRound()
+	end
 	infiniteTime()
 end

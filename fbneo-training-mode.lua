@@ -4,7 +4,7 @@ DISABLE_SCROLLING_INPUT = false
 -- true, do use it
 -- false, don't use it
 
-FBNEO_TRAINING_MODE_VERSION = "v0.26.03.13"
+FBNEO_TRAINING_MODE_VERSION = "v0.26.03.16"
 
 --DEBUG = true
 ROM = emu.romname()
@@ -147,7 +147,7 @@ local games = {
 	samsho3 = {"samsho3", iconfile = "icons-neogeo-32.png"},
 	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
 	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
-	samsho5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
+	samsh5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
 	schmeisr = {"schmeisr", iconfile = "icons-asurabus-32.png"},
 	sf = {"sf", iconfile = "icons-sf1-32.png"},
 	sf2 = {"sf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
@@ -2418,7 +2418,7 @@ local function writePlayerMeter(player, health)
 end
 
 function otherPlayer(player) -- returns "P2" when "P1" is given and vice versa
-	return player=="P1" and "P1" or "P2"
+	return player=="P1" and "P2" or "P1"
 end
 
 local function comboHandler(player)
@@ -2452,7 +2452,7 @@ local function comboHandler(player)
 end
 
 local function healthHandler(player)
-	if not combovars[player].refillhealthenabled then return end
+	if not combovars[player].refillhealthenabled or combovars[player].instantrefillhealth then return end
 	local cvars = combovars[player]
 	local gvars = gamevars[player]
 
@@ -2473,17 +2473,14 @@ local function healthHandler(player)
 end
 
 local function meterHandler(player)
-	if not combovars[player].refillmeterenabled then return end
+	if not combovars[player].refillmeterenabled or combovars[player].instantrefillmeter then return end
+	local otherplayer = otherPlayer(player)
 	local cvars = combovars[player]
 	local gvars = gamevars[player]
 
-	if cvars.instantrefillmeter then
-		writePlayerMeter(player, gvars.maxmeter)
-	end
-
-	if gamevars[otherPlayer(player)].inhitstun then
+	if gamevars[otherplayer].inhitstun and combovars[otherplayer].previouscombo == 0 then
 		cvars.refillmeter = 0
-	elseif combovars[otherPlayer(player)].combo ~= combovars[otherPlayer(player)].previouscombo then
+	elseif combovars[otherplayer].combo < combovars[otherplayer].previouscombo then -- if the combo has dropped
 		if cvars.refillmeter == 0 then
 			cvars.refillmeter = math.ceil((gvars.maxmeter - gvars.meter) / cvars.refillmeterspeed) -- refill speed
 		end
@@ -3024,8 +3021,6 @@ local function playBack()
 		inputs.setinputs = combinePlayerInputs(inputs.P1, raw.P2, raw.other)
 	end
 	recordslot[fc - recordslot.framestart + start].raw = nil
-	recordslot[fc - recordslot.framestart + start].p1facingleft = nil
-	recordslot[fc - recordslot.framestart + start].p2facingleft = nil
 end
 
 local function hitPlayBack()
@@ -4320,21 +4315,20 @@ function setRegisters() -- pre-calc stuff
 			reset = function() resetConfig("p1meterx") resetConfig("p1metery") resetConfig("p1meterenabled") end,
 			draw = function() gui.text(hud.meter.P1.x, hud.meter.P1.y, gamevars.P1.meter, hud.meter.P1.textcolour) end
 		})
-		if gamevars.P1.constants.maxmeter and gamefunctions.readplayeronemeter and gamefunctions.writeplayeronemeter and gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then
+		if gamefunctions.writeplayeronemeter and gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P1") end)
 		else
-			if gamevars.P1.constants.maxmeter and gamefunctions.writeplayeronemeter then
-				write "Using P1 back-up Meter always full"
-				table.insert(registers.registerafter, function() instantMeter("P1") end)
-				combovars.P1.instantrefillmeter = true
-			else
-				write "Can't auto-refill P1 meter"
-			end
+			combovars.P1.instantrefillmeter = true
 		end
 	else
 		write "Can't auto-refill P1 meter"
 	end
 
+	if gamevars.P1.constants.maxmeter and gamefunctions.writeplayeronemeter then
+		table.insert(registers.registerafter, function() instantMeter("P1") end)
+	else
+		write "Can't auto-refill P1 meter"
+	end
 
 	if gamevars.P2.constants.maxmeter and gamefunctions.readplayertwometer then
 		table.insert(HUDElements, {
@@ -4348,14 +4342,14 @@ function setRegisters() -- pre-calc stuff
 		if gamefunctions.writeplayertwometer and gamefunctions.readplayeronehealth and gamefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P2") end)
 		else
-			if gamevars.P2.constants.maxmeter and gamefunctions.writeplayertwometer then
-				write "Using P2 back-up Meter always full"
-				table.insert(registers.registerafter, function() instantMeter("P2") end)
-				combovars.P2.instantrefillmeter = true
-			else
-				write "Can't auto-refill P2 meter"
-			end
+			combovars.P2.instantrefillmeter = true
 		end
+	else
+		write "Can't auto-refill P2 meter"
+	end
+
+	if gamevars.P2.constants.maxmeter and gamefunctions.writeplayertwometer then
+		table.insert(registers.registerafter, function() instantMeter("P2") end)
 	else
 		write "Can't auto-refill P2 meter"
 	end

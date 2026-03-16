@@ -6,11 +6,18 @@ p2maxhealth = 0x80
 p1maxmeter = 0x20
 p2maxmeter = 0x20
 
-local p1health = rdw(0x100a46) + 0xbb
-local p2health = rdw(0x100a4a) + 0xbb
+local p1uid
+local p2uid
 
-local p1meter = rdw(0x100a46) + 0xf0
-local p2meter = rdw(0x100a4a) + 0xf0
+local healthoffset = 0xBB
+local meteroffset = 0xF0
+local meteraddoffset = 0x114
+
+local function newRound()
+	p1uid = rdw(0x100A46)
+	p2uid = rdw(0x100A4A)
+end
+newRound()
 
 local p1direction = 0x10105c
 local p2direction = 0x100ad0
@@ -108,41 +115,47 @@ function _playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	return rb(p1uid + healthoffset)
 end
 
 function writePlayerOneHealth(health)
-	wb(p1health, health)
+	wb(p1uid + healthoffset, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(p2health)
+	return rb(p2uid + healthoffset)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2health, health)
+	wb(p2uid + healthoffset, health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter)
+	return rb(p1uid + meteroffset)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+	wb(p1uid + meteraddoffset, meter - rb(p1uid + meteroffset))
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rb(p2uid + meteroffset)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	wb(p2uid + meteraddoffset, meter - rb(p2uid + meteroffset))
 end
 
+local timer = 0x100AC6
+local timemax = 0x99
+
 function infiniteTime()
-	wb(0x100Ac6, 0x98)
+	wb(timer, timemax-1)
 end
 
 function Run()
+	if rb(timer) == timemax then
+		newRound()
+	end
 	infiniteTime()
 end

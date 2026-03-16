@@ -1,3 +1,23 @@
+v0.26.03.16
+samsho:
+Now properly updates player health and meter.
+
+samsho2:
+Now properly updates player health and meter.
+
+samsho3:
+Made the combo counter consistent.
+
+samsho4:
+Made the combo counter consistent.
+
+samsho5:
+Made the combo counter consistent.
+
+samsh5sp:
+Added a combo counter.
+Now tracks player direction for replays.
+
 v0.26.03.13
 fatfursp:
 Updated the combo counter to be more consistent.

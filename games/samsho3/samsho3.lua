@@ -6,10 +6,14 @@ p2maxhealth = 0x80
 p1maxmeter = 0x40
 p2maxmeter = 0x40
 
-function gamemsg()
-	print "Known issues with samsho3:"
-	print "Inconsistent combo counter"
-end
+local p1state = 0x10859B
+local p2state = 0x10869B
+
+local state = {
+	hitstun = 0,
+	neutral = 5,
+	launch = 8
+}
 
 translationtable = {
 	"left",
@@ -39,30 +43,29 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x = 138,
 			y = 56,
 			enabled = false
 		},
 		health = {
 			P1 = {
-				x = 9,
+				x = 10,
 				y = 21,
 				enabled = true,
 			},
 			P2 = {
-				x = 284,
+				x = 283,
 				y = 21,
 				enabled = true,
 			}
 		},
 		meter = {
 			P1 = {
-				x = 113,
+				x = 114,
 				y = 208,
 				enabled = true,
 			},
 			P2 = {
-				x = 188,
+				x = 184,
 				y = 208,
 				enabled = true,
 			}
@@ -84,18 +87,33 @@ gamedefaultconfig = {
 			refillhealthenabled = true,
 			instantrefillmeter = true,
 			refillmeterenabled = true,
+			refillhealthspeed = 1, -- Samsho3 already has a gradual health fill
 		},
 		P2 = {
 			instantrefillhealth = true,
 			refillhealthenabled = true,
 			instantrefillmeter = true,
 			refillmeterenabled = true,
+			refillhealthspeed = 1,
+		}
+	},
+	inputs = {
+		simple = {
+			P1 = {
+				x = 66,
+				y = 185,
+				enabled = true
+			},
+			P2 = {
+				x = 179,
+				y = 185,
+				enabled = true
+			}
 		}
 	}
 }
 
 function playerOneFacingLeft()
-	-- eq 0 or 2 0x1085db
 	return rb(0x1085db)==2
 end
 
@@ -104,11 +122,13 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	return rb(0x1085c4)~=0
+	local value = rb(p1state)
+	return value == state.hitstun or value == state.launch
 end
 
 function playerTwoInHitstun()
-	return rb(0x10f295)~=0 or rb(0x1086c4)~=0 -- why would ss3 make me do this? 
+	local value = rb(p2state)
+	return value == state.hitstun or value == state.launch
 end
 
 function readPlayerOneHealth()
@@ -148,7 +168,5 @@ local infiniteTime = function()
 end
 
 function Run() -- runs every frame
-	-- 108561
-	--print(rb(0x1086dc))
 	infiniteTime()
 end
