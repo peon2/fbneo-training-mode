@@ -1,18 +1,28 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
 function gamemsg()
-	print "Known issues with samsho:"
-	print "Issues with reading/writing health and meter"
+	print "Note that meter only visually updates when the character is hit"
 end
 
---p1maxhealth = 0x80
---p2maxhealth = 0x80
+p1maxhealth = 0x80
+p2maxhealth = 0x80
 
---p1maxmeter = 0x20
---p2maxmeter = 0x20
+p1maxmeter = 0x20
+p2maxmeter = 0x20
 
---local p1meter = 0x10350f
---local p2meter = 0x10370f
+local p1uid
+local p2uid
+
+local healthoffset = 0xA5
+local meteroffset = 0xCD
+local meteraddoffset = 0xAC -- actually updates the meter
+
+local function newRound()
+	p1uid = rdw(0x100A0A)
+	p2uid = rdw(0x100A0E)
+end
+
+newRound()
 
 local direction = 0x100a84
 
@@ -43,32 +53,27 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotext = {
-			x=180,
-			y=42,
-			enabled=true,
-		},
 		health = {
 			P1 = {
-				x = 22,
-				y = 16,
+				x = 18,
+				y = 20,
 				enabled = true,
 			},
 			P2 = {
-				x = 288,
-				y = 16,
+				x = 291,
+				y = 20,
 				enabled = true,
 			}
 		},
 		meter = {
 			P1 = {
-				x = 22,
-				y = 223,
-				enabled = true,
+				x = 114,
+				y = 208,
+				enabled = false,
 			},
 			P2 = {
-				x = 288,
-				y = 223,
+				x = 199,
+				y = 208,
 				enabled = true,
 			}
 		}
@@ -85,15 +90,15 @@ gamedefaultconfig = {
 	},
 	combovars = {
 		P1 = {
-			instantrefillhealth = false,
+			instantrefillhealth = true,
 			refillhealthenabled = true,
-			instantrefillmeter = false,
+			instantrefillmeter = true,
 			refillmeterenabled = true,
 		},
 		P2 = {
-			instantrefillhealth = false,
+			instantrefillhealth = true,
 			refillhealthenabled = true,
-			instantrefillmeter = false,
+			instantrefillmeter = true,
 			refillmeterenabled = true,
 		}
 	}
@@ -113,61 +118,48 @@ end
 function _playerTwoInHitstun()
 end
 
-function _readPlayerOneHealth()
---[[
-
-local p1health = 0x1034e7
-local p2health = 0x1036e7
-
-
-001046: movea.l (A7)+, A6 -- 0x00102142
-.
-.
-.
-001070: move.l  A6, D0
-001072: move.w  ($6,A6), D0
-001076: movea.l D0, A6
-.
-.
-. 104242
-00532A: sub.w   D0, ($a4,A6)
-]]--
-
-	--local ptr = 0x00102142 -- A6
-	--return rw(bit.bor(rw(ptr+0x6), bit.band(ptr, 0xFFFF0000))+0xa2)
+function readPlayerOneHealth()
+	return rb(p1uid + healthoffset)
 end
 
-function _writePlayerOneHealth(health)
+function writePlayerOneHealth(health)
+	wb(p1uid + healthoffset, health)
 end
 
-function _readPlayerTwoHealth()
-	return rb(p2health)
+function readPlayerTwoHealth()
+	return rb(p2uid + healthoffset)
 end
 
-function _writePlayerTwoHealth(health)
-	wb(p2health, health)
+function writePlayerTwoHealth(health)
+	wb(p2uid + healthoffset, health)
 end
 
-function _readPlayerOneMeter()
-	return rb(p1meter)
+function readPlayerOneMeter()
+	return rb(p1uid + meteroffset)
 end
 
-function _writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+function writePlayerOneMeter(meter)
+	wb(p1uid + meteraddoffset, meter - rb(p1uid + meteroffset))
 end
 
-function _readPlayerTwoMeter()
-	return rb(p2meter)
+function readPlayerTwoMeter()
+	return rb(p2uid + meteroffset)
 end
 
-function _writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+function writePlayerTwoMeter(meter)
+	wb(p2uid + meteraddoffset, meter - rb(p2uid + meteroffset))
 end
+
+local timer = 0x100A08
+local maxtime = 0x99
 
 function infiniteTime()
-	wb(0x100A09, 0x63)
+	wb(timer, maxtime-1)
 end
 
 function Run()
+	if rb(timer) == maxtime then
+		newRound()
+	end
 	infiniteTime()
 end

@@ -6,10 +6,22 @@ p2maxhealth = 0x7D
 p1maxmeter = 0x40
 p2maxmeter = 0x40
 
-function gamemsg()
-	print "Known issues with samsho5sp:"
-	print "Doesn't track combos"
+local p1health = 0x108445
+local p2health = 0x108655
+
+local p1meter = 0x10844E
+local p2meter = 0x10865E
+
+local p1data -- some sort of memory block
+local p2data
+local hitstunoffset = 0x20
+local directionoffset = 0x0F
+local function newRound()
+	p1data = rdw(0x108332) -- always seems to be 0x102B00
+	p2data = rdw(0x108336) -- always seems to be 0x102F00
 end
+
+newRound()
 
 translationtable = {
 	"left",
@@ -89,48 +101,64 @@ gamedefaultconfig = {
 	}
 }
 
+function playerOneFacingLeft()
+	return rb(p1data + directionoffset)==2
+end
+
+function playerTwoFacingLeft()
+	return rb(p2data + directionoffset)==2
+end
+
+function playerOneInHitstun()
+	return rb(p1data+hitstunoffset)==3
+end
+
+function playerTwoInHitstun()
+	return rb(p2data+hitstunoffset)==3
+end
+
 function readPlayerOneHealth()
-	return rb(0x108445)
+	return rb(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(0x108445, health)
+	wb(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(0x108655)
+	return rb(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(0x108655, health)
+	wb(p2health, health)
 end
 
 function readPlayerOneMeter()
-	return rb(0x10844E)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(0x10844E, meter)
+	wb(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(0x10865E)
+	return rb(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0x10865E, meter)
+	wb(p2meter, meter)
 end
 
 function infiniteTime()
 	wb(0x10836B, 0x3C)
 end
-
-function longSwordGague() -- Longest sword gauge/rage explode length
+-- TODO add these as guipages options
+function longSwordGauge() -- Longest sword gauge/rage explode length
     wb(0x108554, 0x82)
     wb(0x108764, 0x82)
 end
 
-function maxSwordGuageCharge() -- Can confirm this is max sword guage
+function maxSwordGaugeCharge() -- Can confirm this is max sword guage
     wb(0x1085F8, 0x78)
     wb(0x108808, 0x78)
 end
@@ -147,8 +175,8 @@ end
 
 function Run() -- runs every frame
 	infiniteTime()
-    longSwordGague()
-    maxSwordGuageCharge()
+    longSwordGauge()
+    maxSwordGaugeCharge()
     maxTimeSlow()
     -- maxRage()
 end

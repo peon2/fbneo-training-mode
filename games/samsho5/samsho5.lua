@@ -12,11 +12,22 @@ local p2health = 0x108655
 local p1meter = 0x10844E
 local p2meter = 0x10865E
 
-local p1combocounter = 0x108560
-local p2combocounter = 0x108770
+local p1data -- some sort of memory block
+local p2data
+local hitstunoffset = 0x20
+local directionoffset = 0x0F
 
-local p1direction = 0x102b0f
-local p2direction = 0x102f0f
+local function newRound()
+	p1data = rdw(0x108332) -- always seems to be 0x102E00
+	p2data = rdw(0x108336) -- always seems to be 0x103200
+end
+
+newRound()
+
+--local p1combocounter = 0x108560
+--local p2combocounter = 0x108770
+
+local directionoffset = 0x0F
 
 translationtable = {
 	"left",
@@ -46,8 +57,7 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x=144,
-			y=55,
+			y=50,
 			enabled=true,
 		},
 		health = {
@@ -64,7 +74,7 @@ gamedefaultconfig = {
 		},
 		meter = {
 			P1 = {
-				x = 98,
+				x = 94,
 				y = 210,
 				enabled = true,
 			},
@@ -98,25 +108,37 @@ gamedefaultconfig = {
 			instantrefillmeter = false,
 			refillmeterenabled = true,
 		}
+	},
+	inputs = {
+		simple = {
+			P1 = {
+				x = 49,
+				y = 195,
+				enabled = true,
+			},
+			P2 = {
+				x = 198,
+				y = 195,
+				enabled = true,
+			}
+		}
 	}
 }
 
 function playerOneFacingLeft()
-	local ptr = rdw(0x108332) -- pointer to some sort of memory block
-	return rb(ptr+0xF)==2
+	return rb(p1data + directionoffset)==2
 end
 
 function playerTwoFacingLeft()
-	local ptr = rdw(0x108336) -- pointer to some sort of memory block
-	return rb(ptr+0xF)==2
+	return rb(p2data + directionoffset)==2
 end
 
 function playerOneInHitstun()
-	return rb(p2combocounter)~=0
+	return rb(p1data+hitstunoffset)==3
 end
 
 function playerTwoInHitstun()
-	return rb(p1combocounter)~=0
+	return rb(p2data+hitstunoffset)==3
 end
 
 function readPlayerOneHealth()
