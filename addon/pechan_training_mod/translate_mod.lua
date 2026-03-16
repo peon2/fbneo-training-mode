@@ -22,23 +22,26 @@ function translate_mod.set_locale(locale_code)
 end
 
 -- The main translation function similar to Rails I18n.t()
--- Usage: tl("activemodel.errors.models.character.attributes.health.blank", { model = "Pechan" })
-function translate_mod.tl(key, vars)
+-- Usage: tl("key", { model = "Pechan" }) or tl("key", "Fallback Text")
+function translate_mod.tl(key, vars_or_fallback)
+    local vars = type(vars_or_fallback) == "table" and vars_or_fallback or nil
+    local fallback = type(vars_or_fallback) == "string" and vars_or_fallback or nil
+
     -- 1. Get the current dictionary
     local locale_data = translate_mod.locales[translate_mod.current_locale]
 
-    -- If we don't have the locale loaded, just return the raw key
-    if not locale_data then return key end
+    -- If we don't have the locale loaded, return fallback or key
+    if not locale_data then return fallback or key end
 
     -- 2. Traverse the dictionary using the dot notation ("a.b.c" -> table["a"]["b"]["c"])
-    -- Check if the table has a root key equivalent to our locale (like Rails YAML usually does)
     local node = locale_data[translate_mod.current_locale] or locale_data
 
     for part in string.gmatch(key, "[^%.]+") do
         if type(node) == "table" and node[part] ~= nil then
             node = node[part]
         else
-            -- Translation missing, return a descriptive string as a fallback
+            -- Translation missing, return fallback or a descriptive string
+            if fallback then return fallback end
             return "Translation missing: " .. translate_mod.current_locale .. "." .. key
         end
     end
@@ -46,9 +49,8 @@ function translate_mod.tl(key, vars)
     -- 3. If the final value is a string, process variable interpolation %{like_this}
     if type(node) == "string" then
         local str = node
-        if vars and type(vars) == "table" then
+        if vars then
             str = string.gsub(str, "%%{(.-)}", function(var_name)
-                -- If the variable exists in our 'vars' table, inject it. Otherwise leave it as is.
                 return vars[var_name] and tostring(vars[var_name]) or "%{" .. var_name .. "}"
             end)
         end

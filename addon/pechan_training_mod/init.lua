@@ -17,6 +17,7 @@ local es_data = require("addon.pechan_training_mod.locales.es")
 translate_mod:load_locales({ en = en_data.en, es = es_data.es })
 -- Set the language according to user config
 translate_mod.set_locale(PECHAN_CONFIG.LANGUAGE.current_language)
+local tl = translate_mod.tl
 
 --[[
 if not _G.pechan_training_mod_tests_run then
