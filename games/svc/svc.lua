@@ -50,25 +50,73 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=137,
-		combotexty=49,
-		comboenabled=true,
-		p1healthx=17,
-		p1healthy=23,
-		p1healthenabled=true,
-		p2healthx=276,
-		p2healthy=23,
-		p2healthenabled=true,
-		p1meterx=111,
-		p1metery=208,
-		p1meterenabled=true,
-		p2meterx=173,
-		p2metery=208,
-		p2meterenabled=true,
+		combotext = {
+			x=137,
+			y=49,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 17,
+				y = 23,
+				enabled = true,
+			},
+			P2 = {
+				x = 276,
+				y = 23,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 111,
+				y = 208,
+				enabled = true,
+			},
+			P2 = {
+				x = 173,
+				y = 208,
+				enabled = true,
+			}
+		}
+	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
 	},
 	inputs = {
-		simpleinputxoffset = {42,205},
-		simpleinputyoffset = {190,190},
+		simple = {
+			P1 = {
+				x = 42,
+				y = 190,
+				enabled = true
+			},
+			P2 = {
+				x = 205,
+				y = 190,
+				enabled = true
+			}
+		}
 	}
 }
 

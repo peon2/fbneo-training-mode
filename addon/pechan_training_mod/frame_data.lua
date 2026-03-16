@@ -223,23 +223,25 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         local opp_hitstatus = rb(self.opp_hitstatus_addr)
         local opp_block_val = rb(self.opp_blockstun_addr)
 
-        local current_air_height_word = rw(self.air_height_addr)
-        local is_in_air = (current_air_height_word > 0)
+        if game_offsets.air_height then
+            local current_air_height_word = rw(self.air_height_addr)
+            local is_in_air = (current_air_height_word > 0)
 
-        if is_in_air then
-            if not self.is_currently_in_air then
-                self.current_air_frames = 1
-                self.is_currently_in_air = true
+            if is_in_air then
+                if not self.is_currently_in_air then
+                    self.current_air_frames = 1
+                    self.is_currently_in_air = true
+                else
+                    self.current_air_frames = self.current_air_frames + 1
+                end
             else
-                self.current_air_frames = self.current_air_frames + 1
-            end
-        else
-            if self.is_currently_in_air then
-                self.is_currently_in_air = false
+                if self.is_currently_in_air then
+                    self.is_currently_in_air = false
 
-                -- Shift history: [oldest, newest] <- [1st, 2nd]
-                self.air_time_history[2] = self.air_time_history[1]
-                self.air_time_history[1] = self.current_air_frames
+                    -- Shift history: [oldest, newest] <- [1st, 2nd]
+                    self.air_time_history[2] = self.air_time_history[1]
+                    self.air_time_history[1] = self.current_air_frames
+                end
             end
         end
 
@@ -507,11 +509,13 @@ local function create_tracker(name, base_addr, action_addr, opp_base_addr, opp_a
         end
         gui.text(x, 142, "Free Adv: " .. string.rep(" ", 2) .. free_adv_text, free_adv_color)
 
-        local air1_text = (self.air_time_history[1] > 0) and tostring(self.air_time_history[1]) or "-"
-        local air2_text = (self.air_time_history[2] > 0) and tostring(self.air_time_history[2]) or "-"
+        if game_offsets.air_height then
+            local air1_text = (self.air_time_history[1] > 0) and tostring(self.air_time_history[1]) or "-"
+            local air2_text = (self.air_time_history[2] > 0) and tostring(self.air_time_history[2]) or "-"
 
-        gui.text(x, 152, "Air Time: " .. string.rep(" ", 2) .. air1_text, "cyan")
-        gui.text(x, 162, "Air Time_2: " .. string.rep(" ", 0) .. air2_text, "cyan")
+            gui.text(x, 152, "Air Time: " .. string.rep(" ", 2) .. air1_text, "cyan")
+            gui.text(x, 162, "Air Time_2: " .. string.rep(" ", 0) .. air2_text, "cyan")
+        end
 
         local action = rb(self.action_addr)
         gui.text(x, 173, "Action ID:     " .. action, "gray")
@@ -554,39 +558,50 @@ local current_game = PECHAN_CONFIG.get_current_game()
 local p1_base = current_game.player1_base
 local p2_base = current_game.player2_base
 
-local p1_action = current_game.player1_base + current_game.offsets.action
-local p2_action = current_game.player2_base + current_game.offsets.action
+local p1_action = (current_game.offsets and current_game.offsets.action) and
+    (current_game.player1_base + current_game.offsets.action) or nil
+local p2_action = (current_game.offsets and current_game.offsets.action) and
+    (current_game.player2_base + current_game.offsets.action) or nil
 
-local p1_hitstatus = current_game.player1_base + current_game.offsets.hitstatus
-local p2_hitstatus = current_game.player2_base + current_game.offsets.hitstatus
+local p1_hitstatus = (current_game.offsets and current_game.offsets.hitstatus) and
+    (current_game.player1_base + current_game.offsets.hitstatus) or nil
+local p2_hitstatus = (current_game.offsets and current_game.offsets.hitstatus) and
+    (current_game.player2_base + current_game.offsets.hitstatus) or nil
 
-local p1_blockstun = current_game.player1_base + current_game.offsets.blockstun
-local p2_blockstun = current_game.player2_base + current_game.offsets.blockstun
-local p1_is_in_air = current_game.player1_base + current_game.offsets.air_height
-local p1_tracker = create_tracker("P1", p1_base, p1_action, p2_base, p2_action, p2_hitstatus, p2_blockstun, 4)
-local p2_tracker = create_tracker("P2", p2_base, p2_action, p1_base, p1_action, p1_hitstatus, p1_blockstun, 225)
+local p1_blockstun = (current_game.offsets and current_game.offsets.blockstun) and
+    (current_game.player1_base + current_game.offsets.blockstun) or nil
+local p2_blockstun = (current_game.offsets and current_game.offsets.blockstun) and
+    (current_game.player2_base + current_game.offsets.blockstun) or nil
+
+local p1_tracker = nil
+local p2_tracker = nil
+
+if p1_action and p1_hitstatus and p1_blockstun then
+    p1_tracker = create_tracker("P1", p1_base, p1_action, p2_base, p2_action, p2_hitstatus, p2_blockstun, 4)
+    p2_tracker = create_tracker("P2", p2_base, p2_action, p1_base, p1_action, p1_hitstatus, p1_blockstun, 225)
+end
 
 function frame_data.init()
-    p1_tracker:init()
-    p2_tracker:init()
+    if p1_tracker then p1_tracker:init() end
+    if p2_tracker then p2_tracker:init() end
 end
 
 function frame_data.update()
     local fd_mode = PECHAN_CONFIG.DEBUG.FRAMEDATA
-    if fd_mode == 1 or fd_mode == 3 then
+    if p1_tracker and (fd_mode == 1 or fd_mode == 3) then
         p1_tracker:update()
     end
-    if fd_mode == 2 or fd_mode == 3 then
+    if p2_tracker and (fd_mode == 2 or fd_mode == 3) then
         p2_tracker:update()
     end
 end
 
 function frame_data.draw()
     local fd_mode = PECHAN_CONFIG.DEBUG.FRAMEDATA
-    if fd_mode == 1 or fd_mode == 3 then
+    if p1_tracker and (fd_mode == 1 or fd_mode == 3) then
         p1_tracker:draw()
     end
-    if fd_mode == 2 or fd_mode == 3 then
+    if p2_tracker and (fd_mode == 2 or fd_mode == 3) then
         p2_tracker:draw()
     end
 end

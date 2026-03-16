@@ -38,16 +38,42 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=144,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=25,
-		p1healthy=21,
-		p1healthenabled=true,
-		p2healthx=284,
-		p2healthy=21,
-		p2healthenabled=true,
+		combotext = {
+			x=144,
+			y=42,
+			enabled=false,
+		},
+		health = {
+			P1 = {
+				x = 25,
+				y = 21,
+				enabled = true,
+			},
+			P2 = {
+				x = 284,
+				y = 21,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()

@@ -2,19 +2,22 @@ assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being r
 
 p1maxhealth = 0x0120
 p2maxhealth = 0x0120
-p1maxmeter = 0x90
-p2maxmeter = 0x90
+
+local meterbarmax = 0x90
+local meterstockmax = 10
+
+p1maxmeter = meterbarmax*meterstockmax
+p2maxmeter = meterbarmax*meterstockmax
 
 local p1health = 0xFF8450
 local p2health = 0xFF8850
 local p1redhealth = 0xFF8452
 local p2redhealth = 0xFF8852
 
-local p1meter = 0xFF850A
-local p2meter = 0xFF890A
-
-local p1stocks = 0xFF8509
-local p2stocks = 0xFF8909
+local p1meterstocks = 0xFF8509
+local p1meterbar = 0xFF850A
+local p2meterstocks = 0xFF8909
+local p2meterbar = 0xFF890A
 
 local p1direction = 0xFF8520
 local p2direction = 0xFF8920
@@ -47,31 +50,61 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	p1 = {
-		instantrefillhealth = false,
-		instantrefillmeter = true,
-	},
-	p2 = {
-		instantrefillhealth = false,
-		instantrefillmeter = true,
-	},
 	hud = {
-		combotextx=178,
-		combotexty=52,
-		comboenabled=true,
-		p1healthx=18,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=355,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=164,
-		p1metery=206,
-		p1meterenabled=true,
-		p2meterx=209,
-		p2metery=206,
-		p2meterenabled=true,
+		combotext = {
+			x=180,
+			y=52,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 18,
+				y = 16,
+				enabled = true,
+			},
+			P2 = {
+				x = 355,
+				y = 16,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 160,
+				y = 206,
+				enabled = false,
+			},
+			P2 = {
+				x = 209,
+				y = 206,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -109,27 +142,59 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rw(p1meter)
+	return rb(p1meterstocks)*meterbarmax + rw(p1meterbar)
 end
 
 function writePlayerOneMeter(meter)
--- 	ww(p1meter, meter)
-	wb(p1stocks, 0x63)
+	if meter > p1maxmeter then
+		meter = p1maxmeter
+	end
+	local bar = meter%meterbarmax
+	local stocks = meter/meterbarmax
+	wb(p1meterbar, bar)
+	wb(p1meterstocks, stocks)
 end
 
 function readPlayerTwoMeter()
-	return rw(p2meter)
+	return rb(p2meterstocks)*meterbarmax + rw(p2meterbar)
 end
 
 function writePlayerTwoMeter(meter)
--- 	ww(p2meter, meter)
-	wb(p2stocks, 0x63)
+	if meter > p2maxmeter then
+		meter = p2maxmeter
+	end
+	local bar = meter%meterbarmax
+	local stocks = meter/meterbarmax
+	wb(p2meterbar, bar)
+	wb(p2meterstocks, stocks)
 end
 
-local infiniteTime = function()
+local function infiniteTime()
 	wb(0xFF8109, 0x63)
 end
 
-function Run() -- runs every frame
+
+local vsav = {}
+
+initConfigTable("vsav", vsav, "config")
+createConfigValue(
+	"vsavmusicvolume",
+	"musicvolume",
+	50,
+	vsav,
+	vsav,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF027
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
+function Run()
+	setMusicVolume(vsav.musicvolume)
 	infiniteTime()
 end

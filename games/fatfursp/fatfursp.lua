@@ -6,6 +6,9 @@ p2maxhealth = 0x60
 local p1health = 0x10049a
 local p2health = 0x10059a
 
+local p1dizzy = 0x1004a4
+local p2dizzy = 0x1005a4
+
 local p1direction = 0x100469
 local p2direction = 0x100569
 
@@ -38,22 +41,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=144,
-		combotexty=35,
-		comboenabled=true,
-		p1healthx=49,
-		p1healthy=17,
-		p1healthenabled=true,
-		p2healthx=264,
-		p2healthy=17,
-		p2healthenabled=true,
-		p1meterx=22,
-		p1metery=223,
-		p1meterenabled=true,
-		p2meterx=288,
-		p2metery=223,
-		p2meterenabled=true,
+		combotext = {
+			x=144,
+			y=35,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 49,
+				y = 17,
+				enabled = true,
+			},
+			P2 = {
+				x = 264,
+				y = 17,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 22,
+				y = 223,
+				enabled = true,
+			},
+			P2 = {
+				x = 288,
+				y = 223,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -64,12 +105,13 @@ function playerTwoFacingLeft()
 	return rb(p2direction)==0
 end
 
+-- Thanks to Guruslum for these hitstun values
 function playerOneInHitstun()
-	return rb(0x1004a4)~=0 -- damage animation?
+	return (rb(0x1004A0) + bit.band(rb(0x1004FD), 0x3F))~=0
 end
 
 function playerTwoInHitstun()
-	return rb(0x1005a4)~=0 -- damage animation?
+	return (rb(0x1005A0) + bit.band(rb(0x1005FD), 0x3F))~=0
 end
 
 function readPlayerOneHealth()
@@ -92,6 +134,14 @@ function infiniteTime()
 	ww(0x10092a, 0x6030)
 end
 
-function Run() -- runs every frame
-	infiniteTime()
+if ROM == "fatfurspbh" then
+	Run = function() -- runs every frame
+		infiniteTime()
+	end
+else
+	wb(0x10FD82, 0x00) -- Set the Neogeo to AES
+	Run = function() -- runs every frame
+		infiniteTime()
+		wb(0x10E063, 0xFF) -- Unlock Ryo
+	end
 end

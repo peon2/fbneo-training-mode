@@ -47,22 +47,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=138,
-		combotexty=35,
-		comboenabled=true,
-		p1healthx=10,
-		p1healthy=16,
-		p1healthenabled=true,
-		p2healthx=282,
-		p2healthy=16,
-		p2healthenabled=true,
-		p1meterx=10,
-		p1metery=25,
-		p1meterenabled=true,
-		p2meterx=275,
-		p2metery=25,
-		p2meterenabled=true,
+		combotext = {
+			x = 138,
+			y = 35,
+			enabled = true
+		},
+		health = {
+			P1 = {
+				x = 10,
+				y = 16,
+				enabled = true
+			},
+			P2 = {
+				x = 282,
+				y = 16,
+				enabled = true
+			}
+		},
+		meter = {
+			P1 = {
+				x = 10,
+				y = 25,
+				enabled = true
+			},
+			P2 = {
+				x = 275,
+				y = 25,
+				enabled = true
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()

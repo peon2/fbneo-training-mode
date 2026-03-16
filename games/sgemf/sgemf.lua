@@ -9,14 +9,19 @@ end
 p1maxhealth = 144
 p2maxhealth = 144
 
-p1maxmeter = 96
-p2maxmeter = 96
+local meterbarmax = 96
+local meterstockmax = 9
+
+p1maxmeter = meterbarmax*meterstockmax
+p2maxmeter = meterbarmax*meterstockmax
 
 local p1health = 0xFF8441
 local p2health = 0xFF8841
 
-local p1meter = 0xFF8595
-local p2meter = 0xFF8995
+local p1meterstocks = 0xFF8594
+local p1meterbar = 0xFF8595
+local p2meterstocks = 0xFF8994
+local p2meterbar = 0xFF8995
 
 local p1combocounter = 0xFF8944
 local p2combocounter = 0xFF8544
@@ -47,22 +52,58 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=178,
-		combotexty=45,
-		comboenabled=true,
-		p1healthx=18,
-		p1healthy=23,
-		p1healthenabled=true,
-		p2healthx=355,
-		p2healthy=23,
-		p2healthenabled=true,
-		p1meterx=125,
-		p1metery=44,
-		p1meterenabled=true,
-		p2meterx=257,
-		p2metery=44,
-		p2meterenabled=true,
+		combotext = {
+			y=46
+		},
+		health = {
+			P1 = {
+				x = 18,
+				y = 23,
+				enabled = true,
+			},
+			P2 = {
+				x = 355,
+				y = 23,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 155,
+				y = 32,
+				enabled = true,
+			},
+			P2 = {
+				x = 219,
+				y = 32,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -78,7 +119,7 @@ function playerOneInHitstun()
 end
 
 function playerTwoInHitstun()
-	return rb(p1combocounter) ~= 0
+	return rb(p1combocounter)~=0
 end
 
 function readPlayerOneHealth()
@@ -98,25 +139,58 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(p1meter)
+	return rb(p1meterstocks)*meterbarmax + rb(p1meterbar)
 end
 
 function writePlayerOneMeter(meter)
-	wb(p1meter, meter)
+	if meter > p1maxmeter then
+		meter = p1maxmeter
+	end
+	local bar = meter%meterbarmax
+	local stocks = meter/meterbarmax
+	wb(p1meterbar, bar)
+	wb(p1meterstocks, stocks)
 end
 
 function readPlayerTwoMeter()
-	return rb(p2meter)
+	return rb(p2meterstocks)*meterbarmax + rb(p2meterbar)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(p2meter, meter)
+	if meter > p2maxmeter then
+		meter = p2maxmeter
+	end
+	local bar = meter%meterbarmax
+	local stocks = meter/meterbarmax
+	wb(p2meterbar, bar)
+	wb(p2meterstocks, stocks)
 end
 
 function infiniteTime()
 	wb(0xFF8188,0x99)
 end
 
+local sgemf = {}
+
+initConfigTable("sgemf", sgemf, "config")
+createConfigValue(
+	"sgemfmusicvolume",
+	"musicvolume",
+	50,
+	sgemf,
+	sgemf,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF027
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
 function Run()
+	setMusicVolume(sgemf.musicvolume)
 	infiniteTime()
 end

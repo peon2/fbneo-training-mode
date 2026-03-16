@@ -87,22 +87,60 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=179,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=33,
-		p1healthy=18,
-		p1healthenabled=true,
-		p2healthx=340,
-		p2healthy=18,
-		p2healthenabled=true,
-		p1meterx=176,
-		p1metery=210,
-		p1meterenabled=true,
-		p2meterx=205,
-		p2metery=210,
-		p2meterenabled=true,
+		combotext = {
+			x=180,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 33,
+				y = 18,
+				enabled = true,
+			},
+			P2 = {
+				x = 340,
+				y = 18,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 33,
+				y = 211,
+				enabled = false,
+			},
+			P2 = {
+				x = 339,
+				y = 211,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true,
+			instantrefillmeter = false,
+			refillmeterenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -516,7 +554,28 @@ end
 
 Z3_functions = {updateGamestate, Z3_Training_basic_settings, draw_messages}
 
-function Run() -- runs every frame
+local sfa3 = {}
+
+initConfigTable("sfa3", sfa3, "config")
+createConfigValue(
+	"sfa3musicvolume",
+	"musicvolume",
+	50,
+	sfa3,
+	sfa3,
+	"config"
+)
+
+local maxmusicvolume = 0xFF -- what the maximum volume is in game
+local musicvolume = 0xF027
+
+function setMusicVolume(volume) -- squeeze from 0 to 100
+	local volume = math.floor( (volume*maxmusicvolume)/100 )
+	memory.writebyte_audio(musicvolume, volume)
+end
+
+function Run()
+	setMusicVolume(sfa3.musicvolume)
 	for i = 1, #Z3_functions do
 		Z3_functions[i]()
 	end

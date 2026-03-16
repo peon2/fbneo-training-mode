@@ -3,10 +3,11 @@ assert(rb,"Run fbneo-training-mode.lua")
 p1maxhealth = 0x60
 p2maxhealth = 0x60
 
+-- Thanks to Guruslum for these health values
 local p1health = 0x1003B8
 local p1redhealth = 0x1003B9
-local p2health = 0x100589
-local p2redhealth = 0x100589
+local p2health = 0x1004B8
+local p2redhealth = 0x1004B9
 
 local p1direction = 0x100445
 local p2direction = 0x100345
@@ -44,16 +45,44 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
-		combotextx=144,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=25,
-		p1healthy=21,
-		p1healthenabled=true,
-		p2healthx=284,
-		p2healthy=21,
-		p2healthenabled=true,
+		combotext = {
+			x=144,
+			y=42,
+			enabled=false,
+		},
+		health = {
+			P1 = {
+				x = 25,
+				y = 21,
+				enabled = true,
+			},
+			P2 = {
+				x = 284,
+				y = 21,
+				enabled = true,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+		}
+	}
 }
 
 function playerOneFacingLeft()
@@ -62,6 +91,12 @@ end
 
 function playerTwoFacingLeft()
 	return rb(p2direction)==1
+end
+
+function _playerOneInHitstun()
+end
+
+function _playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()

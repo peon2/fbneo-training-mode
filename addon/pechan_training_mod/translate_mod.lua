@@ -9,6 +9,13 @@ function translate_mod.load_locale(locale_code, data_table)
     translate_mod.locales[locale_code] = data_table
 end
 
+-- Load multiple locales at once
+function translate_mod:load_locales(locales_table)
+    for code, data in pairs(locales_table) do
+        self.load_locale(code, data)
+    end
+end
+
 -- Change the current global locale
 function translate_mod.set_locale(locale_code)
     translate_mod.current_locale = locale_code

@@ -12,7 +12,6 @@ local p2health = 0x1039B7
 local p2redhealth = 0x1039B9
 
 function gamemsg()
-	print "Known issues with karnovr:"
 	print "Note karnovr has no meter"
 end
 
@@ -41,17 +40,43 @@ translationtable = {
 	["Select"] = 11,
 }
 
-gamedefaultconfig = {
+gamedefaultconfig = {	
 	hud = {
-		combotextx=139,
-		combotexty=42,
-		comboenabled=true,
-		p1healthx=18,
-		p1healthy=21,
-		p1healthenabled=true,
-		p2healthx=275,
-		p2healthy=21,
-		p2healthenabled=true,
+		combotext = {
+			x=139,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 18,
+				y = 21,
+				enabled = true,
+			},
+			P2 = {
+				x = 275,
+				y = 21,
+				enabled = true,
+			}
+		}
+	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth
+		},
+		P2 = {
+			maxhealth = p2maxhealth
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true
+		},
+		P2 = {
+			instantrefillhealth = false,
+			refillhealthenabled = true
+		}
 	}
 }
 

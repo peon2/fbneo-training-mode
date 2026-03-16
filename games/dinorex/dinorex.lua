@@ -41,19 +41,74 @@ translationtable = {
 }
 
 gamedefaultconfig = {
-	combogui = {
-		combotextx=180,
-		combotexty=42,
+	hud = {
+		combotext = {
+			x=180,
+			y=42,
+			enabled=true,
+		},
+		health = {
+			P1 = {
+				x = 13,
+				y = 8,
+				enabled = true,
+			},
+			P2 = {
+				x = 296,
+				y = 8,
+				enabled = true,
+			}
+		},
+		meter = {
+			P1 = {
+				x = 82,
+				y = 17,
+				enabled = false,
+			},
+			P2 = {
+				x = 231,
+				y = 17,
+				enabled = false,
+			}
+		}
 	},
+	gamevars = {
+		P1 = {
+			maxhealth = p1maxhealth,
+			maxmeter = p1maxmeter
+		},
+		P2 = {
+			maxhealth = p2maxhealth,
+			maxmeter = p2maxmeter
+		}
+	},
+	combovars = {
+		P1 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		},
+		P2 = {
+			instantrefillhealth = true,
+			refillhealthenabled = true,
+			instantrefillmeter = true,
+			refillmeterenabled = true,
+		}
+	}
 }
 
-function _playerOneFacingLeft() -- hahahahaha dino rex doesnt have crossups
+-- cannot switch sides in this game
+function playerOneFacingLeft()
+	return false
 end
 
-function _playerTwoFacingLeft()
+function playerTwoFacingLeft()
+	return true
 end
 
-function _playerOneInHitstun() -- I don't think dino rex even has combos
+-- I don't think dino rex even has combos
+function _playerOneInHitstun()
 end
 
 function _playerTwoInHitstun()

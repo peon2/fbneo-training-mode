@@ -45,7 +45,17 @@ end
 
 -- Memory Reading Methods
 function Player:isBeingHit()
-    return rb(self.addresses.hitstatus) ~= 0
+    local hit_val = rb(self.addresses.hitstatus)
+    local current_game = PECHAN_CONFIG.get_current_game()
+    if current_game.hitstun_values then
+        for _, v in ipairs(current_game.hitstun_values) do
+            if hit_val == v then
+                return true
+            end
+        end
+        return false
+    end
+    return hit_val ~= 0
 end
 
 function Player:getRawActionByte()
@@ -70,51 +80,8 @@ function Player:getExecutingAction()
 end
 
 function Player:isActionExecuting()
-    local action_filtered = {
-        [0] = true,
-        [1] = true,
-        [2] = true,
-        [3] = true,
-        [4] = true,
-        [5] = true,
-        [6] = true,
-        [7] = true,
-        [8] = true,
-        [9] = true,
-        [10] = true,
-        [11] = true,
-        [12] = true,
-        [13] = true,
-        [14] = true,
-        [15] = true,
-        [16] = true,
-        [17] = true,
-        [18] = true,
-        [19] = true,
-        [20] = true,
-        [21] = true,
-        [22] = true,
-        [23] = true,
-        [24] = true,
-        [45] = true,
-        [46] = true,
-        [47] = true,
-        [48] = true,
-        [49] = true,
-        [50] = true,
-        [51] = true,
-        [52] = true,
-        [53] = true,
-        [54] = true,
-        [55] = true,
-        [56] = true,
-        [79] = true,
-        [157] = true,
-        [158] = true,
-        [159] = true,
-        [232] = true,
-        [233] = true
-    }
+    local current_game = PECHAN_CONFIG.get_current_game()
+    local action_filtered = current_game.action_filtered or {}
 
     if not action_filtered[self:getRawActionByte()] then
         return true
@@ -124,7 +91,20 @@ end
 
 function Player:getCurrentBlockstun()
     local blockstun_val = rb(self.addresses.blockstun)
-    if blockstun_val == 0x20 or blockstun_val == 0xA0 then
+    local current_game = PECHAN_CONFIG.get_current_game()
+    local is_stunned = false
+    if current_game.blockstun_values then
+        for _, v in ipairs(current_game.blockstun_values) do
+            if blockstun_val == v then
+                is_stunned = true
+                break
+            end
+        end
+    else
+        is_stunned = (blockstun_val == 0x20 or blockstun_val == 0xA0) -- Fallback for safety
+    end
+
+    if is_stunned then
         local current_frame = emu.framecount()
         if current_frame ~= self.frame_data.blockstun_last_updated_frame then
             self.frame_data.blockstun_last_updated_frame = current_frame

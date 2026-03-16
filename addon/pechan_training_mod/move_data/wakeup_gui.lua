@@ -1,37 +1,37 @@
 local WAKEUP_GUI = {}
+local translate_mod = require("addon.pechan_training_mod.translate_mod")
+local tl = translate_mod.tl
 WAKEUP_GUI.wakeup_command_normals = {
     ["1"] = {
         y = 10,
         x = 8,
-        info = {'back B'},
+        info = { 'back B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DF_D" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DF_D" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DF_D" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DF_D" .. ": ON"
+            end
+        end,
         text = "DF_D",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_D"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["2"] = {
         y = 22,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["3"] = {
         y = 22,
@@ -40,25 +40,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_D").on_wake_up_delay - 1
+        end,
     },
     ["4"] = {
         y = 22,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["5"] = {
         y = 22,
@@ -67,9 +68,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_D").on_wake_up_delay + 1
+        end,
     },
     ["6"] = {
         y = 22,
@@ -78,25 +80,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_D").on_wake_up_times - 1
+        end,
     },
     ["7"] = {
         y = 22,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["8"] = {
         y = 22,
@@ -105,41 +108,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_D").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_D").on_wake_up_times + 1
+        end,
     },
     ["9"] = {
         y = 35,
         x = 8,
-        info = {'back B'},
+        info = { 'back B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DF_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DF_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DF_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DF_B" .. ": ON"
+            end
+        end,
         text = "DF_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["10"] = {
         y = 47,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["11"] = {
         y = 47,
@@ -148,25 +150,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_B").on_wake_up_delay - 1
+        end,
     },
     ["12"] = {
         y = 47,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["13"] = {
         y = 47,
@@ -175,9 +178,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_B").on_wake_up_delay + 1
+        end,
     },
     ["14"] = {
         y = 47,
@@ -186,25 +190,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_B").on_wake_up_times - 1
+        end,
     },
     ["15"] = {
         y = 47,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["16"] = {
         y = 47,
@@ -213,41 +218,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_B").on_wake_up_times + 1
+        end,
     },
     ["17"] = {
         y = 60,
         x = 8,
-        info = {'forward A'},
+        info = { 'forward A' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "FWD_A" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "FWD_A" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "FWD_A" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "FWD_A" .. ": ON"
+            end
+        end,
         text = "FWD_A",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_A"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["18"] = {
         y = 72,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["19"] = {
         y = 72,
@@ -256,25 +260,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_A").on_wake_up_delay - 1
+        end,
     },
     ["20"] = {
         y = 72,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["21"] = {
         y = 72,
@@ -283,9 +288,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_A").on_wake_up_delay + 1
+        end,
     },
     ["22"] = {
         y = 72,
@@ -294,25 +300,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_A").on_wake_up_times - 1
+        end,
     },
     ["23"] = {
         y = 72,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["24"] = {
         y = 72,
@@ -321,41 +328,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_A").on_wake_up_times + 1
+        end,
     },
     ["25"] = {
         y = 85,
         x = 8,
-        info = {'forward B'},
+        info = { 'forward B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "FWD_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "FWD_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "FWD_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "FWD_B" .. ": ON"
+            end
+        end,
         text = "FWD_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["FWD_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["26"] = {
         y = 97,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["27"] = {
         y = 97,
@@ -364,25 +370,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_B").on_wake_up_delay - 1
+        end,
     },
     ["28"] = {
         y = 97,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["29"] = {
         y = 97,
@@ -391,9 +398,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_B").on_wake_up_delay + 1
+        end,
     },
     ["30"] = {
         y = 97,
@@ -402,25 +410,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_B").on_wake_up_times - 1
+        end,
     },
     ["31"] = {
         y = 97,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["32"] = {
         y = 97,
@@ -429,41 +438,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("FWD_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("FWD_B").on_wake_up_times + 1
+        end,
     },
     ["33"] = {
         y = 110,
         x = 8,
-        info = {'back A'},
+        info = { 'back A' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "BACK_A" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "BACK_A" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "BACK_A" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "BACK_A" .. ": ON"
+            end
+        end,
         text = "BACK_A",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_A"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["34"] = {
         y = 122,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["35"] = {
         y = 122,
@@ -472,25 +480,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_A").on_wake_up_delay - 1
+        end,
     },
     ["36"] = {
         y = 122,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["37"] = {
         y = 122,
@@ -499,9 +508,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_A").on_wake_up_delay + 1
+        end,
     },
     ["38"] = {
         y = 122,
@@ -510,25 +520,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_A").on_wake_up_times - 1
+        end,
     },
     ["39"] = {
         y = 122,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["40"] = {
         y = 122,
@@ -537,41 +548,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_A").on_wake_up_times + 1
+        end,
     },
     ["41"] = {
         y = 135,
         x = 8,
-        info = {'back B'},
+        info = { 'back B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "BACK_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "BACK_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "BACK_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "BACK_B" .. ": ON"
+            end
+        end,
         text = "BACK_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACK_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["42"] = {
         y = 147,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["43"] = {
         y = 147,
@@ -580,25 +590,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_B").on_wake_up_delay - 1
+        end,
     },
     ["44"] = {
         y = 147,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["45"] = {
         y = 147,
@@ -607,9 +618,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_B").on_wake_up_delay + 1
+        end,
     },
     ["46"] = {
         y = 147,
@@ -618,25 +630,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_B").on_wake_up_times - 1
+        end,
     },
     ["47"] = {
         y = 147,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["48"] = {
         y = 147,
@@ -645,41 +658,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACK_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("BACK_B").on_wake_up_times + 1
+        end,
     },
     ["49"] = {
         y = 10,
         x = 123,
-        info = {'back B'},
+        info = { 'back B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DF_C" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DF_C" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DF_C" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DF_C" .. ": ON"
+            end
+        end,
         text = "DF_C",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DF_C"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["50"] = {
         y = 22,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["51"] = {
         y = 22,
@@ -688,25 +700,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_C").on_wake_up_delay - 1
+        end,
     },
     ["52"] = {
         y = 22,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["53"] = {
         y = 22,
@@ -715,9 +728,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_C").on_wake_up_delay + 1
+        end,
     },
     ["54"] = {
         y = 22,
@@ -726,25 +740,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_C").on_wake_up_times - 1
+        end,
     },
     ["55"] = {
         y = 22,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["56"] = {
         y = 22,
@@ -753,41 +768,40 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DF_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DF_C").on_wake_up_times + 1
+        end,
     },
     ["57"] = {
         y = 35,
         x = 123,
-        info = {'crouching guard'},
+        info = { 'crouching guard' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "CR_GUARD" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "CR_GUARD" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "CR_GUARD" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "CR_GUARD" .. ": ON"
+            end
+        end,
         text = "CR_GUARD",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_GUARD"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["58"] = {
         y = 47,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["59"] = {
         y = 47,
@@ -796,25 +810,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay - 1
+        end,
     },
     ["60"] = {
         y = 47,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["61"] = {
         y = 47,
@@ -823,9 +838,10 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_delay + 1
+        end,
     },
     ["62"] = {
         y = 47,
@@ -834,25 +850,26 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times - 1
+        end,
     },
     ["63"] = {
         y = 47,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["64"] = {
         y = 47,
@@ -861,43 +878,42 @@ WAKEUP_GUI.wakeup_command_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("CR_GUARD").on_wake_up_times + 1
+        end,
     },
 }
 WAKEUP_GUI.wakeup_normals = {
     ["1"] = {
         y = 10,
         x = 8,
-        info = {'crouching D'},
+        info = { 'crouching D' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "CR_D" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "CR_D" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "CR_D" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "CR_D" .. ": ON"
+            end
+        end,
         text = "CR_D",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_D"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["2"] = {
         y = 22,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["3"] = {
         y = 22,
@@ -906,25 +922,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_D").on_wake_up_delay - 1
+        end,
     },
     ["4"] = {
         y = 22,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["5"] = {
         y = 22,
@@ -933,9 +950,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_D").on_wake_up_delay + 1
+        end,
     },
     ["6"] = {
         y = 22,
@@ -944,25 +962,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_D").on_wake_up_times - 1
+        end,
     },
     ["7"] = {
         y = 22,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["8"] = {
         y = 22,
@@ -971,41 +990,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_D").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_D").on_wake_up_times + 1
+        end,
     },
     ["9"] = {
         y = 35,
         x = 8,
-        info = {'standing A'},
+        info = { 'standing A' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "ST_A" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "ST_A" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "ST_A" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "ST_A" .. ": ON"
+            end
+        end,
         text = "ST_A",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_A"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["10"] = {
         y = 47,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["11"] = {
         y = 47,
@@ -1014,25 +1032,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_A").on_wake_up_delay - 1
+        end,
     },
     ["12"] = {
         y = 47,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["13"] = {
         y = 47,
@@ -1041,9 +1060,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_A").on_wake_up_delay + 1
+        end,
     },
     ["14"] = {
         y = 47,
@@ -1052,25 +1072,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_A").on_wake_up_times - 1
+        end,
     },
     ["15"] = {
         y = 47,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["16"] = {
         y = 47,
@@ -1079,41 +1100,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_A").on_wake_up_times + 1
+        end,
     },
     ["17"] = {
         y = 60,
         x = 8,
-        info = {'CD'},
+        info = { 'CD' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "CD" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "CD" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "CD" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "CD" .. ": ON"
+            end
+        end,
         text = "CD",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CD"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["18"] = {
         y = 72,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["19"] = {
         y = 72,
@@ -1122,25 +1142,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CD").on_wake_up_delay - 1
+        end,
     },
     ["20"] = {
         y = 72,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["21"] = {
         y = 72,
@@ -1149,9 +1170,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CD").on_wake_up_delay + 1
+        end,
     },
     ["22"] = {
         y = 72,
@@ -1160,25 +1182,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CD").on_wake_up_times - 1
+        end,
     },
     ["23"] = {
         y = 72,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["24"] = {
         y = 72,
@@ -1187,41 +1210,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CD").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CD").on_wake_up_times + 1
+        end,
     },
     ["25"] = {
         y = 85,
         x = 8,
-        info = {'crouching B'},
+        info = { 'crouching B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "CR_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "CR_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "CR_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "CR_B" .. ": ON"
+            end
+        end,
         text = "CR_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["26"] = {
         y = 97,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["27"] = {
         y = 97,
@@ -1230,25 +1252,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_B").on_wake_up_delay - 1
+        end,
     },
     ["28"] = {
         y = 97,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["29"] = {
         y = 97,
@@ -1257,9 +1280,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_B").on_wake_up_delay + 1
+        end,
     },
     ["30"] = {
         y = 97,
@@ -1268,25 +1292,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_B").on_wake_up_times - 1
+        end,
     },
     ["31"] = {
         y = 97,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["32"] = {
         y = 97,
@@ -1295,41 +1320,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_B").on_wake_up_times + 1
+        end,
     },
     ["33"] = {
         y = 110,
         x = 8,
-        info = {'crouching A'},
+        info = { 'crouching A' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "CR_A" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "CR_A" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "CR_A" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "CR_A" .. ": ON"
+            end
+        end,
         text = "CR_A",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_A"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["34"] = {
         y = 122,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["35"] = {
         y = 122,
@@ -1338,25 +1362,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_A").on_wake_up_delay - 1
+        end,
     },
     ["36"] = {
         y = 122,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["37"] = {
         y = 122,
@@ -1365,9 +1390,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_A").on_wake_up_delay + 1
+        end,
     },
     ["38"] = {
         y = 122,
@@ -1376,25 +1402,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_A").on_wake_up_times - 1
+        end,
     },
     ["39"] = {
         y = 122,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["40"] = {
         y = 122,
@@ -1403,41 +1430,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_A").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_A").on_wake_up_times + 1
+        end,
     },
     ["41"] = {
         y = 135,
         x = 8,
-        info = {'AB'},
+        info = { 'AB' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "AB" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "AB" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "AB" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "AB" .. ": ON"
+            end
+        end,
         text = "AB",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["AB"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["42"] = {
         y = 147,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["43"] = {
         y = 147,
@@ -1446,25 +1472,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("AB").on_wake_up_delay - 1
+        end,
     },
     ["44"] = {
         y = 147,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["45"] = {
         y = 147,
@@ -1473,9 +1500,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("AB").on_wake_up_delay + 1
+        end,
     },
     ["46"] = {
         y = 147,
@@ -1484,25 +1512,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("AB").on_wake_up_times - 1
+        end,
     },
     ["47"] = {
         y = 147,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["48"] = {
         y = 147,
@@ -1511,41 +1540,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("AB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("AB").on_wake_up_times + 1
+        end,
     },
     ["49"] = {
         y = 10,
         x = 123,
-        info = {'standing C'},
+        info = { 'standing C' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "ST_D" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "ST_D" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "ST_D" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "ST_D" .. ": ON"
+            end
+        end,
         text = "ST_D",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_D"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["50"] = {
         y = 22,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["51"] = {
         y = 22,
@@ -1554,25 +1582,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_D").on_wake_up_delay - 1
+        end,
     },
     ["52"] = {
         y = 22,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["53"] = {
         y = 22,
@@ -1581,9 +1610,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_D").on_wake_up_delay + 1
+        end,
     },
     ["54"] = {
         y = 22,
@@ -1592,25 +1622,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_D").on_wake_up_times - 1
+        end,
     },
     ["55"] = {
         y = 22,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["56"] = {
         y = 22,
@@ -1619,41 +1650,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_D").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_D").on_wake_up_times + 1
+        end,
     },
     ["57"] = {
         y = 35,
         x = 123,
-        info = {'standing C'},
+        info = { 'standing C' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "ST_C" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "ST_C" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "ST_C" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "ST_C" .. ": ON"
+            end
+        end,
         text = "ST_C",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_C"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["58"] = {
         y = 47,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["59"] = {
         y = 47,
@@ -1662,25 +1692,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_C").on_wake_up_delay - 1
+        end,
     },
     ["60"] = {
         y = 47,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["61"] = {
         y = 47,
@@ -1689,9 +1720,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_C").on_wake_up_delay + 1
+        end,
     },
     ["62"] = {
         y = 47,
@@ -1700,25 +1732,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_C").on_wake_up_times - 1
+        end,
     },
     ["63"] = {
         y = 47,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["64"] = {
         y = 47,
@@ -1727,41 +1760,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_C").on_wake_up_times + 1
+        end,
     },
     ["65"] = {
         y = 60,
         x = 123,
-        info = {'standing B'},
+        info = { 'standing B' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "ST_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "ST_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "ST_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "ST_B" .. ": ON"
+            end
+        end,
         text = "ST_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ST_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["66"] = {
         y = 72,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["67"] = {
         y = 72,
@@ -1770,25 +1802,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_B").on_wake_up_delay - 1
+        end,
     },
     ["68"] = {
         y = 72,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["69"] = {
         y = 72,
@@ -1797,9 +1830,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_B").on_wake_up_delay + 1
+        end,
     },
     ["70"] = {
         y = 72,
@@ -1808,25 +1842,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_B").on_wake_up_times - 1
+        end,
     },
     ["71"] = {
         y = 72,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["72"] = {
         y = 72,
@@ -1835,41 +1870,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ST_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("ST_B").on_wake_up_times + 1
+        end,
     },
     ["73"] = {
         y = 85,
         x = 123,
-        info = {'crouching C'},
+        info = { 'crouching C' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "CR_C" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "CR_C" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "CR_C" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "CR_C" .. ": ON"
+            end
+        end,
         text = "CR_C",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["CR_C"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["74"] = {
         y = 97,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["75"] = {
         y = 97,
@@ -1878,25 +1912,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_C").on_wake_up_delay - 1
+        end,
     },
     ["76"] = {
         y = 97,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["77"] = {
         y = 97,
@@ -1905,9 +1940,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_C").on_wake_up_delay + 1
+        end,
     },
     ["78"] = {
         y = 97,
@@ -1916,25 +1952,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_C").on_wake_up_times - 1
+        end,
     },
     ["79"] = {
         y = 97,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["80"] = {
         y = 97,
@@ -1943,41 +1980,40 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("CR_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("CR_C").on_wake_up_times + 1
+        end,
     },
     ["81"] = {
         y = 110,
         x = 123,
-        info = {'throw C'},
+        info = { 'throw C' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "THROW_C" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "THROW_C" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "THROW_C" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "THROW_C" .. ": ON"
+            end
+        end,
         text = "THROW_C",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["THROW_C"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["82"] = {
         y = 122,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["83"] = {
         y = 122,
@@ -1986,25 +2022,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("THROW_C").on_wake_up_delay - 1
+        end,
     },
     ["84"] = {
         y = 122,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["85"] = {
         y = 122,
@@ -2013,9 +2050,10 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("THROW_C").on_wake_up_delay + 1
+        end,
     },
     ["86"] = {
         y = 122,
@@ -2024,25 +2062,26 @@ WAKEUP_GUI.wakeup_normals = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("THROW_C").on_wake_up_times - 1
+        end,
     },
     ["87"] = {
         y = 122,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["88"] = {
         y = 122,
@@ -2051,8 +2090,9 @@ WAKEUP_GUI.wakeup_normals = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("THROW_C").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("THROW_C").on_wake_up_times + 1
+        end,
     },
     ["89"] = {
         y = 161.6,
@@ -2060,7 +2100,7 @@ WAKEUP_GUI.wakeup_normals = {
         handle = 8,
         text = "command normals",
         olcolour = "black",
-        func = function() changeInteractiveGuiPage(getCustomPageNameByType("command_normals_move_settings", "WAKEUP") ) end,
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType("command_normals_move_settings", "WAKEUP")) end,
     },
     ["90"] = {
         y = 161.6,
@@ -2068,7 +2108,7 @@ WAKEUP_GUI.wakeup_normals = {
         handle = 8,
         text = "specials",
         olcolour = "black",
-        func = function() changeInteractiveGuiPage(getCustomPageNameByType("specials_move_settings", "WAKEUP") ) end,
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType("specials_move_settings", "WAKEUP")) end,
     },
     ["91"] = {
         y = 161.6,
@@ -2076,7 +2116,7 @@ WAKEUP_GUI.wakeup_normals = {
         handle = 8,
         text = "Supers ",
         olcolour = "black",
-        func = function() changeInteractiveGuiPage(getCustomPageNameByType( "supers_move_settings", "WAKEUP")) end,
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType("supers_move_settings", "WAKEUP")) end,
     },
     ["92"] = {
         y = 161.6,
@@ -2084,7 +2124,7 @@ WAKEUP_GUI.wakeup_normals = {
         handle = 8,
         text = "Common ",
         olcolour = "black",
-        func = function() changeInteractiveGuiPage(getCustomPageNameByType( "commons_move_settings", "WAKEUP")) end,
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType("commons_move_settings", "WAKEUP")) end,
     },
     ["93"] = {
         y = 161.6,
@@ -2092,60 +2132,56 @@ WAKEUP_GUI.wakeup_normals = {
         handle = 8,
         text = "Recordings",
         olcolour = "black",
-        func = function() changeInteractiveGuiPage(getCustomPageNameByType( "recordings_move_settings", "WAKEUP")) end,
+        func = function() changeInteractiveGuiPage(getCustomPageNameByType("recordings_move_settings", "WAKEUP")) end,
     },
 }
 WAKEUP_GUI.wakeup_specials = {
     ["1"] = {
         y = 10,
         x = 8,
-        info = {'Half circle Back (63214)'},
+        info = { 'Half circle Back (63214)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "HCB" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "HCB" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "HCB" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "HCB" .. ": ON"
+            end
+        end,
         text = "HCB",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["2"] = {
         y = 10,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["HCB"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["HCB"].wakeup_current_button = moves["HCB"].wakeup_current_button   +  1
-							if moves["HCB"].wakeup_current_button > 4 then
-								moves["HCB"].wakeup_current_button = 1
-							end
-					end,
+            moves["HCB"].wakeup_current_button = moves["HCB"].wakeup_current_button + 1
+            if moves["HCB"].wakeup_current_button > 4 then
+                moves["HCB"].wakeup_current_button = 1
+            end
+        end,
     },
     ["3"] = {
         y = 22,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["4"] = {
         y = 22,
@@ -2154,25 +2190,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB").on_wake_up_delay - 1
+        end,
     },
     ["5"] = {
         y = 22,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["6"] = {
         y = 22,
@@ -2181,9 +2218,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB").on_wake_up_delay + 1
+        end,
     },
     ["7"] = {
         y = 22,
@@ -2192,25 +2230,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB").on_wake_up_times - 1
+        end,
     },
     ["8"] = {
         y = 22,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["9"] = {
         y = 22,
@@ -2219,59 +2258,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB").on_wake_up_times + 1
+        end,
     },
     ["10"] = {
         y = 35,
         x = 8,
-        info = {'Quarter circle Back (214)'},
+        info = { 'Quarter circle Back (214)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "QCB" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "QCB" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "QCB" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "QCB" .. ": ON"
+            end
+        end,
         text = "QCB",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["11"] = {
         y = 35,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB"].wakeup_current_button] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["QCB"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["QCB"].wakeup_current_button = moves["QCB"].wakeup_current_button   +  1
-							if moves["QCB"].wakeup_current_button > 4 then
-								moves["QCB"].wakeup_current_button = 1
-							end
-					end,
+            moves["QCB"].wakeup_current_button = moves["QCB"].wakeup_current_button + 1
+            if moves["QCB"].wakeup_current_button > 4 then
+                moves["QCB"].wakeup_current_button = 1
+            end
+        end,
     },
     ["12"] = {
         y = 47,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["13"] = {
         y = 47,
@@ -2280,25 +2316,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB").on_wake_up_delay - 1
+        end,
     },
     ["14"] = {
         y = 47,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["15"] = {
         y = 47,
@@ -2307,9 +2344,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB").on_wake_up_delay + 1
+        end,
     },
     ["16"] = {
         y = 47,
@@ -2318,25 +2356,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB").on_wake_up_times - 1
+        end,
     },
     ["17"] = {
         y = 47,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["18"] = {
         y = 47,
@@ -2345,58 +2384,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB").on_wake_up_times + 1
+        end,
     },
     ["19"] = {
         y = 60,
         x = 8,
-        info = {'k9999 super move'},
+        info = { 'k9999 super move' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "D_F_DF" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "D_F_DF" .. ": ON" 
-					end
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "D_F_DF" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "D_F_DF" .. ": ON"
+            end
+        end,
         text = "D_F_DF",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["D_F_DF"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["20"] = {
         y = 60,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["D_F_DF"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["D_F_DF"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["D_F_DF"].wakeup_current_button = moves["D_F_DF"].wakeup_current_button   +  1
-							if moves["D_F_DF"].wakeup_current_button > 4 then
-								moves["D_F_DF"].wakeup_current_button = 1
-							end
-					end,
+            moves["D_F_DF"].wakeup_current_button = moves["D_F_DF"].wakeup_current_button + 1
+            if moves["D_F_DF"].wakeup_current_button > 4 then
+                moves["D_F_DF"].wakeup_current_button = 1
+            end
+        end,
     },
     ["21"] = {
         y = 72,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["22"] = {
         y = 72,
@@ -2405,25 +2442,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("D_F_DF").on_wake_up_delay - 1
+        end,
     },
     ["23"] = {
         y = 72,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["24"] = {
         y = 72,
@@ -2432,9 +2470,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("D_F_DF").on_wake_up_delay + 1
+        end,
     },
     ["25"] = {
         y = 72,
@@ -2443,25 +2482,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("D_F_DF").on_wake_up_times - 1
+        end,
     },
     ["26"] = {
         y = 72,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["27"] = {
         y = 72,
@@ -2470,59 +2510,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("D_F_DF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("D_F_DF").on_wake_up_times + 1
+        end,
     },
     ["28"] = {
         y = 85,
         x = 8,
-        info = {'Half circle Back Forward (632146)'},
+        info = { 'Half circle Back Forward (632146)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "HCB_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "HCB_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "HCB_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "HCB_F" .. ": ON"
+            end
+        end,
         text = "HCB_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCB_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["29"] = {
         y = 85,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCB_F"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["HCB_F"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["HCB_F"].wakeup_current_button = moves["HCB_F"].wakeup_current_button   +  1
-							if moves["HCB_F"].wakeup_current_button > 4 then
-								moves["HCB_F"].wakeup_current_button = 1
-							end
-					end,
+            moves["HCB_F"].wakeup_current_button = moves["HCB_F"].wakeup_current_button + 1
+            if moves["HCB_F"].wakeup_current_button > 4 then
+                moves["HCB_F"].wakeup_current_button = 1
+            end
+        end,
     },
     ["30"] = {
         y = 97,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["31"] = {
         y = 97,
@@ -2531,25 +2568,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB_F").on_wake_up_delay - 1
+        end,
     },
     ["32"] = {
         y = 97,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["33"] = {
         y = 97,
@@ -2558,9 +2596,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB_F").on_wake_up_delay + 1
+        end,
     },
     ["34"] = {
         y = 97,
@@ -2569,25 +2608,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB_F").on_wake_up_times - 1
+        end,
     },
     ["35"] = {
         y = 97,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["36"] = {
         y = 97,
@@ -2596,59 +2636,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCB_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCB_F").on_wake_up_times + 1
+        end,
     },
     ["37"] = {
         y = 110,
         x = 8,
-        info = {'Half circle forward (41236)'},
+        info = { 'Half circle forward (41236)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "HCF" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "HCF" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "HCF" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "HCF" .. ": ON"
+            end
+        end,
         text = "HCF",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HCF"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["38"] = {
         y = 110,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["HCF"].wakeup_current_button] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["HCF"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["HCF"].wakeup_current_button = moves["HCF"].wakeup_current_button   +  1
-							if moves["HCF"].wakeup_current_button > 4 then
-								moves["HCF"].wakeup_current_button = 1
-							end
-					end,
+            moves["HCF"].wakeup_current_button = moves["HCF"].wakeup_current_button + 1
+            if moves["HCF"].wakeup_current_button > 4 then
+                moves["HCF"].wakeup_current_button = 1
+            end
+        end,
     },
     ["39"] = {
         y = 122,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["40"] = {
         y = 122,
@@ -2657,25 +2694,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCF").on_wake_up_delay - 1
+        end,
     },
     ["41"] = {
         y = 122,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["42"] = {
         y = 122,
@@ -2684,9 +2722,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCF").on_wake_up_delay + 1
+        end,
     },
     ["43"] = {
         y = 122,
@@ -2695,25 +2734,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCF").on_wake_up_times - 1
+        end,
     },
     ["44"] = {
         y = 122,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["45"] = {
         y = 122,
@@ -2722,59 +2762,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HCF").on_wake_up_times + 1
+        end,
     },
     ["46"] = {
         y = 135,
         x = 8,
-        info = {'Dragon Punch (623)'},
+        info = { 'Dragon Punch (623)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DP" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DP" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DP" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DP" .. ": ON"
+            end
+        end,
         text = "DP",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DP"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["47"] = {
         y = 135,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["DP"].wakeup_current_button] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["DP"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["DP"].wakeup_current_button = moves["DP"].wakeup_current_button   +  1
-							if moves["DP"].wakeup_current_button > 4 then
-								moves["DP"].wakeup_current_button = 1
-							end
-					end,
+            moves["DP"].wakeup_current_button = moves["DP"].wakeup_current_button + 1
+            if moves["DP"].wakeup_current_button > 4 then
+                moves["DP"].wakeup_current_button = 1
+            end
+        end,
     },
     ["48"] = {
         y = 147,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["49"] = {
         y = 147,
@@ -2783,25 +2820,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DP").on_wake_up_delay - 1
+        end,
     },
     ["50"] = {
         y = 147,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["51"] = {
         y = 147,
@@ -2810,9 +2848,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DP").on_wake_up_delay + 1
+        end,
     },
     ["52"] = {
         y = 147,
@@ -2821,25 +2860,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DP").on_wake_up_times - 1
+        end,
     },
     ["53"] = {
         y = 147,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["54"] = {
         y = 147,
@@ -2848,59 +2888,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DP").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DP").on_wake_up_times + 1
+        end,
     },
     ["55"] = {
         y = 10,
         x = 123,
-        info = {'Quarter circle forward (236)'},
+        info = { 'Quarter circle forward (236)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "QCF" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "QCF" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "QCF" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "QCF" .. ": ON"
+            end
+        end,
         text = "QCF",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["56"] = {
         y = 10,
         x = 183,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["QCF"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["QCF"].wakeup_current_button = moves["QCF"].wakeup_current_button   +  1
-							if moves["QCF"].wakeup_current_button > 4 then
-								moves["QCF"].wakeup_current_button = 1
-							end
-					end,
+            moves["QCF"].wakeup_current_button = moves["QCF"].wakeup_current_button + 1
+            if moves["QCF"].wakeup_current_button > 4 then
+                moves["QCF"].wakeup_current_button = 1
+            end
+        end,
     },
     ["57"] = {
         y = 22,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["58"] = {
         y = 22,
@@ -2909,25 +2946,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF").on_wake_up_delay - 1
+        end,
     },
     ["59"] = {
         y = 22,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["60"] = {
         y = 22,
@@ -2936,9 +2974,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF").on_wake_up_delay + 1
+        end,
     },
     ["61"] = {
         y = 22,
@@ -2947,25 +2986,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF").on_wake_up_times - 1
+        end,
     },
     ["62"] = {
         y = 22,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["63"] = {
         y = 22,
@@ -2974,59 +3014,56 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF").on_wake_up_times + 1
+        end,
     },
     ["64"] = {
         y = 35,
         x = 123,
-        info = {'Reverse DP (421)'},
+        info = { 'Reverse DP (421)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "R_DP" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "R_DP" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "R_DP" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "R_DP" .. ": ON"
+            end
+        end,
         text = "R_DP",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("GUARD")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["R_DP"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("GUARD")
+        end,
     },
     ["65"] = {
         y = 35,
         x = 183,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["R_DP"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["R_DP"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["R_DP"].wakeup_current_button = moves["R_DP"].wakeup_current_button   +  1
-							if moves["R_DP"].wakeup_current_button > 4 then
-								moves["R_DP"].wakeup_current_button = 1
-							end
-					end,
+            moves["R_DP"].wakeup_current_button = moves["R_DP"].wakeup_current_button + 1
+            if moves["R_DP"].wakeup_current_button > 4 then
+                moves["R_DP"].wakeup_current_button = 1
+            end
+        end,
     },
     ["66"] = {
         y = 47,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on wakeup'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on wakeup' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["67"] = {
         y = 47,
@@ -3035,25 +3072,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("R_DP").on_wake_up_delay - 1
+        end,
     },
     ["68"] = {
         y = 47,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["69"] = {
         y = 47,
@@ -3062,9 +3100,10 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("R_DP").on_wake_up_delay + 1
+        end,
     },
     ["70"] = {
         y = 47,
@@ -3073,25 +3112,26 @@ WAKEUP_GUI.wakeup_specials = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("R_DP").on_wake_up_times - 1
+        end,
     },
     ["71"] = {
         y = 47,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["72"] = {
         y = 47,
@@ -3100,61 +3140,58 @@ WAKEUP_GUI.wakeup_specials = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("R_DP").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("R_DP").on_wake_up_times + 1
+        end,
     },
 }
 WAKEUP_GUI.wakeup_supers = {
     ["1"] = {
         y = 10,
         x = 8,
-        info = {'Quarter circle Back Half circle Forward (214236)'},
+        info = { 'Quarter circle Back Half circle Forward (214236)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "QCB_HCF" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "QCB_HCF" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "QCB_HCF" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "QCB_HCF" .. ": ON"
+            end
+        end,
         text = "QCB_HCF",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_HCF"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["2"] = {
         y = 10,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_HCF"].guard_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["QCB_HCF"].guard_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["QCB_HCF"].wakeup_current_button = moves["QCB_HCF"].wakeup_current_button   +  1
-							if moves["QCB_HCF"].wakeup_current_button > 4 then
-								moves["QCB_HCF"].wakeup_current_button = 1
-							end
-					end,
+            moves["QCB_HCF"].wakeup_current_button = moves["QCB_HCF"].wakeup_current_button + 1
+            if moves["QCB_HCF"].wakeup_current_button > 4 then
+                moves["QCB_HCF"].wakeup_current_button = 1
+            end
+        end,
     },
     ["3"] = {
         y = 22,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["4"] = {
         y = 22,
@@ -3163,25 +3200,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_HCF").on_wake_up_delay - 1
+        end,
     },
     ["5"] = {
         y = 22,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["6"] = {
         y = 22,
@@ -3190,9 +3228,10 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_HCF").on_wake_up_delay + 1
+        end,
     },
     ["7"] = {
         y = 22,
@@ -3201,25 +3240,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_HCF").on_wake_up_times - 1
+        end,
     },
     ["8"] = {
         y = 22,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["9"] = {
         y = 22,
@@ -3228,59 +3268,56 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_HCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_HCF").on_wake_up_times + 1
+        end,
     },
     ["10"] = {
         y = 35,
         x = 8,
-        info = {'pretzel (1632143)'},
+        info = { 'pretzel (1632143)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "PRETZEL" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "PRETZEL" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "PRETZEL" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "PRETZEL" .. ": ON"
+            end
+        end,
         text = "PRETZEL",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["PRETZEL"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["11"] = {
         y = 35,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["PRETZEL"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["PRETZEL"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["PRETZEL"].wakeup_current_button = moves["PRETZEL"].wakeup_current_button   +  1
-							if moves["PRETZEL"].wakeup_current_button > 4 then
-								moves["PRETZEL"].wakeup_current_button = 1
-							end
-					end,
+            moves["PRETZEL"].wakeup_current_button = moves["PRETZEL"].wakeup_current_button + 1
+            if moves["PRETZEL"].wakeup_current_button > 4 then
+                moves["PRETZEL"].wakeup_current_button = 1
+            end
+        end,
     },
     ["12"] = {
         y = 47,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["13"] = {
         y = 47,
@@ -3289,25 +3326,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("PRETZEL").on_wake_up_delay - 1
+        end,
     },
     ["14"] = {
         y = 47,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["15"] = {
         y = 47,
@@ -3316,9 +3354,10 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("PRETZEL").on_wake_up_delay + 1
+        end,
     },
     ["16"] = {
         y = 47,
@@ -3327,25 +3366,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("PRETZEL").on_wake_up_times - 1
+        end,
     },
     ["17"] = {
         y = 47,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["18"] = {
         y = 47,
@@ -3354,59 +3394,56 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("PRETZEL").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("PRETZEL").on_wake_up_times + 1
+        end,
     },
     ["19"] = {
         y = 60,
         x = 8,
-        info = {'Quarter circle forward (236214)'},
+        info = { 'Quarter circle forward (236214)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "QCF_HCB" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "QCF_HCB" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "QCF_HCB" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "QCF_HCB" .. ": ON"
+            end
+        end,
         text = "QCF_HCB",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_HCB"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["20"] = {
         y = 60,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_HCB"].guard_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["QCF_HCB"].guard_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["QCF_HCB"].wakeup_current_button = moves["QCF_HCB"].wakeup_current_button   +  1
-							if moves["QCF_HCB"].wakeup_current_button > 4 then
-								moves["QCF_HCB"].wakeup_current_button = 1
-							end
-					end,
+            moves["QCF_HCB"].wakeup_current_button = moves["QCF_HCB"].wakeup_current_button + 1
+            if moves["QCF_HCB"].wakeup_current_button > 4 then
+                moves["QCF_HCB"].wakeup_current_button = 1
+            end
+        end,
     },
     ["21"] = {
         y = 72,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["22"] = {
         y = 72,
@@ -3415,25 +3452,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_HCB").on_wake_up_delay - 1
+        end,
     },
     ["23"] = {
         y = 72,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["24"] = {
         y = 72,
@@ -3442,9 +3480,10 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_HCB").on_wake_up_delay + 1
+        end,
     },
     ["25"] = {
         y = 72,
@@ -3453,25 +3492,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_HCB").on_wake_up_times - 1
+        end,
     },
     ["26"] = {
         y = 72,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["27"] = {
         y = 72,
@@ -3480,59 +3520,56 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_HCB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_HCB").on_wake_up_times + 1
+        end,
     },
     ["28"] = {
         y = 85,
         x = 8,
-        info = {'Quarter circle Back Forward (2146)'},
+        info = { 'Quarter circle Back Forward (2146)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "QCB_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "QCB_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "QCB_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "QCB_F" .. ": ON"
+            end
+        end,
         text = "QCB_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCB_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["29"] = {
         y = 85,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCB_F"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["QCB_F"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["QCB_F"].wakeup_current_button = moves["QCB_F"].wakeup_current_button   +  1
-							if moves["QCB_F"].wakeup_current_button > 4 then
-								moves["QCB_F"].wakeup_current_button = 1
-							end
-					end,
+            moves["QCB_F"].wakeup_current_button = moves["QCB_F"].wakeup_current_button + 1
+            if moves["QCB_F"].wakeup_current_button > 4 then
+                moves["QCB_F"].wakeup_current_button = 1
+            end
+        end,
     },
     ["30"] = {
         y = 97,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["31"] = {
         y = 97,
@@ -3541,25 +3578,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_F").on_wake_up_delay - 1
+        end,
     },
     ["32"] = {
         y = 97,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["33"] = {
         y = 97,
@@ -3568,9 +3606,10 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_F").on_wake_up_delay + 1
+        end,
     },
     ["34"] = {
         y = 97,
@@ -3579,25 +3618,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_F").on_wake_up_times - 1
+        end,
     },
     ["35"] = {
         y = 97,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["36"] = {
         y = 97,
@@ -3606,59 +3646,56 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCB_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCB_F").on_wake_up_times + 1
+        end,
     },
     ["37"] = {
         y = 110,
         x = 8,
-        info = {'Quarter circle forward * 2 (236236)'},
+        info = { 'Quarter circle forward * 2 (236236)' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "QCF_QCF" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "QCF_QCF" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "QCF_QCF" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "QCF_QCF" .. ": ON"
+            end
+        end,
         text = "QCF_QCF",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["QCF_QCF"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["38"] = {
         y = 110,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["QCF_QCF"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["QCF_QCF"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["QCF_QCF"].wakeup_current_button = moves["QCF_QCF"].wakeup_current_button   +  1
-							if moves["QCF_QCF"].wakeup_current_button > 4 then
-								moves["QCF_QCF"].wakeup_current_button = 1
-							end
-					end,
+            moves["QCF_QCF"].wakeup_current_button = moves["QCF_QCF"].wakeup_current_button + 1
+            if moves["QCF_QCF"].wakeup_current_button > 4 then
+                moves["QCF_QCF"].wakeup_current_button = 1
+            end
+        end,
     },
     ["39"] = {
         y = 122,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["40"] = {
         y = 122,
@@ -3667,25 +3704,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_QCF").on_wake_up_delay - 1
+        end,
     },
     ["41"] = {
         y = 122,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["42"] = {
         y = 122,
@@ -3694,9 +3732,10 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_QCF").on_wake_up_delay + 1
+        end,
     },
     ["43"] = {
         y = 122,
@@ -3705,25 +3744,26 @@ WAKEUP_GUI.wakeup_supers = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_QCF").on_wake_up_times - 1
+        end,
     },
     ["44"] = {
         y = 122,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["45"] = {
         y = 122,
@@ -3732,43 +3772,42 @@ WAKEUP_GUI.wakeup_supers = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("QCF_QCF").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("QCF_QCF").on_wake_up_times + 1
+        end,
     },
 }
 WAKEUP_GUI.wakeup_commons = {
     ["1"] = {
         y = 10,
         x = 8,
-        info = {'longer AB'},
+        info = { 'longer AB' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "BACKDASH" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "BACKDASH" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "BACKDASH" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "BACKDASH" .. ": ON"
+            end
+        end,
         text = "BACKDASH",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["BACKDASH"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["2"] = {
         y = 22,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["3"] = {
         y = 22,
@@ -3777,25 +3816,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay - 1
+        end,
     },
     ["4"] = {
         y = 22,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["5"] = {
         y = 22,
@@ -3804,9 +3844,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_delay + 1
+        end,
     },
     ["6"] = {
         y = 22,
@@ -3815,25 +3856,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times - 1
+        end,
     },
     ["7"] = {
         y = 22,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["8"] = {
         y = 22,
@@ -3842,59 +3884,56 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("BACKDASH").on_wake_up_times + 1
+        end,
     },
     ["9"] = {
         y = 35,
         x = 8,
-        info = {'super jump forward with a delayed button'},
+        info = { 'super jump forward with a delayed button' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DSJ_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DSJ_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DSJ_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DSJ_F" .. ": ON"
+            end
+        end,
         text = "DSJ_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DSJ_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["10"] = {
         y = 35,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["DSJ_F"].wakeup_current_button ] ..")" 
-												
-						
-					end,
-        text ="Button:  ",
+            this.text = "Button: (" .. BUTTON_NAMES[moves["DSJ_F"].wakeup_current_button] .. ")"
+        end,
+        text = "Button:  ",
         olcolour = "black",
         func = function()
-							moves["DSJ_F"].wakeup_current_button = moves["DSJ_F"].wakeup_current_button   +  1
-							if moves["DSJ_F"].wakeup_current_button > 4 then
-								moves["DSJ_F"].wakeup_current_button = 1
-							end
-					end,
+            moves["DSJ_F"].wakeup_current_button = moves["DSJ_F"].wakeup_current_button + 1
+            if moves["DSJ_F"].wakeup_current_button > 4 then
+                moves["DSJ_F"].wakeup_current_button = 1
+            end
+        end,
     },
     ["11"] = {
         y = 47,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["12"] = {
         y = 47,
@@ -3903,25 +3942,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DSJ_F").on_wake_up_delay - 1
+        end,
     },
     ["13"] = {
         y = 47,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["14"] = {
         y = 47,
@@ -3930,9 +3970,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DSJ_F").on_wake_up_delay + 1
+        end,
     },
     ["15"] = {
         y = 47,
@@ -3941,25 +3982,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DSJ_F").on_wake_up_times - 1
+        end,
     },
     ["16"] = {
         y = 47,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["17"] = {
         y = 47,
@@ -3968,59 +4010,56 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DSJ_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DSJ_F").on_wake_up_times + 1
+        end,
     },
     ["18"] = {
         y = 60,
         x = 8,
-        info = {'instant super jump back'},
+        info = { 'instant super jump back' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "INS_SJ_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "INS_SJ_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "INS_SJ_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "INS_SJ_B" .. ": ON"
+            end
+        end,
         text = "INS_SJ_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["INS_SJ_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["19"] = {
         y = 60,
         x = 68,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["INS_SJ_B"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["INS_SJ_B"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["INS_SJ_B"].wakeup_current_button = moves["INS_SJ_B"].wakeup_current_button   +  1
-							if moves["INS_SJ_B"].wakeup_current_button > 4 then
-								moves["INS_SJ_B"].wakeup_current_button = 1
-							end
-					end,
+            moves["INS_SJ_B"].wakeup_current_button = moves["INS_SJ_B"].wakeup_current_button + 1
+            if moves["INS_SJ_B"].wakeup_current_button > 4 then
+                moves["INS_SJ_B"].wakeup_current_button = 1
+            end
+        end,
     },
     ["20"] = {
         y = 72,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["21"] = {
         y = 72,
@@ -4029,25 +4068,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay - 1
+        end,
     },
     ["22"] = {
         y = 72,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["23"] = {
         y = 72,
@@ -4056,9 +4096,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_delay + 1
+        end,
     },
     ["24"] = {
         y = 72,
@@ -4067,25 +4108,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times - 1
+        end,
     },
     ["25"] = {
         y = 72,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["26"] = {
         y = 72,
@@ -4094,41 +4136,40 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("INS_SJ_B").on_wake_up_times + 1
+        end,
     },
     ["27"] = {
         y = 85,
         x = 8,
-        info = {'super jump forward'},
+        info = { 'super jump forward' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "SJ_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "SJ_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "SJ_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "SJ_F" .. ": ON"
+            end
+        end,
         text = "SJ_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["28"] = {
         y = 97,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["29"] = {
         y = 97,
@@ -4137,25 +4178,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_F").on_wake_up_delay - 1
+        end,
     },
     ["30"] = {
         y = 97,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["31"] = {
         y = 97,
@@ -4164,9 +4206,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_F").on_wake_up_delay + 1
+        end,
     },
     ["32"] = {
         y = 97,
@@ -4175,25 +4218,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_F").on_wake_up_times - 1
+        end,
     },
     ["33"] = {
         y = 97,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["34"] = {
         y = 97,
@@ -4202,41 +4246,40 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_F").on_wake_up_times + 1
+        end,
     },
     ["35"] = {
         y = 110,
         x = 8,
-        info = {'Hyper Hop forward'},
+        info = { 'Hyper Hop forward' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "HH_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "HH_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "HH_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "HH_F" .. ": ON"
+            end
+        end,
         text = "HH_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["HH_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["36"] = {
         y = 122,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["37"] = {
         y = 122,
@@ -4245,25 +4288,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HH_F").on_wake_up_delay - 1
+        end,
     },
     ["38"] = {
         y = 122,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["39"] = {
         y = 122,
@@ -4272,9 +4316,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HH_F").on_wake_up_delay + 1
+        end,
     },
     ["40"] = {
         y = 122,
@@ -4283,25 +4328,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HH_F").on_wake_up_times - 1
+        end,
     },
     ["41"] = {
         y = 122,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["42"] = {
         y = 122,
@@ -4310,41 +4356,40 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("HH_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("HH_F").on_wake_up_times + 1
+        end,
     },
     ["43"] = {
         y = 135,
         x = 8,
-        info = {'super jump back'},
+        info = { 'super jump back' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "SJ_B" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "SJ_B" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "SJ_B" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "SJ_B" .. ": ON"
+            end
+        end,
         text = "SJ_B",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["SJ_B"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["44"] = {
         y = 147,
         x = 8,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["45"] = {
         y = 147,
@@ -4353,25 +4398,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_B").on_wake_up_delay - 1
+        end,
     },
     ["46"] = {
         y = 147,
         x = 53,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["47"] = {
         y = 147,
@@ -4380,9 +4426,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_B").on_wake_up_delay + 1
+        end,
     },
     ["48"] = {
         y = 147,
@@ -4391,25 +4438,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_B").on_wake_up_times - 1
+        end,
     },
     ["49"] = {
         y = 147,
         x = 94,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["50"] = {
         y = 147,
@@ -4418,41 +4466,40 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("SJ_B").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("SJ_B").on_wake_up_times + 1
+        end,
     },
     ["51"] = {
         y = 10,
         x = 123,
-        info = {'longer AB'},
+        info = { 'longer AB' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "LONG_AB" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "LONG_AB" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "LONG_AB" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "LONG_AB" .. ": ON"
+            end
+        end,
         text = "LONG_AB",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["LONG_AB"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["52"] = {
         y = 22,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["53"] = {
         y = 22,
@@ -4461,25 +4508,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("LONG_AB").on_wake_up_delay - 1
+        end,
     },
     ["54"] = {
         y = 22,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["55"] = {
         y = 22,
@@ -4488,9 +4536,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("LONG_AB").on_wake_up_delay + 1
+        end,
     },
     ["56"] = {
         y = 22,
@@ -4499,25 +4548,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("LONG_AB").on_wake_up_times - 1
+        end,
     },
     ["57"] = {
         y = 22,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["58"] = {
         y = 22,
@@ -4526,59 +4576,56 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("LONG_AB").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("LONG_AB").on_wake_up_times + 1
+        end,
     },
     ["59"] = {
         y = 35,
         x = 123,
-        info = {'hop forward with delayed  button'},
+        info = { 'hop forward with delayed  button' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DH_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DH_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DH_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DH_F" .. ": ON"
+            end
+        end,
         text = "DH_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DH_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["60"] = {
         y = 35,
         x = 183,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["DH_F"].wakeup_current_button ] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["DH_F"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["DH_F"].wakeup_current_button = moves["DH_F"].wakeup_current_button   +  1
-							if moves["DH_F"].wakeup_current_button > 4 then
-								moves["DH_F"].wakeup_current_button = 1
-							end
-					end,
+            moves["DH_F"].wakeup_current_button = moves["DH_F"].wakeup_current_button + 1
+            if moves["DH_F"].wakeup_current_button > 4 then
+                moves["DH_F"].wakeup_current_button = 1
+            end
+        end,
     },
     ["61"] = {
         y = 47,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["62"] = {
         y = 47,
@@ -4587,25 +4634,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DH_F").on_wake_up_delay - 1
+        end,
     },
     ["63"] = {
         y = 47,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["64"] = {
         y = 47,
@@ -4614,9 +4662,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DH_F").on_wake_up_delay + 1
+        end,
     },
     ["65"] = {
         y = 47,
@@ -4625,25 +4674,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DH_F").on_wake_up_times - 1
+        end,
     },
     ["66"] = {
         y = 47,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["67"] = {
         y = 47,
@@ -4652,59 +4702,57 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DH_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DH_F").on_wake_up_times + 1
+        end,
     },
     ["68"] = {
         y = 60,
         x = 123,
-        info = {'neutral hop with delayed button'},
+        info = { 'neutral hop with delayed button' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DNEUTRALH" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DNEUTRALH" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DNEUTRALH" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DNEUTRALH" .. ": ON"
+            end
+        end,
         text = "DNEUTRALH",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] +
+                1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALH"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["69"] = {
         y = 60,
         x = 183,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALH"].wakeup_current_button] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["DNEUTRALH"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["DNEUTRALH"].wakeup_current_button = moves["DNEUTRALH"].wakeup_current_button   +  1
-							if moves["DNEUTRALH"].wakeup_current_button > 4 then
-								moves["DNEUTRALH"].wakeup_current_button = 1
-							end
-					end,
+            moves["DNEUTRALH"].wakeup_current_button = moves["DNEUTRALH"].wakeup_current_button + 1
+            if moves["DNEUTRALH"].wakeup_current_button > 4 then
+                moves["DNEUTRALH"].wakeup_current_button = 1
+            end
+        end,
     },
     ["70"] = {
         y = 72,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["71"] = {
         y = 72,
@@ -4713,25 +4761,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay - 1
+        end,
     },
     ["72"] = {
         y = 72,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["73"] = {
         y = 72,
@@ -4740,9 +4789,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_delay + 1
+        end,
     },
     ["74"] = {
         y = 72,
@@ -4751,25 +4801,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times - 1
+        end,
     },
     ["75"] = {
         y = 72,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["76"] = {
         y = 72,
@@ -4778,59 +4829,56 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALH").on_wake_up_times + 1
+        end,
     },
     ["77"] = {
         y = 85,
         x = 123,
-        info = {'delayed hyper hop forward with button'},
+        info = { 'delayed hyper hop forward with button' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DHJ_F" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DHJ_F" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DHJ_F" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DHJ_F" .. ": ON"
+            end
+        end,
         text = "DHJ_F",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DHJ_F"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["78"] = {
         y = 85,
         x = 183,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["DHJ_F"].wakeup_current_button] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["DHJ_F"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["DHJ_F"].wakeup_current_button = moves["DHJ_F"].wakeup_current_button   +  1
-							if moves["DHJ_F"].wakeup_current_button > 4 then
-								moves["DHJ_F"].wakeup_current_button = 1
-							end
-					end,
+            moves["DHJ_F"].wakeup_current_button = moves["DHJ_F"].wakeup_current_button + 1
+            if moves["DHJ_F"].wakeup_current_button > 4 then
+                moves["DHJ_F"].wakeup_current_button = 1
+            end
+        end,
     },
     ["79"] = {
         y = 97,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["80"] = {
         y = 97,
@@ -4839,25 +4887,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DHJ_F").on_wake_up_delay - 1
+        end,
     },
     ["81"] = {
         y = 97,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["82"] = {
         y = 97,
@@ -4866,9 +4915,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_delay = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DHJ_F").on_wake_up_delay + 1
+        end,
     },
     ["83"] = {
         y = 97,
@@ -4877,25 +4927,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DHJ_F").on_wake_up_times - 1
+        end,
     },
     ["84"] = {
         y = 97,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["85"] = {
         y = 97,
@@ -4904,59 +4955,57 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DHJ_F").on_wake_up_times = PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("DHJ_F").on_wake_up_times + 1
+        end,
     },
     ["86"] = {
         y = 110,
         x = 123,
-        info = {'neutral jump with delayed button'},
+        info = { 'neutral jump with delayed button' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "DNEUTRALJ" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "DNEUTRALJ" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "DNEUTRALJ" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "DNEUTRALJ" .. ": ON"
+            end
+        end,
         text = "DNEUTRALJ",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] +
+                1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["DNEUTRALJ"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["87"] = {
         y = 110,
         x = 183,
-        info = {'Button used to make the move'},
+        info = { 'Button used to make the move' },
         autofunc = function(this)
-							this.text = "Button: (".. BUTTON_NAMES[moves["DNEUTRALJ"].wakeup_current_button] ..")" 
-												
-						
-					end,
+            this.text = "Button: (" .. BUTTON_NAMES[moves["DNEUTRALJ"].wakeup_current_button] .. ")"
+        end,
         text = "Button: ",
         olcolour = "black",
         func = function()
-							moves["DNEUTRALJ"].wakeup_current_button = moves["DNEUTRALJ"].wakeup_current_button   +  1
-							if moves["DNEUTRALJ"].wakeup_current_button > 4 then
-								moves["DNEUTRALJ"].wakeup_current_button = 1
-							end
-					end,
+            moves["DNEUTRALJ"].wakeup_current_button = moves["DNEUTRALJ"].wakeup_current_button + 1
+            if moves["DNEUTRALJ"].wakeup_current_button > 4 then
+                moves["DNEUTRALJ"].wakeup_current_button = 1
+            end
+        end,
     },
     ["88"] = {
         y = 122,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["89"] = {
         y = 122,
@@ -4965,25 +5014,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay - 1
+        end,
     },
     ["90"] = {
         y = 122,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["91"] = {
         y = 122,
@@ -4992,9 +5042,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_delay + 1
+        end,
     },
     ["92"] = {
         y = 122,
@@ -5003,25 +5054,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times - 1
+        end,
     },
     ["93"] = {
         y = 122,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["94"] = {
         y = 122,
@@ -5030,41 +5082,41 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("DNEUTRALJ").on_wake_up_times + 1
+        end,
     },
     ["95"] = {
         y = 135,
         x = 123,
-        info = {'fgrbg guard'},
+        info = { 'fgrbg guard' },
         autofunc = function(this)
-					
-					if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "ALT_GUARD" .. ": Off" 
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "ALT_GUARD" .. ": ON" 
-					end
-					
-				end,
+            if (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "ALT_GUARD" .. ": Off"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "ALT_GUARD" .. ": ON"
+            end
+        end,
         text = "ALT_GUARD",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"]+ 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] +
+                1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["ALT_GUARD"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["97"] = {
         y = 147,
         x = 123,
-        info = {'this is the delay it will take on frames and the times of the reversal on guard'},
+        info = { 'this is the delay it will take on frames and the times of the reversal on guard' },
         text = "d & t:",
         olcolour = "black",
         func = function()
-						-- Function for "delay: "
-					end,
+            -- Function for "delay: "
+        end,
     },
     ["98"] = {
         y = 147,
@@ -5073,25 +5125,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) delay"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay  == 0 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay   = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay  - 1
-					end,
+            -- Function for "(-) delay"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay == 0 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay - 1
+        end,
     },
     ["99"] = {
         y = 147,
         x = 168,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay )
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["100"] = {
         y = 147,
@@ -5100,9 +5153,10 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						-- Function for "(+) delay"
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay + 1
-					end,
+            -- Function for "(+) delay"
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_delay + 1
+        end,
     },
     ["101"] = {
         y = 147,
@@ -5111,25 +5165,26 @@ WAKEUP_GUI.wakeup_commons = {
         text = "-",
         olcolour = "black",
         func = function()
-						-- Function for "(-) times"				
-						if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times == 1 then
-							return
-						end
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times - 1
-					end,
+            -- Function for "(-) times"				
+            if PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times == 1 then
+                return
+            end
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times - 1
+        end,
     },
     ["102"] = {
         y = 147,
         x = 209,
         info = {},
         autofunc = function(this)
-						this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times)
-					end,
+            this.text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times)
+        end,
         text = tostring(PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times),
         olcolour = "black",
         func = function()
-						
-					end,
+
+        end,
     },
     ["103"] = {
         y = 147,
@@ -5138,318 +5193,258 @@ WAKEUP_GUI.wakeup_commons = {
         text = "+",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times  = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times + 1
-					end,
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times = PECHAN_CONFIG
+                .REVERSAL_MOVES.MOVELIST:getReversal("ALT_GUARD").on_wake_up_times + 1
+        end,
     },
 }
 
-WAKEUP_GUI.wakeup_recordings = { 
-    
+WAKEUP_GUI.wakeup_recordings = {
+
     ["1"] = {
         y = 10,
         x = 8,
-        info = {'Recording 1'},
+        info = { 'Recording 1' },
         autofunc = function(this)
-					if not next(recording[1]) then
-						this.text = "REC_1" .. ": empty" 
-                        
-                        
-                    elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-						this.text = "REC_1" .. ": Off" 
-                        
-                        if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
-                            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = false
-                        end
-					elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-						this.text = "REC_1" .. ": ON" 
-					end
-					
-				end,
+            if not next(recording[1]) then
+                this.text = "REC_1" .. ": empty"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "REC_1" .. ": Off"
+
+                if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                    PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = false
+                end
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "REC_1" .. ": ON"
+            end
+        end,
         text = "REC_1",
         olcolour = "black",
         func = function()
-						PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] + 1
-						if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] > 1 then
-							PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"]  = 0
-						end
-						PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-				end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_1"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["2"] = {
         y = 22,
         x = 8,
-        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        info = { 'this is to check if the recordng should execute afterwards or during the guard move' },
         autofunc = function(this)
-					if not next(recording[1]) then
-						this.text = "Prop REC_1" .. ": N/A" 
-                        
-                    elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == false) then
-						this.text = "Prop REC_1" .. ": false" 
-					elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == true) then
-						this.text = "Prop REC_1" .. ": true" 
-					end
-					
-				end,
+            if not next(recording[1]) then
+                this.text = "Prop REC_1" .. ": N/A"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == false) then
+                this.text = "Prop REC_1" .. ": false"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates == true) then
+                this.text = "Prop REC_1" .. ": true"
+            end
+        end,
         text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "propagate: "
-                        PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = not PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates
-                         
-					end,
+            -- Function for "propagate: "
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_1").propagates = not PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("REC_1").propagates
+        end,
     },
     --REC 2 --
     ["3"] = {
         y = 34,
         x = 8,
-        info = {'Recording 2'},
+        info = { 'Recording 2' },
         autofunc = function(this)
-                    
             if not next(recording[2]) then
-                this.text = "REC_2" .. ": empty" 
-                
+                this.text = "REC_2" .. ": empty"
             elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-                        this.text = "REC_2" .. ": Off" 
-                        
-                        if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
-                            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = false
-                        end
-                    elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-                        this.text = "REC_2" .. ": ON" 
-                    end
-                end,
+                this.text = "REC_2" .. ": Off"
+
+                if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                    PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = false
+                end
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "REC_2" .. ": ON"
+            end
+        end,
         text = "REC_2",
         olcolour = "black",
         func = function()
-                    PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"]+ 1
-                    if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] > 1 then
-                        PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"]  = 0
-                    end
-                    PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-                end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_2"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["4"] = {
         y = 46,
         x = 8,
-        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        info = { 'this is to check if the recordng should execute afterwards or during the guard move' },
         autofunc = function(this)
-					if not next(recording[2]) then
-						this.text = "Prop REC_2" .. ": N/A" 
-                        
-                    elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == false) then
-						this.text = "Prop REC_2" .. ": false" 
-					elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == true) then
-						this.text = "Prop REC_2" .. ": true" 
-					end
-					
-				end,
+            if not next(recording[2]) then
+                this.text = "Prop REC_2" .. ": N/A"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == false) then
+                this.text = "Prop REC_2" .. ": false"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates == true) then
+                this.text = "Prop REC_2" .. ": true"
+            end
+        end,
         text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "propagate: "
-                        PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = not PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates
-                         
-					end,
-    }    ,
+            -- Function for "propagate: "
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_2").propagates = not PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("REC_2").propagates
+        end,
+    },
     -- REC 3 --
     ["5"] = {
         y = 58,
         x = 8,
-        info = {'Recording 3'},
+        info = { 'Recording 3' },
         autofunc = function(this)
-                    
             if not next(recording[3]) then
-                this.text = "REC_3" .. ": empty" 
-                
+                this.text = "REC_3" .. ": empty"
             elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-                        this.text = "REC_3" .. ": Off" 
-                        
-                        if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
-                            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = false
-                        end
-                    elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-                        this.text = "REC_3" .. ": ON" 
-                    end
-                end,
+                this.text = "REC_3" .. ": Off"
+
+                if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                    PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = false
+                end
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "REC_3" .. ": ON"
+            end
+        end,
         text = "REC_3",
         olcolour = "black",
         func = function()
-                    PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"]+ 1
-                    if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] > 1 then
-                        PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"]  = 0
-                    end
-                    PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-                end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_3"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["6"] = {
         y = 70,
         x = 8,
-        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        info = { 'this is to check if the recordng should execute afterwards or during the guard move' },
         autofunc = function(this)
-					if not next(recording[3]) then
-						this.text = "Prop REC_3" .. ": N/A" 
-                        
-                    elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == false) then
-						this.text = "Prop REC_3" .. ": false" 
-					elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == true) then
-						this.text = "Prop REC_3" .. ": true" 
-					end
-					
-				end,
+            if not next(recording[3]) then
+                this.text = "Prop REC_3" .. ": N/A"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == false) then
+                this.text = "Prop REC_3" .. ": false"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates == true) then
+                this.text = "Prop REC_3" .. ": true"
+            end
+        end,
         text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "propagate: "
-                        PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = not PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates
-                         
-					end,
+            -- Function for "propagate: "
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_3").propagates = not PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("REC_3").propagates
+        end,
     },
-    -- REC 4 -- 
+    -- REC 4 --
     ["7"] = {
         y = 82,
         x = 8,
-        info = {'Recording 4'},
+        info = { 'Recording 4' },
         autofunc = function(this)
-                    
             if not next(recording[4]) then
-                this.text = "REC_4" .. ": empty" 
-                
+                this.text = "REC_4" .. ": empty"
             elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-                        this.text = "REC_4" .. ": Off" 
-                        
-                        if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
-                            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = false
-                        end
-                    elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-                        this.text = "REC_4" .. ": ON" 
-                    end
-                end,
+                this.text = "REC_4" .. ": Off"
+
+                if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                    PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = false
+                end
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "REC_4" .. ": ON"
+            end
+        end,
         text = "REC_4",
         olcolour = "black",
         func = function()
-                    PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"]+ 1
-                    if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] > 1 then
-                        PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"]  = 0
-                    end
-                    PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-                end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_4"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["8"] = {
         y = 94,
         x = 8,
-        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        info = { 'this is to check if the recordng should execute afterwards or during the guard move' },
         autofunc = function(this)
-					if not next(recording[4]) then
-						this.text = "Prop REC_4" .. ": N/A" 
-                        
-                    elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == false) then
-						this.text = "Prop REC_4" .. ": false" 
-					elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == true) then
-						this.text = "Prop REC_4" .. ": true" 
-					end
-					
-				end,
+            if not next(recording[4]) then
+                this.text = "Prop REC_4" .. ": N/A"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == false) then
+                this.text = "Prop REC_4" .. ": false"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates == true) then
+                this.text = "Prop REC_4" .. ": true"
+            end
+        end,
         text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "propagate: "
-                        PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = not PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates
-                         
-					end,
+            -- Function for "propagate: "
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_4").propagates = not PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("REC_4").propagates
+        end,
     },
-    -- REC 5 -- 
+    -- REC 5 --
     ["9"] = {
         y = 106,
         x = 8,
-        info = {'Recording 5'},
+        info = { 'Recording 5' },
         autofunc = function(this)
-                    
-                    if not next(recording[5]) then
-						this.text = "REC_5" .. ": empty" 
-                        
-                    elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
-                        this.text = "REC_5" .. ": Off" 
-                        
-                        if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
-                            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = false
-                        end
-                    elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
-                        this.text = "REC_5" .. ": ON" 
-                    end
-                end,
+            if not next(recording[5]) then
+                this.text = "REC_5" .. ": empty"
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF) then
+                this.text = "REC_5" .. ": Off"
+
+                if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.OFF then
+                    PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = false
+                end
+            elseif (PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] == PECHAN_CONFIG.REVERSAL_MOVES.OPTIONS.ON) then
+                this.text = "REC_5" .. ": ON"
+            end
+        end,
         text = "REC_5",
         olcolour = "black",
         func = function()
-                    PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"]+ 1
-                    if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] > 1 then
-                        PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"]  = 0
-                    end
-                    PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
-                end,
+            PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] + 1
+            if PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] > 1 then
+                PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_5"] = 0
+            end
+            PECHAN_CONFIG["WAKEUP"].reversal_moves = getCurrentReversalMoves("WAKEUP")
+        end,
     },
     ["10"] = {
         y = 118,
         x = 8,
-        info = {'this is to check if the recordng should execute afterwards or during the guard move'},
+        info = { 'this is to check if the recordng should execute afterwards or during the guard move' },
         autofunc = function(this)
-					if not next(recording[5]) then
-						this.text = "Prop REC_5" .. ": N/A" 
-                        
-                    elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == false) then
-						this.text = "Prop REC_5" .. ": false" 
-					elseif ( PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == true) then
-						this.text = "Prop REC_5" .. ": true" 
-					end
-					
-				end,
+            if not next(recording[5]) then
+                this.text = "Prop REC_5" .. ": N/A"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == false) then
+                this.text = "Prop REC_5" .. ": false"
+            elseif (PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates == true) then
+                this.text = "Prop REC_5" .. ": true"
+            end
+        end,
         text = "Propagate:",
         olcolour = "black",
         func = function()
-						-- Function for "propagate: "
-                        PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = not PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates
-                         
-					end,
+            -- Function for "propagate: "
+            PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_5").propagates = not PECHAN_CONFIG.REVERSAL_MOVES
+                .MOVELIST:getReversal("REC_5").propagates
+        end,
     },
-    ["11"] = {
-        x = 80,
-        y = 10,
-        info = {'Save current recording setup to file'},
-        autofunc = function(this)
-					if isRecordingEmpty() then
-                       this.text = "Setup to Save" .. ": N/A" 
-                    else
-                       this.text = "Save Setup for: " .. getCurrentSetupName()
-                    end
-
-					
-				end,
-        text = "..non data:",
-        olcolour = "black",
-        func = function()
-                        if isRecordingEmpty() then
-                            return
-                        end
-						-- Function for "save current setup to file: "
-                       -- saveSetupToFile(1, getCurrentSetupName())
-                       --loadSetupFromFile(1, getCurrentSetupName())
-                       local setup = buildSetup()
-                       setup.wakeup = true
-                       setup.WAKEUP_CONFIG = PECHAN_CONFIG["WAKEUP"]
-                       setup.RECOVERY_CONFIG = PECHAN_CONFIG["RECOVERY"]
-                       for i =1,5 do
-                            setup.recording_var_states[i] = {}
-                            setup.recording_var_states[i].value = PECHAN_CONFIG.MOVES_VAR_NAMES["WAKEUP"]["REC_"..i]
-                            setup.recording_var_states[i].propagates = PECHAN_CONFIG.REVERSAL_MOVES.MOVELIST:getReversal("REC_"..i).propagates
-                       end
-
-                       DBIndex.createSetup(setup)
-                        -- 🔥 refresh setups page immediately
-                        refreshSetupMenu()
-                       
-                         
-					end,
-    },
-
 }
 
 return WAKEUP_GUI
