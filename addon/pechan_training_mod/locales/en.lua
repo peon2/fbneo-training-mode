@@ -6,12 +6,11 @@ return {
                 guard_settings = "Guard Settings:",
                 other_settings = "Other Settings:",
                 reversal_settings = "Reversal Move List Settings and information:",
-                p1_dummy_settings = "Advanced Settings:",
+                p1_dummy_settings = "Advanced Settings",
                 char_selection = "Character Selection",
                 cpu_settings = "CPU settings",
                 configurations = "Configurations:",
-                load_setup = "Recorded Setups:",
-                no_setup = "Setup:",
+                load_setup = "Load Recorded Setup",
                 current_conf = "Current Conf:",
                 trial_mode = "Trial Mode (KOF98)",
             },
@@ -94,9 +93,9 @@ return {
             },
             reversals = {
                 guard_active_title = "Guard Reversal Move Active Settings",
-                guard = "Guard Reversals",
-                wakeup = "WakeUp Reversals",
-                hit = "Hit Reversals",
+                guard = "Guard Reversals:",
+                wakeup = "Wakeup Reversals:",
+                hit = "Hit Reversals:",
             },
             p1_dummy = {
                 title = "Advanced Settings",
@@ -120,15 +119,6 @@ return {
                 coin_swap = {
                     off = "3-Coin Swap: Off",
                     on = "3-Coin Swap: On",
-                },
-                recording = {
-                    loop = {
-                        off = "Loop Recording: Off",
-                        on = "Loop Recording: On",
-                    },
-                    reload_state = "State: %{state}",
-                    none = "None",
-                    popup_title = "Select Savestate Slot",
                 },
             },
             error = {
@@ -220,7 +210,6 @@ return {
                 },
             },
             debug = {
-                master = "Master Debug: %{state}",
                 block = "Debug Block: %{state}",
                 advantage = "Debug Advantage: %{state}",
                 action = "Debug Action: %{state}",

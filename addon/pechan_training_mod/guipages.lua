@@ -1,14 +1,11 @@
 local current_game = PECHAN_CONFIG.get_current_game()
 local translate_mod = require("addon.pechan_training_mod.translate_mod")
 local tl = translate_mod.tl
-local CIG = changePageAndSelection
-
-local menu_title_text = "Pechan's Training Mode - " .. (current_game.name or "Unknown Game")
 
 guicustompage = {
 	title = {
-		text = menu_title_text,
-		x = interactivegui.boxxlength / 2 - (#menu_title_text) * 2,
+		text = tl("ui.menu.title"),
+		x = interactivegui.boxxlength / 2 - (#"Pechan's Training Mode Settings") * 2,
 		y = 1,
 	},
 	guielements.leftarrow,
@@ -18,11 +15,11 @@ guicustompage = {
 local cur_y = 15
 
 if current_game.has_guard then
-	table.insert(guicustompage, {
+	guicustompage.guard_settings = {
 		text = tl("ui.menu.guard_settings"),
 		x = 2,
 		y = cur_y,
-	})
+	}
 	cur_y = cur_y + 10
 	table.insert(guicustompage, {
 		text = tl("ui.guard.action_title"),
@@ -80,7 +77,6 @@ if current_game.has_guard then
 		end,
 	})
 	cur_y = cur_y + 10
-
 	table.insert(guicustompage, {
 		text = tl("ui.guard.reversal_title"),
 		x = 118,
@@ -107,6 +103,7 @@ if current_game.has_guard then
 end
 
 if current_game.has_hit_reversal then
+	if not current_game.has_guard then cur_y = cur_y + 10 end
 	table.insert(guicustompage, {
 		text = tl("ui.hit.reversal_title"),
 		x = 8,
@@ -132,9 +129,13 @@ if current_game.has_hit_reversal then
 	})
 end
 
-if (current_game.has_guard or current_game.has_hit_reversal) then
-    cur_y = cur_y + 10
-end
+cur_y = cur_y + 15
+guicustompage.other_settings = {
+	text = tl("ui.menu.other_settings"),
+	x = 2,
+	y = cur_y,
+}
+cur_y = cur_y + 10
 
 if current_game.has_wakeup then
 	table.insert(guicustompage, {
@@ -199,15 +200,8 @@ if current_game.has_recovery then
 			end
 		end,
 	})
-end
-
-if (current_game.has_wakeup or current_game.has_recovery) then
-    cur_y = cur_y + 10
-end
-
-if current_game.has_recovery then
-	table.insert(guicustompage,
-		{ text = tl("ui.recovery.delay"), x = 8, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
+	cur_y = cur_y + 11
+	guicustompage.recovery_delay = { text = tl("ui.recovery.delay"), x = 8, y = cur_y, info = { tl("ui.info.recovery_delay") } }
 	table.insert(guicustompage,
 		{
 			text = "-",
@@ -222,19 +216,17 @@ if current_game.has_recovery then
 				end
 			end
 		})
-	table.insert(guicustompage,
-		{
+	guicustompage.recovery_delay_value = {
 			text = tostring(PECHAN_CONFIG.RECOVERY.delay),
 			x = 40 + 45,
 			y = cur_y,
-			olcolour = "black",
 			info = {},
 			func = function() end,
 			autofunc = function(
 				this)
 				this.text = tostring(PECHAN_CONFIG.RECOVERY.delay)
 			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "+",
@@ -248,8 +240,7 @@ if current_game.has_recovery then
 			end
 		})
 
-	table.insert(guicustompage,
-		{ text = tl("ui.recovery.times"), x = 118, y = cur_y, olcolour = "black", info = { tl("ui.info.recovery_delay") } })
+	guicustompage.recovery_times = {text = tl("ui.recovery.times"), x = 118, y = cur_y, info = { tl("ui.info.recovery_delay") } }
 	table.insert(guicustompage,
 		{
 			text = "-",
@@ -264,19 +255,17 @@ if current_game.has_recovery then
 				end
 			end
 		})
-	table.insert(guicustompage,
-		{
+	guicustompage.recovery_times_values = {
 			text = tostring(PECHAN_CONFIG.RECOVERY.times),
 			x = 150 + 45,
 			y = cur_y,
-			olcolour = "black",
 			info = {},
 			func = function() end,
 			autofunc = function(
 				this)
 				this.text = tostring(PECHAN_CONFIG.RECOVERY.times)
 			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "+",
@@ -289,48 +278,34 @@ if current_game.has_recovery then
 					PECHAN_CONFIG.RECOVERY.times + 1
 			end
 		})
-    cur_y = cur_y + 10
 end
 
-if current_game.has_other_settings then
-	cur_y = cur_y + 2
-	table.insert(guicustompage, {
-		text = tl("ui.menu.other_settings"),
-		x = 2,
-		y = cur_y,
-	})
-	cur_y = cur_y + 10
-end
-
-cur_y = cur_y + 8
-table.insert(guicustompage, { text = tl("ui.menu.reversal_settings"), x = 2, y = cur_y })
+cur_y = cur_y + 12
+guicustompage.reversal_settings = { text = tl("ui.menu.reversal_settings"), x = 2, y = cur_y }
 cur_y = cur_y + 12
 
 local left_y = cur_y
 local right_y = cur_y
 
 if current_game.has_guard then
-	table.insert(guicustompage,
-		{
+	guicustompage.reversals_guard = {
 			text = tl("ui.reversals.guard"),
-			x = 8,
+			x = 2,
 			y = left_y,
-			olcolour = "black",
 			handle = 9,
-			func = function()
-				CIG(
-					"guard_reversal_move_active_settings", 1)
-			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "()",
 			x = 8,
-			y = left_y + 8,
+			y = left_y + 11,
 			olcolour = "black",
 			handle = 2,
 			info = { tl("ui.info.reversal_moves") },
-			func = function() end,
+			func = function()
+				CIG(
+					"guard_reversal_move_active_settings", 1)
+			end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.GUARD.reversal_moves) do
 					txt = txt ..
@@ -338,29 +313,27 @@ if current_game.has_guard then
 				end; this.text = "(" .. txt .. ")"
 			end
 		})
-	left_y = left_y + 18
+	left_y = left_y + 22
 end
 
 if current_game.has_wakeup then
-	table.insert(guicustompage,
-		{
+	guicustompage.reversals_wakeup = {
 			text = tl("ui.reversals.wakeup"),
-			x = 8,
+			x = 2,
 			y = left_y,
 			handle = 9,
-			func = function()
-				CIG(
-					"wakeup_reversal_move_active_settings", 1)
-			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "()",
 			x = 8,
-			y = left_y + 8,
+			y = left_y + 11,
 			olcolour = "black",
 			handle = 8,
-			func = function() end,
+			func = function()
+				CIG(
+					"wakeup_reversal_move_active_settings", 1)
+			end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.WAKEUP.reversal_moves) do
 					txt = txt ..
@@ -368,29 +341,27 @@ if current_game.has_wakeup then
 				end; this.text = "(" .. txt .. ")"
 			end
 		})
-	left_y = left_y + 18
+	left_y = left_y + 22
 end
 
 if current_game.has_hit_reversal then
-	table.insert(guicustompage,
-		{
+	guicustompage.reversal_hit = {
 			text = tl("ui.reversals.hit"),
-			x = 8,
+			x = 2,
 			y = left_y,
 			handle = 9,
-			func = function()
-				CIG(
-					"hit_reversal_move_active_settings", 1)
-			end
-		})
+		}
 	table.insert(guicustompage,
 		{
 			text = "()",
 			x = 8,
-			y = left_y + 8,
+			y = left_y + 11,
 			olcolour = "black",
 			handle = 8,
-			func = function() end,
+			func = function()
+				CIG(
+					"hit_reversal_move_active_settings", 1)
+			end,
 			autofunc = function(this)
 				local txt = ""; for i, v in ipairs(PECHAN_CONFIG.HIT.reversal_moves) do
 					txt = txt ..
@@ -398,280 +369,11 @@ if current_game.has_hit_reversal then
 				end; this.text = "(" .. txt .. ")"
 			end
 		})
-	left_y = left_y + 18
+	left_y = left_y + 22
 end
 
-if current_game.has_replays then
-	table.insert(guicustompage, {
-		text = "Manage Replays",
-		x = 8,
-		y = left_y,
-		olcolour = "black",
-		handle = 1,
-		info = { "Manage recording slots, weights, and loop settings" },
-		func = function()
-			CIG("managerecordings", 1)
-		end,
-	})
-	left_y = left_y + 12
-end
-
-guipages["managerecordings"] = {
-	title = {
-		text = "Manage Replays",
-		x = interactivegui.boxxlength / 2 - (#"Manage Replays") * 2,
-		y = 1,
-	},
-	{
-		text = "<<",
-		x = 0,
-		y = 0,
-		olcolour = "black",
-		handle = 1,
-		info = { "Return to previous menu" },
-		func = function()
-			CIG(0, 1)
-		end,
-	},
-}
-
-table.insert(guipages["managerecordings"], {
-	text = "Loop Recording: Off",
-	x = 8,
-	y = 15,
-	olcolour = "black",
-	handle = 1,
-	info = {},
-	func = function()
-		local count = 0
-		for i = 1, 5 do
-			if PECHAN_CONFIG.RECORDING.slots[i].enabled then count = count + 1 end
-		end
-		if count > 0 then
-			PECHAN_CONFIG.RECORDING.loop = not PECHAN_CONFIG.RECORDING.loop
-		else
-			PECHAN_CONFIG.RECORDING.loop = false
-		end
-		-- Keep core variable false to allow addon to handle delay
-		recording.loop = false
-	end,
-	autofunc = function(this)
-		if PECHAN_CONFIG.RECORDING.loop then
-			this.text = "Loop Recording: On"
-		else
-			this.text = "Loop Recording: Off"
-		end
-		-- Force core variable to false in case it was set elsewhere
-		recording.loop = false
-	end,
-})
-
-table.insert(guipages["managerecordings"], {
-	text = "-",
-	x = 100,
-	y = 15,
-	olcolour = "black",
-	handle = 1,
-	info = { "Decrease wait frames (-5)" },
-	func = function()
-		PECHAN_CONFIG.RECORDING.cooldown = math.max(0, PECHAN_CONFIG.RECORDING.cooldown - 5)
-	end,
-})
-
-table.insert(guipages["managerecordings"], {
-	text = "Wait Frames: 10",
-	x = 112,
-	y = 15,
-	olcolour = "black",
-	handle = 1,
-	unselectable = true,
-	info = { "Frames to wait after dummy is idle before restarting recording" },
-	func = function() end,
-	autofunc = function(this)
-		this.text = "Wait: " .. PECHAN_CONFIG.RECORDING.cooldown
-	end,
-})
-
-table.insert(guipages["managerecordings"], {
-	text = "+",
-	x = 150,
-	y = 15,
-	olcolour = "black",
-	handle = 1,
-	info = { "Increase wait frames (+5)" },
-	func = function()
-		PECHAN_CONFIG.RECORDING.cooldown = math.min(600, PECHAN_CONFIG.RECORDING.cooldown + 5)
-	end,
-})
-
-local ry = 30
-for i = 1, 5 do
-	local current_ry = ry -- Closure fix for popups
-	-- Status Button (Number or X)
-	table.insert(guipages["managerecordings"], {
-		text = "Slot " .. i,
-		x = 8,
-		y = current_ry,
-		olcolour = "black",
-		handle = 1,
-		info = { "Recording status: Number if exists, X if empty" },
-		func = function() end,
-		autofunc = function(this)
-			local exists = recording[i] and (recording[i].p1start or recording[i].p2start)
-			if exists then
-				this.text = "[" .. i .. "]"
-			else
-				this.text = "[X]"
-			end
-		end,
-	})
-
-	-- Weight Button (1-10)
-	table.insert(guipages["managerecordings"], {
-		text = "Prob: 1",
-		x = 35,
-		y = current_ry,
-		olcolour = "black",
-		handle = 1,
-		info = { "Probability weight (1-10)" },
-		func = function()
-			local step = 1
-			if guiinputs and guiinputs.P1 and guiinputs.P1.left then
-				step = -1
-			end
-			PECHAN_CONFIG.RECORDING.slots[i].weight = PECHAN_CONFIG.RECORDING.slots[i].weight + step
-			if PECHAN_CONFIG.RECORDING.slots[i].weight > 10 then
-				PECHAN_CONFIG.RECORDING.slots[i].weight = 1
-			elseif PECHAN_CONFIG.RECORDING.slots[i].weight < 1 then
-				PECHAN_CONFIG.RECORDING.slots[i].weight = 10
-			end
-		end,
-		autofunc = function(this)
-			this.text = "Prob: " .. PECHAN_CONFIG.RECORDING.slots[i].weight
-		end,
-	})
-
-	-- Enabled Checkbox
-	table.insert(guipages["managerecordings"], {
-		text = "[ ]",
-		x = 85,
-		y = current_ry,
-		olcolour = "black",
-		handle = 1,
-		info = { "Include in loop" },
-		func = function()
-			PECHAN_CONFIG.RECORDING.slots[i].enabled = not PECHAN_CONFIG.RECORDING.slots[i].enabled
-			-- If unticking the last slot, disable loop
-			if not PECHAN_CONFIG.RECORDING.slots[i].enabled then
-				local count = 0
-				for j = 1, 5 do
-					if PECHAN_CONFIG.RECORDING.slots[j].enabled then count = count + 1 end
-				end
-				if count == 0 then
-					recording.loop = false
-					PECHAN_CONFIG.RECORDING.loop = false
-				end
-			end
-		end,
-		autofunc = function(this)
-			if PECHAN_CONFIG.RECORDING.slots[i].enabled then
-				this.text = "[X]"
-			else
-				this.text = "[ ]"
-			end
-		end,
-	})
-
-	-- Savestate Selector
-	table.insert(guipages["managerecordings"], {
-		text = "State: None",
-		x = 115,
-		y = current_ry,
-		olcolour = "black",
-		handle = 1,
-		info = { "Reload a savestate slot before this recording playback starts." },
-		func = function()
-			PECHAN_CONFIG.RECORDING.active_slot = i
-			local states = PECHAN_HELPERS.get_available_savestates()
-			local entries = {
-				{
-					label = tl("ui.p1_dummy.recording.none"),
-					action = function()
-						PECHAN_CONFIG.RECORDING.slots[i].savestate_reload_slot = -1
-						PECHAN_CONFIG.RECORDING.slots[i].savestate_reload_path = nil
-					end
-				}
-			}
-			for _, s in ipairs(states) do
-				table.insert(entries, {
-					label = s.label,
-					action = function()
-						PECHAN_CONFIG.RECORDING.slots[i].savestate_reload_slot = s.slot
-						PECHAN_CONFIG.RECORDING.slots[i].savestate_reload_path = s.path
-					end
-				})
-			end
-			PECHAN_HELPERS.create_context_popup(tl("ui.p1_dummy.recording.popup_title"), entries, "managerecordings", 115,
-				current_ry + 10, nil, function() PECHAN_CONFIG.RECORDING.active_slot = nil end)
-		end,
-		autofunc = function(this)
-			local slot = PECHAN_CONFIG.RECORDING.slots[i].savestate_reload_slot
-			local state_text = tl("ui.p1_dummy.recording.none")
-			if slot and slot >= 0 then
-				state_text = "Slot " .. slot
-			end
-			this.text = tl("ui.p1_dummy.recording.reload_state", { state = state_text })
-
-			-- Visual feedback: red border when active
-			if PECHAN_CONFIG.RECORDING.active_slot == i then
-				this.olcolour = "red"
-			else
-				this.olcolour = "black"
-			end
-		end,
-	})
-	ry = ry + 12
-end
-
-table.insert(guipages["managerecordings"], {
-	text = "Save Replay Setup",
-	x = 8,
-	y = ry + 5,
-	olcolour = "white",
-	bgcolour = 0x444444FF,
-	info = { "Save all 5 recording slots, weights and wait frames" },
-	releasefunc = function()
-		if isRecordingEmpty() then
-			return
-		end
-		local setup = buildSetup()
-		setup.base_name = "replay"
-		local DBIndex = DBIndex or require("addon.pechan_training_mod.db_lua.db.index")
-		DBIndex.createSetup(setup, false, true) -- isTrial = false, isReplay = true
-		if refreshReplaySetupMenu then refreshReplaySetupMenu() end
-	end,
-	autofunc = function(this)
-		if isRecordingEmpty() then
-			this.text = "Recording Setup: Empty"
-		else
-			this.text = "Save Replay Setup"
-		end
-	end,
-})
-
-table.insert(guipages["managerecordings"], {
-	text = "Load Replay Setup",
-	x = 100,
-	y = ry + 5,
-	olcolour = "white",
-	bgcolour = 0x444444FF,
-	info = { "Select from saved independent replay setups" },
-	func = function()
-		CIG("activate_replay_recording_setup", 1)
-	end,
-})
-
-left_y = left_y + 12
+guicustompage.menu_configurations = { text = tl("ui.menu.configurations"), x = 118, y = right_y }
+right_y = right_y + 12
 
 if current_game.has_dummy_settings then
 	table.insert(guicustompage,
@@ -722,11 +424,6 @@ if current_game.has_cpu_settings then
 end
 
 if current_game.has_setups_configuration then
-	table.insert(guicustompage, { text = tl("ui.menu.configurations"), x = 118, y = right_y })
-	right_y = right_y + 12
-end
-
-if current_game.has_setups_configuration then
 	table.insert(guicustompage,
 		{
 			text = tl("ui.menu.load_setup"),
@@ -749,11 +446,8 @@ if current_game.has_setups_configuration then
 			handle = 2,
 			info = { tl("ui.info.reversal_moves") },
 			func = function()
-				PECHAN_CONFIG.TRAINING.current_configuration = PECHAN_CONFIG.TRAINING.current_configuration + 1
-				if PECHAN_CONFIG.TRAINING.current_configuration > 11 then
-					PECHAN_CONFIG.TRAINING.current_configuration = -1
-				end
-				setDefaultConfig(PECHAN_CONFIG.TRAINING.current_configuration)
+				PECHAN_CONFIG.TRAINING.current_configuration = PECHAN_CONFIG.TRAINING.current_configuration + 1; if PECHAN_CONFIG.TRAINING.current_configuration > 11 then PECHAN_CONFIG.TRAINING.current_configuration = -1 end; setDefaultConfig(
+					PECHAN_CONFIG.TRAINING.current_configuration)
 			end,
 			autofunc = function(this)
 				this.text = tl("ui.menu.current_conf") .. " " ..
@@ -795,262 +489,99 @@ local trial_mode_settings = {
 		func = function() CIG(0, 1) end,
 	},
 	{
-		text = "Save Trial Setup",
-		x = 130,
+		text = "Trial 1: The Destined Battle",
+		x = 10,
 		y = 15,
 		olcolour = "black",
+		info = { "Perform a 3-hit combo after the dialogue." },
 		func = function()
-			saveTrialSetup()
-			refreshTrialSetupMenu()
+			local Trials = require("addon.pechan_training_mod.ai.trials")
+			Trials.load_trial(1)
 		end,
-	},
-	{
-		text = "Load Trial Setups",
-		x = 130,
-		y = 27,
-		olcolour = "black",
-		func = function()
-			CIG("activate_trial_recording_setup", 1)
-		end,
-	},
+	}
 }
-
-local function buildSetupPages(setups, base_page_name, page_title, back_page, include_save_btn)
-	local ITEMS_PER_PAGE = 10
-	local total_pages = math.ceil(#setups / ITEMS_PER_PAGE)
-	if total_pages == 0 then total_pages = 1 end
-
-	for page = 1, total_pages do
-		local page_name = base_page_name .. (page == 1 and "" or "_" .. page)
-		local page_table = {
-			title = {
-				text = page_title .. " (Pg " .. page .. "/" .. total_pages .. ")",
-				x = interactivegui.boxxlength / 2 - (#page_title + 7) * 2,
-				y = 1,
-			},
-			{
-				text = "<",
-				olcolour = "black",
-				info = "Back",
-				func = function() CIG(back_page, 1) end,
-			}
-		}
-
-		local start_y = 10
-
-		if include_save_btn and page == 1 then
-			table.insert(page_table, {
-				text = "Save Current Setup",
-				x = 10,
-				y = start_y,
-				olcolour = "white",
-				bgcolour = 0x444444FF,
-				info = { "Save the current reversal config to a new setup file" },
-				releasefunc = function()
-					if isRecordingEmpty() then
-						return
-					end
-					local setup = buildSetup()
-					setup.wakeup = true
-					setup.guard = true
-					setup.hit = true
-					local DBIndex = DBIndex or require("addon.pechan_training_mod.db_lua.db.index")
-					DBIndex.createSetup(setup)
-					if refreshSetupMenu then refreshSetupMenu() end
-				end,
-				autofunc = function(this)
-					if isRecordingEmpty() then
-						this.text = "Setup to Save: N/A"
-					else
-						this.text = "Save Setup for: " .. getCurrentSetupName()
-					end
-				end,
-			})
-			start_y = start_y + 14
-		end
-
-		local item_start_y = start_y
-		local spacing = 12
-		local start_idx = (page - 1) * ITEMS_PER_PAGE + 1
-		local end_idx = math.min(page * ITEMS_PER_PAGE, #setups)
-
-		for i = start_idx, end_idx do
-			local setup = setups[i]
-			table.insert(page_table, {
-				x = 10,
-				y = item_start_y + (i - start_idx) * spacing,
-				text = setup.title or (setup[1] and setup[1].title) or setup.base_name or
-					(setup[1] and setup[1].base_name),
-				olcolour = "black",
-				fillpercent = 1,
-				checked = false,
-				setup_ref = setup,
-				func = function()
-					-- Uncheck all other items across all pages dynamically
-					for p = 1, total_pages do
-						local p_name = base_page_name .. (p == 1 and "" or "_" .. p)
-						if guipages[p_name] then
-							for _, el in ipairs(guipages[p_name]) do
-								if el.text and el.checked ~= nil then
-									el.checked = false
-								end
-							end
-						end
-					end
-					-- Check this one
-					local el = guipages[page_name][interactivegui.selection]
-					if el then el.checked = true end
-					-- Load the selected setup
-					applySetup(setup)
-				end,
-				autofunc = function(this)
-					if this.checked then
-						this.fillpercent = 1
-					else
-						this.fillpercent = 0
-					end
-				end
-			})
-		end
-
-		page_table.other_func = function()
-			local sel = interactivegui.selection
-			local el = page_table[sel]
-			local setup = el and el.setup_ref
-			local description = setup and (setup.description or (setup[1] and setup[1].description))
-
-			if description then
-				-- Position the box on the right half of the menu
-				local box_x = 145
-				local box_y = 20
-				local box_w = 100
-				local box_h = 110
-
-				gui.box(box_x, box_y, box_x + box_w, box_y + box_h, 0x000000CC, "red")
-
-				-- Word wrap (approx 4 pixels per char)
-				local chars_per_line = math.floor((box_w - 8) / 4)
-				local lines = {}
-				-- Handle manual newlines first
-				for paragraph in description:gmatch("([^\n]*)\n?") do
-					if paragraph == "" then
-						table.insert(lines, "")
-					else
-						-- Then wrap long paragraphs
-						while #paragraph > 0 do
-							if #paragraph <= chars_per_line then
-								table.insert(lines, paragraph)
-								paragraph = ""
-							else
-								local split_idx = chars_per_line
-								-- Try to split at space
-								local space_idx = paragraph:sub(1, chars_per_line):match(".*() ")
-								if space_idx and space_idx > 5 then
-									split_idx = space_idx
-								end
-								table.insert(lines, paragraph:sub(1, split_idx))
-								paragraph = paragraph:sub(split_idx + 1)
-							end
-						end
-					end
-				end
-
-				for line_idx, line_text in ipairs(lines) do
-					if line_idx * 10 > box_h - 10 then break end
-					gui.text(box_x + 4, box_y + 4 + (line_idx - 1) * 10, line_text, "white")
-				end
-			end
-		end
-
-		guipages[page_name] = page_table
-
-		-- Pagination buttons
-		if page > 1 then
-			local prev_page_name = base_page_name .. (page == 2 and "" or "_" .. (page - 1))
-			table.insert(page_table, {
-				y = 145,
-				x = 30,
-				info = { 'Previous Page' },
-				text = "<< Prev",
-				olcolour = "black",
-				func = function() CIG(prev_page_name, 1) end,
-			})
-		end
-		if page < total_pages then
-			local next_page_name = base_page_name .. "_" .. (page + 1)
-			table.insert(page_table, {
-				y = 145,
-				x = 144,
-				info = { 'Next Page' },
-				text = "Next >>",
-				olcolour = "black",
-				func = function() CIG(next_page_name, 1) end,
-			})
-		end
-
-		guipages[page_name] = page_table
-	end
-end
-
-
-local Trials = require("addon.pechan_training_mod.ai.trials")
-local trials = Trials.load_all_trials()
-for i, trial in ipairs(trials) do
-	table.insert(trial_mode_settings, {
-		text = "Trial " .. trial.id .. ": " .. trial.name,
-		x = 10,
-		y = 15 + (i - 1) * 12,
-		olcolour = "black",
-		info = { trial.description },
-		func = function()
-			Trials.load_trial(trial.id)
-		end,
-	})
-end
 guipages.trial_mode_settings = trial_mode_settings
 
-local activate_trial_recording_setup = {
+local activate_current_recording_setup = {
 	title = {
-		text = "Trial Setups",
-		x = interactivegui.boxxlength / 2 - 40,
+		text = tl("ui.menu.load_setup"),
+		x = interactivegui.boxxlength / 2 - (#"Activate Recorded setup from recording") * 2,
 		y = 1,
 	},
 	{
 		text = "<",
 		olcolour = "black",
 		info = "Back",
-		func = function() CIG("trial_mode_settings", 1) end,
+		func = function() CIG(0, 1) end,
 	},
 }
-guipages.activate_trial_recording_setup = activate_trial_recording_setup
+guipages.activate_current_recording_setup = activate_current_recording_setup
+local function buildSetupMenu(setups)
+	local items = {}
 
-local trial_setups = DBIndex.loadAllSetups(true) -- isTrial = true
-buildSetupPages(trial_setups, "activate_trial_recording_setup", "Trial Setups", "trial_mode_settings", false)
+	local start_x = 10
+	local start_y = 8
+	local spacing = 12
 
-function refreshTrialSetupMenu()
-	local setups = DBIndex.loadAllSetups(true)
-	buildSetupPages(setups, "activate_trial_recording_setup", "Trial Setups", "trial_mode_settings", false)
-	formatGUITables()
+	for i, setup in ipairs(setups) do
+		local item = {
+			x = start_x,
+			y = start_y + (i - 1) * spacing,
+			text = setup.base_name,
+			olcolour = "black",
+			fillpercent = 1,
+			checked = false,
+			func = function()
+				items[i].checked = not items[i].checked
+				if items[i].checked then
+					-- Uncheck other items
+					for j, other_item in ipairs(items) do
+						if j ~= i then
+							other_item.checked = false
+						end
+					end
+					-- Load the selected setup
+					applySetup(setups[i])
+				end
+			end,
+			autofunc = function(this)
+				if this.checked then
+					this.fillpercent = 1
+				elseif not this.checked then
+					this.fillpercent = 0
+				end
+			end
+		}
+
+		table.insert(items, item)
+	end
+
+	return items
 end
-
 local DBIndex = DBIndex or require("addon.pechan_training_mod.db_lua.db.index")
 local setups = DBIndex.loadAllSetups()
+local setup_items = buildSetupMenu(setups)
 
-buildSetupPages(setups, "activate_current_recording_setup", tl("ui.menu.load_setup"), 0, true)
+for _, item in ipairs(setup_items) do
+	table.insert(guipages.activate_current_recording_setup, item)
+end
+local SETUP_MENU_START_INDEX = #activate_current_recording_setup + 1
 
 function refreshSetupMenu()
-	local new_setups = DBIndex.loadAllSetups()
-	buildSetupPages(new_setups, "activate_current_recording_setup", tl("ui.menu.load_setup"), 0, true)
-	formatGUITables()
-end
+	-- remove old dynamic items
+	for i = #guipages.activate_current_recording_setup, SETUP_MENU_START_INDEX, -1 do
+		table.remove(guipages.activate_current_recording_setup, i)
+	end
 
-local replay_setups = DBIndex.loadAllSetups(false, true) -- isTrial = false, isReplay = true
-buildSetupPages(replay_setups, "activate_replay_recording_setup", "Replay Setups", "managerecordings", false)
+	-- reload setups from disk
+	local setups = DBIndex.loadAllSetups()
+	local setup_items = buildSetupMenu(setups)
 
-function refreshReplaySetupMenu()
-	local setups = DBIndex.loadAllSetups(false, true)
-	buildSetupPages(setups, "activate_replay_recording_setup", "Replay Setups", "managerecordings", false)
-	formatGUITables()
+	-- insert new items
+	for _, item in ipairs(setup_items) do
+		table.insert(guipages.activate_current_recording_setup, item)
+	end
+	formatGuiTables() --  this is VERY important as it resets the gui for the new element to work properly
 end
 
 local cpu_settings = {
@@ -1344,20 +875,6 @@ local p1_and_dummy_data = {
 			end
 		end,
 	},
-	["0"] = {
-		text = "Master Debug",
-		x = 10,
-		y = 80,
-		olcolour = "black",
-		handle = 0,
-		func = function()
-			PECHAN_CONFIG.DEBUG.ENABLED = PECHAN_CONFIG.DEBUG.ENABLED == 0 and 1 or 0
-		end,
-		autofunc = function(this)
-			local state = (PECHAN_CONFIG.DEBUG.ENABLED == 1 and "On" or "Off")
-			this.text = tl("ui.debug.master", { state = state })
-		end,
-	},
 
 	["5"] = {
 		text = "Debug Block",
@@ -1525,8 +1042,6 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 	local popup_entries = {}
 	local cur_y = 15
 	local previous_selection = interactivegui.selection
-	local saved_prev_page = interactivegui.previouspage
-	local saved_prev_sel = interactivegui.previousselection
 
 	-- Title will be passed to pechanCreatePopUpMenu as a parameter (non-selectable)
 	local popup_title = (player_side == 1 and "P1" or "P2") .. ": " .. (char.name or "")
@@ -1539,8 +1054,6 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 			releasefunc = function()
 				assignment_func()
 				CIG(back_page, previous_selection)
-				interactivegui.previouspage = saved_prev_page
-				interactivegui.previousselection = saved_prev_sel
 			end,
 		})
 	end
@@ -1666,7 +1179,7 @@ local function generate_character_popup(char, player_side, back_page, parent_x, 
 		0x222222FF, popup_title
 	)
 
-	if formatGUITables then formatGUITables() end
+	if formatGuiTables then formatGuiTables() end
 	CIG("char_popup", 1) -- Start at index 1 (title is not an entry anymore)
 end
 
@@ -2096,25 +1609,11 @@ end
 
 
 if guipages then
-	local custom_page_inserted = false
-	for i = #guipages, 1, -1 do
-		local page = guipages[i]
-		if page.title and page.title.text and (string.find(page.title.text, "King of Fighters") or string.find(page.title.text, "king of fighters") or string.find(page.title.text, "Training Mode Settings")) then
-			if not custom_page_inserted then
-				guipages[i] = guicustompage
-				custom_page_inserted = true
-			else
-				table.remove(guipages, i)
-			end
-		end
-	end
-
-	if not custom_page_inserted then
-		table.insert(guipages, guicustompage)
-	end
+	-- Insert button into Main Menu (Page 1)
+	table.insert(guipages, guicustompage)
 
 	-- Refresh layout to auto-calculate position and update navigation
-	if formatGUITables then
-		formatGUITables()
+	if formatGuiTables then
+		formatGuiTables()
 	end
 end
