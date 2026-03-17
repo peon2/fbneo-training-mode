@@ -2757,8 +2757,8 @@ local function unserialise(inputs, _stable, constants) -- takes inputs (recordsl
 			serial = bit.rshift(serial,1)
 		end
 	end
-	inputs.P1facingleft = bit.band(serial,1)==1 -- set direction flag
-	inputs.P2facingleft = bit.band(serial,2)==2 -- set direction flag
+	inputs.p1facingleft = bit.band(serial,1)==1 -- set direction flag
+	inputs.p2facingleft = bit.band(serial,2)==2 -- set direction flag
 	inputs.raw.other = {}
 	t=inputs.raw.other
 	for i, v in pairs(other) do
@@ -3793,6 +3793,7 @@ local drawReplayEditorFuncs = {
 
 				reinputs[interactivegui.replayeditor.editframe] = {raw={P1={}, P2={}}}
 				reinputs[interactivegui.replayeditor.editframe].raw.P2=copytable(inputs.P1) -- new value
+				reinputs[interactivegui.replayeditor.editframe].p1facingleft = gamevars.P1.facingleft
 				reinputs[interactivegui.replayeditor.editframe].p2facingleft = gamevars.P2.facingleft
 
 				recordslot._stable = {} -- make sure this updates
@@ -3847,7 +3848,8 @@ local drawReplayEditorFuncs = {
 	function(but) -- clear
 		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
-			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={P1={}, P2={}}}
+			local prev_p2facingleft = interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] and interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe].p2facingleft
+			interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={P1={}, P2={}}, p2facingleft = prev_p2facingleft}
 
 			local recordslot = recording[recording.recordingslot]
 
@@ -3927,7 +3929,8 @@ local drawReplayEditorFuncs = {
 		if interactivegui.replayeditor.framestart then return end
 		if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then
 			if (interactivegui.replayeditor.editframe==#interactivegui.replayeditor.inputs[recording.recordingslot]+1) then
-				interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={P1={}, P2={}}}
+				local prev_p2facingleft = interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe-1] and interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe-1].p2facingleft
+				interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] = {raw={P1={}, P2={}}, p2facingleft = prev_p2facingleft}
 			else
 				local reinputs = interactivegui.replayeditor.inputs[recording.recordingslot]
 				for i=#reinputs,interactivegui.replayeditor.editframe,-1 do
@@ -3935,7 +3938,8 @@ local drawReplayEditorFuncs = {
 					reinputs[i+1] = {raw={P1={}, P2={}}}
 					reinputs[i+1].raw.P2=copytable(reinputs[i].raw.P2)
 				end
-				reinputs[interactivegui.replayeditor.editframe+1] = {raw={P1={}, P2={}}}
+				local prev_p2facingleft = interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe] and interactivegui.replayeditor.inputs[recording.recordingslot][interactivegui.replayeditor.editframe].p2facingleft
+				reinputs[interactivegui.replayeditor.editframe+1] = {raw={P1={}, P2={}}, p2facingleft = prev_p2facingleft}
 			end
 
 			local recordslot = recording[recording.recordingslot] -- update for visuals
