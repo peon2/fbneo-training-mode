@@ -9,8 +9,9 @@ maxvolume = 0x3F -- what the maximum volume is in game
 p1maxhealth = 0x90
 p2maxhealth = 0x90
 
-local healthoffset = 0x2B
-local redhealthoffset = 0x2D
+local healthoffset = 0x2A
+local redhealthoffset = 0x2C
+local visualhealthoffset = 0x1BC
 local directionoffset = 0x12
 
 local stateoffset = 0x03
@@ -116,25 +117,27 @@ end
 local p1previoushealth = p1maxhealth
 function readPlayerOneHealth()
 	local ret = p1previoushealth
-	p1previoushealth = rb(p1uid + healthoffset)
+	p1previoushealth = rw(p1uid + healthoffset)
 	return ret
 end
 
 local p2previoushealth = p2maxhealth
 function readPlayerTwoHealth()
 	local ret = p2previoushealth
-	p2previoushealth = rb(p2uid + healthoffset)
+	p2previoushealth = rw(p2uid + healthoffset)
 	return ret
 end
 
 function writePlayerOneHealth(health)
-	wb(p1uid + healthoffset, health)
-	wb(p1uid + redhealthoffset, health)
+	ww(p1uid + healthoffset, health)
+	ww(p1uid + redhealthoffset, health)
+	ww(p1uid + visualhealthoffset, health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(p2uid + healthoffset, health)
-	wb(p2uid + redhealthoffset, health)
+	ww(p2uid + healthoffset, health)
+	ww(p2uid + redhealthoffset, health)
+	ww(p2uid + visualhealthoffset, health)
 end
 
 local function readPlayerOneStun()
