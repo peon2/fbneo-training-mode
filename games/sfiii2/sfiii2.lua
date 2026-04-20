@@ -249,125 +249,97 @@ end
 initConfigTable("sfiii2", sfiii2, "config")
 createConfigValue(
 	"sfiii2stunenabledp1",
-	"enabled",
 	true,
 	sfiii2.stun.P1,
-	sfiii2.stun.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiii2stunenabledp2",
-	"enabled",
 	true,
 	sfiii2.stun.P2,
-	sfiii2.stun.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiii2stunaftercombop1",
-	"aftercombo",
 	true,
 	sfiii2.stun.P1,
-	sfiii2.stun.P1,
-	"config"
+	"aftercombo"
 )
 createConfigValue(
 	"sfiii2stunaftercombop2",
-	"aftercombo",
 	true,
 	sfiii2.stun.P2,
-	sfiii2.stun.P2,
-	"config"
+	"aftercombo"
 )
 createConfigValue(
 	"sfiii2stunp1",
-	"value",
 	0,
 	sfiii2.stun.P1,
-	sfiii2.stun.P1,
-	"config"
+	"value"
 )
 createConfigValue(
 	"sfiii2stunp2",
-	"value",
 	0,
 	sfiii2.stun.P2,
-	sfiii2.stun.P2,
-	"config"
+	"value"
 )
 createConfigValue(
 	"sfiii2stunxp1",
-	"x",
 	84,
 	sfiii2.stun.hud.P1,
-	sfiii2.stun.hud.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"sfiii2stunxp2",
-	"x",
 	285,
 	sfiii2.stun.hud.P2,
-	sfiii2.stun.hud.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"sfiii2stunyp1",
-	"y",
 	24,
 	sfiii2.stun.hud.P1,
-	sfiii2.stun.hud.P1,
-	"config"
+	"y"
 )
 createConfigValue(
 	"sfiii2stunyp2",
-	"y",
 	24,
 	sfiii2.stun.hud.P2,
-	sfiii2.stun.hud.P2,
-	"config"
+	"y"
 )
 createConfigValue(
 	"sfiii2stunhudenabledp1",
-	"enabled",
 	true,
 	sfiii2.stun.hud.P1,
-	sfiii2.stun.hud.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiii2stunhudenabledp2",
-	"enabled",
 	true,
 	sfiii2.stun.hud.P2,
-	sfiii2.stun.hud.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiii2musicvolume",
-	"musicvolume",
 	25,
 	sfiii2,
-	sfiii2,
-	"config"
+	"musicvolume"
 )
 initConfigTable("sfiii2", colours, "colourconfig")
 createConfigValue(
 	"sfiii2stuncolourp1",
-	"stunp1",
 	0xFF0000FF,
 	colours,
+	"stunp1",
 	colours,
-	"colourconfig",
 	"Stun Colour P1"
 )
 createConfigValue(
 	"sfiii2stuncolourp2",
-	"stunp2",
 	0x00FFFFFF,
 	colours,
+	"stunp2",
 	colours,
-	"colourconfig",
 	"Stun Colour P2"
 )
 

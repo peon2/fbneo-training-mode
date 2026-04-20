@@ -255,105 +255,79 @@ createConfigValue(
 	"sfiii3stunenabledp1",
 	"enabled",
 	true,
-	sfiii3.stun.P1,
-	sfiii3.stun.P1,
-	"config"
+	sfiii3.stun.P1
 )
 createConfigValue(
 	"sfiii3stunenabledp2",
 	"enabled",
 	true,
-	sfiii3.stun.P2,
-	sfiii3.stun.P2,
-	"config"
+	sfiii3.stun.P2
 )
 createConfigValue(
 	"sfiii3stunaftercombop1",
 	"aftercombo",
 	true,
-	sfiii3.stun.P1,
-	sfiii3.stun.P1,
-	"config"
+	sfiii3.stun.P1
 )
 createConfigValue(
 	"sfiii3stunaftercombop2",
 	"aftercombo",
 	true,
-	sfiii3.stun.P2,
-	sfiii3.stun.P2,
-	"config"
+	sfiii3.stun.P2
 )
 createConfigValue(
 	"sfiii3stunp1",
 	"value",
 	0,
-	sfiii3.stun.P1,
-	sfiii3.stun.P1,
-	"config"
+	sfiii3.stun.P1
 )
 createConfigValue(
 	"sfiii3stunp2",
 	"value",
 	0,
-	sfiii3.stun.P2,
-	sfiii3.stun.P2,
-	"config"
+	sfiii3.stun.P2
 )
 createConfigValue(
 	"sfiii3stunxp1",
 	"x",
 	84,
-	sfiii3.stun.hud.P1,
-	sfiii3.stun.hud.P1,
-	"config"
+	sfiii3.stun.hud.P1
 )
 createConfigValue(
 	"sfiii3stunxp2",
 	"x",
 	285,
-	sfiii3.stun.hud.P2,
-	sfiii3.stun.hud.P2,
-	"config"
+	sfiii3.stun.hud.P2
 )
 createConfigValue(
 	"sfiii3stunyp1",
 	"y",
 	24,
-	sfiii3.stun.hud.P1,
-	sfiii3.stun.hud.P1,
-	"config"
+	sfiii3.stun.hud.P1
 )
 createConfigValue(
 	"sfiii3stunyp2",
 	"y",
 	24,
-	sfiii3.stun.hud.P2,
-	sfiii3.stun.hud.P2,
-	"config"
+	sfiii3.stun.hud.P2
 )
 createConfigValue(
 	"sfiii3stunhudenabledp1",
 	"enabled",
 	true,
-	sfiii3.stun.hud.P1,
-	sfiii3.stun.hud.P1,
-	"config"
+	sfiii3.stun.hud.P1
 )
 createConfigValue(
 	"sfiii3stunhudenabledp2",
 	"enabled",
 	true,
-	sfiii3.stun.hud.P2,
-	sfiii3.stun.hud.P2,
-	"config"
+	sfiii3.stun.hud.P2
 )
 createConfigValue(
 	"sfiii3musicvolume",
 	"musicvolume",
 	25,
-	sfiii3,
-	sfiii3,
-	"config"
+	sfiii3
 )
 initConfigTable("sfiii3", colours, "colourconfig")
 createConfigValue(
@@ -362,7 +336,6 @@ createConfigValue(
 	0xFF0000FF,
 	colours,
 	colours,
-	"colourconfig",
 	"Stun Colour P1"
 )
 createConfigValue(
@@ -371,7 +344,6 @@ createConfigValue(
 	0x00FFFFFF,
 	colours,
 	colours,
-	"colourconfig",
 	"Stun Colour P2"
 )
 

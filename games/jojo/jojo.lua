@@ -55,7 +55,6 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x=180,
 			y=36,
 			enabled=true,
 		},
@@ -195,61 +194,47 @@ end
 initConfigTable("jojo", jojo, "config")
 createConfigValue(
 	"jojomusicvolume",
-	"musicvolume",
 	50,
 	jojo,
-	jojo,
-	"config"
+	"musicvolume"
 )
 
 createConfigValue(
 	"p1standhealthx",
-	"x",
 	152,
 	jojo.stand.P1,
-	jojo.stand.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"p1standhealthy",
-	"y",
 	24,
 	jojo.stand.P1,
-	jojo.stand.P1,
-	"config"
+	"y"
 )
 createConfigValue(
 	"p1standhealthenabled",
-	"enabled",
 	true,
 	jojo.stand.P1,
-	jojo.stand.P1,
-	"config"
+	"enabled"
 )
 
 createConfigValue(
 	"p2standhealthx",
-	"x",
 	226,
 	jojo.stand.P2,
-	jojo.stand.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"p2standhealthy",
-	"y",
 	24,
 	jojo.stand.P2,
-	jojo.stand.P2,
-	"config"
+	"y"
 )
 createConfigValue(
 	"p2standhealthenabled",
-	"enabled",
 	true,
 	jojo.stand.P2,
-	jojo.stand.P2,
-	"config"
+	"enabled"
 )
 
 createHUDElement(

@@ -194,52 +194,40 @@ end
 initConfigTable("rotd", rotd, "config")
 createConfigValue(
 	"rotdstunenabledp1",
-	"enabled",
 	false,
 	rotd.stun.P1,
-	rotd.stun.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"rotdstunxp1",
-	"x",
 	20,
 	rotd.stun.P1,
-	rotd.stun.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"rotdstunyp1",
-	"y",
 	50,
 	rotd.stun.P1,
-	rotd.stun.P1,
-	"config"
+	"y"
 )
 
 createConfigValue(
 	"rotdstunenabledp2",
-	"enabled",
 	true,
 	rotd.stun.P2,
-	rotd.stun.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"rotdstunxp2",
-	"x",
 	184,
 	rotd.stun.P2,
-	rotd.stun.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"rotdstunyp2",
-	"y",
 	50,
 	rotd.stun.P2,
-	rotd.stun.P2,
-	"config"
+	"y"
 )
 
 local function drawStunBar(player)

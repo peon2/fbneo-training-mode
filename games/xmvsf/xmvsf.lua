@@ -86,9 +86,7 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x=180,
 			y=53,
-			enabled=true,
 		},
 		health = {
 			P1 = {
@@ -212,11 +210,9 @@ local xmvsf = {}
 initConfigTable("xmvsf", xmvsf, "config")
 createConfigValue(
 	"xmvsfmusicvolume",
-	"musicvolume",
 	50,
 	xmvsf,
-	xmvsf,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

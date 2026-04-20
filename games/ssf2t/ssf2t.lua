@@ -4426,11 +4426,9 @@ local ssf2t = {}
 initConfigTable("ssf2t", ssf2t, "config")
 createConfigValue(
 	"ssf2tmusicvolume",
-	"musicvolume",
 	50,
 	ssf2t,
-	ssf2t,
-	"config"
+	"musicvolume"
 )
 
 local function setMusicVolume(volume) -- squeeze from 0 to 100

@@ -172,11 +172,9 @@ local cybots = {}
 initConfigTable("cybots", cybots, "config")
 createConfigValue(
 	"cybotsmusicvolume",
-	"musicvolume",
 	50,
 	cybots,
-	cybots,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

@@ -224,77 +224,59 @@ end
 initConfigTable("sf2", sf2, "config")
 createConfigValue(
 	"sf2musicvolume",
-	"musicvolume",
 	50,
 	sf2,
-	sf2,
-	"config"
+	"musicvolume"
 )
 createConfigValue(
 	"sf2disablestunp1",
-	"p1stun",
 	false,
 	sf2,
-	sf2,
-	"config"
+	"p1stun"
 )
 createConfigValue(
 	"sf2disablestunp2",
-	"p2stun",
 	false,
 	sf2,
-	sf2,
-	"config"
+	"p2stun"
 )
 
 createConfigValue(
 	"sf2stunenabledp1",
-	"enabled",
 	false,
 	sf2.stun.P1,
-	sf2.stun.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sf2stunxp1",
-	"x",
 	29,
 	sf2.stun.P1,
-	sf2.stun.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"sf2stunyp1",
-	"y",
 	44,
 	sf2.stun.P1,
-	sf2.stun.P1,
-	"config"
+	"y"
 )
 
 createConfigValue(
 	"sf2stunenabledp2",
-	"enabled",
 	true,
 	sf2.stun.P2,
-	sf2.stun.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sf2stunxp2",
-	"x",
 	232,
 	sf2.stun.P2,
-	sf2.stun.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"sf2stunyp2",
-	"y",
 	44,
 	sf2.stun.P2,
-	sf2.stun.P2,
-	"config"
+	"y"
 )
 
 createHUDElement(

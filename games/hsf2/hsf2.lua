@@ -436,11 +436,9 @@ local hsf2 = {}
 initConfigTable("hsf2", hsf2, "config")
 createConfigValue(
 	"hsf2musicvolume",
-	"musicvolume",
 	25,
 	hsf2,
-	hsf2,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

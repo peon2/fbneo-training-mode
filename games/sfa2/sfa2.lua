@@ -44,9 +44,7 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x=176,
 			y=42,
-			enabled=true,
 		},
 		health = {
 			P1 = {
@@ -177,11 +175,9 @@ local sfa2 = {}
 initConfigTable("sfa2", sfa2, "config")
 createConfigValue(
 	"sfa2musicvolume",
-	"musicvolume",
 	50,
 	sfa2,
-	sfa2,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

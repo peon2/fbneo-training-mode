@@ -179,11 +179,9 @@ local vsav = {}
 initConfigTable("vsav", vsav, "config")
 createConfigValue(
 	"vsavmusicvolume",
-	"musicvolume",
 	50,
 	vsav,
-	vsav,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

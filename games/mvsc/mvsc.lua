@@ -156,11 +156,9 @@ local mvsc = {}
 initConfigTable("mvsc", mvsc, "config")
 createConfigValue(
 	"mvscmusicvolume",
-	"musicvolume",
 	50,
 	mvsc,
-	mvsc,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

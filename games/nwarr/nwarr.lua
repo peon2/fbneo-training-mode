@@ -51,7 +51,6 @@ translationtable = {
 gamedefaultconfig = {
 	hud = {
 		combotext = {
-			x=180,
 			y=42,
 			enabled=true,
 		},
@@ -144,7 +143,6 @@ end
 
 function writePlayerOneMeter(meter)
 	ww(p1meter, meter)
-	wb(p1stocks, 0x0A)
 end
 
 function readPlayerTwoMeter()
@@ -153,7 +151,6 @@ end
 
 function writePlayerTwoMeter(meter)
 	ww(p2meter, meter)
-	wb(p2stocks, 0x0A)
 end
 
 local infiniteTime = function()
@@ -165,11 +162,9 @@ local nwarr = {}
 initConfigTable("nwarr", nwarr, "config")
 createConfigValue(
 	"nwarrmusicvolume",
-	"musicvolume",
 	50,
 	nwarr,
-	nwarr,
-	"config"
+	"musicvolume"
 )
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game

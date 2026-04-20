@@ -275,85 +275,65 @@ end
 initConfigTable("redearth", redearth, "config")
 createConfigValue(
 	"redearthmusicvolume",
-	"musicvolume",
 	50,
 	redearth,
-	redearth,
-	"config"
+	"musicvolume"
 )
 createConfigValue(
 	"redearthsword",
-	"sword",
 	LEGENDARY_SWORD,
 	redearth,
-	redearth,
-	"config"
+	"sword"
 )
 createConfigValue(
 	"redearthshield",
-	"shield",
 	LEGENDARY_SHIELD,
 	redearth,
-	redearth,
-	"config"
+	"shield"
 )
 createConfigValue(
 	"redearthorb",
-	"orb",
 	LIGHTNING,
 	redearth,
-	redearth,
-	"config"
+	"orb"
 )
 
 createConfigValue(
 	"redearthstunenabledp1",
-	"enabled",
 	false,
 	redearth.stun.P1,
-	redearth.stun.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"redearthstunxp1",
-	"x",
 	3,
 	redearth.stun.P1,
-	redearth.stun.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"redearthstunyp1",
-	"y",
 	42,
 	redearth.stun.P1,
-	redearth.stun.P1,
-	"config"
+	"y"
 )
 
 createConfigValue(
 	"redearthstunenabledp2",
-	"enabled",
 	true,
 	redearth.stun.P2,
-	redearth.stun.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"redearthstunxp2",
-	"x",
 	325,
 	redearth.stun.P2,
-	redearth.stun.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"redearthstunyp2",
-	"y",
 	42,
 	redearth.stun.P2,
-	redearth.stun.P2,
-	"config"
+	"y"
 )
 
 local function drawStunBar(player)

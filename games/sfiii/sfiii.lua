@@ -256,141 +256,109 @@ end
 initConfigTable("sfiii", sfiii, "config")
 createConfigValue(
 	"sfiiistunenabledp1",
-	"enabled",
 	true,
 	sfiii.stun.P1,
-	sfiii.stun.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiiistunenabledp2",
-	"enabled",
 	true,
 	sfiii.stun.P2,
-	sfiii.stun.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiiistunaftercombop1",
-	"aftercombo",
 	true,
 	sfiii.stun.P1,
-	sfiii.stun.P1,
-	"config"
+	"aftercombo"
 )
 createConfigValue(
 	"sfiiistunaftercombop2",
-	"aftercombo",
 	true,
 	sfiii.stun.P2,
-	sfiii.stun.P2,
-	"config"
+	"aftercombo"
 )
 createConfigValue(
 	"sfiiistunp1",
-	"value",
 	0,
 	sfiii.stun.P1,
-	sfiii.stun.P1,
-	"config"
+	"value"
 )
 createConfigValue(
 	"sfiiistunp2",
-	"value",
 	0,
 	sfiii.stun.P2,
-	sfiii.stun.P2,
-	"config"
+	"value"
 )
 createConfigValue(
 	"sfiiistunxp1",
-	"x",
 	84,
 	sfiii.stun.hud.P1,
-	sfiii.stun.hud.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"sfiiistunxp2",
-	"x",
 	285,
 	sfiii.stun.hud.P2,
-	sfiii.stun.hud.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"sfiiistunyp1",
-	"y",
 	24,
 	sfiii.stun.hud.P1,
-	sfiii.stun.hud.P1,
-	"config"
+	"y"
 )
 createConfigValue(
 	"sfiiistunyp2",
-	"y",
 	24,
 	sfiii.stun.hud.P2,
-	sfiii.stun.hud.P2,
-	"config"
+	"y"
 )
 createConfigValue(
 	"sfiiistunhudenabledp1",
-	"enabled",
 	true,
 	sfiii.stun.hud.P1,
-	sfiii.stun.hud.P1,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiiistunhudenabledp2",
-	"enabled",
 	true,
 	sfiii.stun.hud.P2,
-	sfiii.stun.hud.P2,
-	"config"
+	"enabled"
 )
 createConfigValue(
 	"sfiiip1gill",
-	"p1gill",
 	false,
 	sfiii,
-	sfiii,
-	"config"
+	"p1gill"
 )
 createConfigValue(
 	"sfiiip2gill",
-	"p2gill",
 	false,
 	sfiii,
-	sfiii,
-	"config"
+	"p2gill"
 )
 createConfigValue(
 	"sfiiimusicvolume",
-	"musicvolume",
 	25,
 	sfiii,
-	sfiii,
-	"config"
+	"musicvolume"
 )
 initConfigTable("sfiii", colours, "colourconfig")
 createConfigValue(
 	"sfiiistuncolourp1",
-	"stunp1",
 	0xFF0000FF,
 	colours,
-	colours,
-	"colourconfig",
+	"stunp1",
+	colours
 	"Stun Colour P1"
 )
 createConfigValue(
 	"sfiiistuncolourp2",
-	"stunp2",
 	0x00FFFFFF,
 	colours,
+	"stunp2",
 	colours,
-	"colourconfig",
 	"Stun Colour P2"
 )
 

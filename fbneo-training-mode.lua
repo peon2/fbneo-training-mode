@@ -1028,14 +1028,28 @@ local configitems = {
 		config = config,
 	},
 }
-local validconfigs = {config = config, colourconfig = colourconfig, recordingconfig = recording.config}
+
+--[[
+	"config" -> General config, stored on a rom by rom basis. Nearly everything should go in here.
+	"colourconfig" -> Global config, should only be used to store colours.
+	"recordingconfig" -> Localised config for replaypacks, write to this if you want to save configs to be loaded with a replaypack.
+--]]
+local validconfigs = {
+	config = config,
+	colourconfig = colourconfig,
+	recordingconfig = recording.config
+}
+-- Reserved values used by the training mode in config tables. These values shouldn't be saved to disk	
+local configmarkers = {
+	configstr = true
+}
 
 -- CONFIG FUNCTIONS
 --[[
 	Expensive function.
 	Recursively copies all values from table src to table dst, without changing dst tables.
 	Triggers Assertion failure with table location name if the dst doesn't have a matching table.
-	Call this WITHOUT the third argument defined
+	Call this WITHOUT the third argument given
 --]]
 local function deepAppendCopy(src, dst, isrecursive)
 	if type(src) ~= "table" then return end
@@ -1073,26 +1087,70 @@ local function copyConfigValuesToVar(id)
 	configitem.varpointer[name] = configitem.configpointer[name]
 end
 
+-- Assign configstr recursively, assume no bi-lateral links
+local function assignConfigStr(t, configstr)
+	t.configstr = configstr
+	for _, v in pairs(t) do
+		if type(v) == "table" then
+			assignConfigStr(v, configstr)
+		end
+	end
+end
+
+--[[
+	This function will initialise the table given and all it's subtables for output with the config decided by configstr.
+
+	tablename -> The unique name associated with this config table.
+		For user config values, it's recommended to name this the romname.
+	t -> The table to act as the config table.
+		For user config values, it's recommended to create this table as a local.
+		N.B. every subtable you will need in this table should be already initialised.
+	configstr -> Which config, to be written to disc, this config should be associated with.
+		See validconfigs for the list of strings this can be.
+	
+	See redearth as an example.
+--]]
 function initConfigTable(tablename, t, configstr)
 	assert(type(tablename)=="string", "Table Name must be a string")
 	assert(type(t)=="table", "Argument 2 should be the table")
 	assert(validconfigs[configstr], configstr.." is not a valid config")
-
+	
+	assignConfigStr(t, configstr)
 	validconfigs[configstr][tablename] = t
 end
 
-function createConfigValue(configname, name, default, configpointer, varpointer, configstr, displayname)
+--[[
+	This function will create a config item using the arguments given in the configpointer and varpointer tables given.
+
+	configname -> The unique name associated with this config option, used to get this config and write to it.
+		For user config values, it's recommended to preface with romname to avoid collisions.
+	default -> Default value of the config. Whenever the config is updated, the type of the new value will be matched against the type of the default value.
+	configpointer -> The table to be written to disk when the script closes.
+	internalname -> The name of the value in the config table.
+		For user config values, it's recommended to use the configname minus the romname.
+	*varpointer -> The table that should be read and written to while the script is active.
+		For user config values, it's recommended to leave this argument nil, to default configpointer and varpointer to the same table.
+	*displayname -> If this config is displayed to the user, what should it show.
+	
+	*: Optional
+	
+	See sfiii3 as an example.
+--]]
+function createConfigValue(configname, default, configpointer, internalname, varpointer, displayname)
 	assert(type(configname)=="string", "Config Name must be a string")
-	assert(configitems[configname]==nil, "Config Name: "..configname.." is already taken, configname must be unique")
-	assert(type(name)=="string", "Name must be a string")
+	assert(configitems[configname]==nil, "Config Name: '"..configname.."' is already taken, configname must be unique")
 	assert(default~=nil, "Default must have a value")
 	assert(type(configpointer)=="table", "Config Pointer must be a table")
+	local configstr = configpointer.configstr
+	assert(validconfigs[configstr], "Config Pointer is not initialised. Call initConfigTable")
+	assert(type(internalname)=="string", "Internal Name must be a string")
+	assert(configmarkers[internalname]==nil, "Internal Name: '"..internalname.."' matches a reserved string, use a different string.")
+	if varpointer == nil then varpointer = configpointer end
 	assert(type(varpointer)=="table", "Var Pointer must be a table")
 	assert(type(displayname)=="string" or displayname==nil, "Display Name must be a string")
-	assert(validconfigs[configstr], configstr.." is not a valid config")
 
 	configitems[configname] = {
-		name = name,
+		name = internalname,
 		default = default,
 		configpointer = configpointer,
 		varpointer = varpointer,
@@ -1177,8 +1235,11 @@ local function removeDefaultConfigValues() -- reduce save file size
 	end
 end
 
-local function trimConfigTable(t) -- remove any extra tables
+local function trimConfigTable(t) -- remove any extra tables and markers
 	for i, v in pairs(t) do
+		if configmarkers[i] then
+			t[i] = nil
+		end
 		if type(v)=="table" then
 			trimConfigTable(v)
 			if next(v) == nil then

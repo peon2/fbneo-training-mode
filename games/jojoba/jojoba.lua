@@ -206,61 +206,47 @@ end
 initConfigTable("jojoba", jojoba, "config")
 createConfigValue(
 	"jojobamusicvolume",
-	"musicvolume",
 	50,
 	jojoba,
-	jojoba,
-	"config"
+	"musicvolume"
 )
 
 createConfigValue(
 	"p1standhealthx",
-	"x",
 	152,
 	jojoba.stand.P1,
-	jojoba.stand.P1,
-	"config"
+	"x"
 )
 createConfigValue(
 	"p1standhealthy",
-	"y",
 	24,
 	jojoba.stand.P1,
-	jojoba.stand.P1,
-	"config"
+	"y"
 )
 createConfigValue(
 	"p1standhealthenabled",
-	"enabled",
 	true,
 	jojoba.stand.P1,
-	jojoba.stand.P1,
-	"config"
+	"enabled"
 )
 
 createConfigValue(
 	"p2standhealthx",
-	"x",
 	226,
 	jojoba.stand.P2,
-	jojoba.stand.P2,
-	"config"
+	"x"
 )
 createConfigValue(
 	"p2standhealthy",
-	"y",
 	24,
 	jojoba.stand.P2,
-	jojoba.stand.P2,
-	"config"
+	"y"
 )
 createConfigValue(
 	"p2standhealthenabled",
-	"enabled",
 	true,
 	jojoba.stand.P2,
-	jojoba.stand.P2,
-	"config"
+	"enabled"
 )
 
 createHUDElement(
