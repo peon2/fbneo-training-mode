@@ -8,6 +8,7 @@ FBNEO_TRAINING_MODE_VERSION = "v0.26.03.16"
 
 --DEBUG = true
 ROM = emu.romname()
+PARENT = emu.parentname()
 REPLAY_SLOTS_COUNT = 5
 
 LETTER_WIDTH = 4 -- width of a gui.text letter in pixels
@@ -78,108 +79,108 @@ local fc = emu.framecount()
 local games = {
 	[""] = {}, -- null case
 	aliencha = {"aliencha", iconfile = "icons-capcom-32.png"},
-	aof = {"aof", iconfile = "icons-neogeo-32.png"},
-	aof2 = {"aof2", iconfile = "icons-neogeo-32.png"},
-	aof3 = {"aof3", hitboxes = "aof3-hitboxes", iconfile = "icons-neogeo-32.png"},
-	asurabld = {"asurabld", iconfile = "icons-asurabus-32.png"},
-	asurabus = {"asurabus", iconfile = "icons-asurabus-32.png"},
-	avengrgs = {"avengrgs", iconfile = "icons-banpresto-32.png"},
-	bloodstm = {"bloodstm", iconfile = "icons-bloodstm-32.png"},
-	bloodwar = {"bloodwar", iconfile = "icons-neogeo-32.png"},
-	breakrev = {"breakrev", "brkrevext", iconfile = "icons-neogeo-32.png"},
-	cybots = {"cybots", "cybotsam", hitboxes = "cps2-hitboxes", iconfile = "icons-cybots-32.png"},
-	dankuga = {"dankuga", iconfile= "icons-capcom-32.png"},
-	daraku = {"daraku", hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
-	dbz2 = {"dbz2", iconfile = "icons-banpresto-32.png"},
-	dinorex = {"dinorex", iconfile = "icons-taito-32.png"},
-	doubledr = {"doubledr", iconfile = "icons-neogeo-32.png"},
-	dstlk = {"dstlk", "vampjr1", "vampjbh", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	fatfury1 = {"fatfury1", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfury2 = {"fatfury2", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfury3 = {"fatfury3", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfursp = {"fatfursp", "fatfurspbh", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fightfev = {"fightfev", iconfile = "icons-neogeo-32.png"},
-	galaxyfg = {"galaxyfg", iconfile = "icons-neogeo-32.png"},
-	garou = {"garou", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	gowcaizr = {"gowcaizr", iconfile = "icons-neogeo-32.png"},
-	gundamex = {"gundamex", iconfile = "icons-banpresto-32.png"},
-	hippodrm = {"hippodrm", iconfile = "icons-hippodrm-32.png"},
-	hsf2 = {"hsf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	jchan = {"jchan", iconfile = "icons-kaneko-32.png"},
-	jchan2 = {"jchan2", hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
-	jojo = {"jojo", "jojon", hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
-	jojoba = {"jojoba", "jojoban", "jojobanr1", hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
-	kabukikl = {"kabukikl", iconfile = "icons-neogeo-32.png"},
-	karnovr = {"karnovr", hitboxes = "karnovr-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kf2k5uni = {"kf2k5uni", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kizuna = {"kizuna", iconfile = "icons-neogeo-32.png"},
-	kof94 = {"kof94", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof95 = {"kof95", "kof95sp", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof96 = {"kof96", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof97 = {"kof97", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof98 = {"kof98", "kof98cb", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof99 = {"kof99", "kof99ae", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2000 = {"kof2000", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2001 = {"kof2001", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2002 = {"kof2002", hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2003 = {"kof2003", hitboxes = "kof2003-hitboxes", iconfile = "icons-neogeo-32.png"},
-	lastblad = {"lastblad", iconfile = "icons-neogeo-32.png"},
-	lastbld2 = {"lastbld2", iconfile = "icons-neogeo-32.png"},
-	martmast = {"martmast", iconfile = "icons-martmast-32.png"},
-	matrim = {"matrim", iconfile = "icons-neogeo-32.png"},
---	msgundam = {"msgundam", iconfile = "icons-msgundam-32.png"},
-	msh = {"msh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	mshvsf = {"mshvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	mvsc = {"mvsc", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	mwarr = {"mwarr", iconfile = "icons-mwarr-32.png"},
-	ninjamas = {"ninjamas", iconfile = "icons-neogeo-32.png"},
-	nwarr = {"nwarr", "vhuntjr2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	rabbit = {"rabbit", iconfile = "icons-banpresto-32.png"},
-	ragnagrd = {"ragnagrd", iconfile = "icons-neogeo-32.png"},
-	rbff1 = {"rbff1", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	rbff2 = {"rbff2", "rbff2h", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	rbffspec = {"rbffspec", hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	redearth = {"redearth", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	ringdest = {"ringdest", hitboxes = "cps2-hitboxes", iconfile = "icons-ringdest-32.png"},
-	rotd = {"rotd", hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
-	samsho = {"samsho", iconfile = "icons-neogeo-32.png"},
-	samsho2 = {"samsho2", iconfile = "icons-neogeo-32.png"},
-	samsho3 = {"samsho3", iconfile = "icons-neogeo-32.png"},
-	samsho4 = {"samsho4", iconfile = "icons-neogeo-32.png"},
-	samsho5 = {"samsho5", iconfile = "icons-neogeo-32.png"},
-	samsh5sp = {"samsh5sp", iconfile = "icons-neogeo-32.png"},
-	schmeisr = {"schmeisr", iconfile = "icons-asurabus-32.png"},
-	sf = {"sf", iconfile = "icons-sf1-32.png"},
-	sf2 = {"sf2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sf2ce = {"sf2ce", "sf2hf", "sf2rb", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa = {"sfa", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa2 = {"sfa2", "sfa2u", "sfz2al", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa3 = {"sfa3", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii = {"sfiii", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii2 = {"sfiii2", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii3 = {"sfiii3", "sfiii3nr1", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii3ws = {"sfiii3ws", hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sgemf = {"sgemf", hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
-	slammast = {"slammast", iconfile = "icons-slammast-32.png"},
-	ssf2 = {"ssf2", "ssf2us2", hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32letter.png"},
-	ssf2t = {"ssf2t", "ssf2xjr1", "ssf2tnl", hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
-	svc = {"svc", "svcsplus", hitboxes = "svc-hitboxes", iconfile = "icons-neogeo-32.png"},
-	teot = {"teot", iconfile = "icons-neogeo-32.png"},
-	timekill = {"timekill", iconfile = "icons-timekill-32.png"},
-	tkdensho = {"tkdensho", iconfile = "icons-banpresto-32.png"},
-	trstar = {"trstar", iconfile = "icons-trstar-32.png"},
-	umk3 = {"umk3", iconfile = "icons-midway-32.png"},
-	vhunt2 = {"vhunt2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	viofight = {"viofight", iconfile = "icons-viofight-32.png"},
-	vsav = {"vsav", "vsavj", "vsavae", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	vsav2 = {"vsav2", hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	wakuwak7 = {"wakuwak7", "wakuwak7bh", iconfile = "icons-neogeo-32.png"},
-	wh1 = {"wh1", iconfile = "icons-neogeo-32.png"},
-	wh2 = {"wh2", iconfile = "icons-neogeo-32.png"},
-	wh2j = {"wh2j", iconfile = "icons-neogeo-32.png"},
-	whp = {"whp", iconfile = "icons-neogeo-32.png"},
-	xmcota = {"xmcota", "xmcotabh", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	xmvsf = {"xmvsf", hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	aof = {iconfile = "icons-neogeo-32.png"},
+	aof2 = {iconfile = "icons-neogeo-32.png"},
+	aof3 = {hitboxes = "aof3-hitboxes", iconfile = "icons-neogeo-32.png"},
+	asurabld = {iconfile = "icons-asurabus-32.png"},
+	asurabus = {iconfile = "icons-asurabus-32.png"},
+	avengrgs = {iconfile = "icons-banpresto-32.png"},
+	bloodstm = {iconfile = "icons-bloodstm-32.png"},
+	bloodwar = {iconfile = "icons-neogeo-32.png"},
+	breakrev = {iconfile = "icons-neogeo-32.png"},
+	cybots = {hitboxes = "cps2-hitboxes", iconfile = "icons-cybots-32.png"},
+	dankuga = {iconfile= "icons-capcom-32.png"},
+	daraku = {hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
+	dbz2 = {iconfile = "icons-banpresto-32.png"},
+	dinorex = {iconfile = "icons-taito-32.png"},
+	doubledr = {iconfile = "icons-neogeo-32.png"},
+	dstlk = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	fatfury1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	fatfury2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	fatfury3 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	fatfursp = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	fightfev = {iconfile = "icons-neogeo-32.png"},
+	galaxyfg = {iconfile = "icons-neogeo-32.png"},
+	garou = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	gowcaizr = {iconfile = "icons-neogeo-32.png"},
+	gundamex = {iconfile = "icons-banpresto-32.png"},
+	hippodrm = {iconfile = "icons-hippodrm-32.png"},
+	hsf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	jchan = {iconfile = "icons-kaneko-32.png"},
+	jchan2 = {hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
+	jojo = {hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
+	jojoba = {hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
+	kabukikl = {iconfile = "icons-neogeo-32.png"},
+	karnovr = {hitboxes = "karnovr-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kf2k5uni = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kizuna = {iconfile = "icons-neogeo-32.png"},
+	kof94 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof95 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof96 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof97 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof98 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof99 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2000 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2001 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2002 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
+	kof2003 = {hitboxes = "kof2003-hitboxes", iconfile = "icons-neogeo-32.png"},
+	lastblad = {iconfile = "icons-neogeo-32.png"},
+	lastbld2 = {iconfile = "icons-neogeo-32.png"},
+	martmast = {iconfile = "icons-martmast-32.png"},
+	matrim = {iconfile = "icons-neogeo-32.png"},
+--	msgundam = {iconfile = "icons-msgundam-32.png"},
+	msh = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mshvsf = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mvsc = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	mwarr = {iconfile = "icons-mwarr-32.png"},
+	ninjamas = {iconfile = "icons-neogeo-32.png"},
+	nwarr = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	rabbit = {iconfile = "icons-banpresto-32.png"},
+	ragnagrd = {iconfile = "icons-neogeo-32.png"},
+	rbff1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	rbff2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	rbffspec = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
+	redearth = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	ringdest = {hitboxes = "cps2-hitboxes", iconfile = "icons-ringdest-32.png"},
+	rotd = {hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
+	samsho = {iconfile = "icons-neogeo-32.png"},
+	samsho2 = {iconfile = "icons-neogeo-32.png"},
+	samsho3 = {iconfile = "icons-neogeo-32.png"},
+	samsho4 = {iconfile = "icons-neogeo-32.png"},
+	samsho5 = {iconfile = "icons-neogeo-32.png"},
+	samsh5sp = {iconfile = "icons-neogeo-32.png"},
+	schmeisr = {iconfile = "icons-asurabus-32.png"},
+	sf = {iconfile = "icons-sf1-32.png"},
+	sf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sf2ce = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfa = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfa2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfa3 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfiii = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfiii2 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfiii3ws = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	sfiii3 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
+	sgemf = {hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
+	slammast = {iconfile = "icons-slammast-32.png"},
+	ssf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32letter.png"},
+	ssf2t = {hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
+	svc = {hitboxes = "svc-hitboxes", iconfile = "icons-neogeo-32.png"},
+	teot = {iconfile = "icons-neogeo-32.png"},
+	timekill = {iconfile = "icons-timekill-32.png"},
+	tkdensho = {iconfile = "icons-banpresto-32.png"},
+	trstar = {iconfile = "icons-trstar-32.png"},
+	umk3 = {iconfile = "icons-midway-32.png"},
+	vhunt2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	viofight = {iconfile = "icons-viofight-32.png"},
+	vsav = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	vsav2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
+	wakuwak7 = {iconfile = "icons-neogeo-32.png"},
+	wh1 = {iconfile = "icons-neogeo-32.png"},
+	wh2 = {iconfile = "icons-neogeo-32.png"},
+	wh2j = {iconfile = "icons-neogeo-32.png"},
+	whp = {iconfile = "icons-neogeo-32.png"},
+	xmcota = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	xmvsf = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
 }
 
 local function usage()
@@ -1139,15 +1140,15 @@ end
 function createConfigValue(configname, default, configpointer, internalname, varpointer, displayname)
 	assert(type(configname)=="string", "Config Name must be a string")
 	assert(configitems[configname]==nil, "Config Name: '"..configname.."' is already taken, configname must be unique")
-	assert(default~=nil, "Default must have a value")
-	assert(type(configpointer)=="table", "Config Pointer must be a table")
+	assert(default~=nil, configname..": Default must have a value")
+	assert(type(configpointer)=="table", configname..": Config Pointer must be a table")
 	local configstr = configpointer.configstr
-	assert(validconfigs[configstr], "Config Pointer is not initialised. Call initConfigTable")
-	assert(type(internalname)=="string", "Internal Name must be a string")
-	assert(configmarkers[internalname]==nil, "Internal Name: '"..internalname.."' matches a reserved string, use a different string.")
+	assert(validconfigs[configstr], configname..": Config Pointer is not initialised. Call initConfigTable")
+	assert(type(internalname)=="string", configname..": Internal Name must be a string")
+	assert(configmarkers[internalname]==nil, configname..": Internal Name: '"..internalname.."' matches a reserved string, use a different string.")
 	if varpointer == nil then varpointer = configpointer end
-	assert(type(varpointer)=="table", "Var Pointer must be a table")
-	assert(type(displayname)=="string" or displayname==nil, "Display Name must be a string")
+	assert(type(varpointer)=="table", configname..": Var Pointer must be a table")
+	assert(type(displayname)=="string" or displayname==nil, configname..": Display Name must be a string")
 
 	configitems[configname] = {
 		name = internalname,
@@ -1305,13 +1306,11 @@ function fexists(s)
 end
 
 gamename = ""
-for i, v in pairs(games) do
-	for _, k in ipairs(v) do
-		if (ROM == k) then
-			gamename = i
-			gamepath = "games/"..gamename.."/"
-			configpath = gamepath..ROM..".config"
-		end
+for _gamename, _ in pairs(games) do
+	if (ROM == _gamename or PARENT == _gamename) then
+		gamename = _gamename
+		gamepath = "games/"..gamename.."/"
+		configpath = gamepath..ROM..".config"
 	end
 end
 
