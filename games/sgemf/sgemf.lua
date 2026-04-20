@@ -173,12 +173,7 @@ end
 local sgemf = {}
 
 initConfigTable("sgemf", sgemf, "config")
-createConfigValue(
-	"sgemfmusicvolume",
-	50,
-	sgemf,
-	"musicvolume"
-)
+createConfigItem("sgemfmusicvolume", 50, sgemf, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF027

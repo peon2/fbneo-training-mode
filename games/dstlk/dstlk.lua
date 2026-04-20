@@ -155,12 +155,7 @@ end
 local dstlk = {}
 
 initConfigTable("dstlk", dstlk, "config")
-createConfigValue(
-	"dstlkmusicvolume",
-	50,
-	dstlk,
-	"musicvolume"
-)
+createConfigItem("dstlkmusicvolume", 50, dstlk, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

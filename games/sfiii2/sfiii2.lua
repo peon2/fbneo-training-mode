@@ -247,101 +247,25 @@ end
 
 
 initConfigTable("sfiii2", sfiii2, "config")
-createConfigValue(
-	"sfiii2stunenabledp1",
-	true,
-	sfiii2.stun.P1,
-	"enabled"
-)
-createConfigValue(
-	"sfiii2stunenabledp2",
-	true,
-	sfiii2.stun.P2,
-	"enabled"
-)
-createConfigValue(
-	"sfiii2stunaftercombop1",
-	true,
-	sfiii2.stun.P1,
-	"aftercombo"
-)
-createConfigValue(
-	"sfiii2stunaftercombop2",
-	true,
-	sfiii2.stun.P2,
-	"aftercombo"
-)
-createConfigValue(
-	"sfiii2stunp1",
-	0,
-	sfiii2.stun.P1,
-	"value"
-)
-createConfigValue(
-	"sfiii2stunp2",
-	0,
-	sfiii2.stun.P2,
-	"value"
-)
-createConfigValue(
-	"sfiii2stunxp1",
-	84,
-	sfiii2.stun.hud.P1,
-	"x"
-)
-createConfigValue(
-	"sfiii2stunxp2",
-	285,
-	sfiii2.stun.hud.P2,
-	"x"
-)
-createConfigValue(
-	"sfiii2stunyp1",
-	24,
-	sfiii2.stun.hud.P1,
-	"y"
-)
-createConfigValue(
-	"sfiii2stunyp2",
-	24,
-	sfiii2.stun.hud.P2,
-	"y"
-)
-createConfigValue(
-	"sfiii2stunhudenabledp1",
-	true,
-	sfiii2.stun.hud.P1,
-	"enabled"
-)
-createConfigValue(
-	"sfiii2stunhudenabledp2",
-	true,
-	sfiii2.stun.hud.P2,
-	"enabled"
-)
-createConfigValue(
-	"sfiii2musicvolume",
-	25,
-	sfiii2,
-	"musicvolume"
-)
+
+createConfigItem("sfiii2stunenabledp1", true, sfiii2.stun.P1, "enabled")
+createConfigItem("sfiii2stunenabledp2", true, sfiii2.stun.P2, "enabled")
+createConfigItem("sfiii2stunaftercombop1", true, sfiii2.stun.P1, "aftercombo")
+createConfigItem("sfiii2stunaftercombop2", true, sfiii2.stun.P2, "aftercombo")
+createConfigItem("sfiii2stunp1", 0, sfiii2.stun.P1, "value")
+createConfigItem("sfiii2stunp2", 0, sfiii2.stun.P2, "value")
+createConfigItem("sfiii2stunxp1", 84, sfiii2.stun.hud.P1, "x")
+createConfigItem("sfiii2stunxp2", 285, sfiii2.stun.hud.P2, "x")
+createConfigItem("sfiii2stunyp1", 24, sfiii2.stun.hud.P1, "y")
+createConfigItem("sfiii2stunyp2", 24, sfiii2.stun.hud.P2, "y")
+createConfigItem("sfiii2stunhudenabledp1", true, sfiii2.stun.hud.P1, "enabled")
+createConfigItem("sfiii2stunhudenabledp2", true, sfiii2.stun.hud.P2, "enabled")
+
+createConfigItem("sfiii2musicvolume", 25, sfiii2, "musicvolume")
+
 initConfigTable("sfiii2", colours, "colourconfig")
-createConfigValue(
-	"sfiii2stuncolourp1",
-	0xFF0000FF,
-	colours,
-	"stunp1",
-	colours,
-	"Stun Colour P1"
-)
-createConfigValue(
-	"sfiii2stuncolourp2",
-	0x00FFFFFF,
-	colours,
-	"stunp2",
-	colours,
-	"Stun Colour P2"
-)
+createConfigItem("coloursfiii2stunp1", 0xFF0000FF, colours, "stunp1", colours, "Stun Colour P1")
+createConfigItem("coloursfiii2stunp2", 0x00FFFFFF, colours, "stunp2", colours, "Stun Colour P2")
 
 createHUDElement(
 	"p1stun",

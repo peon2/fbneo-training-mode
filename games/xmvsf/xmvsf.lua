@@ -208,12 +208,7 @@ end
 local xmvsf = {}
 
 initConfigTable("xmvsf", xmvsf, "config")
-createConfigValue(
-	"xmvsfmusicvolume",
-	50,
-	xmvsf,
-	"musicvolume"
-)
+createConfigItem("xmvsfmusicvolume", 50, xmvsf, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF027

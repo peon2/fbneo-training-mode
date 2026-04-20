@@ -555,12 +555,7 @@ Z3_functions = {updateGamestate, Z3_Training_basic_settings, draw_messages}
 local sfa3 = {}
 
 initConfigTable("sfa3", sfa3, "config")
-createConfigValue(
-	"sfa3musicvolume",
-	50,
-	sfa3,
-	"musicvolume"
-)
+createConfigItem("sfa3musicvolume", 50, sfa3, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF027

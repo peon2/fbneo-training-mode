@@ -170,12 +170,7 @@ end
 local cybots = {}
 
 initConfigTable("cybots", cybots, "config")
-createConfigValue(
-	"cybotsmusicvolume",
-	50,
-	cybots,
-	"musicvolume"
-)
+createConfigItem("cybotsmusicvolume", 50, cybots, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

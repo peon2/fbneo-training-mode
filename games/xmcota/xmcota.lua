@@ -175,12 +175,7 @@ end
 local xmcota = {}
 
 initConfigTable("xmcota", xmcota, "config")
-createConfigValue(
-	"xmcotamusicvolume",
-	50,
-	xmcota,
-	"musicvolume"
-)
+createConfigItem("xmcotamusicvolume", 50, xmcota, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

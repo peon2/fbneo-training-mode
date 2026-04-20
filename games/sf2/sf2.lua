@@ -222,62 +222,18 @@ function Run() -- runs every frame
 end
 
 initConfigTable("sf2", sf2, "config")
-createConfigValue(
-	"sf2musicvolume",
-	50,
-	sf2,
-	"musicvolume"
-)
-createConfigValue(
-	"sf2disablestunp1",
-	false,
-	sf2,
-	"p1stun"
-)
-createConfigValue(
-	"sf2disablestunp2",
-	false,
-	sf2,
-	"p2stun"
-)
 
-createConfigValue(
-	"sf2stunenabledp1",
-	false,
-	sf2.stun.P1,
-	"enabled"
-)
-createConfigValue(
-	"sf2stunxp1",
-	29,
-	sf2.stun.P1,
-	"x"
-)
-createConfigValue(
-	"sf2stunyp1",
-	44,
-	sf2.stun.P1,
-	"y"
-)
+createConfigItem("sf2musicvolume", 50, sf2, "musicvolume")
+createConfigItem("sf2disablestunp1", false, sf2, "p1stun")
+createConfigItem("sf2disablestunp2", false, sf2, "p2stun")
 
-createConfigValue(
-	"sf2stunenabledp2",
-	true,
-	sf2.stun.P2,
-	"enabled"
-)
-createConfigValue(
-	"sf2stunxp2",
-	232,
-	sf2.stun.P2,
-	"x"
-)
-createConfigValue(
-	"sf2stunyp2",
-	44,
-	sf2.stun.P2,
-	"y"
-)
+createConfigItem("sf2stunenabledp1", false, sf2.stun.P1, "enabled")
+createConfigItem("sf2stunxp1", 29, sf2.stun.P1, "x")
+createConfigItem("sf2stunyp1", 44, sf2.stun.P1, "y")
+
+createConfigItem("sf2stunenabledp2", true, sf2.stun.P2, "enabled")
+createConfigItem("sf2stunxp2", 232, sf2.stun.P2, "x")
+createConfigItem("sf2stunyp2", 44, sf2.stun.P2, "y")
 
 createHUDElement(
 	"p1stun",

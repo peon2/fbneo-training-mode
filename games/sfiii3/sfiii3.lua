@@ -70,7 +70,6 @@ gamedefaultconfig = {
 	hud = {
 		combotext = {
 			y=42,
-			enabled=true,
 		},
 		health = {
 			P1 = {
@@ -251,101 +250,25 @@ function Run() -- runs every frame
 end
 
 initConfigTable("sfiii3", sfiii3, "config")
-createConfigValue(
-	"sfiii3stunenabledp1",
-	"enabled",
-	true,
-	sfiii3.stun.P1
-)
-createConfigValue(
-	"sfiii3stunenabledp2",
-	"enabled",
-	true,
-	sfiii3.stun.P2
-)
-createConfigValue(
-	"sfiii3stunaftercombop1",
-	"aftercombo",
-	true,
-	sfiii3.stun.P1
-)
-createConfigValue(
-	"sfiii3stunaftercombop2",
-	"aftercombo",
-	true,
-	sfiii3.stun.P2
-)
-createConfigValue(
-	"sfiii3stunp1",
-	"value",
-	0,
-	sfiii3.stun.P1
-)
-createConfigValue(
-	"sfiii3stunp2",
-	"value",
-	0,
-	sfiii3.stun.P2
-)
-createConfigValue(
-	"sfiii3stunxp1",
-	"x",
-	84,
-	sfiii3.stun.hud.P1
-)
-createConfigValue(
-	"sfiii3stunxp2",
-	"x",
-	285,
-	sfiii3.stun.hud.P2
-)
-createConfigValue(
-	"sfiii3stunyp1",
-	"y",
-	24,
-	sfiii3.stun.hud.P1
-)
-createConfigValue(
-	"sfiii3stunyp2",
-	"y",
-	24,
-	sfiii3.stun.hud.P2
-)
-createConfigValue(
-	"sfiii3stunhudenabledp1",
-	"enabled",
-	true,
-	sfiii3.stun.hud.P1
-)
-createConfigValue(
-	"sfiii3stunhudenabledp2",
-	"enabled",
-	true,
-	sfiii3.stun.hud.P2
-)
-createConfigValue(
-	"sfiii3musicvolume",
-	"musicvolume",
-	25,
-	sfiii3
-)
+
+createConfigItem("sfiii3stunenabledp1", true, sfiii3.stun.P1, "enabled")
+createConfigItem("sfiii3stunenabledp2", true, sfiii3.stun.P2, "enabled")
+createConfigItem("sfiii3stunaftercombop1", true, sfiii3.stun.P1, "aftercombo")
+createConfigItem("sfiii3stunaftercombop2", true, sfiii3.stun.P2, "aftercombo")
+createConfigItem("sfiii3stunp1", 0, sfiii3.stun.P1, "value")
+createConfigItem("sfiii3stunp2", 0, sfiii3.stun.P2, "value")
+createConfigItem("sfiii3stunxp1", 84, sfiii3.stun.hud.P1, "x")
+createConfigItem("sfiii3stunxp2", 285, sfiii3.stun.hud.P2, "x")
+createConfigItem("sfiii3stunyp1", 24, sfiii3.stun.hud.P1, "y")
+createConfigItem("sfiii3stunyp2", 24, sfiii3.stun.hud.P2, "y")
+createConfigItem("sfiii3stunhudenabledp1", true, sfiii3.stun.hud.P1, "enabled")
+createConfigItem("sfiii3stunhudenabledp2", true, sfiii3.stun.hud.P2, "enabled")
+
+createConfigItem("sfiii3musicvolume", 25, sfiii3, "musicvolume")
+
 initConfigTable("sfiii3", colours, "colourconfig")
-createConfigValue(
-	"sfiii3stuncolourp1",
-	"stunp1",
-	0xFF0000FF,
-	colours,
-	colours,
-	"Stun Colour P1"
-)
-createConfigValue(
-	"sfiii3stuncolourp2",
-	"stunp2",
-	0x00FFFFFF,
-	colours,
-	colours,
-	"Stun Colour P2"
-)
+createConfigItem("coloursfiii3stunp1", 0xFF0000FF, colours, "stunp1", colours, "Stun Colour P1")
+createConfigItem("coloursfiii3stunp2", 0x00FFFFFF, colours, "stunp2", colours, "Stun Colour P2")
 
 createHUDElement(
 	"p1stun",

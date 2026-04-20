@@ -160,12 +160,7 @@ end
 local nwarr = {}
 
 initConfigTable("nwarr", nwarr, "config")
-createConfigValue(
-	"nwarrmusicvolume",
-	50,
-	nwarr,
-	"musicvolume"
-)
+createConfigItem("nwarrmusicvolume", 50, nwarr, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

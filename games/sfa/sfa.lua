@@ -178,12 +178,7 @@ end
 local sfa = {}
 
 initConfigTable("sfa", sfa, "config")
-createConfigValue(
-	"sfamusicvolume",
-	50,
-	sfa,
-	"musicvolume"
-)
+createConfigItem("sfamusicvolume", 50, sfa, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

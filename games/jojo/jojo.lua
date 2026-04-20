@@ -192,50 +192,16 @@ function Run() -- runs every frame
 end
 
 initConfigTable("jojo", jojo, "config")
-createConfigValue(
-	"jojomusicvolume",
-	50,
-	jojo,
-	"musicvolume"
-)
 
-createConfigValue(
-	"p1standhealthx",
-	152,
-	jojo.stand.P1,
-	"x"
-)
-createConfigValue(
-	"p1standhealthy",
-	24,
-	jojo.stand.P1,
-	"y"
-)
-createConfigValue(
-	"p1standhealthenabled",
-	true,
-	jojo.stand.P1,
-	"enabled"
-)
+createConfigItem("jojomusicvolume", 50, jojo, "musicvolume")
 
-createConfigValue(
-	"p2standhealthx",
-	226,
-	jojo.stand.P2,
-	"x"
-)
-createConfigValue(
-	"p2standhealthy",
-	24,
-	jojo.stand.P2,
-	"y"
-)
-createConfigValue(
-	"p2standhealthenabled",
-	true,
-	jojo.stand.P2,
-	"enabled"
-)
+createConfigItem("p1standhealthx", 152, jojo.stand.P1, "x")
+createConfigItem("p1standhealthy", 24, jojo.stand.P1, "y")
+createConfigItem("p1standhealthenabled", true, jojo.stand.P1, "enabled")
+
+createConfigItem("p2standhealthx", 226, jojo.stand.P2, "x")
+createConfigItem("p2standhealthy", 24, jojo.stand.P2, "y")
+createConfigItem("p2standhealthenabled", true, jojo.stand.P2, "enabled")
 
 createHUDElement(
 	"p1standhealth",

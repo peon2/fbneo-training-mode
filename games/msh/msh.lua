@@ -140,12 +140,7 @@ end
 local msh = {}
 
 initConfigTable("msh", msh, "config")
-createConfigValue(
-	"mshmusicvolume",
-	50,
-	msh,
-	"musicvolume"
-)
+createConfigItem("mshmusicvolume", 50, msh, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

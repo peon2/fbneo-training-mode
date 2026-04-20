@@ -4424,12 +4424,7 @@ ST_functions = {updateGamestate, ST_Training_misc, ST_Training_basic_settings, S
 local ssf2t = {}
 
 initConfigTable("ssf2t", ssf2t, "config")
-createConfigValue(
-	"ssf2tmusicvolume",
-	50,
-	ssf2t,
-	"musicvolume"
-)
+createConfigItem("ssf2tmusicvolume", 50, ssf2t, "musicvolume")
 
 local function setMusicVolume(volume) -- squeeze from 0 to 100
 	volume = math.floor( (volume*0xFF)/100 ) -- in-game ranges from 0x00 to 0xFF

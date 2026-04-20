@@ -192,43 +192,14 @@ function Run() -- runs every frame
 end
 
 initConfigTable("rotd", rotd, "config")
-createConfigValue(
-	"rotdstunenabledp1",
-	false,
-	rotd.stun.P1,
-	"enabled"
-)
-createConfigValue(
-	"rotdstunxp1",
-	20,
-	rotd.stun.P1,
-	"x"
-)
-createConfigValue(
-	"rotdstunyp1",
-	50,
-	rotd.stun.P1,
-	"y"
-)
 
-createConfigValue(
-	"rotdstunenabledp2",
-	true,
-	rotd.stun.P2,
-	"enabled"
-)
-createConfigValue(
-	"rotdstunxp2",
-	184,
-	rotd.stun.P2,
-	"x"
-)
-createConfigValue(
-	"rotdstunyp2",
-	50,
-	rotd.stun.P2,
-	"y"
-)
+createConfigItem("rotdstunenabledp1", false, rotd.stun.P1, "enabled")
+createConfigItem("rotdstunxp1", 20, rotd.stun.P1, "x")
+createConfigItem("rotdstunyp1", 50, rotd.stun.P1, "y")
+
+createConfigItem("rotdstunenabledp2", true, rotd.stun.P2, "enabled")
+createConfigItem("rotdstunxp2", 184, rotd.stun.P2, "x")
+createConfigItem("rotdstunyp2", 50, rotd.stun.P2, "y")
 
 local function drawStunBar(player)
 	local stunfunc = { P1 = readPlayerOneStun, P2 = readPlayerTwoStun }

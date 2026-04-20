@@ -1133,11 +1133,11 @@ end
 		For user config values, it's recommended to leave this argument nil, to default configpointer and varpointer to the same table.
 	*displayname -> If this config is displayed to the user, what should it show.
 	
-	*: Optional
+	*: Optional.
 	
 	See sfiii3 as an example.
 --]]
-function createConfigValue(configname, default, configpointer, internalname, varpointer, displayname)
+function createConfigItem(configname, default, configpointer, internalname, varpointer, displayname)
 	assert(type(configname)=="string", "Config Name must be a string")
 	assert(configitems[configname]==nil, "Config Name: '"..configname.."' is already taken, configname must be unique")
 	assert(default~=nil, configname..": Default must have a value")
@@ -2488,7 +2488,7 @@ local function comboHandler(player)
 	cvars.healthdiff = gvars.previoushealth - gvars.health
 	cvars.previouscombo = cvars.combo -- used by other functions to track 'After Combo' logic
 
-	--write(player.." "..fc..": "..tostring(gvars.inhitstun)..", "..cvars.healthdiff) -- debugging command to check if the hitstun and damage are in sync
+	--print(player.." "..fc..": "..tostring(gvars.inhitstun)..", "..cvars.healthdiff) -- debugging command to check if the hitstun and damage are in sync
 	if gvars.inhitstun then
 		if cvars.healthdiff > 0 then -- player has taken damage
 			cvars.combo = cvars.combo+1

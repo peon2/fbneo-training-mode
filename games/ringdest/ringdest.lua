@@ -112,12 +112,7 @@ end
 local ringdest = {}
 
 initConfigTable("ringdest", ringdest, "config")
-createConfigValue(
-	"ringdestmusicvolume",
-	50,
-	ringdest,
-	"musicvolume"
-)
+createConfigItem("ringdestmusicvolume", 50, ringdest, "musicvolume")
 
 local maxmusicvolume = 0xFF -- what the maximum volume is in game
 local musicvolume = 0xF019

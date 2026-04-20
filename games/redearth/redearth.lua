@@ -273,68 +273,19 @@ function Run()
 end
 
 initConfigTable("redearth", redearth, "config")
-createConfigValue(
-	"redearthmusicvolume",
-	50,
-	redearth,
-	"musicvolume"
-)
-createConfigValue(
-	"redearthsword",
-	LEGENDARY_SWORD,
-	redearth,
-	"sword"
-)
-createConfigValue(
-	"redearthshield",
-	LEGENDARY_SHIELD,
-	redearth,
-	"shield"
-)
-createConfigValue(
-	"redearthorb",
-	LIGHTNING,
-	redearth,
-	"orb"
-)
 
-createConfigValue(
-	"redearthstunenabledp1",
-	false,
-	redearth.stun.P1,
-	"enabled"
-)
-createConfigValue(
-	"redearthstunxp1",
-	3,
-	redearth.stun.P1,
-	"x"
-)
-createConfigValue(
-	"redearthstunyp1",
-	42,
-	redearth.stun.P1,
-	"y"
-)
+createConfigItem("redearthmusicvolume", 50, redearth, "musicvolume")
+createConfigItem("redearthsword", LEGENDARY_SWORD, redearth, "sword")
+createConfigItem("redearthshield", LEGENDARY_SHIELD, redearth, "shield")
+createConfigItem("redearthorb", LIGHTNING, redearth, "orb")
 
-createConfigValue(
-	"redearthstunenabledp2",
-	true,
-	redearth.stun.P2,
-	"enabled"
-)
-createConfigValue(
-	"redearthstunxp2",
-	325,
-	redearth.stun.P2,
-	"x"
-)
-createConfigValue(
-	"redearthstunyp2",
-	42,
-	redearth.stun.P2,
-	"y"
-)
+createConfigItem("redearthstunenabledp1", false, redearth.stun.P1, "enabled")
+createConfigItem("redearthstunxp1", 3, redearth.stun.P1, "x")
+createConfigItem("redearthstunyp1", 42, redearth.stun.P1, "y")
+
+createConfigItem("redearthstunenabledp2", true, redearth.stun.P2, "enabled")
+createConfigItem("redearthstunxp2", 325, redearth.stun.P2, "x")
+createConfigItem("redearthstunyp2", 42, redearth.stun.P2, "y")
 
 local function drawStunBar(player)
 	local stunfunc = { P1 = readPlayerOneStun, P2 = readPlayerTwoStun }

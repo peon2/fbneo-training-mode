@@ -204,50 +204,16 @@ function Run() -- runs every frame
 end
 
 initConfigTable("jojoba", jojoba, "config")
-createConfigValue(
-	"jojobamusicvolume",
-	50,
-	jojoba,
-	"musicvolume"
-)
 
-createConfigValue(
-	"p1standhealthx",
-	152,
-	jojoba.stand.P1,
-	"x"
-)
-createConfigValue(
-	"p1standhealthy",
-	24,
-	jojoba.stand.P1,
-	"y"
-)
-createConfigValue(
-	"p1standhealthenabled",
-	true,
-	jojoba.stand.P1,
-	"enabled"
-)
+createConfigItem("jojobamusicvolume", 50, jojoba, "musicvolume")
 
-createConfigValue(
-	"p2standhealthx",
-	226,
-	jojoba.stand.P2,
-	"x"
-)
-createConfigValue(
-	"p2standhealthy",
-	24,
-	jojoba.stand.P2,
-	"y"
-)
-createConfigValue(
-	"p2standhealthenabled",
-	true,
-	jojoba.stand.P2,
-	"enabled"
-)
+createConfigItem("p1standhealthx", 152, jojoba.stand.P1, "x")
+createConfigItem("p1standhealthy", 24, jojoba.stand.P1, "y")
+createConfigItem("p1standhealthenabled", true, jojoba.stand.P1, "enabled")
+
+createConfigItem("p2standhealthx", 226, jojoba.stand.P2, "x")
+createConfigItem("p2standhealthy", 24, jojoba.stand.P2, "y")
+createConfigItem("p2standhealthenabled", true, jojoba.stand.P2, "enabled")
 
 createHUDElement(
 	"p1standhealth",

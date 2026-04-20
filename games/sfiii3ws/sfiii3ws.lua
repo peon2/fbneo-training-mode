@@ -76,7 +76,7 @@ gamedefaultconfig = {
 	}
 }
 
-setConfigDefault("sfiii3stunxp1", 84)
+setConfigDefault("sfiii3stunxp1", 141)
 setConfigDefault("sfiii3stunyp1", 24)
-setConfigDefault("sfiii3stunxp2", 408)
+setConfigDefault("sfiii3stunxp2", 348)
 setConfigDefault("sfiii3stunyp2", 24)
