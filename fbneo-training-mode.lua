@@ -1192,7 +1192,7 @@ function changeConfig(id, value, updatevar)
 	local name = configitem.name
 	assert(
 		type(value) == type(configitem.default),
-		"Bad value: "..tostring(value).." doesn't match the type of default value: "..tostring(configitem.default)
+		id..": Bad value: "..tostring(value).." doesn't match the type of default value: "..tostring(configitem.default)
 	)
 	configitem.configpointer[name] = value
 	if updatevar then
@@ -1821,7 +1821,7 @@ local function interactiveGUISelectionInfo()
 	if not interactivegui.enabled or not info then return end
 
 	local largest = 0
-	local x1, x2, xm, y2 = interactivegui.boxx, interactivegui.boxx2, interactivegui.boxxmid, interactivegui.boxy2
+	local x1, x2, xm, y2 = interactivegui.boxx, interactivegui.boxx2, interactivegui.boxxmid, interactivegui.boxy2-2
 
 	for _,v in ipairs(info) do
 		if largest < #v then largest = #v end
@@ -4401,7 +4401,7 @@ function setRegisters() -- pre-calc stuff
 			y = function(n) if n then changeConfig("p2metery", n) end return hud.meter.P2.y end,
 			enabled = function(n) if n~=nil then changeConfig("p2meterenabled", n) end return hud.meter.P2.enabled end,
 			reset = function() resetConfig("p2meterx") resetConfig("p2metery") resetConfig("p2meterenabled") end,
-			draw = function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P1.meter, hud.meter.P2.textcolour) end
+			draw = function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P2.meter, hud.meter.P2.textcolour) end
 		})
 		if gamefunctions.writeplayertwometer and gamefunctions.readplayeronehealth and gamefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P2") end)
