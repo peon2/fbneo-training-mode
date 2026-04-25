@@ -170,20 +170,6 @@ function infiniteTime()
 	wb(0xFF8188,0x99)
 end
 
-local sgemf = {}
-
-initConfigTable("sgemf", sgemf, "config")
-createConfigItem("sgemfmusicvolume", 50, sgemf, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF027
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(sgemf.musicvolume)
 	infiniteTime()
 end

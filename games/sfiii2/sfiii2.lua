@@ -200,11 +200,6 @@ local function writePlayerTwoStun(stun)
 	wb(p2stunbar, stun)
 end
 
-local function setMusicVolume(volume) -- squeeze from 0 to 100
-	volume = math.floor( (volume*0x80)/100 )
-	wb(0x20731D6, volume)
-end
-
 local timer = 0x2010167
 local timemax = 0x63
 
@@ -242,7 +237,6 @@ function Run() -- runs every frame
 		end
 	end
 	infiniteTime()
-	setMusicVolume(sfiii2.musicvolume)
 end
 
 
@@ -260,8 +254,6 @@ createConfigItem("sfiii2stunyp1", 24, sfiii2.stun.hud.P1, "y")
 createConfigItem("sfiii2stunyp2", 24, sfiii2.stun.hud.P2, "y")
 createConfigItem("sfiii2stunhudenabledp1", true, sfiii2.stun.hud.P1, "enabled")
 createConfigItem("sfiii2stunhudenabledp2", true, sfiii2.stun.hud.P2, "enabled")
-
-createConfigItem("sfiii2musicvolume", 25, sfiii2, "musicvolume")
 
 initConfigTable("sfiii2", colours, "colourconfig")
 createConfigItem("coloursfiii2stunp1", 0xFF0000FF, colours, "stunp1", colours, "Stun Colour P1")

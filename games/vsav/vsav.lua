@@ -173,21 +173,6 @@ local function infiniteTime()
 	wb(0xFF8109, 0x63)
 end
 
-
-local vsav = {}
-
-initConfigTable("vsav", vsav, "config")
-createConfigItem("vsavmusicvolume", 50, vsav, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF027
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(vsav.musicvolume)
 	infiniteTime()
 end

@@ -11,7 +11,6 @@ customconfig = {
 	reversal_trigger_selector = -1,
 	roundstart_selector = -1,
 	slowdown_selector = - 1,
-	nomusic_selector = -1,
 	stage_selector = -1,
 	tech_throw_selector = -1,
 	crossup_display_selector = -1,

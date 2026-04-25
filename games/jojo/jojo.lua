@@ -166,15 +166,6 @@ local function readPlayerTwoStandHealth()
 	return rb(p2standhealth)
 end
 
-local maxmusicvolume = 0x80 -- what the maximum volume is in game
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	if volume < 0 then volume = 0 end
-	if volume > 100 then volume = 100 end
-	volume = math.floor( (volume*maxmusicvolume)/100 )
-	wb(0x206B90E, volume)
-end
-
 local function infiniteTime()
 	wb(0x202D0B0, 0x63)
 end
@@ -186,14 +177,11 @@ end
 P1ChildMode = false
 P2ChildMode = false
 function Run() -- runs every frame
-	setMusicVolume(jojo.musicvolume)
 	infiniteTime()
 	infiniteCredits()
 end
 
 initConfigTable("jojo", jojo, "config")
-
-createConfigItem("jojomusicvolume", 50, jojo, "musicvolume")
 
 createConfigItem("p1standhealthx", 152, jojo.stand.P1, "x")
 createConfigItem("p1standhealthy", 24, jojo.stand.P1, "y")

@@ -109,20 +109,6 @@ local function infiniteTime()
 	wb(0xFF72CA, 0x99)
 end
 
-local ringdest = {}
-
-initConfigTable("ringdest", ringdest, "config")
-createConfigItem("ringdestmusicvolume", 50, ringdest, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(ringdest.musicvolume)
 	infiniteTime()
 end

@@ -205,21 +205,7 @@ local function infiniteTime()
 	wb(0xff5008,0x99)
 end
 
-local xmvsf = {}
-
-initConfigTable("xmvsf", xmvsf, "config")
-createConfigItem("xmvsfmusicvolume", 50, xmvsf, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF027
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(xmvsf.musicvolume)
 	infiniteTime()
 	if p1characterpick then
 		wb(p1characterid, p1characterpick)

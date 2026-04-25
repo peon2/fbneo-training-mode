@@ -174,13 +174,6 @@ local function readPlayerTwoStandHealth()
 	return rb(p2standhealth)
 end
 
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	if volume < 0 then volume = 0 end
-	if volume > 100 then volume = 100 end
-	volume = math.floor( (volume*0x80)/100 )
-	wb(0x205CC1A, volume)
-end
-
 local function infiniteTime()
 	wb(0x20314B4, 0x63)
 end
@@ -194,7 +187,6 @@ P2ChildMode = false
 function Run() -- runs every frame
 	infiniteTime()
 	infiniteCredit()
-	setMusicVolume(jojoba.musicvolume)
 	if P1ChildMode then
 		wb(p1childmode, 0xFF)
 	end
@@ -204,8 +196,6 @@ function Run() -- runs every frame
 end
 
 initConfigTable("jojoba", jojoba, "config")
-
-createConfigItem("jojobamusicvolume", 50, jojoba, "musicvolume")
 
 createConfigItem("p1standhealthx", 152, jojoba.stand.P1, "x")
 createConfigItem("p1standhealthy", 24, jojoba.stand.P1, "y")

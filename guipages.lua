@@ -1151,7 +1151,7 @@ end
 	.
 --]]
 -- format the tables for better navigation and format the info to fit the screen better
-function formatGUITables()
+function formatGUITables() -- TODO, consider a way to make this cheaper
 	local infomax = interactivegui.boxxlength/LETTER_WIDTH
 	local halfpagex = interactivegui.boxxhalflength
 	for pagename, page in pairs(guipages) do

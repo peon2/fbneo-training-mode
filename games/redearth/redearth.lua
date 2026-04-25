@@ -241,13 +241,6 @@ local function readPlayerTwoMaxStun()
 	return charsstunresistance[rb(p2charid)] + rb(p2stuncount)*5
 end
 
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	if volume < 0 then volume = 0 end
-	if volume > 100 then volume = 100 end
-	volume = math.floor( (volume*0x80)/100 )
-	wb(0x207BD0E, volume)
-end
-
 local function infiniteTime()
 	ww(0x2060700, 0x9A)
 end
@@ -259,7 +252,6 @@ end
 function Run()
 	infiniteTime()
 	infiniteCredits()
-	setMusicVolume(redearth.musicvolume)
 	if (rb(p1charid) == LEO) then
 		wb(p1sword, redearth.sword)
 		wb(p1shield, redearth.shield)
@@ -274,7 +266,6 @@ end
 
 initConfigTable("redearth", redearth, "config")
 
-createConfigItem("redearthmusicvolume", 50, redearth, "musicvolume")
 createConfigItem("redearthsword", LEGENDARY_SWORD, redearth, "sword")
 createConfigItem("redearthshield", LEGENDARY_SHIELD, redearth, "shield")
 createConfigItem("redearthorb", LIGHTNING, redearth, "orb")

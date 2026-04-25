@@ -157,20 +157,6 @@ local infiniteTime = function()
 	wb(0xFF8E09, 0x99)
 end
 
-local nwarr = {}
-
-initConfigTable("nwarr", nwarr, "config")
-createConfigItem("nwarrmusicvolume", 50, nwarr, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(nwarr.musicvolume)
 	infiniteTime()
 end

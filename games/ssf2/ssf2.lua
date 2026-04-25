@@ -5,5 +5,4 @@ p1uid = 0xFF83CE
 p2uid = 0xFF87CE
 
 timer = 0xFF8CCE
-musicvolume = 0xF019
 maxvolume = 0xFF

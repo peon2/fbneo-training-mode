@@ -1111,7 +1111,6 @@ end
 
 
 local render_hitboxes = function()
-	gui.clearuncommitted()
 
 	local f = game and game.get_render_frame(buffer) or {}
 	if not f.match_active then

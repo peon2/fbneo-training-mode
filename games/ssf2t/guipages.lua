@@ -783,28 +783,6 @@ advanced_settings = {
 					end
 				end,
 		},
-		nomusic = {
-			text = "Disable Background Music",
-			x = 150,
-			y = 70,
-			olcolour = "black",
-			info = {
-				"Disable background music"
-			},
-			func =	function()
-					nomusic_selector = nomusic_selector + 1
-					if nomusic_selector > 0 then
-						nomusic_selector = -1
-					end
-				end,
-			autofunc = function(this)
-					if nomusic_selector == -1 then
-						this.text = "Disable Background Music: Off"
-					elseif nomusic_selector == 0 then
-						this.text = "Disable Background Music: On"
-					end
-				end,
-		},
 		easy_charge_moves = {
 			text = "Easy Charge Moves",
 			x = 8,
@@ -977,25 +955,8 @@ advanced_settings = {
 		},
 }
 
-local music = {
-	text = "Music Volume",
-	x = 150,
-	y = 70,
-	fillpercent = 0,
-	olcolour = "black",
-	info = "Controls how loud the music is",
-	func = function()
-		changePageAndSelection("ssf2tmusic")
-	end,
-	autofunc = function(this)
-		this.text = string.format("Music Volume: %3d", getConfigValue("ssf2tmusicvolume"))
-		this.fillpercent = getConfigValue("ssf2tmusicvolume")/100
-	end,
-}
-
 table.insert(guipages.advancedsettings, advanced_settings["frameskip"])
 table.insert(guipages.advancedsettings, advanced_settings["slowdown"])
-table.insert(guipages.advancedsettings, music)
 table.insert(guipages.advancedsettings, advanced_settings["easy_charge_moves"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_advantage"])
 table.insert(guipages.advancedsettings, advanced_settings["frame_trap"])
@@ -1004,23 +965,6 @@ table.insert(guipages.advancedsettings, advanced_settings["crossup"])
 table.insert(guipages.advancedsettings, advanced_settings["safe_jump"])
 table.insert(guipages.advancedsettings, advanced_settings["tick_throws"])
 
-guipages.ssf2tmusic = createScrollingBar(guipages.advancedsettings, "Music Volume: 00", music.x, music.y, 0, 100, nil, -- range of [0, 100]
-	function(n, k)
-		if n then
-			local volume = getConfigValue("ssf2tmusicvolume")+n
-			changeConfig("ssf2tmusicvolume", volume)
-			return volume
-		end
-		if k then
-			changeConfig("ssf2tmusicvolume", k)
-			return k
-		end
-		return getConfigValue("ssf2tmusicvolume")
-	end,
-	function(this)
-		this.text = string.format("Music Volume: %3d", getConfigValue("ssf2tmusicvolume"))
-	end
-)
 ------------------------------------------
 ------------------------------------------
 -- Displaying the contextual options

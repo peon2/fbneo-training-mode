@@ -3,7 +3,6 @@ assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being r
 p1uid = 0xFF83C6
 p2uid = 0xFF86C6
 timer = 0xFF8ACE
-musicvolume = 0xD04B
 maxvolume = 0x3F -- what the maximum volume is in game
 
 p1maxhealth = 0x90
@@ -205,14 +204,8 @@ local function infiniteTime()
 	wb(timer, maxtime)
 end
 
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run() -- runs every frame
 	infiniteTime()
-	setMusicVolume(sf2.musicvolume)
 	if sf2.p1stun then
 		writePlayerOneStunReset(0)
 	end
@@ -223,7 +216,6 @@ end
 
 initConfigTable("sf2", sf2, "config")
 
-createConfigItem("sf2musicvolume", 50, sf2, "musicvolume")
 createConfigItem("sf2disablestunp1", false, sf2, "p1stun")
 createConfigItem("sf2disablestunp2", false, sf2, "p2stun")
 

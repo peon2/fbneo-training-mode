@@ -167,21 +167,7 @@ function infiniteTime()
 	wb(timer, 0x99)
 end
 
-local cybots = {}
-
-initConfigTable("cybots", cybots, "config")
-createConfigItem("cybotsmusicvolume", 50, cybots, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(cybots.musicvolume)
 	infiniteTime()
 	wb(0xff470c, 48) -- set arms to max
 	wb(0xff870c, 48) -- set arms to max

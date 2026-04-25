@@ -175,20 +175,6 @@ local infiniteTime = function()
 	ww(0xFFAE09, 0x6300)
 end
 
-local sfa = {}
-
-initConfigTable("sfa", sfa, "config")
-createConfigItem("sfamusicvolume", 50, sfa, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(sfa.musicvolume)
 	infiniteTime()
 end

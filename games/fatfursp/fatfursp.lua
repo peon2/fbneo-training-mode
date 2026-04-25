@@ -43,8 +43,7 @@ gamedefaultconfig = {
 	hud = {
 		combotext = {
 			x=144,
-			y=35,
-			enabled=true,
+			y=35
 		},
 		health = {
 			P1 = {
@@ -134,7 +133,7 @@ function infiniteTime()
 	ww(0x10092a, 0x6030)
 end
 
-if ROM == "fatfurspbh" then
+if ROM_NAME == "fatfurspbh" then
 	Run = function() -- runs every frame
 		infiniteTime()
 	end

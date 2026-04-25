@@ -172,21 +172,7 @@ function infiniteTime()
 	wb(0xFF4808,0x99)
 end
 
-local xmcota = {}
-
-initConfigTable("xmcota", xmcota, "config")
-createConfigItem("xmcotamusicvolume", 50, xmcota, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(xmcota.musicvolume)
 	infiniteTime()
 	if p1characterpick then
 		wb(p1characterid, p1characterpick)

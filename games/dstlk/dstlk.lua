@@ -152,20 +152,6 @@ local infiniteTime = function()
 	wb(0xFF9409, 0x99)
 end
 
-local dstlk = {}
-
-initConfigTable("dstlk", dstlk, "config")
-createConfigItem("dstlkmusicvolume", 50, dstlk, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(dstlk.musicvolume)
 	infiniteTime()
 end

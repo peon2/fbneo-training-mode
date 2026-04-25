@@ -90,26 +90,6 @@ local p2stunbar = {
 	end,
 }
 
-local musicmaxvolume = 100
-
-local music = {
-	text = "Music Volume",
-	rawx = interactivegui.boxxhalflength,
-	x = 10,
-	y = 150,
-	fillpercent = 0,
-	olcolour = "black",
-	info = "Controls how loud the music is",
-	func = function()
-		changePageAndSelection("sfiii3music")
-	end,
-	autofunc = function(this)
-		this.text = string.format("Music Volume: %3d", getConfigValue("sfiii3musicvolume"))
-		this.x = this.rawx-#this.text*LETTER_HALFWIDTH
-		this.fillpercent = getConfigValue("sfiii3musicvolume")/musicmaxvolume
-	end,
-}
-
 guicustompage = {
 	title = {
 		text = "Third Strike Settings"
@@ -129,8 +109,7 @@ guicustompage = {
 	p1stun,
 	p1stunbar,
 	p2stun,
-	p2stunbar,
-	music
+	p2stunbar
 }
 
 
@@ -216,21 +195,4 @@ guipages.p2stunbar = createScrollingBar(guicustompage, "Stun: 00", p2stunbar.raw
 	end,
 	function(this)
 		this.text = string.format("Stun: %2d", getConfigValue("sfiii3stunp2"))
-	end)
-
-guipages.sfiii3music = createScrollingBar(guicustompage, "Music Volume: 00", music.rawx - #"Music Volume: 000"*LETTER_HALFWIDTH, music.y, 0, musicmaxvolume, nil,
-	function(n, k)
-		if n then
-			local volume = getConfigValue("sfiii3musicvolume")+n
-			changeConfig("sfiii3musicvolume", volume)
-			return volume
-		end
-		if k then
-			changeConfig("sfiii3musicvolume", k)
-			return k
-		end
-		return getConfigValue("sfiii3musicvolume")
-	end,
-	function(this)
-		this.text = string.format("Music Volume: %3d", getConfigValue("sfiii3musicvolume"))
 	end)

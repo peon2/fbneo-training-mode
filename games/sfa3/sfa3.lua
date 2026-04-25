@@ -552,21 +552,7 @@ end
 
 Z3_functions = {updateGamestate, Z3_Training_basic_settings, draw_messages}
 
-local sfa3 = {}
-
-initConfigTable("sfa3", sfa3, "config")
-createConfigItem("sfa3musicvolume", 50, sfa3, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF027
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run()
-	setMusicVolume(sfa3.musicvolume)
 	for i = 1, #Z3_functions do
 		Z3_functions[i]()
 	end

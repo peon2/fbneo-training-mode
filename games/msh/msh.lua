@@ -137,21 +137,7 @@ function gemsPlayerOne()
 
 end
 
-local msh = {}
-
-initConfigTable("msh", msh, "config")
-createConfigItem("mshmusicvolume", 50, msh, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run() -- runs every frame
-	setMusicVolume(msh.musicvolume)
 	infiniteTime()
 
 	for gemMem = 0xFF41B6, 0xFF41BB, 1 do

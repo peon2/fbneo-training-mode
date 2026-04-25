@@ -1,7 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-local musicmaxvolume = 100
-
 local orbstr = {"Ice", "Meteor", "Poison", "Fire", "Wind", "Lightning"}
 local orbcolours = {0x70C0D0FF, 0x604060FF, 0xA060A0FF, 0xF07000FF, 0x70D050FF, 0xF0E000FF}
 local orb = {
@@ -68,24 +66,6 @@ local shield = {
 	end
 }
 
-local music = {
-	text = "Music Volume",
-	rawx = interactivegui.boxxhalflength,
-	x = 10,
-	y = 150,
-	fillpercent = 0,
-	olcolour = colour.olcolour,
-	info = "Controls how loud the music is",
-	func = function()
-		changePageAndSelection("redearthmusic")
-	end,
-	autofunc = function(this)
-		this.text = string.format("Music Volume: %3d", getConfigValue("redearthmusicvolume"))
-		this.x = this.rawx-#this.text*LETTER_HALFWIDTH
-		this.fillpercent = getConfigValue("redearthmusicvolume")/musicmaxvolume
-	end,
-}
-
 guicustompage = {
 	title = {
 		text = "Red Earth Settings"
@@ -95,8 +75,7 @@ guicustompage = {
 	guielements.rightarrow,
 	orb,
 	sword,
-	shield,
-	music
+	shield
 }
 
 do
@@ -167,20 +146,3 @@ do
 		true
 	)
 end
-
-guipages.redearthmusic = createScrollingBar(guicustompage, "Music Volume: 00", music.rawx - #"Music Volume: 000"*LETTER_HALFWIDTH, music.y, 0, musicmaxvolume, nil,
-	function(n, k)
-		if n then
-			local volume = getConfigValue("redearthmusicvolume")
-			changeConfig("redearthmusicvolume", volume+n)
-			return volume
-		end
-		if k then
-			changeConfig("redearthmusicvolume", k)
-			return k
-		end
-		return getConfigValue("redearthmusicvolume")
-	end,
-	function(this)
-		this.text = string.format("Music Volume: %3d", getConfigValue("redearthmusicvolume"))
-	end)

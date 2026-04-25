@@ -431,19 +431,6 @@ local p2DizzyControl = function()
 
 end
 
-local hsf2 = {}
-
-initConfigTable("hsf2", hsf2, "config")
-createConfigItem("hsf2musicvolume", 25, hsf2, "musicvolume")
-
-local maxmusicvolume = 0xFF -- what the maximum volume is in game
-local musicvolume = 0xF019
-
-function setMusicVolume(volume) -- squeeze from 0 to 100
-	local volume = math.floor( (volume*maxmusicvolume)/100 )
-	memory.writebyte_audio(musicvolume, volume)
-end
-
 function Run() -- runs every frame
 
 	-- attacker state (ff833f or +0x400 for p2): 0 idle, 2 crouching, 4 jumping, 10 doing a normal attack or throw, 12 on hitstun (doing an special attack)
@@ -465,5 +452,4 @@ function Run() -- runs every frame
 	stageSelect()
 	p2DizzyControl()
 	prev_p1action = p1action
-	setMusicVolume(hsf2.musicvolume)
 end

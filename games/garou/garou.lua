@@ -41,24 +41,24 @@ gamedefaultconfig = {
 		},
 		health = {
 			P1 = {
-				x = 6,
+				x = 3,
 				y = 16,
-				enabled = true,
+				enabled = false,
 			},
 			P2 = {
-				x = 303,
+				x = 306,
 				y = 16,
-				enabled = true,
+				enabled = false,
 			}
 		},
 		meter = {
 			P1 = {
-				x = 90,
+				x = 91,
 				y = 208,
 				enabled = true,
 			},
 			P2 = {
-				x = 222,
+				x = 218,
 				y = 208,
 				enabled = true,
 			}

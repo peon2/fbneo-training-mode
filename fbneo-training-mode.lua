@@ -7,8 +7,8 @@ DISABLE_SCROLLING_INPUT = false
 FBNEO_TRAINING_MODE_VERSION = "v0.26.03.16"
 
 --DEBUG = true
-ROM = emu.romname()
-PARENT = emu.parentname()
+ROM_NAME = emu.romname()
+PARENT_NAME = emu.parentname()
 REPLAY_SLOTS_COUNT = 5
 
 LETTER_WIDTH = 4 -- width of a gui.text letter in pixels
@@ -78,7 +78,7 @@ local fc = emu.framecount()
 
 local games = {
 	[""] = {}, -- null case
-	aliencha = {"aliencha", iconfile = "icons-capcom-32.png"},
+	aliencha = {iconfile = "icons-capcom-32.png"},
 	aof = {iconfile = "icons-neogeo-32.png"},
 	aof2 = {iconfile = "icons-neogeo-32.png"},
 	aof3 = {hitboxes = "aof3-hitboxes", iconfile = "icons-neogeo-32.png"},
@@ -162,8 +162,8 @@ local games = {
 	sfiii3 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
 	sgemf = {hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
 	slammast = {iconfile = "icons-slammast-32.png"},
-	ssf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32letter.png"},
-	ssf2t = {hitboxes = "st-hitboxes", iconfile = "icons-capcom-32letter.png"},
+	ssf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-letter-32.png"},
+	ssf2t = {hitboxes = "st-hitboxes", iconfile = "icons-capcom-letter-32.png"},
 	svc = {hitboxes = "svc-hitboxes", iconfile = "icons-neogeo-32.png"},
 	teot = {iconfile = "icons-neogeo-32.png"},
 	timekill = {iconfile = "icons-timekill-32.png"},
@@ -196,6 +196,9 @@ end
 --------
 local HUDElements = { }
 
+--[[
+	TODO GIVE THIS A DESCRIPTION
+--]]
 function createHUDElement(name, x, y, enabled, reset, draw, movehud)
 	assert(type(name)=="string", "Name must be of type string")
 	assert(type(x)=="function", "X must be a function")
@@ -217,7 +220,7 @@ function createHUDElement(name, x, y, enabled, reset, draw, movehud)
 end
 
 gamepath = "games/other/"
-local configpath = gamepath..ROM..".lua"
+local configpath = gamepath..ROM_NAME..".lua"
 guiinputs = {
 	P1 = {previousinputs={}, coinframestart = 0, coinpresscount = 0, leftframecount = 0, rightframecount = 0, downframecount = 0, upframecount = 0,},
 	P2 = {previousinputs={}},
@@ -1074,6 +1077,33 @@ local function deepAppendCopy(src, dst, isrecursive)
 	end
 end
 
+--[[
+	Expensive function.
+	The same as deepAppendCopy, but if an uninitialised table is encountered, it is forceably copied over.
+	Call this WITHOUT the third argument given.
+--]]
+local function unsafeDeepAppendCopy(src, dst, isrecursive)
+	if type(src) ~= "table" then return end
+	for i, v in pairs(src) do
+		if type(v) == "table" then
+			if dst[i] == nil then
+				dst[i] = {}
+			end
+			local ret = deepAppendCopy(v, dst[i], true)
+			if ret then
+				local tablename = i.."."..ret
+				if isrecursive then
+					return tablename
+				else
+					assert(1==0, "Table: '"..tablename.."' doesn't exist and cannot be appended to.")
+				end
+			end
+		else
+			dst[i] = v
+		end
+	end
+end
+
 local function updateDefaultConfig(id)
 	local configitem = configitems[id]
 	local name = configitem.name
@@ -1121,6 +1151,25 @@ function initConfigTable(tablename, t, configstr)
 end
 
 --[[
+	Call this if a Config Table is created outside of a game script startup.
+	If the table cannot be found in the config, a new table is created.
+	Use initConfigTable instead if possible.
+	If you need to use getConfigTable, you probably need to use initConfigItem too.
+	
+	See the mute addon as an example.
+--]]
+function getConfigTable(tablename, configstr)
+	assert(type(tablename)=="string", "Table Name must be a string")
+	assert(validconfigs[configstr], configstr.." is not a valid config")
+	local t = {}
+	if config[tablename] then
+		unsafeDeepAppendCopy(config[tablename], t)
+	end
+	initConfigTable(tablename, t, configstr)
+	return t
+end
+
+--[[
 	This function will create a config item using the arguments given in the configpointer and varpointer tables given.
 
 	configname -> The unique name associated with this config option, used to get this config and write to it.
@@ -1160,6 +1209,25 @@ function createConfigItem(configname, default, configpointer, internalname, varp
 	}
 end
 
+--[[
+	Call this if a config item is created after the game luas are loaded.
+	
+	See the mute addon as an example.
+--]]
+function initConfigItem(configname)
+	assert(type(configname)=="string", "Config Name must be a string")
+	assert(configitems[configname], "Cannot find configname: '"..configname)
+	local configitem = configitems[configname]
+	local name = configitem.name
+	local default = configitem.default
+	if configitem.configpointer[name]==nil then
+		configitem.configpointer[name] = default
+	end
+	if configitem.varpointer[name]==nil then
+		configitem.varpointer[name] = default
+	end
+end
+
 function getConfigItemsFiltered(filter) -- returns configitems by comparing the start of their names against a filter
 	assert(type(filter)=="string", "Filter should be of type string.")
 	local newconfigitems = {}
@@ -1180,7 +1248,7 @@ function getConfigValue(id)
 	assert(configitems[id], "Config Item: '"..id.."' does not exist.")
 	local configitem = configitems[id]
 	local name = configitem.name
-	return configitem.configpointer[name], configitem.varpointer and configitem.varpointer[name], configitem.default
+	return configitem.configpointer[name], configitem.varpointer[name], configitem.default
 end
 
 function changeConfig(id, value, updatevar)
@@ -1307,10 +1375,10 @@ end
 
 gamename = ""
 for _gamename, _ in pairs(games) do
-	if (ROM == _gamename or PARENT == _gamename) then
+	if (ROM_NAME == _gamename or PARENT_NAME == _gamename) then
 		gamename = _gamename
 		gamepath = "games/"..gamename.."/"
-		configpath = gamepath..ROM..".config"
+		configpath = gamepath..ROM_NAME..".config"
 	end
 end
 
@@ -1329,7 +1397,7 @@ if fexists("games/"..gamename.."/"..gamename..".lua") then
 	local i = 5
 	while (translationtable[i]:sub(1,6)=="button") do nbuttons = nbuttons+1 i=i+1 end
 else
-	write("Memory addresses not found for "..ROM)
+	write("Memory addresses not found for "..ROM_NAME)
 end
 
 -- check if the translationtable is valid, failsafe
@@ -1350,7 +1418,7 @@ if translationtable then
 end
 
 if nbuttons == 0 then
-	write("No buttons found for "..ROM)
+	write("No buttons found for "..ROM_NAME)
 	write "Attempting to make a translationtable from defaults"
 	-- try to make a translation table
 
@@ -1477,7 +1545,7 @@ setGameConstants()
 ----------------------------------------------
 -- CHECK IF TABLEIO IS PRESENT AND TRYING TO OPEN CONFIG FILE
 ----------------------------------------------
--- TRY TO USE CONFIG.LUA, THEN A GAME'S DEFAULT CONFIG, THEN THE GENERAL DEFAULT CONFIG
+-- TRY TO USE SAVED CONFIG, THEN A GAME'S DEFAULT CONFIG, THEN THE GENERAL DEFAULT CONFIG
 ----------------------------------------------
 do
 
@@ -1487,9 +1555,9 @@ if fexists("resources/tableio.lua") then
 		write "Game default config not found."
 	else
 		deepAppendCopy(gamedefaultconfig, config)
-		for id, _ in pairs(configitems) do -- update the default values and populate the config table with those values
-			updateDefaultConfig(id)
-			resetConfig(id)
+		for configitemid, _ in pairs(configitems) do -- update the default values and populate the config table with those values
+			updateDefaultConfig(configitemid)
+			resetConfig(configitemid)
 		end
 	end
 
@@ -1500,7 +1568,7 @@ if fexists("resources/tableio.lua") then
 		elseif gameconfig.type ~= "gameconfig" then
 			write("Can't read config file found for "..gamename..", bad format.")
 		else -- if the file is loaded, make sure the contents are at least superficially correct
-			deepAppendCopy(gameconfig, config)
+			unsafeDeepAppendCopy(gameconfig, config) -- we have to use unsafe here to account for config items not defined yet, we are assuming the saved config isn't malformed
 		end
 	end
 
@@ -1613,10 +1681,10 @@ do
 		if fexists("hitboxes/"..hitbox..".lua") then
 			dofile("hitboxes/"..hitbox..".lua")
 			else
-			write("Hitbox file "..games[gamename].hitboxes.."not found for "..ROM)
+			write("Hitbox file "..games[gamename].hitboxes.."not found for "..ROM_NAME)
 		end
 	else
-		write("No associated hitbox file for "..ROM)
+		write("No associated hitbox file for "..ROM_NAME)
 	end
 end
 ----------------------------------------------
@@ -1652,7 +1720,7 @@ if games[gamename].iconfile then
 		write("inputs/scrolling-input/"..iconfile.." not found")
 	end
 else
-	write("No scrolling input image found for "..ROM)
+	write("No scrolling input image found for "..ROM_NAME)
 end
 
 ----------------------------------------------
@@ -2235,10 +2303,10 @@ function replaySave()
 		write("Saving replaypack to: "..gamepath.."save.replaypack")
 	else
 		assert(
-			table.save(recording,gamepath..ROM..".replaypack")==nil,
+			table.save(recording,gamepath..ROM_NAME..".replaypack")==nil,
 			"Can't save replay file"
 		)
-		write(gamepath..ROM..".replaypack")
+		write(gamepath..ROM_NAME..".replaypack")
 	end
 end
 
@@ -2409,7 +2477,7 @@ function reloadGUIPages()
 	if fexists("guipages.lua") then
 		dofile("guipages.lua")
 	else
-		write("GUI pages not found"..ROM)
+		write("GUI pages not found"..ROM_NAME)
 	end
 end
 
@@ -3275,7 +3343,7 @@ local function drawElement(elementid, element)
 	local olcolour = elementid == interactivegui.selection and interactivegui.selectcolour or element.olcolour
 	local w = #element.text*LETTER_WIDTH + LETTER_WIDTH
 	local h = LETTER_HEIGHT + 2 -- small amount of empty space
-	if element.bgcolour ~= nil or element.olcolour ~= nil then
+	if element.bgcolour ~= nil or olcolour ~= nil then
 		gui.box(
 			element.x + interactivegui.boxx,
 			element.y + interactivegui.boxy,
@@ -4597,17 +4665,17 @@ setRegisters()
 ----------------------------------------------
 
 -- global addons
-dofile("addon/addons.lua")
+dofile("addon/addons.lua") -- see what addons exist...
 if DEBUG then
-	for _, v in pairs(DEBUG_addons_run) do
-		if fexists("addon/"..v) then
-			dofile("addon/"..v)
+	for _, addon in pairs(DEBUG_addons_run) do
+		if fexists("addon/"..addon) then
+			dofile("addon/"..addon)
 		end
 	end
 else
-	for _, v in pairs(addons_run) do
-		if fexists("addon/"..v) then
-			dofile("addon/"..v)
+	for _, addon in pairs(addons_run) do
+		if fexists("addon/"..addon) then
+			dofile("addon/"..addon)
 		end
 	end
 end
