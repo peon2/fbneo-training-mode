@@ -197,16 +197,35 @@ end
 local HUDElements = { }
 
 --[[
-	TODO GIVE THIS A DESCRIPTION
+	This function creates something displayable on screen that can be modified by the 'HUD Settings'
+	
+	name -> Unique identifier of this element.
+	&x -> A function that will both set the x value and return the x value.
+	&y -> A function that will both set the y value and return the y value.
+	&enabled -> A function that will both set whether this function is visible and return if it is visible.
+	reset -> A function that will reset this HUDElement to default values.
+	draw -> A function that will draw the HUDElement on screen, it should know the x and y values implicitly.
+	*extrafuncs -> A table of helpElements.
+	
+	&: in the format:
+		function(n)
+			if n~=nil then
+				[LOGIC TO CHANGE VALUE HERE]
+			end
+			return [LOGIC TO GET VALUE HERE]
+		end
+	*: Optional
+	
+	See redearth for user created examples, or "p1scrollinginput" below as an example.
 --]]
-function createHUDElement(name, x, y, enabled, reset, draw, movehud)
+function createHUDElement(name, x, y, enabled, reset, draw, extrafuncs)
 	assert(type(name)=="string", "Name must be of type string")
 	assert(type(x)=="function", "X must be a function")
 	assert(type(y)=="function", "Y must be a function")
-	assert(type(enabled)=="function" or enabled == nil, "Enabled must be a function")
-	assert(type(reset)=="function" or reset == nil, "Reset must be a function")
-	assert(type(draw)=="function" or draw == nil, "Draw must be a function")
-	assert(type(movehud)=="table" or movehud == nil, "MoveHud must be a table")
+	assert(type(enabled)=="function", "Enabled must be a function")
+	assert(type(reset)=="function", "Reset must be a function")
+	assert(type(draw)=="function", "Draw must be a function")
+	assert(type(extrafuncs)=="table" or extrafuncs == nil, "extrafuncs must be a table")
 
 	table.insert(HUDElements, {
 		name = name,
@@ -215,7 +234,7 @@ function createHUDElement(name, x, y, enabled, reset, draw, movehud)
 		enabled = enabled,
 		reset = reset,
 		draw = draw,
-		movehud = movehud
+		extrafuncs = extrafuncs
 	})
 end
 
@@ -3770,7 +3789,7 @@ local function moveHUDInteract()
 
 	local temp
 	if helpElements.name ~= helpButtons.funcs.name then -- if this needs to be changed
-		for _,v in ipairs(HUDElements[interactivegui.movehud.selection].movehud or {}) do
+		for _,v in ipairs(HUDElements[interactivegui.movehud.selection].extrafuncs or {}) do
 			table.insert(helpButtons, {name=v.name, button=v.button})
 			temp = copytable(helpButtons.funcs)
 			helpButtons.funcs = nil -- avoid memory leaks
@@ -3794,7 +3813,7 @@ local function moveHUDInteract()
 	gui.text(dispx, dispy, str, col)
 
 	-- don't display the tooltip if it will cover up elements
-	if y>=interactivegui.sh-27 and (x>=(interactivegui.sw/2-helpElements.len*9) and x<=(interactivegui.sw/2+helpElements.len*9)) then toggledrawhelp=false else toggledrawhelp=true end
+	toggledrawhelp = not (y>=interactivegui.sh-27 and (x>=(interactivegui.sw/2-helpElements.len*9) and x<=(interactivegui.sw/2+helpElements.len*9)))
 
 	helpElements.buttons = helpButtons
 end
@@ -4331,14 +4350,14 @@ function setRegisters() -- pre-calc stuff
 	local str = ""
 
 	if gamefunctions.readplayeronehealth then
-		table.insert(HUDElements, {
-			name = "p1health",
-			x = function(n) if n then changeConfig("p1healthx", n) end return hud.health.P1.x end,
-			y = function(n) if n then changeConfig("p1healthy", n) end return hud.health.P1.y end,
-			enabled = function(n) if n~=nil then changeConfig("p1healthenabled", n) end return hud.health.P1.enabled end,
-			reset = function() resetConfig("p1healthx") resetConfig("p1healthy") resetConfig("p1healthenabled") end,
-			draw = function() gui.text(hud.health.P1.x, hud.health.P1.y, gamevars.P1.health, hud.health.P1.textcolour) end
-		})
+		createHUDElement(
+			"p1health",
+			function(n) if n then changeConfig("p1healthx", n) end return hud.health.P1.x end,
+			function(n) if n then changeConfig("p1healthy", n) end return hud.health.P1.y end,
+			function(n) if n~=nil then changeConfig("p1healthenabled", n) end return hud.health.P1.enabled end,
+			function() resetConfig("p1healthx") resetConfig("p1healthy") resetConfig("p1healthenabled") end,
+			function() gui.text(hud.health.P1.x, hud.health.P1.y, gamevars.P1.health, hud.health.P1.textcolour) end
+		)
 		if gamefunctions.playeroneinhitstun then
 			table.insert(registers.interactiveguiregister, function() comboHandler("P1") end)
 		else
@@ -4349,14 +4368,14 @@ function setRegisters() -- pre-calc stuff
 	end
 
 	if gamefunctions.readplayertwohealth then
-		table.insert(HUDElements, {
-			name = "p2health",
-			x = function(n) if n then changeConfig("p2healthx", n) end return hud.health.P2.x end,
-			y = function(n) if n then changeConfig("p2healthy", n) end return hud.health.P2.y end,
-			enabled = function(n) if n~=nil then changeConfig("p2healthenabled", n) end return hud.health.P2.enabled end,
-			reset = function() resetConfig("p2healthx") resetConfig("p2healthy") resetConfig("p2healthenabled") end,
-			draw = function() gui.text(hud.health.P2.x, hud.health.P2.y, gamevars.P2.health, hud.health.P2.textcolour) end
-		})
+		createHUDElement(
+			"p2health",
+			function(n) if n then changeConfig("p2healthx", n) end return hud.health.P2.x end,
+			function(n) if n then changeConfig("p2healthy", n) end return hud.health.P2.y end,
+			function(n) if n~=nil then changeConfig("p2healthenabled", n) end return hud.health.P2.enabled end,
+			function() resetConfig("p2healthx") resetConfig("p2healthy") resetConfig("p2healthenabled") end,
+			function() gui.text(hud.health.P2.x, hud.health.P2.y, gamevars.P2.health, hud.health.P2.textcolour) end
+		)
 		if gamefunctions.playertwoinhitstun then
 			table.insert(registers.interactiveguiregister, function() comboHandler("P2") end)
 		else
@@ -4387,14 +4406,14 @@ function setRegisters() -- pre-calc stuff
 
 	if gamevars.P2.constants.maxhealth and gamefunctions.readplayertwohealth and gamefunctions.writeplayertwohealth and gamefunctions.playertwoinhitstun then
 		table.insert(registers.registerafter, function() healthHandler("P2") end)
-		table.insert(HUDElements, {
-			name = "combocounter",
-			x = function(n) if n then changeConfig("combotextx", n) end return hud.combotext.x end,
-			y = function(n) if n then changeConfig("combotexty", n, hud) end return hud.combotext.y end,
-			enabled = function(n) if n~=nil then changeConfig("combotextenabled", n) end return hud.combotext.enabled end,
-			reset = function() resetConfig("combotextx") resetConfig("combotexty") resetConfig("combotextenabled") end,
-			draw = drawcomboHUD
-		})
+		createHUDElement(
+			"combocounter",
+			function(n) if n then changeConfig("combotextx", n) end return hud.combotext.x end,
+			function(n) if n then changeConfig("combotexty", n, hud) end return hud.combotext.y end,
+			function(n) if n~=nil then changeConfig("combotextenabled", n) end return hud.combotext.enabled end,
+			function() resetConfig("combotextx") resetConfig("combotexty") resetConfig("combotextenabled") end,
+			drawcomboHUD
+		)
 	else
 		str = ""
 		if not gamevars.P2.constants.maxhealth then
@@ -4439,14 +4458,14 @@ function setRegisters() -- pre-calc stuff
 	end
 
 	if gamevars.P1.constants.maxmeter and gamefunctions.readplayeronemeter then
-		table.insert(HUDElements, {
-			name = "p1meter",
-			x = function(n) if n then changeConfig("p1meterx", n) end return hud.meter.P1.x end,
-			y = function(n) if n then changeConfig("p1metery", n) end return hud.meter.P1.y end,
-			enabled = function(n) if n~=nil then changeConfig("p1meterenabled", n) end return hud.meter.P1.enabled end,
-			reset = function() resetConfig("p1meterx") resetConfig("p1metery") resetConfig("p1meterenabled") end,
-			draw = function() gui.text(hud.meter.P1.x, hud.meter.P1.y, gamevars.P1.meter, hud.meter.P1.textcolour) end
-		})
+		createHUDElement(
+			"p1meter",
+			function(n) if n then changeConfig("p1meterx", n) end return hud.meter.P1.x end,
+			function(n) if n then changeConfig("p1metery", n) end return hud.meter.P1.y end,
+			function(n) if n~=nil then changeConfig("p1meterenabled", n) end return hud.meter.P1.enabled end,
+			function() resetConfig("p1meterx") resetConfig("p1metery") resetConfig("p1meterenabled") end,
+			function() gui.text(hud.meter.P1.x, hud.meter.P1.y, gamevars.P1.meter, hud.meter.P1.textcolour) end
+		)
 		if gamefunctions.writeplayeronemeter and gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P1") end)
 		else
@@ -4463,14 +4482,14 @@ function setRegisters() -- pre-calc stuff
 	end
 
 	if gamevars.P2.constants.maxmeter and gamefunctions.readplayertwometer then
-		table.insert(HUDElements, {
-			name = "p2meter",
-			x = function(n) if n then changeConfig("p2meterx", n) end return hud.meter.P2.x end,
-			y = function(n) if n then changeConfig("p2metery", n) end return hud.meter.P2.y end,
-			enabled = function(n) if n~=nil then changeConfig("p2meterenabled", n) end return hud.meter.P2.enabled end,
-			reset = function() resetConfig("p2meterx") resetConfig("p2metery") resetConfig("p2meterenabled") end,
-			draw = function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P2.meter, hud.meter.P2.textcolour) end
-		})
+		createHUDElement(
+			"p2meter",
+			function(n) if n then changeConfig("p2meterx", n) end return hud.meter.P2.x end,
+			function(n) if n then changeConfig("p2metery", n) end return hud.meter.P2.y end,
+			function(n) if n~=nil then changeConfig("p2meterenabled", n) end return hud.meter.P2.enabled end,
+			function() resetConfig("p2meterx") resetConfig("p2metery") resetConfig("p2meterenabled") end,
+			function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P2.meter, hud.meter.P2.textcolour) end
+		)
 		if gamefunctions.writeplayertwometer and gamefunctions.readplayeronehealth and gamefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P2") end)
 		else
@@ -4538,63 +4557,63 @@ function setRegisters() -- pre-calc stuff
 
 	--kb
 	local kb = inputs.properties.kb
-	table.insert(HUDElements, {
-		name = "kb",
-		x = function(n) if n then changeConfig("kbx", n) end return hud.kb.x end,
-		y = function(n) if n then changeConfig("kby", n) end return hud.kb.y end,
-		enabled = function(n) if n~=nil then changeConfig("kbenabled", n) end return hud.kb.enabled end,
-		reset = function() resetConfig("kbx") resetConfig("kby") resetConfig("kbenabled") end,
-		draw = function() drawKB(hud.kb.x, hud.kb.y) end
-	})
+	createHUDElement(
+		"kb",
+		function(n) if n then changeConfig("kbx", n) end return hud.kb.x end,
+		function(n) if n then changeConfig("kby", n) end return hud.kb.y end,
+		function(n) if n~=nil then changeConfig("kbenabled", n) end return hud.kb.enabled end,
+		function() resetConfig("kbx") resetConfig("kby") resetConfig("kbenabled") end,
+		function() drawKB(hud.kb.x, hud.kb.y) end
+	)
 
 	if scrollingInputReg then -- if scrolling-input-display.lua is loaded
 		local scroll = inputs.properties.scrollinginput -- keep it short
-		table.insert(HUDElements, {
-			name = "p1scrollinginput",
-			x = function(n) if n then changeConfig("scrollinginputxp1", n) end return inputs.properties.scrolling.P1.x end,
-			y = function(n) if n then changeConfig("scrollinginputyp1", n) end return inputs.properties.scrolling.P1.y end,
-			enabled = function(n) if n~=nil then changeConfig("scrollinginputenabledp1", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P1.enabled end,
-			reset = function() resetConfig("scrollinginputxp1") resetConfig("scrollinginputyp1") resetConfig("scrollinginputenabledp1") resetConfig("scrollinginputframes") end,
-			draw = function() end, -- handled by scrolling-input-display.lua
-			movehud = { -- extra functions for scrolling input
+		createHUDElement(
+			"p1scrollinginput",
+			function(n) if n then changeConfig("scrollinginputxp1", n) end return inputs.properties.scrolling.P1.x end, -- we know n is either nil or an int, never a bool
+			function(n) if n then changeConfig("scrollinginputyp1", n) end return inputs.properties.scrolling.P1.y end,
+			function(n) if n~=nil then changeConfig("scrollinginputenabledp1", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P1.enabled end,
+			function() resetConfig("scrollinginputxp1") resetConfig("scrollinginputyp1") resetConfig("scrollinginputenabledp1") resetConfig("scrollinginputframes") end,
+			function() end, -- handled by scrolling-input-display.lua
+			{ -- extra functions for scrolling input
 				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then changeConfig("scrollinginputframes", not getConfigValue("scrollinginputframes")) end end}, -- toggle numbers
 				{name="INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrolling.iconsize<16 then changeConfig("scrollinginputiconsize", inputs.properties.scrolling.iconsize+1) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
 				{name="DEC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrolling.iconsize>8  then changeConfig("scrollinginputiconsize", inputs.properties.scrolling.iconsize-1) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
 			}
-		})
-		table.insert(HUDElements, {
-			name = "p2scrollinginput",
-			x = function(n) if n then changeConfig("scrollinginputxp2", n) end return inputs.properties.scrolling.P2.x end,
-			y = function(n) if n then changeConfig("scrollinginputyp2", n) end return inputs.properties.scrolling.P2.y end,
-			enabled = function(n) if n~=nil then changeConfig("scrollinginputenabledp2", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P2.enabled end,
-			reset = function() resetConfig("scrollinginputxp2") resetConfig("scrollinginputyp2") resetConfig("scrollinginputenabledp2") resetConfig("scrollinginputframes") end,
-			draw = function() end, -- handled by scrolling-input-display.lua
-			movehud = { -- extra functions for scrolling input
+		)
+		createHUDElement(
+			"p2scrollinginput",
+			function(n) if n then changeConfig("scrollinginputxp2", n) end return inputs.properties.scrolling.P2.x end,
+			function(n) if n then changeConfig("scrollinginputyp2", n) end return inputs.properties.scrolling.P2.y end,
+			function(n) if n~=nil then changeConfig("scrollinginputenabledp2", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P2.enabled end,
+			function() resetConfig("scrollinginputxp2") resetConfig("scrollinginputyp2") resetConfig("scrollinginputenabledp2") resetConfig("scrollinginputframes") end,
+			function() end, -- handled by scrolling-input-display.lua
+			{ -- extra functions for scrolling input
 				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then changeConfig("scrollinginputframes", not getConfigValue("scrollinginputframes")) end end}, -- toggle numbers
 				{name="INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrolling.iconsize<16 then changeConfig("scrollinginputiconsize", inputs.properties.scrolling.iconsize+1) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
 				{name="DEC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrolling.iconsize>8  then changeConfig("scrollinginputiconsize", inputs.properties.scrolling.iconsize-1) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
 			}
-		})
+		)
 	end
 
 	if inputDisplayReg then -- simple inputs
 		local simple = inputs.properties.simpleinput -- keep it short
-		table.insert(HUDElements, {
-			name = "p1simpleinput",
-			x = function(n) if n then changeConfig("simpleinputxp1", n) end return inputs.properties.simple.P1.x end,
-			y = function(n) if n then changeConfig("simpleinputyp1", n) end return inputs.properties.simple.P1.y end,
-			enabled = function(n) if n~=nil then changeConfig("simpleinputenabledp1", n) end return inputs.properties.simple.P1.enabled end,
-			reset = function() resetConfig("simpleinputxp1") resetConfig("simpleinputyp1") resetConfig("simpleinputenabledp1") end,
-			draw = function() end -- handled by input-display.lua
-		})
-		table.insert(HUDElements, {
-			name = "p2simpleinput",
-			x = function(n) if n then changeConfig("simpleinputxp2", n) end return inputs.properties.simple.P2.x end,
-			y = function(n) if n then changeConfig("simpleinputyp2", n) end return inputs.properties.simple.P2.y end,
-			enabled = function(n) if n~=nil then changeConfig("simpleinputenabledp2", n) end return inputs.properties.simple.P2.enabled end,
-			reset = function() resetConfig("simpleinputxp2") resetConfig("simpleinputyp2") resetConfig("simpleinputenabledp2") end,
-			draw = function() end -- handled by input-display.lua
-		})
+		createHUDElement(
+			"p1simpleinput",
+			function(n) if n then changeConfig("simpleinputxp1", n) end return inputs.properties.simple.P1.x end,
+			function(n) if n then changeConfig("simpleinputyp1", n) end return inputs.properties.simple.P1.y end,
+			function(n) if n~=nil then changeConfig("simpleinputenabledp1", n) end return inputs.properties.simple.P1.enabled end,
+			function() resetConfig("simpleinputxp1") resetConfig("simpleinputyp1") resetConfig("simpleinputenabledp1") end,
+			function() end -- handled by input-display.lua
+		)
+		createHUDElement(
+			"p2simpleinput",
+			function(n) if n then changeConfig("simpleinputxp2", n) end return inputs.properties.simple.P2.x end,
+			function(n) if n then changeConfig("simpleinputyp2", n) end return inputs.properties.simple.P2.y end,
+			function(n) if n~=nil then changeConfig("simpleinputenabledp2", n) end return inputs.properties.simple.P2.enabled end,
+			function() resetConfig("simpleinputxp2") resetConfig("simpleinputyp2") resetConfig("simpleinputenabledp2") end,
+			function() end -- handled by input-display.lua
+		)
 	end
 
 	emu.registerbefore(function()

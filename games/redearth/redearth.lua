@@ -49,7 +49,6 @@ local p2stuncount = p2uid + 0x10F
 local p1combocounter = p1uid + 0xEA
 local p2combocounter = p2uid + 0xEA
 
-
 local OLD_SWORD			= 0
 local BRONZE_SWORD		= 1
 local STEEL_SWORD		= 2
@@ -64,7 +63,7 @@ local p1sword = p1uid + 0x158 -- Swords for Leo
 local p2sword = p1uid + 0x158
 
 -- Each number corresponds to different Swords being selectable, 0x11 and higher enables Legendary Sword
-local LEGENDARYSWORDANDELEMENTALSWORDS = 0x1F
+local SWAP_LEGENDARY_SWORD_AND_ELEMENTAL_SWORDS = 0x1F
 local p1weaponswap = p1uid + 0x159
 local p2weaponswap = p2uid + 0x159
 
@@ -76,6 +75,16 @@ local LEGENDARY_SHIELD = 4
 
 local p1shield = p1uid + 0x15A -- Shields for Leo
 local p2shield = p1uid + 0x15A
+
+local lvl32 = { -- passwords are three double words and remembered between rounds
+	[LEO]		= {0x00015454, 0x00000142, 0x00000044},
+	[KENJI]		= {0x00012452, 0x00000631, 0x00000044},
+	[TESSA]		= {0x00012354, 0x00000632, 0x00000044},
+	[MAILING]	= {0x00013126, 0x00000435, 0x00000044}
+}
+
+local p1password = p1uid + 0x274
+local p2password = p2uid + 0x274
 
 translationtable = {
 	"left",
@@ -249,22 +258,42 @@ local function infiniteCredits()
 	wb(0x2000A10, 9)
 end
 
+local p1character = rb(p1charid)
+local p2character = rb(p2charid)
+
+local function forceLevel32()
+	wdw(p1password,   lvl32[p1character][1])
+	wdw(p1password+4, lvl32[p1character][2])
+	wdw(p1password+8, lvl32[p1character][3])
+	
+	wdw(p2password,   lvl32[p2character][1])
+	wdw(p2password+4, lvl32[p2character][2])
+	wdw(p2password+8, lvl32[p2character][3])
+end
+
 function Run()
+	p1character = rb(p1charid) -- we read this every frame because we also want to know the charid at char select
+	p2character = rb(p2charid)
 	infiniteTime()
 	infiniteCredits()
-	if (rb(p1charid) == LEO) then
+	if (redearth.force32) then
+		forceLevel32()
+	end
+	if (p1character == LEO) then
 		wb(p1sword, redearth.sword)
 		wb(p1shield, redearth.shield)
-		wb(p1weaponswap, LEGENDARYSWORDANDELEMENTALSWORDS)
+		wb(p1weaponswap, SWAP_LEGENDARY_SWORD_AND_ELEMENTAL_SWORDS)
 	end
-	if (rb(p2charid) == LEO) then
+	if (p2character == LEO) then
 		wb(p2sword, redearth.sword)
 		wb(p2shield, redearth.shield)
-		wb(p2weaponswap, LEGENDARYSWORDANDELEMENTALSWORDS)
+		wb(p2weaponswap, SWAP_LEGENDARY_SWORD_AND_ELEMENTAL_SWORDS)
 	end
 end
 
 initConfigTable("redearth", redearth, "config")
+
+createConfigItem("redearthforce32", true, redearth, "force32")
 
 createConfigItem("redearthsword", LEGENDARY_SWORD, redearth, "sword")
 createConfigItem("redearthshield", LEGENDARY_SHIELD, redearth, "shield")

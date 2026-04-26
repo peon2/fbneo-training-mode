@@ -1,5 +1,27 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+local force32 = {
+	text = "Force Level 32 Password",
+	rawx = interactivegui.boxxhalflength,
+	fillpercent = 0,
+	olcolour = "black",
+	bgcolour = colour.boolfalse,
+	info = "Forces any password you input at char select to be a lvl32 password. Doesn't work if you don't input a password.",
+	func = function()
+		changeConfig("redearthforce32", not getConfigValue("redearthforce32"))
+	end,
+	autofunc = function(this)
+		if getConfigValue("redearthforce32") then
+			this.text = "Force Level 32 Password"
+			this.bgcolour = colour.booltrue
+		else
+			this.text = "Don't Force Level 32 Password"
+			this.bgcolour = colour.boolfalse
+		end
+		this.x = this.rawx-#this.text*LETTER_HALFWIDTH
+	end,
+}
+
 local orbstr = {"Ice", "Meteor", "Poison", "Fire", "Wind", "Lightning"}
 local orbcolours = {0x70C0D0FF, 0x604060FF, 0xA060A0FF, 0xF07000FF, 0x70D050FF, 0xF0E000FF}
 local orb = {
@@ -73,6 +95,7 @@ guicustompage = {
 	leo = leo,
 	guielements.leftarrow,
 	guielements.rightarrow,
+	force32,
 	orb,
 	sword,
 	shield
