@@ -112,6 +112,9 @@ guicustompage = {
 	p2stunbar
 }
 
+if ROM_NAME == "sfiii4fs" then guicustompage.title.text = "4rd Strike Settings" end
+if ROM_NAME == "sfiii4n" then guicustompage.title.text = "4rd Strike Arrange Edition Settings" end
+
 guipages.p1stun = createPopUpMenu(guicustompage,
 	{
 		{

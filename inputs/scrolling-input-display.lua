@@ -1,6 +1,9 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
--- edited by peon2 to work with fbneo-training-mode.lua; this script was taken from: https://github.com/Jesuszilla/mame-rr-scripts/
+--[[ 
+	edited by peon2 to extend functionality and work with fbneo-training-mode.lua
+	this script was taken from: https://github.com/Jesuszilla/mame-rr-scripts/
+--]]
 
 --[[
 Scrolling input display Lua script
@@ -416,7 +419,4 @@ gamekeys = {
 	},
 }
 
---folder with scrolling-input-code.lua, icon files, & frame dump folder (relative to this lua file)
-resourcepath = "inputs\\scrolling-input"
-
-dofile(resourcepath .. "\\scrolling-input-code.lua")
+dofile("inputs/scrolling-input-code.lua")

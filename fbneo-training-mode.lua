@@ -11,6 +11,9 @@ ROM_NAME = emu.romname()
 PARENT_NAME = emu.parentname()
 REPLAY_SLOTS_COUNT = 5
 
+BASIC_ICONS_RESOURCEPATH = "resources/icons/"
+SCROLLING_INPUT_RESOURCEPATH = "resources/scrolling-input/"
+
 LETTER_WIDTH = 4 -- width of a gui.text letter in pixels
 LETTER_HALFWIDTH = 2
 
@@ -78,109 +81,109 @@ local fc = emu.framecount()
 
 local games = {
 	[""] = {}, -- null case
-	aliencha = {iconfile = "icons-capcom-32.png"},
-	aof = {iconfile = "icons-neogeo-32.png"},
-	aof2 = {iconfile = "icons-neogeo-32.png"},
-	aof3 = {hitboxes = "aof3-hitboxes", iconfile = "icons-neogeo-32.png"},
-	asurabld = {iconfile = "icons-asurabus-32.png"},
-	asurabus = {iconfile = "icons-asurabus-32.png"},
-	avengrgs = {iconfile = "icons-banpresto-32.png"},
-	bloodstm = {iconfile = "icons-bloodstm-32.png"},
-	bloodwar = {iconfile = "icons-neogeo-32.png"},
-	breakrev = {iconfile = "icons-neogeo-32.png"},
-	cybots = {hitboxes = "cps2-hitboxes", iconfile = "icons-cybots-32.png"},
-	dankuga = {iconfile= "icons-capcom-32.png"},
-	daraku = {hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo-32.png"},
-	dbz2 = {iconfile = "icons-banpresto-32.png"},
-	dinorex = {iconfile = "icons-taito-32.png"},
-	doubledr = {iconfile = "icons-neogeo-32.png"},
-	dstlk = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	fatfury1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfury2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfury3 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fatfursp = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	fightfev = {iconfile = "icons-neogeo-32.png"},
-	galaxyfg = {iconfile = "icons-neogeo-32.png"},
-	garou = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	gowcaizr = {iconfile = "icons-neogeo-32.png"},
-	gundamex = {iconfile = "icons-banpresto-32.png"},
-	hippodrm = {iconfile = "icons-hippodrm-32.png"},
-	hsf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	jchan = {iconfile = "icons-kaneko-32.png"},
-	jchan2 = {hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko-32.png"},
-	jojo = {hitboxes = "jojo-hitboxes", iconfile = "icons-jojos-32.png"},
-	jojoba = {hitboxes = "hftf-hitboxes", iconfile = "icons-jojos-32.png"},
-	kabukikl = {iconfile = "icons-neogeo-32.png"},
-	karnovr = {hitboxes = "karnovr-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kf2k5uni = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kizuna = {iconfile = "icons-neogeo-32.png"},
-	kof94 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof95 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof96 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof97 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof98 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof99 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2000 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2001 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2002 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo-32.png"},
-	kof2003 = {hitboxes = "kof2003-hitboxes", iconfile = "icons-neogeo-32.png"},
-	lastblad = {iconfile = "icons-neogeo-32.png"},
-	lastbld2 = {iconfile = "icons-neogeo-32.png"},
-	martmast = {iconfile = "icons-martmast-32.png"},
-	matrim = {iconfile = "icons-neogeo-32.png"},
---	msgundam = {iconfile = "icons-msgundam-32.png"},
-	msh = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	mshvsf = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	mvsc = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	mwarr = {iconfile = "icons-mwarr-32.png"},
-	ninjamas = {iconfile = "icons-neogeo-32.png"},
-	nwarr = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	rabbit = {iconfile = "icons-banpresto-32.png"},
-	ragnagrd = {iconfile = "icons-neogeo-32.png"},
-	rbff1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	rbff2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	rbffspec = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo-32.png"},
-	redearth = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	ringdest = {hitboxes = "cps2-hitboxes", iconfile = "icons-ringdest-32.png"},
-	rotd = {hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo-32.png"},
-	samsho = {iconfile = "icons-neogeo-32.png"},
-	samsho2 = {iconfile = "icons-neogeo-32.png"},
-	samsho3 = {iconfile = "icons-neogeo-32.png"},
-	samsho4 = {iconfile = "icons-neogeo-32.png"},
-	samsho5 = {iconfile = "icons-neogeo-32.png"},
-	samsh5sp = {iconfile = "icons-neogeo-32.png"},
-	schmeisr = {iconfile = "icons-asurabus-32.png"},
-	sf = {iconfile = "icons-sf1-32.png"},
-	sf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sf2ce = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfa3 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii2 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii3ws = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sfiii3 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom-32.png"},
-	sgemf = {hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf-32.png"},
-	slammast = {iconfile = "icons-slammast-32.png"},
-	ssf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-letter-32.png"},
-	ssf2t = {hitboxes = "st-hitboxes", iconfile = "icons-capcom-letter-32.png"},
-	svc = {hitboxes = "svc-hitboxes", iconfile = "icons-neogeo-32.png"},
-	teot = {iconfile = "icons-neogeo-32.png"},
-	timekill = {iconfile = "icons-timekill-32.png"},
-	tkdensho = {iconfile = "icons-banpresto-32.png"},
-	trstar = {iconfile = "icons-trstar-32.png"},
-	umk3 = {iconfile = "icons-midway-32.png"},
-	vhunt2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	viofight = {iconfile = "icons-viofight-32.png"},
-	vsav = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	vsav2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom-32.png"},
-	wakuwak7 = {iconfile = "icons-neogeo-32.png"},
-	wh1 = {iconfile = "icons-neogeo-32.png"},
-	wh2 = {iconfile = "icons-neogeo-32.png"},
-	wh2j = {iconfile = "icons-neogeo-32.png"},
-	whp = {iconfile = "icons-neogeo-32.png"},
-	xmcota = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
-	xmvsf = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom-32.png"},
+	aliencha = {iconfile = "icons-capcom.png"},
+	aof = {iconfile = "icons-neogeo.png"},
+	aof2 = {iconfile = "icons-neogeo.png"},
+	aof3 = {hitboxes = "aof3-hitboxes", iconfile = "icons-neogeo.png"},
+	asurabld = {iconfile = "icons-asurabus.png"},
+	asurabus = {iconfile = "icons-asurabus.png"},
+	avengrgs = {iconfile = "icons-banpresto.png"},
+	bloodstm = {iconfile = "icons-bloodstm.png"},
+	bloodwar = {iconfile = "icons-neogeo.png"},
+	breakrev = {iconfile = "icons-neogeo.png"},
+	cybots = {hitboxes = "cps2-hitboxes", iconfile = "icons-cybots.png"},
+	dankuga = {iconfile= "icons-capcom.png"},
+	daraku = {hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo.png"},
+	dbz2 = {iconfile = "icons-banpresto.png"},
+	dinorex = {iconfile = "icons-taito.png"},
+	doubledr = {iconfile = "icons-neogeo.png"},
+	dstlk = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	fatfury1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	fatfury2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	fatfury3 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	fatfursp = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	fightfev = {iconfile = "icons-neogeo.png"},
+	galaxyfg = {iconfile = "icons-neogeo.png"},
+	garou = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	gowcaizr = {iconfile = "icons-neogeo.png"},
+	gundamex = {iconfile = "icons-banpresto.png"},
+	hippodrm = {iconfile = "icons-hippodrm.png"},
+	hsf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom.png"},
+	jchan = {iconfile = "icons-kaneko.png"},
+	jchan2 = {hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko.png"},
+	jojo = {hitboxes = "jojo-hitboxes", iconfile = "icons-jojos.png"},
+	jojoba = {hitboxes = "hftf-hitboxes", iconfile = "icons-jojos.png"},
+	kabukikl = {iconfile = "icons-neogeo.png"},
+	karnovr = {hitboxes = "karnovr-hitboxes", iconfile = "icons-neogeo.png"},
+	kf2k5uni = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kizuna = {iconfile = "icons-neogeo.png"},
+	kof94 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof95 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof96 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof97 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof98 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof99 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof2000 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof2001 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof2002 = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
+	kof2003 = {hitboxes = "kof2003-hitboxes", iconfile = "icons-neogeo.png"},
+	lastblad = {iconfile = "icons-neogeo.png"},
+	lastbld2 = {iconfile = "icons-neogeo.png"},
+	martmast = {iconfile = "icons-martmast.png"},
+	matrim = {iconfile = "icons-neogeo.png"},
+--	msgundam = {iconfile = "icons-msgundam.png"},
+	msh = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom.png"},
+	mshvsf = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom.png"},
+	mvsc = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom.png"},
+	mwarr = {iconfile = "icons-mwarr.png"},
+	ninjamas = {iconfile = "icons-neogeo.png"},
+	nwarr = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	rabbit = {iconfile = "icons-banpresto.png"},
+	ragnagrd = {iconfile = "icons-neogeo.png"},
+	rbff1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	rbff2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	rbffspec = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
+	redearth = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom.png"},
+	ringdest = {hitboxes = "cps2-hitboxes", iconfile = "icons-ringdest.png"},
+	rotd = {hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo.png"},
+	samsho = {iconfile = "icons-neogeo.png"},
+	samsho2 = {iconfile = "icons-neogeo.png"},
+	samsho3 = {iconfile = "icons-neogeo.png"},
+	samsho4 = {iconfile = "icons-neogeo.png"},
+	samsho5 = {iconfile = "icons-neogeo.png"},
+	samsh5sp = {iconfile = "icons-neogeo.png"},
+	schmeisr = {iconfile = "icons-asurabus.png"},
+	sf = {iconfile = "icons-sf1.png"},
+	sf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom.png"},
+	sf2ce = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom.png"},
+	sfa = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	sfa2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	sfa3 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	sfiii = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom.png"},
+	sfiii2 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom.png"},
+	sfiii3ws = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom.png"},
+	sfiii3 = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom.png"},
+	sgemf = {hitboxes = "cps2-hitboxes", iconfile = "icons-sgemf.png"},
+	slammast = {iconfile = "icons-slammast.png"},
+	ssf2 = {hitboxes = "sf2-hitboxes", iconfile = "icons-capcom-letter.png"},
+	ssf2t = {hitboxes = "st-hitboxes", iconfile = "icons-capcom-letter.png"},
+	svc = {hitboxes = "svc-hitboxes", iconfile = "icons-neogeo.png"},
+	teot = {iconfile = "icons-neogeo.png"},
+	timekill = {iconfile = "icons-timekill.png"},
+	tkdensho = {iconfile = "icons-banpresto.png"},
+	trstar = {iconfile = "icons-trstar.png"},
+	umk3 = {iconfile = "icons-midway.png"},
+	vhunt2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	viofight = {iconfile = "icons-viofight.png"},
+	vsav = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	vsav2 = {hitboxes = "cps2-hitboxes", iconfile = "icons-capcom.png"},
+	wakuwak7 = {iconfile = "icons-neogeo.png"},
+	wh1 = {iconfile = "icons-neogeo.png"},
+	wh2 = {iconfile = "icons-neogeo.png"},
+	wh2j = {iconfile = "icons-neogeo.png"},
+	whp = {iconfile = "icons-neogeo.png"},
+	xmcota = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom.png"},
+	xmvsf = {hitboxes = "marvel-hitboxes", iconfile = "icons-capcom.png"},
 }
 
 local function usage()
@@ -1507,7 +1510,7 @@ if nbuttons == 0 then
 				translationtable[i] = 7+nbuttons+1 -- we dont care about any of these but need to make sure they're bound to something
 			end
 		end
-		local d = {nil, nil, "icons-taito-32.png", "icons-neogeo-32.png", nil, "icons-capcom-32.png"} -- iconfiles, 3,4,6 buttons
+		local d = {nil, nil, "icons-taito.png", "icons-neogeo.png", nil, "icons-capcom.png"} -- iconfiles, 3,4,6 buttons
 		games[""].iconfile = d[nbuttons]
 	else
 		write "Can't make a translationtable"
@@ -1725,9 +1728,9 @@ write "If the script crashes here you may need to edit DISABLE_SCROLLING_INPUT b
 
 if games[gamename].iconfile then
 	iconfile = games[gamename].iconfile
-	if fexists("inputs/scrolling-input/"..iconfile) and not DISABLE_SCROLLING_INPUT then
+	if fexists(SCROLLING_INPUT_RESOURCEPATH.."32/"..iconfile) and not DISABLE_SCROLLING_INPUT then
 		if fexists("inputs/scrolling-input-display.lua") then
-			if fexists("inputs/scrolling-input/scrolling-input-code.lua") then
+			if fexists("inputs/scrolling-input-code.lua") then
 				dofile("inputs/scrolling-input-display.lua")
 			else
 				write("scrolling-input-code.lua not found")
@@ -1736,7 +1739,7 @@ if games[gamename].iconfile then
 			write("scrolling-input-display.lua not found")
 		end
 	else
-		write("inputs/scrolling-input/"..iconfile.." not found")
+		write(iconfile.. " missing in "..SCROLLING_INPUT_RESOURCEPATH.."32/")
 	end
 else
 	write("No scrolling input image found for "..ROM_NAME)
@@ -3263,54 +3266,61 @@ end
 -- set up gd images
 local icons = {[16] = {}} -- follows translationtable series
 local helpButtons = {}
-local helpShell = gd.createFromPng("resources/info/shell.png")
+local helpShell = gd.createFromPng(BASIC_ICONS_RESOURCEPATH.."shell.png")
 helpShell = helpShell:gdStr()
 
 if scrollingInputReg then -- if there's a scrolling input file loaded
-	local img = gd.createFromPng("inputs/scrolling-input/"..games[gamename].iconfile) -- always assume we're using a 32x32 tileset image
-	local imgcnt = img:sizeY()/32
-	local y = img:sizeY()-(nbuttons+1)*32 -- y of first button, ignoring start
+	local img
+	local img_16_path = SCROLLING_INPUT_RESOURCEPATH.."16/"..games[gamename].iconfile
+	if fexists(img_16_path) then -- use the 16x16 icons for the UI
+		img = gd.createFromPng(img_16_path)
+	else -- create a tileset of 16x16 icons using the 32x32 icons
+		local img_32_path = SCROLLING_INPUT_RESOURCEPATH.."32/"..games[gamename].iconfile
+		write("Couldn't find: "..img_16_path.." for the UI, using: "..img_32_path.." as a substitute.")
+		local largeimg = gd.createFromPng(img_32_path)
+		img = gd.create(16, largeimg:sizeY()/2)
+		gd.copyResampled(img, largeimg, 0, 0, 0, 0, 16, largeimg:sizeY()/2, 32, largeimg:sizeY())
+	end
+	local imgcnt = img:sizeY()/16
+	local y = img:sizeY()-(nbuttons+1)*16 -- y of first button, ignoring start
 	--[[
 		Left,
 		Right,
 		Up,
 		Down,
-		Up-Left, -- skip these
-		Up-Right,
-		Down-Left,
-		Down-Right,
-		{
+		Up-Left,   -- skip this
+		Up-Right,  -- skip this
+		Down-Left, -- skip this
+		Down-Right,-- skip this
 		.
 		.
 		.
 		*Buttons*,
 		.
 		.
-		.
-		},
+		.,
 		Start
 	--]]
 
-	-- change to 16x16 for displaying
 	for i = 1, 4 do	-- cardinal directions
 		icons[16][i] = gd.create(16,16)
-		icons[16][i]:copyResampled(img, 0, 0, 0, (i-1)*32, 16, 16, 32, 32)
+		icons[16][i]:copy(img, 0, 0, 0, (i-1)*16, 16, 16)
 		icons[16][i] = icons[16][i]:gdStr()
 	end
 
 	for i = 9, imgcnt do -- skip diagonals, rest of the buttons
 		icons[16][i-4] = gd.create(16,16)
-		icons[16][i-4]:copyResampled(img, 0, 0, 0, (i-1)*32, 16, 16, 32, 32)
+		icons[16][i-4]:copy(img, 0, 0, 0, (i-1)*16, 16, 16)
 		icons[16][i-4] = icons[16][i-4]:gdStr()
 	end
 
 	for i = 1,nbuttons do
 		helpButtons[i] = icons[16][i+4] -- assign buttons
-		y=y+32
+		y=y+16
 	end
 else -- otherwise use these defaults
-	for i = 1,nbuttons do
-		helpButtons[i] = gd.createFromPng("resources/info/"..i..".png")
+	for i = 1, nbuttons do
+		helpButtons[i] = gd.createFromPng(BASIC_ICONS_RESOURCEPATH..i..".png")
 		helpButtons[i] = helpButtons[i]:gdStr()
 	end
 end
