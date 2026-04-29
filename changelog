@@ -1,3 +1,16 @@
+v0.26.04
+Added more volume control logic.
+Moved the volume control logic to an addon 'mute'.
+Expanded Config Saving functionality and fixed some related bugs.
+Added more scrolling input icons, and redid many.
+roms now match on parent names, most rom versions should just work with their parent.
+E.g. sfiii4fs and sfiii4n are now recognised by the training mode.
+
+Taking the first step to many changes to internal code to hopefully make it more approachable for other developers.
+
+redearth:
+Added an option to force lvl 32 passwords for each character.
+
 v0.26.03.16
 samsho:
 Now properly updates player health and meter.

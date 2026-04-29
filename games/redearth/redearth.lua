@@ -82,6 +82,11 @@ local lvl32 = { -- passwords are three double words and remembered between round
 	[TESSA]		= {0x00012354, 0x00000632, 0x00000044},
 	[MAILING]	= {0x00013126, 0x00000435, 0x00000044}
 }
+if ROM_NAME=="redearthep" then -- changes all max level passwords to be '11111 11111'
+	for i, v in ipairs(lvl32) do
+		lvl32[i]= {0x00011111, 0x00000111, 0x00000011}
+	end
+end
 
 local p1password = p1uid + 0x274
 local p2password = p2uid + 0x274

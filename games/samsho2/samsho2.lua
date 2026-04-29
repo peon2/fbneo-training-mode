@@ -150,7 +150,7 @@ local timer = 0x100AC6
 local timemax = 0x99
 
 function infiniteTime()
-	wb(timer, timer-1)
+	wb(timer, timemax-1)
 end
 
 function Run()
