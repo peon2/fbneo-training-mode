@@ -290,5 +290,7 @@ local setupup = {
 	neogeo = neogeomute
 }
 
-setupup[machine](group)
-formatGUITables()
+if machine then
+	setupup[machine](group)
+	formatGUITables()
+end

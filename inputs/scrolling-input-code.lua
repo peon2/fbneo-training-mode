@@ -474,7 +474,6 @@ end
 function scrollingInputReload()
 	toggleshowframes()
 	icon_size, image_icon_size = inputs.properties.scrolling.iconsize
-	print(inputs.properties.scrolling.iconsize)
 	readimages()
 	togglescrollinginputsplayer()
 end

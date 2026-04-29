@@ -1,8 +1,10 @@
 DISABLE_SCROLLING_INPUT = false
--- flip this when the script keeps crashing
--- replace the text after the '=' with:
--- true, do use it
--- false, don't use it
+--[[
+   flip this when the script keeps crashing
+   replace the text after the '=' with:
+	-> true, do use it
+	-> false, don't use it
+--]]
 
 FBNEO_TRAINING_MODE_VERSION = "v0.26.03.16"
 
@@ -93,7 +95,7 @@ local games = {
 	breakrev = {iconfile = "icons-neogeo.png"},
 	cybots = {hitboxes = "cps2-hitboxes", iconfile = "icons-cybots.png"},
 	dankuga = {iconfile= "icons-capcom.png"},
-	daraku = {hitboxes = "daraku-hitboxes", iconfile= "icons-psikyo.png"},
+	daraku = {hitboxes = "daraku-hitboxes", iconfile = "icons-psikyo.png"},
 	dbz2 = {iconfile = "icons-banpresto.png"},
 	dinorex = {iconfile = "icons-taito.png"},
 	doubledr = {iconfile = "icons-neogeo.png"},
@@ -143,7 +145,7 @@ local games = {
 	rbff1 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
 	rbff2 = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
 	rbffspec = {hitboxes = "garou-hitboxes", iconfile = "icons-neogeo.png"},
-	redearth = {hitboxes = "cps3-hitboxes", iconfile = "icons-capcom.png"},
+	redearth = {hitboxes = "cps3-hitboxes", iconfile = "icons-redearth.png"},
 	ringdest = {hitboxes = "cps2-hitboxes", iconfile = "icons-ringdest.png"},
 	rotd = {hitboxes = "rotd-hitboxes", iconfile = "icons-neogeo.png"},
 	samsho = {iconfile = "icons-neogeo.png"},
@@ -1090,7 +1092,7 @@ local function deepAppendCopy(src, dst, isrecursive)
 				if isrecursive then
 					return tablename
 				else
-					assert(1==0, "Table: '"..tablename.."' doesn't exist and cannot be appended to.")
+					assert(nil, "Table: '"..tablename.."' doesn't exist and cannot be appended to.")
 				end
 			end
 		else
@@ -1117,7 +1119,7 @@ local function unsafeDeepAppendCopy(src, dst, isrecursive)
 				if isrecursive then
 					return tablename
 				else
-					assert(1==0, "Table: '"..tablename.."' doesn't exist and cannot be appended to.")
+					assert(nil, "Table: '"..tablename.."' doesn't exist and cannot be appended to.")
 				end
 			end
 		else
@@ -4583,7 +4585,7 @@ function setRegisters() -- pre-calc stuff
 			function(n) if n then changeConfig("scrollinginputxp1", n) end return inputs.properties.scrolling.P1.x end, -- we know n is either nil or an int, never a bool
 			function(n) if n then changeConfig("scrollinginputyp1", n) end return inputs.properties.scrolling.P1.y end,
 			function(n) if n~=nil then changeConfig("scrollinginputenabledp1", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P1.enabled end,
-			function() resetConfig("scrollinginputxp1") resetConfig("scrollinginputyp1") resetConfig("scrollinginputenabledp1") resetConfig("scrollinginputframes") end,
+			function() resetConfig("scrollinginputxp1") resetConfig("scrollinginputyp1") resetConfig("scrollinginputenabledp1") resetConfig("scrollinginputframes") resetConfig("scrollinginputiconsize") scrollingInputReload() end,
 			function() end, -- handled by scrolling-input-display.lua
 			{ -- extra functions for scrolling input
 				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then changeConfig("scrollinginputframes", not getConfigValue("scrollinginputframes")) end end}, -- toggle numbers
@@ -4596,7 +4598,7 @@ function setRegisters() -- pre-calc stuff
 			function(n) if n then changeConfig("scrollinginputxp2", n) end return inputs.properties.scrolling.P2.x end,
 			function(n) if n then changeConfig("scrollinginputyp2", n) end return inputs.properties.scrolling.P2.y end,
 			function(n) if n~=nil then changeConfig("scrollinginputenabledp2", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P2.enabled end,
-			function() resetConfig("scrollinginputxp2") resetConfig("scrollinginputyp2") resetConfig("scrollinginputenabledp2") resetConfig("scrollinginputframes") end,
+			function() resetConfig("scrollinginputxp2") resetConfig("scrollinginputyp2") resetConfig("scrollinginputenabledp2") resetConfig("scrollinginputframes") resetConfig("scrollinginputiconsize") scrollingInputReload() end,
 			function() end, -- handled by scrolling-input-display.lua
 			{ -- extra functions for scrolling input
 				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then changeConfig("scrollinginputframes", not getConfigValue("scrollinginputframes")) end end}, -- toggle numbers
