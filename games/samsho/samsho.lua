@@ -12,16 +12,24 @@ p1maxmeter = 0x20
 p2maxmeter = 0x20
 
 timer = 0x100A08 -- we can treat this as a byte
+local timemax = 0x99
 
 local p1uid
 local p2uid
 
-local maxstun = 0x40 -- not sure about this
-local maxstunreset = 0x130 -- not sure about this
+local p1char
+local p2char
 
+local maxstun = 0x40 -- not sure about this
+local p1maxstunreset
+local p2maxstunreset
+
+samshostunlookup = 0x0004D0D4 -- lookup table for character stun reset values
+	
 uidoffset = {
 	P1UIDLocation = 0x100A0A,
 	P2UIDLocation = 0x100A0E,
+	character = 0x31, -- we can treat this as a byte
 	direction = 0x4E,
 	health = 0xA5,
 	healthadd = 0xA6, -- signed word, actually updates health
@@ -35,6 +43,10 @@ uidoffset = {
 function samshoNewRound() -- uid locations update each round
 	p1uid = rdw(uidoffset.P1UIDLocation)
 	p2uid = rdw(uidoffset.P2UIDLocation)
+	p1char = rb(p1uid+uidoffset.character)
+	p2char = rb(p2uid+uidoffset.character)
+	p1maxstunreset = rw(samshostunlookup+p1char*4)
+	p2maxstunreset = rw(samshostunlookup+p2char*4)
 end
 
 samshoNewRound()
@@ -221,10 +233,8 @@ function writePlayerTwoMeter(meter)
 	wb(p2uid + uidoffset.meteradd, meter - rb(p2uid + uidoffset.meter))
 end
 
-local maxtime = 0x99
-
 function infiniteTime()
-	wb(timer, maxtime-1)
+	wb(timer, timemax-1)
 end
 
 local p1previousanimation = false
@@ -385,38 +395,38 @@ end
 
 local function drawStunBarPlayerOne(player)
 	local stunreset = readPlayerOneStunReset() -- too large to display on screen
-	local xoffset = samsho.stun.P1.x + #"10"*LETTER_WIDTH
+	local xoffset = samsho.stun.P1.x + #"999"*LETTER_WIDTH
 	local height = LETTER_HEIGHT-2
-	gui.box(xoffset+4, samsho.stun.P1.y, xoffset+maxstunreset/4, samsho.stun.P1.y+height, nil, "grey")
+	gui.box(xoffset, samsho.stun.P1.y, xoffset+2+p1maxstunreset/4, samsho.stun.P1.y+height, nil, "grey")
 	if stunreset>0 then
-		gui.box(xoffset+5, samsho.stun.P1.y+1, xoffset+5+math.floor(stunreset/4), samsho.stun.P1.y+height-1, "cyan", nil)
+		gui.box(xoffset+1, samsho.stun.P1.y+1, xoffset+1+math.floor(stunreset/4), samsho.stun.P1.y+height-1, "cyan", nil)
 	end
 	gui.text(samsho.stun.P1.x, samsho.stun.P1.y, stunreset, "red")
 	
 	local stun = readPlayerOneStun()
 	local yoffset = 8
-	gui.box(xoffset+4, samsho.stun.P1.y+yoffset, xoffset+maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
+	gui.box(xoffset, samsho.stun.P1.y+yoffset, xoffset+maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
 	if stun>0 then
-		gui.box(xoffset+5, samsho.stun.P1.y+yoffset+1, xoffset+5+stun, samsho.stun.P1.y+height+yoffset-1, "cyan", nil)
+		gui.box(xoffset+1, samsho.stun.P1.y+yoffset+1, xoffset+1+stun, samsho.stun.P1.y+height+yoffset-1, "cyan", nil)
 	end
 	gui.text(samsho.stun.P1.x, samsho.stun.P1.y+yoffset, stun, "red")
 end
 
 local function drawStunBarPlayerTwo(player)
 	local stunreset = readPlayerTwoStunReset() -- too large to display on screen
-	local xoffset = samsho.stun.P2.x + #"10"*LETTER_WIDTH
+	local xoffset = samsho.stun.P2.x + #"999"*LETTER_WIDTH
 	local height = LETTER_HEIGHT-2
-	gui.box(xoffset+4, samsho.stun.P2.y, xoffset+maxstunreset/4, samsho.stun.P2.y+height, nil, "grey")
+	gui.box(xoffset, samsho.stun.P2.y, xoffset+2+p2maxstunreset/4, samsho.stun.P2.y+height, nil, "grey")
 	if stunreset>0 then
-		gui.box(xoffset+5, samsho.stun.P2.y+1, xoffset+5+math.floor(stunreset/4), samsho.stun.P2.y+height-1, "cyan", nil)
+		gui.box(xoffset+1, samsho.stun.P2.y+1, xoffset+1+math.floor(stunreset/4), samsho.stun.P2.y+height-1, "cyan", nil)
 	end
 	gui.text(samsho.stun.P2.x, samsho.stun.P2.y, stunreset, "red")
 	
 	local stun = readPlayerTwoStun()
 	local yoffset = 8
-	gui.box(xoffset+4, samsho.stun.P2.y+yoffset, xoffset+maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
+	gui.box(xoffset, samsho.stun.P2.y+yoffset, xoffset+maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
 	if stun>0 then
-		gui.box(xoffset+5, samsho.stun.P2.y+yoffset+1, xoffset+5+stun, samsho.stun.P2.y+height+yoffset-1, "cyan", nil)
+		gui.box(xoffset+1, samsho.stun.P2.y+yoffset+1, xoffset+1+stun, samsho.stun.P2.y+height+yoffset-1, "cyan", nil)
 	end
 	gui.text(samsho.stun.P2.x, samsho.stun.P2.y+yoffset, stun, "red")
 end

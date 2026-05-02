@@ -6,10 +6,13 @@ timer = 0x100AC6
 local p1uid
 local p2uid
 
+samshostunlookup = 0x00027EB4
+
 uidoffset = { -- see samsho.lua
 	P1UIDLocation = 0x100A46,
 	P2UIDLocation = 0x100A4A,
 	direction = 0x7F,
+	character = 0xF6,
 	health = 0xBB,
 	healthadd = 0xBC,
 	meteradd = 0x114,
