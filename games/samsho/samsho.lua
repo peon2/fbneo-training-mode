@@ -20,7 +20,8 @@ local p2uid
 local p1char
 local p2char
 
-local maxstun = 0x40 -- not sure about this
+local p1maxstun
+local p2maxstun
 local p1maxstunreset
 local p2maxstunreset
 
@@ -29,7 +30,7 @@ samshostunlookup = 0x0004D0D4 -- lookup table for character stun reset values
 uidoffset = {
 	P1UIDLocation = 0x100A0A,
 	P2UIDLocation = 0x100A0E,
-	character = 0x31, -- we can treat this as a byte
+	character = 0x31, -- we can treat this as a byte, I'm pretty sure this is the address for character, but I can't be certain.
 	direction = 0x4E,
 	health = 0xA5,
 	healthadd = 0xA6, -- signed word, actually updates health
@@ -46,7 +47,9 @@ function samshoNewRound() -- uid locations update each round
 	p1char = rb(p1uid+uidoffset.character)
 	p2char = rb(p2uid+uidoffset.character)
 	p1maxstunreset = rw(samshostunlookup+p1char*4)
+	p1maxstun = rw(2+samshostunlookup+p1char*4)
 	p2maxstunreset = rw(samshostunlookup+p2char*4)
+	p2maxstun = rw(2+samshostunlookup+p2char*4)
 end
 
 samshoNewRound()
@@ -377,19 +380,19 @@ end
 
 local function readPlayerOneStun()
 	local _stun = rb(p1uid + uidoffset.stun)
-	if _stun > maxstun or readPlayerOneStunReset() == 0 then
+	if _stun > p1maxstun or readPlayerOneStunReset() == 0 then
 		return 0
 	else
-		return maxstun-_stun
+		return p1maxstun-_stun
 	end
 end
 
 local function readPlayerTwoStun()
 	local _stun = rb(p2uid + uidoffset.stun)
-	if _stun > maxstun or readPlayerTwoStunReset() == 0 then
+	if _stun > p2maxstun or readPlayerTwoStunReset() == 0 then
 		return 0
 	else
-		return maxstun-_stun
+		return p2maxstun-_stun
 	end
 end
 
@@ -405,7 +408,7 @@ local function drawStunBarPlayerOne(player)
 	
 	local stun = readPlayerOneStun()
 	local yoffset = 8
-	gui.box(xoffset, samsho.stun.P1.y+yoffset, xoffset+maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
+	gui.box(xoffset, samsho.stun.P1.y+yoffset, xoffset+p1maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
 	if stun>0 then
 		gui.box(xoffset+1, samsho.stun.P1.y+yoffset+1, xoffset+1+stun, samsho.stun.P1.y+height+yoffset-1, "cyan", nil)
 	end
@@ -424,7 +427,7 @@ local function drawStunBarPlayerTwo(player)
 	
 	local stun = readPlayerTwoStun()
 	local yoffset = 8
-	gui.box(xoffset, samsho.stun.P2.y+yoffset, xoffset+maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
+	gui.box(xoffset, samsho.stun.P2.y+yoffset, xoffset+p2maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
 	if stun>0 then
 		gui.box(xoffset+1, samsho.stun.P2.y+yoffset+1, xoffset+1+stun, samsho.stun.P2.y+height+yoffset-1, "cyan", nil)
 	end
