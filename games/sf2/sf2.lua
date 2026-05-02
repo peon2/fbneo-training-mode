@@ -3,7 +3,6 @@ assert(rb,"Run fbneo-training-mode.lua") -- make sure the main script is being r
 p1uid = 0xFF83C6
 p2uid = 0xFF86C6
 timer = 0xFF8ACE
-maxvolume = 0x3F -- what the maximum volume is in game
 
 p1maxhealth = 0x90
 p2maxhealth = 0x90
@@ -164,37 +163,39 @@ local function writePlayerTwoStunReset(value)
 end
 
 local function drawStunBarPlayerOne(player)
-	local stun = readPlayerOneStun()
 	local stunreset = readPlayerOneStunReset()
 	local xoffset = sf2.stun.P1.x + #"10"*LETTER_WIDTH
-	local heigth = LETTER_HEIGHT-2
-	gui.box(xoffset, sf2.stun.P1.y, xoffset+maxstunreset, sf2.stun.P1.y+heigth, nil, "grey")
+	local height = LETTER_HEIGHT-2
+	gui.box(xoffset, sf2.stun.P1.y, xoffset+maxstunreset, sf2.stun.P1.y+height, nil, "grey")
 	if stunreset>0 then
-		gui.box(xoffset+1, sf2.stun.P1.y+1, xoffset+stunreset-1, sf2.stun.P1.y+heigth-1, "cyan", nil)
+		gui.box(xoffset+1, sf2.stun.P1.y+1, xoffset+stunreset-1, sf2.stun.P1.y+height-1, "cyan", nil)
 	end
 	gui.text(sf2.stun.P1.x, sf2.stun.P1.y, stunreset, "red")
+	
+	local stun = readPlayerOneStun()
 	local yoffset = 8
-	gui.box(xoffset, sf2.stun.P1.y+yoffset, xoffset+maxstun, sf2.stun.P1.y+heigth+yoffset, nil, "grey")
+	gui.box(xoffset, sf2.stun.P1.y+yoffset, xoffset+maxstun, sf2.stun.P1.y+height+yoffset, nil, "grey")
 	if stun>0 then
-		gui.box(xoffset+1, sf2.stun.P1.y+yoffset+1, xoffset+stun-1, sf2.stun.P1.y+heigth+yoffset-1, "cyan", nil)
+		gui.box(xoffset+1, sf2.stun.P1.y+yoffset+1, xoffset+stun-1, sf2.stun.P1.y+height+yoffset-1, "cyan", nil)
 	end
 	gui.text(sf2.stun.P1.x, sf2.stun.P1.y+yoffset, stun, "red")
 end
 
 local function drawStunBarPlayerTwo(player)
-	local stun = readPlayerTwoStun()
 	local stunreset = readPlayerTwoStunReset()
 	local xoffset = sf2.stun.P2.x + #"10"*LETTER_WIDTH
-	local heigth = LETTER_HEIGHT-2
-	gui.box(xoffset, sf2.stun.P2.y, xoffset+maxstunreset, sf2.stun.P2.y+heigth, nil, "grey")
+	local height = LETTER_HEIGHT-2
+	gui.box(xoffset, sf2.stun.P2.y, xoffset+maxstunreset, sf2.stun.P2.y+height, nil, "grey")
 	if stunreset>0 then
-		gui.box(xoffset+1, sf2.stun.P2.y+1, xoffset+stunreset-1, sf2.stun.P2.y+heigth-1, "cyan", nil)
+		gui.box(xoffset+1, sf2.stun.P2.y+1, xoffset+stunreset-1, sf2.stun.P2.y+height-1, "cyan", nil)
 	end
 	gui.text(sf2.stun.P2.x, sf2.stun.P2.y, stunreset, "red")
+	
+	local stun = readPlayerTwoStun()
 	local yoffset = 8
-	gui.box(xoffset, sf2.stun.P2.y+yoffset, xoffset+maxstun, sf2.stun.P2.y+heigth+yoffset, nil, "grey")
+	gui.box(xoffset, sf2.stun.P2.y+yoffset, xoffset+maxstun, sf2.stun.P2.y+height+yoffset, nil, "grey")
 	if stun>0 then
-		gui.box(xoffset+1, sf2.stun.P2.y+yoffset+1, xoffset+stun-1, sf2.stun.P2.y+heigth+yoffset-1, "cyan", nil)
+		gui.box(xoffset+1, sf2.stun.P2.y+yoffset+1, xoffset+stun-1, sf2.stun.P2.y+height+yoffset-1, "cyan", nil)
 	end
 	gui.text(sf2.stun.P2.x, sf2.stun.P2.y+yoffset, stun, "red")
 end

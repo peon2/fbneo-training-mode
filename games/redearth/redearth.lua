@@ -318,10 +318,10 @@ local function drawStunBar(player)
 	local maxstunfunc = { P1 = readPlayerOneMaxStun, P2 = readPlayerTwoMaxStun }
 	local maxstun = maxstunfunc[player]()
 	local xoffset = redearth.stun[player].x + #"00"*LETTER_WIDTH + 2
-	local heigth = LETTER_HEIGHT-2
-	gui.box(xoffset, redearth.stun[player].y, xoffset+maxstun, redearth.stun[player].y+heigth, nil, "grey")
+	local height = LETTER_HEIGHT-2
+	gui.box(xoffset, redearth.stun[player].y, xoffset+maxstun, redearth.stun[player].y+height, nil, "grey")
 	if stun>0 then
-		gui.box(xoffset+1, redearth.stun[player].y+1, xoffset+stun-1, redearth.stun[player].y+heigth-1, "cyan", nil)
+		gui.box(xoffset+1, redearth.stun[player].y+1, xoffset+stun-1, redearth.stun[player].y+height-1, "cyan", nil)
 	end
 	gui.text(redearth.stun[player].x, redearth.stun[player].y, stun, "red")
 end

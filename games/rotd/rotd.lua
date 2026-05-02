@@ -207,10 +207,10 @@ local function drawStunBar(player)
 	local maxstunfunc = { P1 = readPlayerOneMaxStun, P2 = readPlayerTwoMaxStun }
 	local maxstun = maxstunfunc[player]()
 	local xoffset = rotd.stun[player].x + #"100"*LETTER_WIDTH
-	local heigth = LETTER_HEIGHT-2
-	gui.box(xoffset, rotd.stun[player].y, xoffset+maxstun, rotd.stun[player].y+heigth, nil, "grey")
+	local height = LETTER_HEIGHT-2
+	gui.box(xoffset, rotd.stun[player].y, xoffset+maxstun, rotd.stun[player].y+height, nil, "grey")
 	if stun>0 then
-		gui.box(xoffset+1, rotd.stun[player].y+1, xoffset+stun-1, rotd.stun[player].y+heigth-1, "cyan", nil)
+		gui.box(xoffset+1, rotd.stun[player].y+1, xoffset+stun-1, rotd.stun[player].y+height-1, "cyan", nil)
 	end
 	gui.text(rotd.stun[player].x, rotd.stun[player].y, stun, "red")
 end
