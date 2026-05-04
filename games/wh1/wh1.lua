@@ -1,5 +1,11 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+function gamemsg()
+	print "Known issues with wh1:"
+	print "Combo Counter is inconsistent"
+	print "Health bars don't always visually update, even when the health values update"
+end
+
 p1maxhealth = 0x68
 p2maxhealth = 0x68
 
@@ -8,6 +14,12 @@ local p2health = 0x10610A
 
 local p1direction = 0x100021
 local p2direction = 0x100121
+
+local p1hitstun = 0x106135
+local p2hitstun = 0x106035
+
+-- P1 inputs are at 0x106000, WH1 keeps a history of inputs from 0x106400 onwards
+-- P2 -> 106100 and 0x106500
 
 translationtable = {
 	"left",
@@ -38,13 +50,13 @@ gamedefaultconfig = {
 	hud = {
 		health = {
 			P1 = {
-				x = 50,
-				y = 17,
+				x = 34,
+				y = 24,
 				enabled = true,
 			},
 			P2 = {
-				x = 259,
-				y = 17,
+				x = 275,
+				y = 24,
 				enabled = true,
 			}
 		}
@@ -60,11 +72,11 @@ gamedefaultconfig = {
 	combovars = {
 		P1 = {
 			instantrefillhealth = true,
-			refillhealthenabled = true
+			refillhealthenabled = false
 		},
 		P2 = {
 			instantrefillhealth = true,
-			refillhealthenabled = true
+			refillhealthenabled = false
 		}
 	}
 }
@@ -77,10 +89,12 @@ function playerTwoFacingLeft()
 	return AND(rb(p2direction), 0x80) > 0
 end
 
-function _playerOneInHitstun()
+function playerOneInHitstun() -- I don't know how combos work in this game, or even if combos exist
+	return rb(p1hitstun) > 0
 end
 
-function _playerTwoInHitstun()
+function playerTwoInHitstun()
+	return rb(p2hitstun) > 0
 end
 
 function readPlayerOneHealth()

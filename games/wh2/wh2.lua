@@ -1,5 +1,11 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
+function gamemsg()
+	print "Known issues with wh2:"
+	print "Combo Counter is inconsistent"
+	print "Health bars don't always visually update, even when the health values update"
+end
+
 p1maxhealth = 0x76
 p2maxhealth = 0x76
 
@@ -8,6 +14,12 @@ local p2health = 0x10610C
 
 local p1direction = 0x100021
 local p2direction = 0x100121
+
+local p1actionable = 0x1060D5 -- I'm not sure what this actually represents
+local p2actionable = 0x1061D5
+
+local p1attackanimation = 0x1060D7
+local p2attackanimation = 0x1061D7
 
 translationtable = {
 	"left",
@@ -36,6 +48,11 @@ translationtable = {
 
 gamedefaultconfig = {
 	hud = {
+		combotext = {
+			x = 134,
+			y = 50,
+			enabled=false,
+		},
 		health = {
 			P1 = {
 				x = 19,
@@ -59,11 +76,11 @@ gamedefaultconfig = {
 	},
 	combovars = {
 		P1 = {
-			instantrefillhealth = true,
+			instantrefillhealth = false,
 			refillhealthenabled = true
 		},
 		P2 = {
-			instantrefillhealth = true,
+			instantrefillhealth = false,
 			refillhealthenabled = true
 		}
 	},
@@ -91,14 +108,20 @@ function playerTwoFacingLeft()
 	return AND(rb(p2direction), 0x80) > 0
 end
 
-function _playerOneInHitstun()
+function playerOneInHitstun() -- if p1 isn't actionable, and p2 is in an attack animation, assume a hit took place
+	return rb(p1actionable) > 2 and rb(p2attackanimation) == 0x11
 end
 
-function _playerTwoInHitstun()
+function playerTwoInHitstun()
+	return rb(p2actionable) > 0 and rb(p1attackanimation) == 0x11
 end
+
+local p1prevhealth = rb(p2health)
 
 function readPlayerOneHealth()
-	return rb(p1health)
+	local value = p1prevhealth
+	p1prevhealth = rb(p1health)
+	return value
 end
 
 function writePlayerOneHealth(health)
@@ -106,8 +129,12 @@ function writePlayerOneHealth(health)
 	wb(p1health+1, health) -- red health
 end
 
+local p2prevhealth = rb(p2health)
+
 function readPlayerTwoHealth()
-	return rb(p2health)
+	local value = p2prevhealth
+	p2prevhealth = rb(p2health)
+	return value
 end
 
 function writePlayerTwoHealth(health)

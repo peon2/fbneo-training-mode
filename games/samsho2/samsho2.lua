@@ -1,6 +1,11 @@
 assert(rb,"Run fbneo-training-mode.lua")
 dofile("games/samsho/samsho.lua") -- mostly only memory locations differ between samsho and samsho2
 
+function gamemsg()
+	print "Known issues with samsho2:"
+	print "No control over Hikyaku (delivery man)"
+end
+
 timer = 0x100AC6
 
 local p1uid

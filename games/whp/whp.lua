@@ -47,7 +47,7 @@ gamedefaultconfig = {
 		combotext = {
 			x=140,
 			y=35,
-			enabled=true,
+			enabled=false,
 		},
 		health = {
 			P1 = {
@@ -96,6 +96,20 @@ gamedefaultconfig = {
 			refillhealthenabled = true,
 			instantrefillmeter = false,
 			refillmeterenabled = true
+		}
+	},
+	input = {
+		simple = {
+			P1 = {
+				x = 18,
+				y = 185,
+				enabled = true
+			},
+			P2 = {
+				x = 215,
+				y = 185,
+				enabled = true
+			}
 		}
 	}
 }
@@ -160,4 +174,5 @@ end
 
 function Run() -- runs every frame
 	infiniteTime()
+	wb(0x10B072, 3) -- Unlocks Gokuu and NEO-DIO
 end

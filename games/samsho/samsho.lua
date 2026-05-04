@@ -1,10 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
-function gamemsg()
-	print("Known issues with "..ROM_NAME..":")
-	print "No control over Hikyaku (delivery man)"
-end
-
 p1maxhealth = 0x80
 p2maxhealth = 0x80
 
@@ -397,7 +392,7 @@ local function readPlayerTwoStun()
 end
 
 local function drawStunBarPlayerOne(player)
-	local stunreset = readPlayerOneStunReset() -- too large to display on screen
+	local stunreset = readPlayerOneStunReset() -- too large to display on screen, dividing by 4
 	local xoffset = samsho.stun.P1.x + #"999"*LETTER_WIDTH
 	local height = LETTER_HEIGHT-2
 	gui.box(xoffset, samsho.stun.P1.y, xoffset+2+p1maxstunreset/4, samsho.stun.P1.y+height, nil, "grey")
@@ -408,7 +403,7 @@ local function drawStunBarPlayerOne(player)
 	
 	local stun = readPlayerOneStun()
 	local yoffset = 8
-	gui.box(xoffset, samsho.stun.P1.y+yoffset, xoffset+p1maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
+	gui.box(xoffset, samsho.stun.P1.y+yoffset, xoffset+2+p1maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
 	if stun>0 then
 		gui.box(xoffset+1, samsho.stun.P1.y+yoffset+1, xoffset+1+stun, samsho.stun.P1.y+height+yoffset-1, "cyan", nil)
 	end
@@ -416,7 +411,7 @@ local function drawStunBarPlayerOne(player)
 end
 
 local function drawStunBarPlayerTwo(player)
-	local stunreset = readPlayerTwoStunReset() -- too large to display on screen
+	local stunreset = readPlayerTwoStunReset() -- too large to display on screen, dividing by 4
 	local xoffset = samsho.stun.P2.x + #"999"*LETTER_WIDTH
 	local height = LETTER_HEIGHT-2
 	gui.box(xoffset, samsho.stun.P2.y, xoffset+2+p2maxstunreset/4, samsho.stun.P2.y+height, nil, "grey")
@@ -427,7 +422,7 @@ local function drawStunBarPlayerTwo(player)
 	
 	local stun = readPlayerTwoStun()
 	local yoffset = 8
-	gui.box(xoffset, samsho.stun.P2.y+yoffset, xoffset+p2maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
+	gui.box(xoffset, samsho.stun.P2.y+yoffset, xoffset+2+p2maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
 	if stun>0 then
 		gui.box(xoffset+1, samsho.stun.P2.y+yoffset+1, xoffset+1+stun, samsho.stun.P2.y+height+yoffset-1, "cyan", nil)
 	end
