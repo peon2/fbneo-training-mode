@@ -92,7 +92,7 @@ local inputParse = function()
 		if (sstable[newfc]) then -- if this savestate exists
 			savestate.load(sstable[newfc]) -- load
 		else
-			gui.text(1,10,"Can't go any farther forwards", "red")
+			gui.text(1,10,"Can't go any further forwards", "red")
 		end
 	end
 

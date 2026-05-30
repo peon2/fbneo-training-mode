@@ -19,7 +19,7 @@ local state = {
 }
 
 local stunresetoffset = 0x5C  -- word
-local maxstunreset = 0x80 -- I don't know how large this should actually be
+local maxstunreset = 0x82 -- I don't know how large this should actually be, there's a table of stun reset values starting at 0x2CBB0, I've only ever seen it go as high as 0x78.
 local stunoffset = 0x5F  -- byte
 local maxstun = 0x1E -- if a character has 0x1E stun (or more) and gets hit, they're stunned
 
@@ -162,45 +162,6 @@ local function writePlayerTwoStunReset(value)
 	ww(p2uid + stunresetoffset, value)
 end
 
-local function drawStunBarPlayerOne(player)
-	local stunreset = readPlayerOneStunReset()
-	local xoffset = sf2.stun.P1.x + #"10"*LETTER_WIDTH
-	local height = LETTER_HEIGHT-2
-	gui.box(xoffset, sf2.stun.P1.y, xoffset+maxstunreset, sf2.stun.P1.y+height, nil, "grey")
-	if stunreset>0 then
-		gui.box(xoffset+1, sf2.stun.P1.y+1, xoffset+stunreset-1, sf2.stun.P1.y+height-1, "cyan", nil)
-	end
-	gui.text(sf2.stun.P1.x, sf2.stun.P1.y, stunreset, "red")
-	
-	local stun = readPlayerOneStun()
-	local yoffset = 8
-	gui.box(xoffset, sf2.stun.P1.y+yoffset, xoffset+maxstun, sf2.stun.P1.y+height+yoffset, nil, "grey")
-	if stun>0 then
-		gui.box(xoffset+1, sf2.stun.P1.y+yoffset+1, xoffset+stun-1, sf2.stun.P1.y+height+yoffset-1, "cyan", nil)
-	end
-	gui.text(sf2.stun.P1.x, sf2.stun.P1.y+yoffset, stun, "red")
-end
-
-local function drawStunBarPlayerTwo(player)
-	local stunreset = readPlayerTwoStunReset()
-	local xoffset = sf2.stun.P2.x + #"10"*LETTER_WIDTH
-	local height = LETTER_HEIGHT-2
-	gui.box(xoffset, sf2.stun.P2.y, xoffset+maxstunreset, sf2.stun.P2.y+height, nil, "grey")
-	if stunreset>0 then
-		gui.box(xoffset+1, sf2.stun.P2.y+1, xoffset+stunreset-1, sf2.stun.P2.y+height-1, "cyan", nil)
-	end
-	gui.text(sf2.stun.P2.x, sf2.stun.P2.y, stunreset, "red")
-	
-	local stun = readPlayerTwoStun()
-	local yoffset = 8
-	gui.box(xoffset, sf2.stun.P2.y+yoffset, xoffset+maxstun, sf2.stun.P2.y+height+yoffset, nil, "grey")
-	if stun>0 then
-		gui.box(xoffset+1, sf2.stun.P2.y+yoffset+1, xoffset+stun-1, sf2.stun.P2.y+height+yoffset-1, "cyan", nil)
-	end
-	gui.text(sf2.stun.P2.x, sf2.stun.P2.y+yoffset, stun, "red")
-end
-
-
 local function infiniteTime()
 	wb(timer, maxtime)
 end
@@ -254,7 +215,22 @@ createHUDElement(
 		resetConfig("sf2stunenabledp1")
 	end,
 	function()
-		drawStunBarPlayerOne()
+		drawFillBar(
+			sf2.stun.P1.x,
+			sf2.stun.P1.y,
+			readPlayerOneStun(),
+			LETTER_WIDTH*2,
+			readPlayerOneStun(),
+			maxstun
+		)
+		drawFillBar(
+			sf2.stun.P1.x,
+			sf2.stun.P1.y+LETTER_HEIGHT,
+			readPlayerOneStunReset(),
+			LETTER_WIDTH*2,
+			readPlayerOneStunReset(),
+			maxstunreset
+		)
 	end
 )
 
@@ -284,6 +260,21 @@ createHUDElement(
 		resetConfig("sf2stunenabledp2")
 	end,
 	function()
-		drawStunBarPlayerTwo()
+		drawFillBar(
+			sf2.stun.P2.x,
+			sf2.stun.P2.y,
+			readPlayerTwoStun(),
+			LETTER_WIDTH*2,
+			readPlayerTwoStun(),
+			maxstun
+		)
+		drawFillBar(
+			sf2.stun.P2.x,
+			sf2.stun.P2.y+LETTER_HEIGHT,
+			readPlayerTwoStunReset(),
+			LETTER_WIDTH*2,
+			readPlayerTwoStunReset(),
+			maxstunreset
+		)
 	end
 )

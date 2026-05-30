@@ -860,19 +860,20 @@ local function closePopUp()
 	end
 end
 
+local handledpopup = false
+
 local function handlePopUp()
 	if interactivegui.page == "save_mission" or interactivegui.page == "save_name" or interactivegui.page == "save_frame" then
 		-- Guipage size
-		interactivegui.boxx = emu.screenwidth()/4
-		interactivegui.boxy = emu.screenheight()/3-10
-		interactivegui.boxx2 = 3*(emu.screenwidth()/4)
-		interactivegui.boxy2 = 4*(emu.screenheight()/6)+9
-	else
+		interactivegui.boxx = math.floor(emu.screenwidth()/4)
+		interactivegui.boxy = math.floor(emu.screenheight()/3-10)
+		interactivegui.boxx2 = math.floor(3*(emu.screenwidth()/4))
+		interactivegui.boxy2 = math.floor(4*(emu.screenheight()/6)+9)
+		handledpopup = true
+	elseif handledpopup then
 		-- restaures default values
-		interactivegui.boxx = emu.screenwidth()/8
-		interactivegui.boxy = emu.screenheight()/10-10
-		interactivegui.boxx2 = 7*(emu.screenwidth()/8)
-		interactivegui.boxy2 = 9*(emu.screenheight()/10)-10
+		calcDerivedGUIValues()
+		handledpopup = false
 	end
 	-- Back option
 	if (interactivegui.page == "save_mission" and back()) or ((interactivegui.previouspage == "save_mission" or interactivegui.previouspage == "save_name" or interactivegui.previouspage == "save_frame") and not interactivegui.enabled) then
@@ -926,7 +927,7 @@ local function saveMission()
 	else
 		-- Saving one or more replay files for the new mission.
 		for i = 1, #slots_checked do
-			assert(table.save(recording[slots_checked[i]], mission_name.."_"..i..".lua")==nil, "Can't save replay file")
+			saveTableToFile(nil, recording[slots_checked[i]], mission_name.."_"..i..".lua")
 		end
 		-- Both savestate and lua files are moved in the correct folder
 		os.rename("./new_savestate","./"..mission_path..character.."/"..mission_name..".fs")
@@ -977,9 +978,10 @@ local function playMission(mission) -- mission[1] = gamename / [2] = mission's n
 			local txt1 = mission.mission_text
 			showTxt(900, txt1, "")
 		end
-		random_slot = math.random(1, mission.slots_nb)
-		if fexists(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua") then -- replay
-			recording[recording.recordingslot]=table.load(mission_path..mission.character.."/"..mission.name.."_"..random_slot..".lua")
+		local replay_slot = mission_path..mission.character.."/"..mission.name.."_"..math.random(1, mission.slots_nb)..".lua"
+		if fexists(replay_slot) then -- replay
+			local metadata, data = loadTableFromFile(replay_slot)
+			recording[recording.recordingslot]=data
 		end
 		togglePlayBack(nil, {})
 		timer = 0

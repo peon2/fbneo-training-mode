@@ -65,8 +65,18 @@ local hudsettings = {
 		toggleMoveHUD(true, {})
 	end,
 }
+local saveconfig = {
+	text = "Manually Save Configs",
+	alignment = "centre",
+	olcolour = colour.olcolour,
+	info = "Manually Save All Configs, crashes the script as this is a destructive action. Reopen the Script after Manually Saving.",
+	func = function()
+		saveAllConfig()
+	end,
+}
 local coininputleniency = {
 	text = "Coin Leniency 10",
+	rawtext = "Coin Leniency ",
 	alignment = "centre",
 	fillpercent = 0,
 	olcolour = colour.olcolour,
@@ -75,7 +85,7 @@ local coininputleniency = {
 		changePageAndSelection("coinleniency", interactivegui.coinleniency-9)
 	end,
 	autofunc = function(this)
-		this.text = "Coin Leniency "..(interactivegui.coinleniency)
+		this.text = this.rawtext..tostring(interactivegui.coinleniency)
 		this.fillpercent = (interactivegui.coinleniency-10)/5
 	end,
 }
@@ -97,11 +107,13 @@ local inputdelay = {
 		end
 	end,
 }
+local maxrefillspeed = 60
 local refillhealthspeed = {
 	text = "Refill Health Speed 00",
 	x = interactivegui.boxxhalflength-#"Refill Health Speed 000"*LETTER_WIDTH,
 	olcolour = colour.olcolour,
-	info = "The maximum number of frames it will take to refill health.",
+	fillpercent = 0,
+	info = "The maximum number of frames it will take to refill health. Lower is better.",
 	func = function()
 		changePageAndSelection("refillhealthspeed")
 	end,
@@ -111,6 +123,7 @@ local refillhealthspeed = {
 	end,
 	autofunc = function(this)
 		this.text = string.format("Refill Health Speed %2d", combovars.P1.refillhealthspeed)
+		this.fillpercent = combovars.P1.refillhealthspeed/maxrefillspeed
 	end,
 }
 local refillmeterspeed = {
@@ -118,7 +131,8 @@ local refillmeterspeed = {
 	x = interactivegui.boxxhalflength + LETTER_WIDTH,
 	inline = true,
 	olcolour = colour.olcolour,
-	info = "The maximum number of frames it will take to refill meter.",
+	fillpercent = 0,
+	info = "The maximum number of frames it will take to refill meter. Lower is better.",
 	func = function()
 		changePageAndSelection("refillmeterspeed")
 	end,
@@ -128,6 +142,7 @@ local refillmeterspeed = {
 	end,
 	autofunc = function(this)
 		this.text = string.format("Refill Meter Speed %2d", combovars.P1.refillmeterspeed)
+		this.fillpercent = combovars.P1.refillmeterspeed/maxrefillspeed
 	end,
 }
 selectedcolourconfig = selectedcolourconfig or nil -- global so it persists when this file is reloaded
@@ -140,7 +155,7 @@ currentcolour = currentcolour or { -- global so it persists when this file is re
 local colourconfigpicker = {
 	text = "Current Config",
 	rawx = interactivegui.boxxhalflength,
-	y = 60,
+	y = 75,
 	info = "The colour setting to edit.",
 	olcolour = colour.olcolour,
 	func = function()
@@ -153,6 +168,7 @@ local colourconfigpicker = {
 	reset = function()
 		if not selectedcolourconfig then return end
 		resetConfig(selectedcolourconfig.id)
+		reloadGUIPages()
 	end,
 	autofunc = function(this)
 		if selectedcolourconfig then
@@ -223,6 +239,69 @@ local colourpickerblue = {
 	autofunc = function(this)
 		this.text = string.format("%3d", currentcolour.blue)
 	end
+}
+local colourpickeralpha = {
+	text = "255",
+	x = 15,
+	olcolour = colour.olcolour,
+	info = "The Opacity component of the Colour",
+	func = function()
+		changePageAndSelection("colourpickeralpha")
+	end,
+	reset = function()
+		currentcolour.alpha = 0xFF
+	end,
+	autofunc = function(this)
+		this.text = string.format("%3d", currentcolour.alpha)
+	end
+}
+
+local backgroundpattern = {
+	rawtext = "Background: ",
+	rawx = interactivegui.boxxhalflength-40,
+	y = colourconfigpicker.y + 85,
+	olcolour = colour.olcolour,
+	func = function()
+		changePageAndSelection("backgroundpattern", interactivegui.background.style)
+	end,
+	reset = function()
+		resetConfig("guibackgroundstyle")
+		resetConfig("guibackgroundvariant")
+	end,
+	autofunc = function(this)
+		this.text = this.rawtext..BACKGROUND[interactivegui.background.style][1]
+		this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+	end,
+}
+
+local backgroundvariant = {
+	rawtext = "Variant: ",
+	rawx = interactivegui.boxxhalflength+40,
+	y = backgroundpattern.y,
+	olcolour = colour.olcolour,
+	func = function()
+		-- only display the correct number of variants for the background style
+		-- this is REALLY hacky
+		for i, _ in ipairs(guipages.backgroundvariant) do -- stop buttons from displaying and being selectable
+			guipages.backgroundvariant[i].text = ""
+			guipages.backgroundvariant[i].olcolour = nil
+			guipages.backgroundvariant[i] = nil
+		end
+		for i = 1, BACKGROUND[interactivegui.background.style][3] do -- make the correct number of variants visible and selectable
+			guipages.backgroundvariant[i] = guipages.backgroundvariant["variant"..i]
+			guipages.backgroundvariant[i].text = tostring(i)
+			guipages.backgroundvariant[i].olcolour = colour.olcolour
+		end
+		
+		changePageAndSelection("backgroundvariant", interactivegui.background.variant)
+	end,
+	reset = function()
+		resetConfig("guibackgroundvariant")
+	end,
+	autofunc = function(this)
+		this.text = this.rawtext..interactivegui.background.variant
+		this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+	end,
 }
 
 local directionset = {
@@ -540,7 +619,7 @@ local hitplayback = {
 	autofunc = function(this)
 		if recording.hitslot == 0 then
 			this.text = "Hit Slot"
-			this.bgcolour = colour.bgcolour
+			this.bgcolour = nil
 			this.x = this.rawx-#this.text*LETTER_HALFWIDTH
 		else
 			this.text = "Hit Slot "..recording.hitslot
@@ -567,7 +646,7 @@ local savestateplayback = {
 	autofunc = function(this)
 		if recording.savestateslot == 0 then
 			this.text = "Savestate Slot"
-			this.bgcolour = colour.bgcolour
+			this.bgcolour = nil
 			this.x = this.rawx-#this.text*LETTER_HALFWIDTH
 		else
 			this.text = "Savestate Slot "..recording.savestateslot
@@ -654,9 +733,9 @@ local replaysnipping = {
 			this.x = this.rawx - #this.text*LETTER_HALFWIDTH
 			this.bgcolour = colour.option2
 		else
-			this.text = "Snipping Replays"
+			this.text = "Snipping Replays Off"
 			this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-			this.bgcolour = nil
+			this.bgcolour = colour.boolfalse
 		end
 	end,
 }
@@ -709,7 +788,7 @@ local replaystartingtime = {
 		else
 			this.text = "Replay Delay"
 			this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-			this.bgcolour = colour.bgcolour
+			this.bgcolour = nil
 			this.fillpercent = 0
 		end
 	end,
@@ -735,7 +814,7 @@ local replayrandomisedelay = {
 		else
 			this.text = "Don't Randomise"
 			this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-			this.bgcolour = colour.bgcolour
+			this.bgcolour = colour.boolfalse
 		end
 	end,
 }
@@ -799,92 +878,95 @@ guipages[guipagenames.Players] = {
 		y = 95,
 	},
 }
+
 guipages[guipagenames.Recording] = {
-		guielements.leftarrow,
-		guielements.rightarrow,
-		title = {
-			text = "Recording Menu"
-		},
-		{
-			text = "Don't Loop",
-			rawx = interactivegui.boxxhalflength,
-			canhotkey = true,
-			y = 15,
-			info = "Controls whether or not playback loops until you press play again",
-			olcolour = colour.olcolour,
-			reset = function()
-				resetConfig("recordingloop")
-			end,
-			func = function()
-				changeConfig("recordingloop", not getConfigValue("recordingloop"))
-			end,
-			autofunc = function(this)
-				if recording.loop then
-					this.text = "Loop"
-					this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-					this.bgcolour = colour.booltrue
-				else
-					this.text = "Don't Loop"
-					this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-					this.bgcolour = colour.boolfalse
-				end
-			end,
-		},
-		{
-			text = "Slot ",
-			rawx = interactivegui.boxxhalflength,
-			olcolour = colour.olcolour,
-			reset = function()
-				resetConfig("recordingslot")
-			end,
-			func = function()
-				changePageAndSelection("recordingslot", recording.recordingslot)
-			end,
-			autofunc = function(this) -- calls every frame this is visible
-				this.text = "Slot "..recording.recordingslot
+	guielements.leftarrow,
+	guielements.rightarrow,
+	title = {
+		text = "Recording Menu"
+	},
+	{
+		text = "Don't Loop",
+		rawx = interactivegui.boxxhalflength,
+		canhotkey = true,
+		y = 15,
+		info = "Controls whether or not playback loops until you press play again",
+		olcolour = colour.olcolour,
+		reset = function()
+			resetConfig("recordingloop")
+		end,
+		func = function()
+			changeConfig("recordingloop", not getConfigValue("recordingloop"))
+		end,
+		autofunc = function(this)
+			if recording.loop then
+				this.text = "Loop"
 				this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-			end,
-			info = "Set the current recording slot",
-		},
-		savestateplayback,
-		{
-			text = "Don't Randomise",
-			rawx = interactivegui.boxxhalflength,
-			info = "Random playback between all slots that have been recorded into",
-			canhotkey = true,
-			olcolour = colour.olcolour,
-			reset = function()
-				resetConfig("recordingrandomise")
-			end,
-			func = function()
-				changeConfig("recordingrandomise", not getConfigValue("recordingrandomise"))
-			end,
-			autofunc = function(this)
-				if recording.randomise then
-					this.text = "Randomise Slot"
-					this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-					this.bgcolour = colour.booltrue
-				else
-					this.text = "Don't Randomise Slot"
-					this.x = this.rawx - #this.text*LETTER_HALFWIDTH
-					this.bgcolour = colour.bgcolour
-				end
-			end,
-		},
-		replaysnipping,
-		playerrecording,
-		replaystartingtime,
-		replayrandomisedelay,
-		other_func = function()
-			drawReplayInfo(replaynonex + interactivegui.boxx, replaynoney + interactivegui.boxy + 3)
-		end
-	}
+				this.bgcolour = colour.booltrue
+			else
+				this.text = "Don't Loop"
+				this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+				this.bgcolour = colour.boolfalse
+			end
+		end,
+	},
+	{
+		text = "Slot ",
+		rawtext = "Slot ",
+		rawx = interactivegui.boxxhalflength,
+		olcolour = colour.olcolour,
+		reset = function()
+			resetConfig("recordingslot")
+		end,
+		func = function()
+			changePageAndSelection("recordingslot", recording.recordingslot)
+		end,
+		autofunc = function(this) -- calls every frame this is visible
+			this.text = this.rawtext..recording.recordingslot
+			this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+		end,
+		info = "Set the current recording slot",
+	},
+	savestateplayback,
+	{
+		text = "Don't Randomise",
+		rawx = interactivegui.boxxhalflength,
+		info = "Random playback between all slots that have been recorded into",
+		canhotkey = true,
+		olcolour = colour.olcolour,
+		reset = function()
+			resetConfig("recordingrandomise")
+		end,
+		func = function()
+			changeConfig("recordingrandomise", not getConfigValue("recordingrandomise"))
+		end,
+		autofunc = function(this)
+			if recording.randomise then
+				this.text = "Randomise Slot"
+				this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+				this.bgcolour = colour.booltrue
+			else
+				this.text = "Don't Randomise Slot"
+				this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+				this.bgcolour = colour.boolfalse
+			end
+		end,
+	},
+	replaysnipping,
+	playerrecording,
+	replaystartingtime,
+	replayrandomisedelay,
+	other_func = function()
+		drawReplayInfo(replaynonex + interactivegui.boxx, replaynoney + interactivegui.boxy + 3)
+	end
+}
 
 guipages[guipagenames.GeneralSettings] = {
 	title = {
 		text = "Config Settings"
 	},
 	guielements.backarrow,
+	saveconfig,
 	coininputleniency,
 	inputdelay,
 	refillhealthspeed,
@@ -901,7 +983,7 @@ guipages[guipagenames.GeneralSettings] = {
 		y = colourpickerred.y - 10,
 		olcolour = colour.olcolour,
 		autofunc = function(this)
-			this.bgcolour = currentcolour.red*0x01000000 + currentcolour.green*0x010000 + currentcolour.blue*0x0100 + currentcolour.alpha
+			this.bgcolour = currentcolour.red*0x01000000 + currentcolour.green*0x010000 + currentcolour.blue*0x0100 + 0xFF
 		end,
 	},
 	red = {
@@ -919,12 +1001,20 @@ guipages[guipagenames.GeneralSettings] = {
 		x = colourpickerblue.x-9,
 		y = colourpickerred.y + interactivegui.linespacing*2
 	},
+	alpha = {
+		text = "A",
+		x = colourpickeralpha.x-9,
+		y = colourpickerred.y + interactivegui.linespacing*3
+	},
 	colourpickerred,
 	colourpickergreen,
 	colourpickerblue,
+	colourpickeralpha,
 	savecolourconfig,
-	resetcolourconfig,
+	backgroundpattern,
+	backgroundvariant
 }
+
 guipages[guipagenames.RecordingExtraButtons] = {
 	title = {
 		text = "Extra Buttons"
@@ -1083,7 +1173,11 @@ if translationtable then -- if inputs can be processed
 			setHoldDirection(direction)
 			previousPageAndSelection()
 		end,
-		autofunc = 	function() displayStick(interactivegui.boxx + interactivegui.boxxhalflength + 40, directionset.y-1) end,
+		autofunc = function()
+			if interactivegui.page == guipagenames.Main then -- I shouldn't have to do this...
+				displayStick(interactivegui.boxx + interactivegui.boxxhalflength + 40, directionset.y-1)
+			end
+		end,
 	}
 end
 
@@ -1287,7 +1381,7 @@ if gamefunctions.writeplayeronehealth and gamevars.P1.constants.maxhealth then -
 			return k
 		end
 		return getConfigValue("p1maxhealth")
-	end
+	end-- (basepage, text, x, y, minimum, maximum, length, updatefunc, autofunc)
 	guipages.p1maxhealth = createScrollingBar(
 		guipages[guipagenames.Players],
 		"Max Health: "..gamevars.P1.constants.maxhealth,
@@ -1295,7 +1389,7 @@ if gamefunctions.writeplayeronehealth and gamevars.P1.constants.maxhealth then -
 		p1healthmax.y,
 		1,
 		gamevars.P1.constants.maxhealth,
-		0,
+		nil,
 		uf,
 		function(this)
 			local str = ""
@@ -1310,7 +1404,6 @@ if gamefunctions.writeplayeronehealth and gamevars.P1.constants.maxhealth then -
 				str = health
 			end
 			this.text = "Max Health: "..str
-			this.x = p1healthmax.rawx - #this.text*LETTER_HALFWIDTH
 		end
 	)
 end
@@ -1576,7 +1669,7 @@ end
 
 do -- recordingslot
 	local rf = function() return function() previousPageAndSelection() end end
-	local sf = function(n) return function() recording.recordingslot = n end end
+	local sf = function(n) return function() changeConfig("recordingslot", n) end end
 	guipages.recordingslot = createPopUpMenu(
 		guipages[guipagenames.Recording],
 		nil,
@@ -1847,7 +1940,7 @@ do -- refill health speed
 		refillhealthspeed.x,
 		refillhealthspeed.y,
 		1,
-		60,
+		maxrefillspeed,
 		nil,
 		uf,
 		function(this) this.text = string.format("Refill Health Speed %2d", combovars.P1.refillhealthspeed) end
@@ -1875,7 +1968,7 @@ do
 		refillmeterspeed.x,
 		refillmeterspeed.y,
 		1,
-		60,
+		maxrefillspeed,
 		nil,
 		uf,
 		function(this) this.text = string.format("Refill Meter Speed %2d", combovars.P1.refillmeterspeed) end
@@ -1997,8 +2090,80 @@ do
 		function(this) this.text = string.format("%3d", currentcolour.blue) end
 	)
 end
+do
+	local uf = function(n, k)
+		if n then
+			currentcolour.alpha = currentcolour.alpha+n
+			return currentcolour.alpha
+		end
+		if k then
+			currentcolour.alpha = k
+			return k
+		end
+		return currentcolour.alpha
+	end
+	guipages.colourpickeralpha = createScrollingBar(
+		guipages[guipagenames.GeneralSettings],
+		"255",
+		colourpickeralpha.x,
+		colourpickeralpha.y,
+		0,
+		0xFF,
+		0,
+		uf,
+		function(this) this.text = string.format("%3d", currentcolour.alpha) end
+	)
+end
+do
+	local Elements = {}
+	
+	for i, v in ipairs(BACKGROUND) do
+		table.insert(Elements, {
+			text = v[1],
+			x = #backgroundpattern.rawtext*LETTER_HALFWIDTH + backgroundpattern.rawx - #v[1]*LETTER_HALFWIDTH,
+			selectfunc = function() return function()
+				if interactivegui.background.style ~= i then
+					changeConfig("guibackgroundvariant", 1) -- if we've changed style the variants should change too
+				end
+				changeConfig("guibackgroundstyle", i)
+			end end
+		})
+	end
+	
+	guipages.backgroundpattern = createPopUpMenu(
+		guipages[guipagenames.GeneralSettings],
+		Elements,
+		nil,
+		backgroundpattern.y,
+		nil,
+		nil,
+		nil,
+		nil,
+		true
+	)
+end
+do
+	local sf = function(n) return function() changeConfig("guibackgroundvariant", n) end end
+	guipages.backgroundvariant = createPopUpMenu(
+		guipages[guipagenames.GeneralSettings],
+		nil,
+		backgroundvariant.x+(#backgroundvariant.rawtext)*LETTER_WIDTH,
+		backgroundvariant.y,
+		MAX_BACKGROUND_VARIANTS,
+		sf,
+		nil,
+		nil,
+		true
+	)
+end
 
 formatGUITables()
+
+for i, v in ipairs(guipages.backgroundvariant) do
+	guipages.backgroundvariant["variant"..i] = v
+	guipages.backgroundvariant["variant"..i].text = ""
+	guipages.backgroundvariant["variant"..i].olcolour = nil
+end
 
 ------------------------------------------
 -- Add-on

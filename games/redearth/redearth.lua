@@ -40,6 +40,11 @@ local p2charid = p2uid + 0x121
 local p1stun = p1uid + 0xD6
 local p2stun = p2uid + 0xD6
 
+local maxstunreset = 0x82
+
+local p1stunreset = p1uid + 0xD7 -- table of stun reset values at 0x669d268
+local p2stunreset = p2uid + 0xD7
+
 local p1direction = p1uid + 0x62
 local p2direction = p2uid + 0x62
 
@@ -241,6 +246,14 @@ local function readPlayerTwoStun()
 	return rb(p2stun)
 end
 
+local function readPlayerOneStunReset()
+	return rb(p1stunreset)
+end
+
+local function readPlayerTwoStunReset()
+	return rb(p2stunreset)
+end
+
 local charsstunresistance = {}
 charsstunresistance[LEO] = 36
 charsstunresistance[KENJI] = 34
@@ -312,20 +325,6 @@ createConfigItem("redearthstunenabledp2", true, redearth.stun.P2, "enabled")
 createConfigItem("redearthstunxp2", 325, redearth.stun.P2, "x")
 createConfigItem("redearthstunyp2", 42, redearth.stun.P2, "y")
 
-local function drawStunBar(player)
-	local stunfunc = { P1 = readPlayerOneStun, P2 = readPlayerTwoStun }
-	local stun = stunfunc[player]()
-	local maxstunfunc = { P1 = readPlayerOneMaxStun, P2 = readPlayerTwoMaxStun }
-	local maxstun = maxstunfunc[player]()
-	local xoffset = redearth.stun[player].x + #"00"*LETTER_WIDTH + 2
-	local height = LETTER_HEIGHT-2
-	gui.box(xoffset, redearth.stun[player].y, xoffset+maxstun, redearth.stun[player].y+height, nil, "grey")
-	if stun>0 then
-		gui.box(xoffset+1, redearth.stun[player].y+1, xoffset+stun-1, redearth.stun[player].y+height-1, "cyan", nil)
-	end
-	gui.text(redearth.stun[player].x, redearth.stun[player].y, stun, "red")
-end
-
 createHUDElement(
 	"p1stun",
 	function(n)
@@ -352,7 +351,22 @@ createHUDElement(
 		resetConfig("redearthstunenabledp1")
 	end,
 	function()
-		drawStunBar("P1")
+		drawFillBar(
+			redearth.stun.P1.x,
+			redearth.stun.P1.y,
+			readPlayerOneStun(),
+			LETTER_WIDTH*3,
+			readPlayerOneStun(),
+			readPlayerOneMaxStun()
+		)
+		drawFillBar(
+			redearth.stun.P1.x,
+			redearth.stun.P1.y+LETTER_HEIGHT,
+			readPlayerOneStunReset(),
+			LETTER_WIDTH*3,
+			math.floor(readPlayerOneStunReset()/4),
+			math.floor(maxstunreset/4)
+		)
 	end
 )
 
@@ -382,6 +396,21 @@ createHUDElement(
 		resetConfig("redearthstunenabledp2")
 	end,
 	function()
-		drawStunBar("P2")
+		drawFillBar(
+			redearth.stun.P2.x,
+			redearth.stun.P2.y,
+			readPlayerTwoStun(),
+			LETTER_WIDTH*3,
+			readPlayerTwoStun(),
+			readPlayerTwoMaxStun()
+		)
+		drawFillBar(
+			redearth.stun.P2.x,
+			redearth.stun.P2.y+LETTER_HEIGHT,
+			readPlayerTwoStunReset(),
+			LETTER_WIDTH*3,
+			math.floor(readPlayerTwoStunReset()/4),
+			math.floor(maxstunreset/4)
+		)
 	end
 )

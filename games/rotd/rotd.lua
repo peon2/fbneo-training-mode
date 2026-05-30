@@ -201,20 +201,6 @@ createConfigItem("rotdstunenabledp2", true, rotd.stun.P2, "enabled")
 createConfigItem("rotdstunxp2", 184, rotd.stun.P2, "x")
 createConfigItem("rotdstunyp2", 50, rotd.stun.P2, "y")
 
-local function drawStunBar(player)
-	local stunfunc = { P1 = readPlayerOneStun, P2 = readPlayerTwoStun }
-	local stun = stunfunc[player]()
-	local maxstunfunc = { P1 = readPlayerOneMaxStun, P2 = readPlayerTwoMaxStun }
-	local maxstun = maxstunfunc[player]()
-	local xoffset = rotd.stun[player].x + #"100"*LETTER_WIDTH
-	local height = LETTER_HEIGHT-2
-	gui.box(xoffset, rotd.stun[player].y, xoffset+maxstun, rotd.stun[player].y+height, nil, "grey")
-	if stun>0 then
-		gui.box(xoffset+1, rotd.stun[player].y+1, xoffset+stun-1, rotd.stun[player].y+height-1, "cyan", nil)
-	end
-	gui.text(rotd.stun[player].x, rotd.stun[player].y, stun, "red")
-end
-
 createHUDElement(
 	"p1stun",
 	function(n)
@@ -241,7 +227,14 @@ createHUDElement(
 		resetConfig("rotdstunenabledp1")
 	end,
 	function()
-		drawStunBar("P1")
+		drawFillBar(
+			rotd.stun.P1.x,
+			rotd.stun.P1.y,
+			readPlayerOneStun(),
+			LETTER_WIDTH*3,
+			readPlayerOneStun(),
+			readPlayerOneMaxStun()
+		)
 	end
 )
 
@@ -271,6 +264,13 @@ createHUDElement(
 		resetConfig("rotdstunenabledp2")
 	end,
 	function()
-		drawStunBar("P2")
+		drawFillBar(
+			rotd.stun.P2.x,
+			rotd.stun.P2.y,
+			readPlayerTwoStun(),
+			LETTER_WIDTH*3,
+			readPlayerTwoStun(),
+			readPlayerTwoMaxStun()
+		)
 	end
 )

@@ -347,7 +347,7 @@ end
 
 initConfigTable("samsho", samsho, "config")
 
-createConfigItem("samshodisablestunp1", false, samsho, "p1stun")
+createConfigItem("samshodisablestunp1", true, samsho, "p1stun")
 createConfigItem("samshodisablestunp2", false, samsho, "p2stun")
 
 createConfigItem("samshostunenabledp1", false, samsho.stun.P1, "enabled")
@@ -391,44 +391,6 @@ local function readPlayerTwoStun()
 	end
 end
 
-local function drawStunBarPlayerOne(player)
-	local stunreset = readPlayerOneStunReset() -- too large to display on screen, dividing by 4
-	local xoffset = samsho.stun.P1.x + #"999"*LETTER_WIDTH
-	local height = LETTER_HEIGHT-2
-	gui.box(xoffset, samsho.stun.P1.y, xoffset+2+p1maxstunreset/4, samsho.stun.P1.y+height, nil, "grey")
-	if stunreset>0 then
-		gui.box(xoffset+1, samsho.stun.P1.y+1, xoffset+1+math.floor(stunreset/4), samsho.stun.P1.y+height-1, "cyan", nil)
-	end
-	gui.text(samsho.stun.P1.x, samsho.stun.P1.y, stunreset, "red")
-	
-	local stun = readPlayerOneStun()
-	local yoffset = 8
-	gui.box(xoffset, samsho.stun.P1.y+yoffset, xoffset+2+p1maxstun, samsho.stun.P1.y+height+yoffset, nil, "grey")
-	if stun>0 then
-		gui.box(xoffset+1, samsho.stun.P1.y+yoffset+1, xoffset+1+stun, samsho.stun.P1.y+height+yoffset-1, "cyan", nil)
-	end
-	gui.text(samsho.stun.P1.x, samsho.stun.P1.y+yoffset, stun, "red")
-end
-
-local function drawStunBarPlayerTwo(player)
-	local stunreset = readPlayerTwoStunReset() -- too large to display on screen, dividing by 4
-	local xoffset = samsho.stun.P2.x + #"999"*LETTER_WIDTH
-	local height = LETTER_HEIGHT-2
-	gui.box(xoffset, samsho.stun.P2.y, xoffset+2+p2maxstunreset/4, samsho.stun.P2.y+height, nil, "grey")
-	if stunreset>0 then
-		gui.box(xoffset+1, samsho.stun.P2.y+1, xoffset+1+math.floor(stunreset/4), samsho.stun.P2.y+height-1, "cyan", nil)
-	end
-	gui.text(samsho.stun.P2.x, samsho.stun.P2.y, stunreset, "red")
-	
-	local stun = readPlayerTwoStun()
-	local yoffset = 8
-	gui.box(xoffset, samsho.stun.P2.y+yoffset, xoffset+2+p2maxstun, samsho.stun.P2.y+height+yoffset, nil, "grey")
-	if stun>0 then
-		gui.box(xoffset+1, samsho.stun.P2.y+yoffset+1, xoffset+1+stun, samsho.stun.P2.y+height+yoffset-1, "cyan", nil)
-	end
-	gui.text(samsho.stun.P2.x, samsho.stun.P2.y+yoffset, stun, "red")
-end
-
 createHUDElement(
 	"p1stun",
 	function(n)
@@ -455,7 +417,22 @@ createHUDElement(
 		resetConfig("samshostunenabledp1")
 	end,
 	function()
-		drawStunBarPlayerOne()
+		drawFillBar(
+			samsho.stun.P1.x,
+			samsho.stun.P1.y,
+			readPlayerOneStunReset(),
+			LETTER_WIDTH*3,
+			math.floor(readPlayerOneStunReset()/4),
+			math.floor(p1maxstunreset/4)
+		)
+		drawFillBar(
+			samsho.stun.P1.x,
+			samsho.stun.P1.y+LETTER_HEIGHT,
+			readPlayerOneStun(),
+			LETTER_WIDTH*3,
+			readPlayerOneStun(),
+			p1maxstun
+		)
 	end
 )
 
@@ -485,7 +462,22 @@ createHUDElement(
 		resetConfig("samshostunenabledp2")
 	end,
 	function()
-		drawStunBarPlayerTwo()
+		drawFillBar(
+			samsho.stun.P2.x,
+			samsho.stun.P2.y,
+			readPlayerTwoStunReset(),
+			LETTER_WIDTH*3,
+			math.floor(readPlayerTwoStunReset()/4),
+			math.floor(p2maxstunreset/4)
+		)
+		drawFillBar(
+			samsho.stun.P2.x,
+			samsho.stun.P2.y+LETTER_HEIGHT,
+			readPlayerTwoStun(),
+			LETTER_WIDTH*3,
+			readPlayerTwoStun(),
+			p2maxstun
+		)
 	end
 )
 

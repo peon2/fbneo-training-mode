@@ -1,3 +1,42 @@
+v0.26.05
+
+A warning is now displayed if a required file is missing.
+
+Reduced the filesize of config files and replay packs.
+Added backgrounds with variants that can be edited by changing background colours with the colour picker.
+
+The Alpha component of colours is now editable with the colour picker.
+
+Added a manually save config button:
+	Fightcade 'Training Mode' Emulator won't let the script save settings sometimes, use the manual button to save in this case.
+
+Large code refactor and reorganisation.
+
+redearth:
+Better stun tracking.
+Support for redearthep
+Updated icon file to reflect Red Earth notation.
+
+samsho/samsho2:
+Added combo detection.
+Added stun control.
+More accurately reads and writes health/meter.
+Estimates framedata.
+
+ssf2:
+Added the forgotten custom guipage.
+
+wh1/wh2/wh2j:
+Added rudimentary combo tracking.
+
+whp:
+Now unlocks Gokuu and NEO-DIO at Character Select.
+
+Contributions:
+
+Thanks to lansingwolverine:
+Gave addresses for samsho/samsho2 to allow adding combo detection, stun control, and framedata tracking.
+
 v0.26.04
 Added more volume control logic.
 Moved the volume control logic to an addon 'mute'.
