@@ -6,7 +6,7 @@ DISABLE_SCROLLING_INPUT = false
 	-> false, don't use it
 --]]
 
-FBNEO_TRAINING_MODE_VERSION = "v0.26.05"
+FBNEO_TRAINING_MODE_VERSION = "v0.26.06.01"
 REPO_SOURCE = "https://github.com/peon2/fbneo-training-mode"
 
 --DEBUG = true

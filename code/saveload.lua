@@ -130,7 +130,7 @@ writeValue = function (v, file)
 		if v == v_floor then
 			local d_type = CONSTANTS.TYPE.INTEGER
 			if v<0 then -- Track if negative.
-				d_type = d_type + CONSTANTS.TYPE.NEGATIVE_INTEGER
+				d_type = CONSTANTS.TYPE.NEGATIVE_INTEGER
 				v = v*-1
 			end
 			local values = {}
@@ -253,7 +253,6 @@ parseValue = function(rawdata, ind)
 			integer = SHIFT(integer, -8)
 			integer = integer+rawdata[ind+i]
 		end
-		print(integer_size, string.format("0x%X", integer))
 		ind = ind + integer_size
 		value = integer
 	elseif d_type == CONSTANTS.TYPE.NEGATIVE_INTEGER then
@@ -288,7 +287,7 @@ parseValue = function(rawdata, ind)
 		value = CONSTANTS.TABLE_END_VALUE
 		ind = ind + 1
 	else
-		ERR("Couldn't parse data type: "..rawdata[ind].." at position: "..string.format("0x%X", ind-1))
+		ERR("Couldn't parse data type: "..string.format("0x%X", rawdata[ind]).." at position: "..string.format("0x%X", ind-1))
 	end
 	return value, ind
 end

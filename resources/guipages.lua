@@ -184,7 +184,7 @@ local colourconfigpicker = {
 	end
 }
 local savecolourconfig = {
-	text = "Save Colour",
+	text = "Set Colour",
 	x = 2,
 	olcolour = colour.olcolour,
 	func = function()
@@ -2002,32 +2002,34 @@ end
 do
 	local Elements = {}
 	for id, configitem in pairs(getConfigItemsFiltered("colour")) do
-		local text = configitem.displayname
-		table.insert(Elements,
-		{
-			text = text,
-			x = colourconfigpicker.rawx - #text*LETTER_HALFWIDTH,
-			selectfunc = function(n) return function()
-				selectedcolourconfig = {
-					id = id,
-					name = text,
-					config = configitem,
-					displayname = configitem.displayname,
-					pos = n
-				}
-			end end,
-			releasefunc = function(n) return function()
-				local colour = configitem.varpointer[configitem.name]
-				currentcolour.red = bit.rshift(bit.band(0xFF000000, colour), 24)
-				currentcolour.green = bit.rshift(bit.band(0x00FF0000, colour), 16)
-				currentcolour.blue = bit.rshift(bit.band(0x0000FF00, colour), 8)
-				currentcolour.alpha = bit.band(0x000000FF, colour)
-				previousPageAndSelection()
-			end end,
-			autofunc = function(this)
-				this.bgcolour = configitem.varpointer[configitem.name]
-			end
-		})
+		if configitem.displayname then
+			local text = configitem.displayname
+			table.insert(Elements,
+			{
+				text = text,
+				x = colourconfigpicker.rawx - #text*LETTER_HALFWIDTH,
+				selectfunc = function(n) return function()
+					selectedcolourconfig = {
+						id = id,
+						name = text,
+						config = configitem,
+						displayname = configitem.displayname,
+						pos = n
+					}
+				end end,
+				releasefunc = function(n) return function()
+					local colour = configitem.varpointer[configitem.name]
+					currentcolour.red = bit.rshift(bit.band(0xFF000000, colour), 24)
+					currentcolour.green = bit.rshift(bit.band(0x00FF0000, colour), 16)
+					currentcolour.blue = bit.rshift(bit.band(0x0000FF00, colour), 8)
+					currentcolour.alpha = bit.band(0x000000FF, colour)
+					previousPageAndSelection()
+				end end,
+				autofunc = function(this)
+					this.bgcolour = configitem.varpointer[configitem.name]
+				end
+			})
+		end
 	end
 	table.sort(Elements, function(a, b) return a.text < b.text end)
 	guipages.colourconfigpicker = createPopUpMenu(

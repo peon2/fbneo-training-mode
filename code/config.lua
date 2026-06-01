@@ -134,7 +134,8 @@ local colourconfig = {
 }
 
 --[[
-	"config" -> General config, stored on a rom by rom basis. Nearly everything should go in here.
+	"config" -> Game config, stored on a rom by rom basis. Nearly everything should go in here.
+	"generalconfig" -> General config, stores training mode settings across different roms.
 	"colourconfig" -> Global config, should only be used to store colours.
 	"recordingconfig" -> Localised config for replaypacks, write to this if you want to save configs to be loaded with a replaypack.
 --]]
@@ -443,7 +444,7 @@ local function saveGameConfigValues()
 			save[k] = configitem.configpointer[configitem.name]
 		end
 	end
-	
+
 	write("Saving config: " .. configpath)
 	saveTableToFile({type = "gameconfig", version = FBNEO_TRAINING_MODE_VERSION}, save, configpath)
 end
@@ -456,7 +457,7 @@ local function saveGeneralConfigValues()
 			save[k] = configitem.configpointer[configitem.name]
 		end
 	end
-	
+
 	write("Saving general config: "..generalconfig.path)
 	saveTableToFile({type = "generalconfig", version = FBNEO_TRAINING_MODE_VERSION}, save, generalconfig.path)
 end
@@ -465,11 +466,12 @@ local function saveColourConfigValues()
 	colourconfig.changed = false
 	local save = {}
 	for k, configitem in pairs(configitems) do
-		if configitem.config == colourconfig and configitem.configpointer[configitem.name] ~= configitem.default then
-			save[k] = configitem.configpointer[configitem.name]
+		local pointer = configitem.configpointer or {}
+		if configitem.config == colourconfig and pointer[configitem.name] ~= configitem.default then
+			save[k] = pointer[configitem.name] or configitem.default
 		end
 	end
-	
+
 	write("Saving colour config: "..colourconfig.path)
 	saveTableToFile({type = "colourconfig", version = FBNEO_TRAINING_MODE_VERSION}, save, colourconfig.path)
 end
@@ -511,9 +513,9 @@ function loadSavedConfig() -- This should only need to be called once by fbneo-t
 					configitems[configitemid] = {
 						name = nil,
 						default = value,
-						configpointer = config,
+						configpointer = nil,
 						varpointer = nil,
-						config = nil,
+						config = config,
 					}
 				end
 			end
@@ -534,9 +536,9 @@ function loadSavedConfig() -- This should only need to be called once by fbneo-t
 					configitems[configitemid] = {
 						name = nil,
 						default = value,
-						configpointer = generalconfig,
+						configpointer = nil,
 						varpointer = nil,
-						config = nil,
+						config = generalconfig,
 					}
 				end
 			end
@@ -557,14 +559,15 @@ function loadSavedConfig() -- This should only need to be called once by fbneo-t
 					configitems[configitemid] = {
 						name = nil,
 						default = value,
-						configpointer = generalconfig,
+						configpointer = nil,
 						varpointer = nil,
-						config = nil,
+						config = colourconfig,
 					}
 				end
 			end
 		end
 	end
+	
 	config.changed = nil
 	generalconfig.changed = nil
 	colourconfig.changed = nil
