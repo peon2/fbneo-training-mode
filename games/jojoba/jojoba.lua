@@ -232,6 +232,9 @@ createHUDElement(
 	end,
 	function()
 		gui.text(jojoba.stand.P1.x, jojoba.stand.P1.y, readPlayerOneStandHealth(), colour.option1)
+	end,
+	function()
+		gui.text(jojoba.stand.P1.x, jojoba.stand.P1.y, readPlayerOneStandHealth(), hud.previewcolour)
 	end
 )
 createHUDElement(
@@ -261,5 +264,8 @@ createHUDElement(
 	end,
 	function()
 		gui.text(jojoba.stand.P2.x, jojoba.stand.P2.y, readPlayerTwoStandHealth(), colour.option2)
+	end,
+	function()
+		gui.text(jojoba.stand.P2.x, jojoba.stand.P2.y, readPlayerTwoStandHealth(), hud.previewcolour)
 	end
 )

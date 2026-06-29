@@ -74,7 +74,7 @@ local CONSTANTS = {
 	TABLE_END_VALUE = "__SAVELOAD_TABLE_END"
 }
 
-local function ERR(msg) assert(1==0, msg) end
+local function ERR(msg) assert(false, msg) end
 
 ----------------------------------------------
 -- SAVE/SERIALISE

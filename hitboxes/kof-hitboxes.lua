@@ -9,6 +9,8 @@
 --print("Lua hotkey 5: toggle throwable boxes")
 --]]
 
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
+
 local boxes = {
 	      ["vulnerability"] = {color = 0x7777FF, fill = 0x40, outline = 0xFF},
 	             ["attack"] = {color = 0xFF0000, fill = 0x40, outline = 0xFF},
@@ -37,7 +39,7 @@ local globals = {
 --------------------------------------------------------------------------------
 -- game-specific modules
 
-local rb, rbs, rw, rws, rd, fc = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword, emu.framecount
+local rb, rbs, rw, rws, rd = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword
 local game, frame_buffer, throw_buffer
 local any_true, process_throw, define_box, gr
 local a,v,p,g,t = "attack","vulnerability","proj. vulnerability","guard","throw"
@@ -54,7 +56,7 @@ local profile = {
 	box_types = {a,g,v,v,a},
 	unthrowable = function(obj) return any_true({
 		bit.btst(5, rb(obj.base + 0xE3)) > 0,
-		rd(obj.base + 0xAA) > 0,
+		rdw(obj.base + 0xAA) > 0,
 		bit.btst(3, rb(obj.base + 0x7B)) > 0,
 	}) end,
 	special_throws = {
@@ -90,7 +92,7 @@ local profile = {
 	box_types = {a,g,v,v,a},
 	unthrowable = function(obj) return any_true({
 		bit.btst(5, rb(obj.base + 0xE3)) > 0,
-		rd(obj.base + 0xAA) > 0,
+		rdw(obj.base + 0xAA) > 0,
 		bit.btst(3, rb(obj.base + 0x7D)) > 0,
 	}) end,
 	special_throws = {
@@ -200,8 +202,8 @@ for game in ipairs(profile) do
 	}
 	g.insert_throwable = g.special_throws and function(obj) --kof94 ~ kof95
 		obj.air = bit.btst(0, rb(obj.base + 0xE1))
-		obj.throw_ptr = (rd(obj.base + 0x1A0))
-		obj.opp_id = rw(rd(obj.base + 0xB6) + 0x182)
+		obj.throw_ptr = (rdw(obj.base + 0x1A0))
+		obj.opp_id = rw(rdw(obj.base + 0xB6) + 0x182)
 		if g.unthrowable(obj) then
 			return
 		end
@@ -255,7 +257,7 @@ gr = function(register)
 end
 
 
-local get_thrower = function()
+get_thrower = function()
 	local base = bit.band(gr("a4"), 0xFFFFFF)
 	for _, obj in ipairs(frame_buffer) do
 		if base == obj.base then
@@ -272,7 +274,7 @@ process_throw = function(box) --kof94 ~ kof95
 			if box.ptr == move.subroutine then
 				box.range = rw(move.subroutine + move.range_offset)
 				if move.lsr then --opponent-dependent range
-					obj.opp_id = rw(rd(obj.base + 0xB6) + 0x182)
+					obj.opp_id = rw(rdw(obj.base + 0xB6) + 0x182)
 					box.range = box.range + bit.rshift(rw(game.special_throws.table_base + obj.opp_id), move.lsr)
 				elseif move.delay and rbs(obj.base + move.delay) > 0 then
 					return
@@ -300,9 +302,8 @@ end
 
 local display = true
 
-togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
-
-input.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
+--togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
+--localinput.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
 
 local type_check = {
 	["undefined"] = function(obj, box_entry, box)
@@ -616,27 +617,23 @@ local whatgame = function()
 	--print("unsupported game: " .. emu.gamename())
 end
 
-
+--[[
 savestate.registerload(function()
 	frame_buffer, throw_buffer = {}, {}
 end)
-
+--]]
 whatgame()
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		render_hitboxes()
-	end
-end
+drawHitboxes = render_hitboxes
 
-function hitboxesRegAfter()
+function updateHitboxes()
 	globals.register_count = (globals.register_count or 0) + 1
-	globals.last_frame = globals.last_frame or fc()
+	globals.last_frame = globals.last_frame or fc
 	if globals.register_count == 1 then
 		update_hitboxes()
 	end
-	if globals.last_frame < fc() then
+	if globals.last_frame < fc then
 		globals.register_count = 0
 	end
-	globals.last_frame = fc()
+	globals.last_frame = fc
 end

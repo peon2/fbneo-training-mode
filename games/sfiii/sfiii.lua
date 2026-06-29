@@ -204,18 +204,27 @@ local timer = 0x200EB33
 local timemax = 0x63
 
 local function infiniteTime()
-	wb(timer, 0x63-1)
+	wb(timer, timemax-1)
+end
+
+local _reloadguipages = false
+
+local function newRound()
+	setSFIIIConstants() -- get new character data
+	setGameConstants() -- update the training mode with that data
+	-- Make sure the stun values fit the character
+	if sfiii.stun.P1.value > p1maxstun then
+		changeConfig("sfiiistunp1", p1maxstun)
+	end
+	if sfiii.stun.P2.value > p2maxstun then
+		changeConfig("sfiiistunp2", p2maxstun)
+	end
+	_reloadguipages = true -- if reloading the gui is called here, the script crashes during savestate loading for some reason. Reload the gui during the next Run instance instead
 end
 
 function Run() -- runs every frame
 	if (rb(timer) == timemax) then -- should be checking if char/super has changed instead...
-		setSFIIIConstants()
-		setGameConstants()
-		reloadGUIPages()
-		infiniteTime()
-		-- Reset these changeable values
-		changeConfig("sfiiistunp1", 0)
-		changeConfig("sfiiistunp2", 0)
+		newRound()
 	end
 	if sfiii.stun.P1.enabled then
 		if sfiii.stun.P1.aftercombo then
@@ -243,6 +252,14 @@ function Run() -- runs every frame
 	if sfiii.p2gill then
 		wb(0x200EB44, 0x0)
 	end
+	if _reloadguipages then
+		_reloadguipages = false
+		reloadGUIPages()
+	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end
 
 initConfigTable("sfiii", sfiii, "config")
@@ -294,6 +311,9 @@ createHUDElement(
 	end,
 	function()
 		gui.text(sfiii.stun.hud.P1.x, sfiii.stun.hud.P1.y, readPlayerOneStun(), colours.stunp1)
+	end,
+	function()
+		gui.text(sfiii.stun.hud.P1.x, sfiii.stun.hud.P1.y, readPlayerOneStun(), hud.previewcolour)
 	end
 )
 createHUDElement(
@@ -323,5 +343,8 @@ createHUDElement(
 	end,
 	function()
 		gui.text(sfiii.stun.hud.P2.x, sfiii.stun.hud.P2.y, readPlayerTwoStun(), colours.stunp2)
+	end,
+	function()
+		gui.text(sfiii.stun.hud.P2.x, sfiii.stun.hud.P2.y, readPlayerTwoStun(), hud.previewcolour)
 	end
 )

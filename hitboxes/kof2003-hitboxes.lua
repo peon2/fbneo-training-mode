@@ -1,4 +1,4 @@
--- peon2: don't know the original author of this script
+-- peon2: don't know the original author of this script, edited to work with https://github.com/peon2/fbneo-training-mode/
 
 local rb, rbs, rw, rws, rd, rds = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword, memory.readdwordsigned
 local wb, ww, wd = memory.writebyte, memory.writeword, memory.writedword
@@ -36,28 +36,29 @@ boxes = {
 
 
 function main()
-camx = rw(0x1087bc) + 8
-camy = rw(0x1087C0) + 7
-pladr = 0x107D1C - 0x04
+	camx = rw(0x1087bc) + 8
+	camy = rw(0x1087C0) + 7
+	pladr = 0x107D1C - 0x04
 	for players = 0,15,1 do
-	pladr = pladr + 0x04
-	if rd(pladr) ~= 0xFFFFFFFF or 0 then
-	playerdata(rd(pladr))
-	end
+		pladr = pladr + 0x04
+		if rdw(pladr) ~= 0xFFFFFFFF or 0 then
+			playerdata(rdw(pladr))
+		end
 	end
 end
 
 function playerdata(padr)
 	if rw(padr)~=2 and rw(padr)~=3 then return end -- peon2: only show player related hitboxes
+	
 	local px = rw(padr + 0x24) - camx
 	local py = 200 - rw(padr + 0x28) + camy
 	local active = rb(padr + 0x4f)
 	local pflip = bit.band(rb(padr + 0x0f),0x02)
 	
 	if pflip == 2 then
-	flip = 1
+		flip = 1
 	else
-	flip = -1
+		flip = -1
 	end
 	--gui.text(8,8,flip)
 	colbox(px,py,padr+0xB8,flip,1)--Push Box
@@ -70,9 +71,8 @@ function playerdata(padr)
 end
 
 function drawaxis(x,y,axis,color)
-gui.line(x+axis,y,x-axis,y,color)
-gui.line(x,y+axis,x,y-axis,color)
-
+	gui.line(x+axis,y,x-axis,y,color)
+	gui.line(x,y+axis,x,y-axis,color)
 end
 
 function colbox(plx,ply,adr,flp,act)
@@ -88,8 +88,8 @@ function colbox(plx,ply,adr,flp,act)
 	btm = (y+h)
 	
 	if act == 1 then
-	gui.box(lft,top,rgt,btm,boxes[id+1])
-	--gui.text(plx + x,y,string.format("%X",id))
+		gui.box(lft,top,rgt,btm,boxes[id+1])
+		--gui.text(plx + x,y,string.format("%X",id))
 	end
 end
 
@@ -99,11 +99,4 @@ main()
 end)
 --]]
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		main()
-	end
-end
-
-function hitboxesRegAfter() -- stub
-end
+drawHitboxes = main

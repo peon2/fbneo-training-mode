@@ -1,4 +1,4 @@
--- Created by Xenn, edited by peon2 for the fbneo-training-mode
+-- Created by Xenn, edited by peon2 for the https://github.com/peon2/fbneo-training-mode/
 
 local rbs, rd = memory.readbytesigned, memory.readdword
 
@@ -303,12 +303,8 @@ while true do
 	emu.frameadvance();
 end
 --]]
-print("A")
-function hitboxesReg()
-	if hitboxes.enabled then
-		ZoomDisable()
-		Objects()
-	end
-end
 
-function hitboxesRegAfter() end -- stub
+function drawHitboxes()
+	--ZoomDisable()
+	Objects()
+end

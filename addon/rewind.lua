@@ -35,8 +35,12 @@ local readInputs = function() -- gets the inputs supplied this frame
 	kb = input.get()
 end
 
+local warningtext = "Rewind System Enabled"
+local warningxoffset = emu.screenwidth() - #warningtext*4
+
 local inputParse = function()
 	if not enabled then return end
+	gui.text(warningxoffset, 0, warningtext, "red")
 
 	joypad.set(clearinputs) -- common case
 	joypad.set(inputs[fc])

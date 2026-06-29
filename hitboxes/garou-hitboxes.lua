@@ -6,7 +6,7 @@
 --print("Lua hotkey 3: toggle hitbox axis")
 --print("Lua hotkey 4: toggle pushboxes")
 
--- edited by peon2 to work with the fbneo-training-mode
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
 
 local boxes = {
 	["vulnerability"] = {color = 0x7777FF, fill = 0x40, outline = 0xFF},
@@ -672,12 +672,19 @@ local profile = {
 		{base = 0x035210, ["garoup"] = -0x20C, ["garoubl"] = -0x20C, 
 			func = function() set_vulnerable(0xB3) end},
 		{base = 0x035212, ["garoup"] = -0x20C, ["garoubl"] = -0x20C, --check vuln at all times *** setregister for m68000.pc is broken ***
-			func = function() memory.setregister("m68000.pc", gr("pc") + 0x6) end},
-		{base = 0x035212, ["garoup"] = -0x20C, ["garoubl"] = -0x20C, --check vuln at all times *** hackish workaround ***
-			func = function() memory.setregister("m68000.a3", gr("a3") - 0xB7) end},
-		{base = 0x035218, ["garoup"] = -0x20C, ["garoubl"] = -0x20C, --*** fix for hackish workaround ***
-			func = function() memory.setregister("m68000.a3", gr("a3") + 0xB7) end},
-
+			func = function()
+				-- peon2 - if both characters are attacking, don't show the vuln boxes to avoid the traded attacks bug
+				local p1state = rw(0x100460)
+				local p2state = rw(0x100560)
+				if not((p1state >= 0x1F and p1state < 0x134) and (p2state >= 0x1F and p2state < 0x134)) then
+					memory.setregister("m68000.pc", gr("pc") + 0x6)
+				end
+			end
+		},
+--[[	{base = 0x035212, ["garoup"] = -0x20C, ["garoubl"] = -0x20C, --check vuln at all times *** hackish workaround ***
+--			func = function() memory.setregister("m68000.a3", gr("a3") - 0xB7) end},
+--		{base = 0x035218, ["garoup"] = -0x20C, ["garoubl"] = -0x20C, --*** fix for hackish workaround ***
+--			func = function() memory.setregister("m68000.a3", gr("a3") + 0xB7) end},--]]
 		{base = 0x012A5A, ["garoup"] = -0x2FE, ["garoubl"] = -0x2FE, 
 			func = function() insert_box(4, 2) end},
 		{base = 0x012A88, ["garoup"] = -0x308, ["garoubl"] = -0x308, 
@@ -1231,13 +1238,9 @@ end)
 
 whatgame()
 
-function hitboxesReg() 
-	if hitboxes.enabled then
-		render_hitboxes()
-	end
-end
+drawHitboxes = render_hitboxes
 
-function hitboxesRegAfter()
+function updateHitboxes()
 	globals.register_count = (globals.register_count or 0) + 1
 	globals.last_frame = globals.last_frame or fc()
 	if globals.register_count == 1 then
@@ -1247,5 +1250,4 @@ function hitboxesRegAfter()
 		globals.register_count = 0
 	end
 	globals.last_frame = fc()
-	--updateHitboxes()
 end

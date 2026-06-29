@@ -14,6 +14,7 @@ local HUDElements = { }
 	&enabled -> A function that will both set whether this function is visible and return if it is visible.
 	reset -> A function that will reset this HUDElement to default values.
 	draw -> A function that will draw the HUDElement on screen, it should know the x and y values implicitly.
+	*previewdraw -> A function that will draw the HUDElements on screen, suitable as a preview. draw is used instead if nil.
 	*extrafuncs -> A table of helpElements.
 	
 	&: in the format:
@@ -27,14 +28,15 @@ local HUDElements = { }
 	
 	See redearth for user created examples, or "p1scrollinginput" below as an example.
 --]]
-function createHUDElement(name, x, y, enabled, reset, draw, extrafuncs)
-	assert(type(name)=="string", "Name must be of type string")
-	assert(type(x)=="function", "X must be a function")
-	assert(type(y)=="function", "Y must be a function")
-	assert(type(enabled)=="function", "Enabled must be a function")
-	assert(type(reset)=="function", "Reset must be a function")
-	assert(type(draw)=="function", "Draw must be a function")
-	assert(type(extrafuncs)=="table" or extrafuncs == nil, "extrafuncs must be a table")
+function createHUDElement(name, x, y, enabled, reset, draw, previewdraw, extrafuncs)
+	assert(type(name)=="string", "Name must be of type string, "..name)
+	assert(type(x)=="function", "X must be a function, "..name)
+	assert(type(y)=="function", "Y must be a function, "..name)
+	assert(type(enabled)=="function", "Enabled must be a function, "..name)
+	assert(type(reset)=="function", "Reset must be a function, "..name)
+	assert(type(draw)=="function", "Draw must be a function, "..name)
+	assert(type(previewdraw)=="function" or previewdraw == nil, "Preview Draw must be a function, "..name)
+	assert(type(extrafuncs)=="table" or extrafuncs == nil, "extrafuncs must be a table, "..name)
 
 	table.insert(HUDElements, {
 		name = name,
@@ -43,6 +45,7 @@ function createHUDElement(name, x, y, enabled, reset, draw, extrafuncs)
 		enabled = enabled,
 		reset = reset,
 		draw = draw,
+		previewdraw = previewdraw,
 		extrafuncs = extrafuncs
 	})
 end
@@ -55,6 +58,12 @@ function drawHUD() -- all parts of the hud should be dropped in here
 	end
 end
 
+function previewComboHUD()
+	gui.text(hud.combotext.x-LETTER_WIDTH,hud.combotext.y,"Damage: " ..gamevars.P1.maxhealth, hud.previewcolour)
+	gui.text(hud.combotext.x,hud.combotext.y+10,"Combo: "..gamevars.P1.maxhealth, hud.previewcolour)
+	gui.text(hud.combotext.x,hud.combotext.y+20,"Total: "..gamevars.P1.maxhealth, hud.previewcolour)
+end
+
 function drawComboHUD()
 	local player = inputs.properties.enableinputswap and "P1" or "P2"
 	local cvars = combovars[player]
@@ -65,22 +74,50 @@ function drawComboHUD()
 	else
 		gui.text(hud.combotext.x-LETTER_WIDTH,hud.combotext.y,"Damage: " ..cvars.previousdamage, hud.combotext.damagecolour)
 	end
-	if gvars.inhitstun then
-		gui.text(hud.combotext.x,hud.combotext.y+10,"Combo: "..cvars.displaycombo, hud.combotext.colour)
-	else
-		gui.text(hud.combotext.x,hud.combotext.y+10,"Combo: "..cvars.displaycombo, hud.combotext.colour2)
+	if not combovars[player].instantrefillhealth then
+		if gvars.inhitstun then
+			gui.text(hud.combotext.x,hud.combotext.y+10,"Combo: "..cvars.displaycombo, hud.combotext.colour)
+		else
+			gui.text(hud.combotext.x,hud.combotext.y+10,"Combo: "..cvars.displaycombo, hud.combotext.colour2)
+		end
+		gui.text(hud.combotext.x,hud.combotext.y+20,"Total: "..cvars.comboDamage, hud.combotext.totaldamagecolour)
 	end
-   	gui.text(hud.combotext.x,hud.combotext.y+20,"Total: "..cvars.comboDamage, hud.combotext.totaldamagecolour)
+end
+
+function drawFrameAdvantageHUD()
+	local player = inputs.properties.enableinputswap and "P2" or "P1"
+
+	local xoffset = hud.frameadvantage.x
+	local yoffset = hud.frameadvantage.y
+	if gamefunctions.playeroneinanimation and gamefunctions.playertwoinanimation then
+		if frameadvantage[player].attackstartup then
+			gui.text(xoffset, yoffset, "Startup: ")
+			gui.text(xoffset+10*LETTER_WIDTH+1, yoffset, frameadvantage[player].attackstartup, "green")
+			yoffset = yoffset + LETTER_HEIGHT
+		end
+		if frameadvantage[player].advantage then
+			local advantagecolour = "green"
+			local _p1advantage = 0
+			if frameadvantage[player].advantage < 0 then
+				advantagecolour = "red"
+				_p1advantage = frameadvantage[player].advantage
+			elseif frameadvantage[player].advantage > 0 then
+				_p1advantage = "+"..frameadvantage[player].advantage
+				advantagecolour = "cyan"
+			end
+			gui.text(xoffset, yoffset, "Advantage: ")
+			gui.text(xoffset+10*LETTER_WIDTH+1, yoffset, _p1advantage, advantagecolour)
+			yoffset = yoffset + LETTER_HEIGHT
+		end
+	end
+	gui.text(xoffset, yoffset, "Total: ")
+	gui.text(xoffset+10*LETTER_WIDTH+1, yoffset, frameadvantage[player].animationtotal, "green")
 end
 
 local function HUDElementsParse(HUDElements) -- parses HUDElements to fit the createNavigatablePage format
 	local parsedElements = {}
 	for elementid, element in ipairs(HUDElements) do
 		table.insert(parsedElements, {id=elementid, x=element.x(), y=element.y() })
-		if parsedElements[#parsedElements].y == nil then
-			print(elementid)
-			print(element)
-		end
 	end
 	return parsedElements
 end
@@ -344,10 +381,15 @@ function moveHUDInteract()
 
 	local helpButtons = {{name="SLCT", button="button1"}, {name="HIDE", button="button2"}, {name="DFLT", button="button3"}, funcs=moveHUDFuncs}
 
-	local col = 0xff8000ff -- orange
+	local selectioncolour = 0xFF0000FF + 0x00060000*(fc%40)
+	local nonselectioncolour = 0x00000500*(fc%50) + 0x03000000*(fc%80) + 0x00020000*(fc%60) + 0xFF -- make this as annoying as possible so all the elements are visible
 	if interactivegui.movehud.selected then
-		col = bit.bor(0xff0000ff, 0x00040000*(fc%40))
+		selectioncolour = 0xFF0000FF + 0x000C0000*(fc%20)
 		helpButtons[1].name = "BACK"
+	end
+
+	for _, element in ipairs(HUDElements) do
+		gui.pixel(element.x(), element.y(), nonselectioncolour)
 	end
 
 	local x = HUDElements[interactivegui.movehud.selection].x()
@@ -365,19 +407,20 @@ function moveHUDInteract()
 		end
 	end
 
-	gui.pixel(x, y, col)
-	col = 0xffffffff
+	local textcolour = 0xFFFFFFFF
 	local enabled = HUDElements[interactivegui.movehud.selection].enabled()
 	if not enabled then
-		col = 0x0000ffff
+		textcolour = 0x0000FFFF
+		(HUDElements[interactivegui.movehud.selection].previewdraw or HUDElements[interactivegui.movehud.selection].draw)()
 		helpButtons[2].name = "SHOW"
 	end
 
 	local str = "("..x..","..y..")"
-	local dispx, dispy = x, y-10
+	local dispx, dispy = x+1, y-8
 	if #str*LETTER_WIDTH+x>interactivegui.sw then dispx = interactivegui.sw - #str*LETTER_WIDTH end -- keep in bounds
 	if dispy<0 then dispy = 0 end -- keep in bounds
-	gui.text(dispx, dispy, str, col)
+	gui.text(dispx, dispy, str, textcolour)
+	gui.pixel(x, y, selectioncolour)
 
 	-- don't display the tooltip if it will cover up elements
 	toggledrawhelp = not (y>=interactivegui.sh-27 and (x>=(interactivegui.sw/2-helpElements.len*9) and x<=(interactivegui.sw/2+helpElements.len*9)))
@@ -404,13 +447,18 @@ function blankKB()
 	end
 end
 
-function drawKB(x,y)
+function drawKB(x, y, colour)
 	for rowid, row in ipairs(kb) do
 		for letterid,letter in ipairs(row) do
-			local col="white"
-			if inputs.hotkeys.funcs[letter] then col="green" end
-			if guiinputs.kb.inputs and guiinputs.kb.inputs[letter] then col="red" end
-			gui.text(x+row.offset+(letterid-1)*LETTER_WIDTH,y+8*(rowid-1),letter,col)
+			local _colour = "white"
+			if inputs.hotkeys.funcs[letter] then _colour="green" end
+			if guiinputs.kb.inputs and guiinputs.kb.inputs[letter] then _colour="red" end
+			gui.text(
+				x+row.offset+(letterid-1)*LETTER_WIDTH,
+				y+8*(rowid-1),
+				letter,
+				colour or _colour
+			)
 		end
 	end
 end
@@ -420,13 +468,46 @@ end
 ----------------------------------------------
 local stickimgs = {} -- one for each direction, numpad input
 for i = 1,9 do
-	stickimgs[i]=gd.createFromPng("resources/stick/"..i..".png"):gdStr() -- load images
+	stickimgs[i]=gd.createFromPng(STICK_ICONS_RESOURCEPATH..i..".png"):gdStr() -- load images
 end
 
-function displayStick(x, y)
-	local a = function(b) if b then return 1 end return 0 end -- bool to num
-	local dir = 5+a(guiinputs.P1.up)*3 + a(guiinputs.P1.left)*-1 + a(guiinputs.P1.right)*1 + a(guiinputs.P1.down)*-3
-	gui.gdoverlay(x, y, stickimgs[dir])
+function displayStick(x, y, withtext)
+	local direction = 5
+	local text = ""
+	local yoffset = 32
+	if guiinputs.P1.up then -- SOCD
+		direction = 8
+		text = "Up"
+		yoffset = 3
+	elseif guiinputs.P1.down then
+		direction = 2
+		text = "Down"
+	end
+	if getConfigValue("holddirectionrelative") then
+		if guiinputs.P1.left then
+			direction = direction-1
+			if #text > 0 then text = text .. "-" end
+			text = text .. "Back"
+		elseif guiinputs.P1.right then
+			direction = direction+1
+			if #text > 0 then text = text .. "-" end
+			text = text .. "Forward"
+		end
+	else
+		if guiinputs.P1.left then
+			direction = direction-1
+			if #text > 0 then text = text .. "-" end
+			text = text .. "Left"
+		elseif guiinputs.P1.right then
+			direction = direction+1
+			if #text > 0 then text = text .. "-" end
+			text = text .. "Right"
+		end
+	end
+	gui.gdoverlay(x, y, stickimgs[direction])
+	if withtext then
+		gui.text(x+LETTER_WIDTH*5+LETTER_HALFWIDTH - #text*LETTER_HALFWIDTH,y+yoffset, text)
+	end
 end
 
 ----------------------------------------------

@@ -156,7 +156,7 @@ local colourconfigpicker = {
 	text = "Current Config",
 	rawx = interactivegui.boxxhalflength,
 	y = 75,
-	info = "The colour setting to edit.",
+	info = "The colour to edit.",
 	olcolour = colour.olcolour,
 	func = function()
 		if selectedcolourconfig then
@@ -186,10 +186,11 @@ local colourconfigpicker = {
 local savecolourconfig = {
 	text = "Set Colour",
 	x = 2,
+	info = "Set the selected colour with the RGBA values given.",
 	olcolour = colour.olcolour,
 	func = function()
 		if not selectedcolourconfig then return end
-		local colour = currentcolour.red*0x01000000 + currentcolour.green*0x010000 + currentcolour.blue*0x0100 + currentcolour.alpha
+		local colour = SHIFT(currentcolour.red, -24) + SHIFT(currentcolour.green, -16) + SHIFT(currentcolour.blue, -8) + currentcolour.alpha
 		changeConfig(selectedcolourconfig.id, colour)
 		reloadGUIPages()
 	end
@@ -305,26 +306,64 @@ local backgroundvariant = {
 }
 
 local directionset = {
-	text = "Set CPU direction",
+	rawtext = "Set CPU Direction",
+	rawtext2 = "CPU holding ",
 	info = "Allows you to set the direction CPU is holding",
-	canhotkey = true,
 	rawx = interactivegui.boxxhalflength,
 	func = function() changePageAndSelection("setdirection", 1) end,
 	olcolour = colour.olcolour,
 	autofunc = function(this)
-		local str = "CPU holding "
-		for _, v in pairs(inputs.properties.holddirection or {}) do
-			if v then
-				str = str .. v .. " "
+		local str = this.rawtext2
+		local directions = inputs.properties.holddirection or {}
+
+		if directions.Up then
+			str = str.."Up"
+		elseif directions.Down then
+			str = str.."Down"
+		end
+
+		if getConfigValue("holddirectionrelative") then
+			if directions.Left then
+				if #str > #this.rawtext2 then str = str.."-" end
+				str = str.."Back"
+			elseif directions.Right then
+				if #str > #this.rawtext2 then str = str.."-" end
+				str = str.."Forward"
+			end
+		else
+			if directions.Left then
+				if #str > #this.rawtext2 then str = str.."-" end
+				str = str.."Left"
+			elseif directions.Right then
+				if #str > #this.rawtext2 then str = str.."-" end
+				str = str.."Right"
 			end
 		end
-		str = str:sub(1, #str-1)
-		if inputs.properties.holddirection and #inputs.properties.holddirection>0 then
+
+		if #str > #this.rawtext2 then
 			this.text = str
+			this.bgcolour = colour.booltrue
 		else
-			this.text = "Set CPU direction"
+			this.text = this.rawtext
+			this.bgcolour = nil
 		end
 		this.x = this.rawx - #this.text*LETTER_HALFWIDTH
+	end,
+}
+
+local directionsetrelative = {
+	text = "Relative",
+	info = "CPU direction changes based on the direction the character is facing",
+	inline = true,
+	x = directionset.rawx - #(directionset.rawtext2.."Down-Forward")*LETTER_HALFWIDTH - (#"Relative"+2)*LETTER_WIDTH,
+	func = function() changeConfig("holddirectionrelative", not getConfigValue("holddirectionrelative")) end,
+	olcolour = colour.olcolour,
+	autofunc = function(this)
+		if getConfigValue("holddirectionrelative") then
+			this.bgcolour = colour.booltrue
+		else
+			this.bgcolour = colour.boolfalse
+		end
 	end,
 }
 local hitboxstate = {
@@ -605,7 +644,7 @@ local hitplayback = {
 	text = "Hit Slot",
 	rawx = interactivegui.boxxhalflength,
 	olcolour = colour.olcolour,
-	info = "Plays back the respective replay slot after hit",
+	info = "Plays back the respective replay slot after being hit",
 	reset = function()
 		resetConfig("recordinghitslot")
 	end,
@@ -623,6 +662,34 @@ local hitplayback = {
 			this.x = this.rawx-#this.text*LETTER_HALFWIDTH
 		else
 			this.text = "Hit Slot "..recording.hitslot
+			this.bgcolour = colour.option2
+			this.x = this.rawx-#this.text*LETTER_HALFWIDTH
+		end
+	end
+}
+local blockplayback = {
+	text = "Block Slot",
+	rawx = interactivegui.boxxhalflength-60,
+	olcolour = colour.olcolour,
+	inline = true,
+	info = "Plays back the respective replay slot after blocking",
+	reset = function()
+		resetConfig("recordingblockslot")
+	end,
+	func = function()
+		if recording.blockslot then
+			changePageAndSelection("blockslot", recording.blockslot)
+		else
+			changePageAndSelection("blockslot", REPLAY_SLOTS_COUNT+1)
+		end
+	end,
+	autofunc = function(this)
+		if recording.blockslot == 0 then
+			this.text = "Block Slot"
+			this.bgcolour = nil
+			this.x = this.rawx-#this.text*LETTER_HALFWIDTH
+		else
+			this.text = "Block Slot "..recording.blockslot
 			this.bgcolour = colour.option2
 			this.x = this.rawx-#this.text*LETTER_HALFWIDTH
 		end
@@ -983,7 +1050,7 @@ guipages[guipagenames.GeneralSettings] = {
 		y = colourpickerred.y - 10,
 		olcolour = colour.olcolour,
 		autofunc = function(this)
-			this.bgcolour = currentcolour.red*0x01000000 + currentcolour.green*0x010000 + currentcolour.blue*0x0100 + 0xFF
+			this.bgcolour = SHIFT(currentcolour.red, -24) + SHIFT(currentcolour.green, -16) + SHIFT(currentcolour.blue, -8) + currentcolour.alpha
 		end,
 	},
 	red = {
@@ -1145,37 +1212,39 @@ guipages[guipagenames.RecordingExtraButtons] = {
 	end
 }
 
-if hitboxesReg then -- if a hitbox file is loaded
+if gamefunctions.drawhitboxes then -- if a hitbox file is loaded
 	table.insert(guipages[guipagenames.Main], hitboxstate)
 end
 
 if translationtable then -- if inputs can be processed
 	table.insert(guipages[guipagenames.Main], directionset)
+	if gamefunctions.playeronefacingleft and gamefunctions.playertwofacingleft then
+		table.insert(guipages[guipagenames.Main], directionsetrelative)
+	end
 	guipages.setdirection = createFauxPage(guipages[guipagenames.Main])
 	guipages.setdirection[1] = {
-		text = "",
+		text = "Waiting for direction...",
+		canhotkey = true,
 		x = -200, -- should be 'invisible'
 		y = -200,
 		func = function()
 			local direction = {}
-			if (guiinputs.P1["up"]) then
-				table.insert(direction, "up")
+			if guiinputs.P1.up then -- SOCD
+				direction.Up = true
+			elseif guiinputs.P1.down then
+				direction.Down = true
 			end
-			if (guiinputs.P1["down"]) then
-				table.insert(direction, "down")
-			end
-			if (guiinputs.P1["left"]) then
-				table.insert(direction, "left")
-			end
-			if (guiinputs.P1["right"]) then
-				table.insert(direction, "right")
+			if guiinputs.P1.left then
+				direction.Left = true
+			elseif guiinputs.P1.right then
+				direction.Right = true
 			end
 			setHoldDirection(direction)
 			previousPageAndSelection()
 		end,
 		autofunc = function()
-			if interactivegui.page == guipagenames.Main then -- I shouldn't have to do this...
-				displayStick(interactivegui.boxx + interactivegui.boxxhalflength + 40, directionset.y-1)
+			if interactivegui.page == "setdirection" then -- I shouldn't have to do this...
+				displayStick(interactivegui.boxx + interactivegui.boxxhalflength + 48, directionset.y-1, true)
 			end
 		end,
 	}
@@ -1207,8 +1276,12 @@ if gamefunctions.playertwofacingleft then
 	table.insert(guipages[guipagenames.Recording], replayautoturn)
 end
 
-if gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then
+if gamefunctions.playertwoinhitstun then
 	table.insert(guipages[guipagenames.Recording], hitplayback)
+end
+
+if gamefunctions.playertwocanblockreversal then
+	table.insert(guipages[guipagenames.Recording], blockplayback)
 end
 
 if gamefunctions.tablesave and gamefunctions.tableload then
@@ -1381,7 +1454,7 @@ if gamefunctions.writeplayeronehealth and gamevars.P1.constants.maxhealth then -
 			return k
 		end
 		return getConfigValue("p1maxhealth")
-	end-- (basepage, text, x, y, minimum, maximum, length, updatefunc, autofunc)
+	end
 	guipages.p1maxhealth = createScrollingBar(
 		guipages[guipagenames.Players],
 		"Max Health: "..gamevars.P1.constants.maxhealth,
@@ -1674,7 +1747,7 @@ do -- recordingslot
 		guipages[guipagenames.Recording],
 		nil,
 		nil,
-		-200, -- 'hide' the buttons
+		2000, -- 'hide' the buttons
 		REPLAY_SLOTS_COUNT,
 		sf,
 		rf
@@ -1759,14 +1832,14 @@ do -- savestateslot
 		guipages[guipagenames.Recording],
 		Elements,
 		nil,
-		-200, -- 'hide' the buttons
+		2000, -- 'hide' the buttons
 		nil,
 		sf,
 		rf
 	)
 end
 
-if gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then -- hitslot
+if gamefunctions.playertwoinhitstun then -- hitslot
 	local Elements = {
 		{},
 		{},
@@ -1792,6 +1865,38 @@ if gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then -
 		Elements,
 		nil,
 		-200, -- 'hide' the buttons
+		nil,
+		sf,
+		rf
+	)
+end
+
+if gamefunctions.playertwocanblockreversal then -- blockslot
+	local Elements = {
+		{},
+		{},
+		{},
+		{},
+		{},
+		{
+			x = replaynonex,
+			y = replaynoney,
+			text = "None",
+			selectfunc = function() return function()
+				changeConfig("recordingblockslot", 0)
+			end end,
+			releasefunc = function() return function()
+				previousPageAndSelection()
+			end end,
+		}
+	}
+	local rf = function() return function() previousPageAndSelection() end end
+	local sf = function(n) return function() recording.blockslot = n end end
+	guipages.blockslot = createPopUpMenu(
+		guipages[guipagenames.Recording],
+		Elements,
+		nil,
+		2000, -- 'hide' the buttons
 		nil,
 		sf,
 		rf
@@ -2019,10 +2124,10 @@ do
 				end end,
 				releasefunc = function(n) return function()
 					local colour = configitem.varpointer[configitem.name]
-					currentcolour.red = bit.rshift(bit.band(0xFF000000, colour), 24)
-					currentcolour.green = bit.rshift(bit.band(0x00FF0000, colour), 16)
-					currentcolour.blue = bit.rshift(bit.band(0x0000FF00, colour), 8)
-					currentcolour.alpha = bit.band(0x000000FF, colour)
+					currentcolour.red = SHIFT(AND(0xFF000000, colour), 24)
+					currentcolour.green = SHIFT(AND(0x00FF0000, colour), 16)
+					currentcolour.blue = SHIFT(AND(0x0000FF00, colour), 8)
+					currentcolour.alpha = AND(0x000000FF, colour)
 					previousPageAndSelection()
 				end end,
 				autofunc = function(this)

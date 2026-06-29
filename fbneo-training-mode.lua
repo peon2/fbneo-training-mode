@@ -6,7 +6,7 @@ DISABLE_SCROLLING_INPUT = false
 	-> false, don't use it
 --]]
 
-FBNEO_TRAINING_MODE_VERSION = "v0.26.06.01"
+FBNEO_TRAINING_MODE_VERSION = "v0.26.06"
 REPO_SOURCE = "https://github.com/peon2/fbneo-training-mode"
 
 --DEBUG = true
@@ -89,14 +89,13 @@ else
 end
 
 if REPLAY then
-	-- we don't want to write memory when watching a replay
+	-- we never want to set inputs when watching a replay
+	joypad.set = function() end
+
+	-- we don't want to write memory when watching a replay, we leave the raw functions untouched in case we really need them
 	wb = function() end
 	ww = function() end
 	wdw = function() end
-	-- this breaks throw hitboxes on some games
-	-- memory.writebyte = function() end
-	-- memory.writeword = function() end
-	-- memory.writedword = function() end
 end
 
 require "gd"
@@ -114,8 +113,8 @@ local games = {
 	aof = {iconfile = "icons-neogeo.png"},
 	aof2 = {iconfile = "icons-neogeo.png"},
 	aof3 = {hitboxes = "aof3-hitboxes", iconfile = "icons-neogeo.png"},
-	asurabld = {iconfile = "icons-asurabus.png"},
-	asurabus = {iconfile = "icons-asurabus.png"},
+	asurabld = {hitboxes = "asura-hitboxes", iconfile = "icons-asurabus.png"},
+	asurabus = {hitboxes = "asura-hitboxes", iconfile = "icons-asurabus.png"},
 	avengrgs = {iconfile = "icons-banpresto.png"},
 	bloodstm = {iconfile = "icons-bloodstm.png"},
 	bloodwar = {iconfile = "icons-neogeo.png"},
@@ -141,7 +140,7 @@ local games = {
 	jchan = {iconfile = "icons-kaneko.png"},
 	jchan2 = {hitboxes = "jchan2-hitboxes", iconfile = "icons-kaneko.png"},
 	jojo = {hitboxes = "jojo-hitboxes", iconfile = "icons-jojos.png"},
-	jojoba = {hitboxes = "hftf-hitboxes", iconfile = "icons-jojos.png"},
+	jojoba = {hitboxes = "jojo-hitboxes", iconfile = "icons-jojos.png"},
 	kabukikl = {iconfile = "icons-neogeo.png"},
 	karnovr = {hitboxes = "karnovr-hitboxes", iconfile = "icons-neogeo.png"},
 	kf2k5uni = {hitboxes = "kof-hitboxes", iconfile = "icons-neogeo.png"},
@@ -264,6 +263,7 @@ dofile(filetree.input)
 
 ----------------------------------------------
 -- GAME LOGIC
+-- frameadvantage = {}
 -- setGameConstants()
 -- checkGameFunctions()
 -- updategamevars()
@@ -274,6 +274,7 @@ dofile(filetree.input)
 -- meterHandler(player)
 -- instantHealth(player)
 -- instantMeter(player)
+-- frameAdvantage()
 
 ----------------------------------------------
 dofile(filetree.gamelogic)
@@ -296,6 +297,7 @@ dofile(filetree.replay)
 ----------------------------------------------
 -- HUD
 -- helpElements = {}
+-- createHUDElement(name, x, y, enabled, reset, draw, previewdraw, extrafuncs)
 -- drawHUD()
 -- drawComboHUD()
 -- toggleMoveHUD(bool, vargs)
@@ -382,7 +384,7 @@ nbuttons = 0
 if fexists("games/"..gamename.."/"..gamename..".lua") then
 	dofile("games/"..gamename.."/"..gamename..".lua")
 	local i = 5
-	while (translationtable[i]:sub(1,6)=="button") do nbuttons = nbuttons+1 i=i+1 end
+	while (translationtable and translationtable[i]:sub(1,6)=="button") do nbuttons = nbuttons+1 i=i+1 end
 else
 	write("Memory addresses not found for "..ROM_NAME)
 end
@@ -643,7 +645,7 @@ local readHotkeyInFuncs = {
 
 local function readHotkeyIn()
 	if not inputs.hotkeys.hotkeyin then return end
-	drawKB(hud.kb.x,hud.kb.y)
+	drawKB(hud.kb.x, hud.kb.y)
 
 	local boxx = interactivegui.boxx
 	local boxx2 = interactivegui.boxx2
@@ -705,8 +707,9 @@ do -- Configure the Training Mode depending on what functions and info is availa
 		applyHoldDirection,
 		swapInputs,
 		logRecording,
-		playBack,
 		hitPlayBack,
+		blockPlayBack,
+		playBack,
 		menuCheck,
 		delayInputs,
 		freezePlayer,
@@ -715,11 +718,19 @@ do -- Configure the Training Mode depending on what functions and info is availa
 
 	registers.interactiveguiregister = {drawTextItems}
 	registers.registerafter = {}
+	registers.onsave = {} -- savestate save
+	registers.onload = { -- savestate load
+		savestatePlayBack
+	}
 
 	if gamefunctions.run then
 		table.insert(registers.interactiveguiregister, Run)
 	else
-		write "Nothing running every frame from memory file"
+		write "Nothing running every frame from game file."
+	end
+
+	if gamefunctions.onsavestateload then
+		table.insert(registers.onload, OnSaveStateLoad)
 	end
 
 	local str = ""
@@ -730,7 +741,8 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n then changeConfig("p1healthy", n) end return hud.health.P1.y end,
 			function(n) if n~=nil then changeConfig("p1healthenabled", n) end return hud.health.P1.enabled end,
 			function() resetConfig("p1healthx") resetConfig("p1healthy") resetConfig("p1healthenabled") end,
-			function() gui.text(hud.health.P1.x, hud.health.P1.y, gamevars.P1.health, hud.health.P1.textcolour) end
+			function() gui.text(hud.health.P1.x, hud.health.P1.y, gamevars.P1.health, hud.health.P1.textcolour) end,
+			function() gui.text(hud.health.P1.x, hud.health.P1.y, gamevars.P1.health, hud.previewcolour) end
 		)
 		if gamefunctions.playeroneinhitstun then
 			table.insert(registers.interactiveguiregister, function() comboHandler("P1") end)
@@ -748,7 +760,8 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n then changeConfig("p2healthy", n) end return hud.health.P2.y end,
 			function(n) if n~=nil then changeConfig("p2healthenabled", n) end return hud.health.P2.enabled end,
 			function() resetConfig("p2healthx") resetConfig("p2healthy") resetConfig("p2healthenabled") end,
-			function() gui.text(hud.health.P2.x, hud.health.P2.y, gamevars.P2.health, hud.health.P2.textcolour) end
+			function() gui.text(hud.health.P2.x, hud.health.P2.y, gamevars.P2.health, hud.health.P2.textcolour) end,
+			function() gui.text(hud.health.P2.x, hud.health.P2.y, gamevars.P2.health, hud.previewcolour) end
 		)
 		if gamefunctions.playertwoinhitstun then
 			table.insert(registers.interactiveguiregister, function() comboHandler("P2") end)
@@ -786,7 +799,8 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n then changeConfig("combotexty", n, hud) end return hud.combotext.y end,
 			function(n) if n~=nil then changeConfig("combotextenabled", n) end return hud.combotext.enabled end,
 			function() resetConfig("combotextx") resetConfig("combotexty") resetConfig("combotextenabled") end,
-			drawComboHUD
+			drawComboHUD,
+			previewComboHUD
 		)
 	else
 		str = ""
@@ -838,7 +852,8 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n then changeConfig("p1metery", n) end return hud.meter.P1.y end,
 			function(n) if n~=nil then changeConfig("p1meterenabled", n) end return hud.meter.P1.enabled end,
 			function() resetConfig("p1meterx") resetConfig("p1metery") resetConfig("p1meterenabled") end,
-			function() gui.text(hud.meter.P1.x, hud.meter.P1.y, gamevars.P1.meter, hud.meter.P1.textcolour) end
+			function() gui.text(hud.meter.P1.x, hud.meter.P1.y, gamevars.P1.meter, hud.meter.P1.textcolour) end,
+			function() gui.text(hud.meter.P1.x, hud.meter.P1.y, gamevars.P1.meter, hud.previewcolour) end
 		)
 		if gamefunctions.writeplayeronemeter and gamefunctions.readplayertwohealth and gamefunctions.playertwoinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P1") end)
@@ -862,7 +877,8 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n then changeConfig("p2metery", n) end return hud.meter.P2.y end,
 			function(n) if n~=nil then changeConfig("p2meterenabled", n) end return hud.meter.P2.enabled end,
 			function() resetConfig("p2meterx") resetConfig("p2metery") resetConfig("p2meterenabled") end,
-			function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P2.meter, hud.meter.P2.textcolour) end
+			function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P2.meter, hud.meter.P2.textcolour) end,
+			function() gui.text(hud.meter.P2.x, hud.meter.P2.y, gamevars.P2.meter, hud.previewcolour) end
 		)
 		if gamefunctions.writeplayertwometer and gamefunctions.readplayeronehealth and gamefunctions.playeroneinhitstun then
 			table.insert(registers.registerafter, function() meterHandler("P2") end)
@@ -879,9 +895,28 @@ do -- Configure the Training Mode depending on what functions and info is availa
 		write "Can't auto-refill P2 meter"
 	end
 
-	if gamefunctions.hitboxesreg and gamefunctions.hitboxesregafter then
-		table.insert(registers.interactiveguiregister, hitboxesReg)
-		table.insert(registers.registerafter, hitboxesRegAfter)
+	if gamefunctions.playeroneinanimation or gamefunctions.playertwoinanimation then
+		table.insert(registers.registerafter, frameAdvantage)
+		playerOneInAnimation = playerOneInAnimation or function() return false end
+		playerTwoInAnimation = playerTwoInAnimation or function() return false end
+		playerOneLastStartupOffset = playerOneLastStartupOffset or function() return 0 end
+		playerTwoLastStartupOffset = playerTwoLastStartupOffset or function() return 0 end
+		playerOneLastHitstopOffset = playerOneLastHitstopOffset or function() return 0 end
+		playerTwoLastHitstopOffset = playerTwoLastHitstopOffset or function() return 0 end
+		createHUDElement(
+			"frameadvantage",
+			function(n) if n then changeConfig("frameadvantagex", n) end return hud.frameadvantage.x end,
+			function(n) if n then changeConfig("frameadvantagey", n, hud) end return hud.frameadvantage.y end,
+			function(n) if n~=nil then changeConfig("frameadvantageenabled", n) end return hud.frameadvantage.enabled end,
+			function() resetConfig("frameadvantagex") resetConfig("frameadvantagey") resetConfig("frameadvantageenabled") end,
+			drawFrameAdvantageHUD
+		)
+	end
+
+	if gamefunctions.drawhitboxes then
+		table.insert(registers.interactiveguiregister, function() if hitboxes.enabled then drawHitboxes() end end) -- for drawing hitboxes to screen
+		table.insert(registers.registerafter, updateHitboxes) -- for updating hitbox data
+		table.insert(registers.onload, reloadHitboxes)
 	else
 		write "Can't display hitboxes"
 	end
@@ -927,9 +962,14 @@ do -- Configure the Training Mode depending on what functions and info is availa
 	if DEBUG and gamefunctions.playeronefacingleft and gamefunctions.playertwofacingleft then
 		local x = interactivegui.sw/2 - 80
 		table.insert(registers.interactiveguiregister, function()
-			local p1left = playerOneFacingLeft() and "true" or "false"
-			local p2left = playerTwoFacingLeft() and "true" or "false"
-			gui.text(x, 0, "Facing Left; Player 1: "..p1left..", Player 2: "..p2left)
+			local p1left = playerOneFacingLeft() and "L" or "R"
+			local p2left = playerTwoFacingLeft() and "L" or "R"
+			if readPlayerOneXPos then
+				local p1x, p2x, p1y, p2y = readPlayerOneXPos(), readPlayerTwoXPos(), readPlayerOneYPos(), readPlayerTwoYPos()
+				gui.text(x, 0, "Player 1: "..p1left.." ("..p1x..", "..p1y.."), Player 2: "..p2left.." ("..p2x..", "..p2y..")")
+			else
+				gui.text(x, 0, "Player 1: "..p1left..", Player 2: "..p2left)
+			end
 		end)
 	end
 
@@ -941,7 +981,8 @@ do -- Configure the Training Mode depending on what functions and info is availa
 		function(n) if n then changeConfig("kby", n) end return hud.kb.y end,
 		function(n) if n~=nil then changeConfig("kbenabled", n) end return hud.kb.enabled end,
 		function() resetConfig("kbx") resetConfig("kby") resetConfig("kbenabled") end,
-		function() drawKB(hud.kb.x, hud.kb.y) end
+		function() drawKB(hud.kb.x, hud.kb.y) end,
+		function() drawKB(hud.kb.x, hud.kb.y, hud.previewcolour) end
 	)
 
 	if scrollingInputReg then -- if scrolling-input-display.lua is loaded
@@ -953,6 +994,7 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n~=nil then changeConfig("scrollinginputenabledp1", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P1.enabled end,
 			function() resetConfig("scrollinginputxp1") resetConfig("scrollinginputyp1") resetConfig("scrollinginputenabledp1") resetConfig("scrollinginputframes") resetConfig("scrollinginputiconsize") scrollingInputReload() end,
 			function() end, -- handled by scrolling-input-display.lua
+			function() end, -- stub
 			{ -- extra functions for scrolling input
 				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then changeConfig("scrollinginputframes", not getConfigValue("scrollinginputframes")) end end}, -- toggle numbers
 				{name="INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrolling.iconsize<16 then changeConfig("scrollinginputiconsize", inputs.properties.scrolling.iconsize+1) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
@@ -966,6 +1008,7 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			function(n) if n~=nil then changeConfig("scrollinginputenabledp2", n) end togglescrollinginputsplayer() return inputs.properties.scrolling.P2.enabled end,
 			function() resetConfig("scrollinginputxp2") resetConfig("scrollinginputyp2") resetConfig("scrollinginputenabledp2") resetConfig("scrollinginputframes") resetConfig("scrollinginputiconsize") scrollingInputReload() end,
 			function() end, -- handled by scrolling-input-display.lua
+			function() end, -- stub
 			{ -- extra functions for scrolling input
 				{name="NUMS",func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then changeConfig("scrollinginputframes", not getConfigValue("scrollinginputframes")) end end}, -- toggle numbers
 				{name="INC", func = function(but) if guiinputs.P1[but] and not guiinputs.P1.previousinputs[but] then if inputs.properties.scrolling.iconsize<16 then changeConfig("scrollinginputiconsize", inputs.properties.scrolling.iconsize+1) scrollingInputReload() end end end}, -- increase size of text (prone to crashing)
@@ -1035,19 +1078,20 @@ do -- Configure the Training Mode depending on what functions and info is availa
 			end
 		end)
 	end
-end
 
-local saveprocedure = function()
-	toggleStates({})
+	savestate.registersave(function()
+		toggleStates({})
+		for _,v in ipairs(registers.onsave) do
+			v()
+		end
+	end)
+	savestate.registerload(function()
+		toggleStates({})
+		for _,v in ipairs(registers.onload) do
+			v()
+		end
+	end)
 end
-
-local loadprocedure = function()
-	toggleStates({})
-	savestatePlayBack()
-end
-
-savestate.registersave(saveprocedure)
-savestate.registerload(loadprocedure)
 
 ----------------------------------------------
 -- ADDONS
@@ -1059,21 +1103,27 @@ if DEBUG then
 	for _, addon in pairs(DEBUG_addons_run) do
 		if fexists("addon/"..addon) then
 			dofile("addon/"..addon)
+		else
+			write("WARNING: Expected debug addon "..addon.." was not found.")
 		end
 	end
 else
 	for _, addon in pairs(addons_run) do
 		if fexists("addon/"..addon) then
 			dofile("addon/"..addon)
+		else
+			write("WARNING: Expected addon "..addon.." was not found.")
 		end
 	end
 end
 -- game specific addons
 if fexists("games/"..gamename.."/addon/addons.lua") then
 	dofile("games/"..gamename.."/addon/addons.lua")
-	for _, v in pairs(addons_run) do
-		if fexists("games/"..gamename.."/addon/"..v) then
-			dofile("games/"..gamename.."/addon/"..v)
+	for _, addon in pairs(addons_run) do
+		if fexists("games/"..gamename.."/addon/"..addon) then
+			dofile("games/"..gamename.."/addon/"..addon)
+		else
+			write("WARNING: Expected game addon "..addon.." was not found.")
 		end
 	end
 end
@@ -1083,7 +1133,11 @@ end
 input.registerhotkey(1,
 function()
 	if interactivegui.enabled then
-		callGUISelectionFunc()
+		if guipages[interactivegui.page][interactivegui.selection].func then -- if there's a function call it
+			callGUISelectionFunc()
+		elseif guipages[interactivegui.page][interactivegui.selection].releasefunc then -- otherwise if there's a release function call that
+			callGUISelectionReleaseFunc()
+		end
 	else
 		togglePlayBack(nil, {})
 	end
@@ -1106,8 +1160,20 @@ function()
 end)
 input.registerhotkey(4,
 function()
-	toggleInteractiveGUI(nil, {})
+	if interactivegui.enabled then
+		interactiveGUISelectionBack()
+	else
+		toggleInteractiveGUI(nil, {})
+	end
 end)
 input.registerhotkey(9, reloadGUIPages)
 
 markConfigsUnchanged() -- anything before this was editing default values
+
+if REPLAY then
+	local xoffset, yoffset = emu.screenwidth()/2, emu.screenheight()/2
+	local text = "In replay mode, many features are disabled."
+	addTextItem(text, xoffset-#text*LETTER_HALFWIDTH, yoffset, "red", 60*5)
+	text = "Use Lua hotkeys to access/navigate the menu."
+	addTextItem(text, xoffset-#text*LETTER_HALFWIDTH, yoffset+LETTER_HEIGHT, "red", 60*5)
+end

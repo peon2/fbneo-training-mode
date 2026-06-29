@@ -6,6 +6,5 @@ addons_run = {
 	"boxerStandingDownChargeGlitch.lua",
 	"walkSuper.lua",
 	"mashing.lua",
-	"frameDataBar.lua",
-	"inGameHitboxViewer.lua",
+	"frameDataBar.lua"
 }

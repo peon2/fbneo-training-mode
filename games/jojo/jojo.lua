@@ -218,6 +218,9 @@ createHUDElement(
 	end,
 	function()
 		gui.text(jojo.stand.P1.x, jojo.stand.P1.y, readPlayerOneStandHealth(), colour.option1)
+	end,
+	function()
+		gui.text(jojo.stand.P1.x, jojo.stand.P1.y, readPlayerOneStandHealth(), hud.previewcolour)
 	end
 )
 createHUDElement(
@@ -247,5 +250,8 @@ createHUDElement(
 	end,
 	function()
 		gui.text(jojo.stand.P2.x, jojo.stand.P2.y, readPlayerTwoStandHealth(), colour.option2)
+	end,
+	function()
+		gui.text(jojo.stand.P2.x, jojo.stand.P2.y, readPlayerTwoStandHealth(), hud.previewcolour)
 	end
 )

@@ -1,3 +1,81 @@
+v0.26.06
+
+Hold Direction now defaults to being relative to the character's direction.
+The Combo HUD now correctly updates when health is set to 'Health Always Full'
+The Frame Advantage Calculator has been made generic and can now account for screen freezes.
+Hidden HUD Elements now show a preview when selected in the HUD Editor.
+Made the HUD Element positions more obvious in the HUD Editor.
+Fixed a bug stopping config values being loaded from replay packs.
+Added a warning if a replay pack for a different version is loaded.
+Ensured that Coin is never recorded in a replay.
+Controller input will never be controlled during a fightcade replay, avoiding desyncing the replay.
+Lua Macros 1-4 better navigate and use the training mode menu.
+
+aof3:
+No longer locks the screen size.
+
+asurabld:
+Added hitboxes
+Now correctly updates the characters when loading a savestate.
+Curfue and S.Geist can now be forceably selected from character select.
+
+asurabus:
+Added hitboxes
+Now correctly updates the characters when loading a savestate.
+Vebel can now be forceably selected from character select.
+Nanami is no longer unlocked to preserve random character.
+
+cybots:
+Added support for the Frame Advantage Calculator.
+
+garou:
+Now accounts for the magic pixel.
+Now correctly updates the characters when loading a savestate.
+Made the Combo Counter more consistent.
+Character guard damage is now displayable and controllable like health or meter.
+Added a toggleable display to show when a character can JD.
+Charge inputs for characters can now be displayed.
+Added support for the Frame Advantage Calculator.
+Characters can now be forceably counterhit.
+Characters can now be forced to JD.
+Fixed a bug with the hitbox script that causes glitches when characters trade attacks.
+If a character is hit or knocked down, replaying a 'Hit Slot' will now do a proper reversal.
+Added support for playing back a replay with reversal timing from a Block with 'Block Slot'.
+Added support for playing back a replay with guard cancel timing from a JD with 'Guard Cancel'.
+
+lastblad:
+Now correctly updates the character when loading a savestate.
+
+redearth:
+Added reset functions to the custom buttons.
+
+samsho/samsho2:
+Now correctly updates the characters when loading a savestate.
+Made the Combo Counter more consistent.
+Added support for the Frame Advantage Calculator.
+
+sf2/sf2ce/ssf2:
+Added support for the Frame Advantage Calculator.
+Stun gauge is now longer for visibility.
+
+sgemf:
+Timer no longer flashes.
+Now accounts for magic pixel.
+Stocks are now permanently set to 2 per player.
+The level of each player's specials and the item held can now be set.
+Stun is now displayed and can be controlled.
+
+
+sfiii/sfiii2/sfiii3:
+Now correctly updates the characters when loading a savestate.
+
+trstar:
+Now correctly updates the characters when loading a savestate.
+
+Contributions:
+Thanks to ViviMayoi and Xenn:
+Created the Asura Buster hitbox script.
+
 v0.26.05
 
 A warning is now displayed if a required file is missing.

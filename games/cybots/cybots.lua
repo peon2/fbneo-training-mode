@@ -16,13 +16,20 @@ local p2meter = 0xFF8934
 local p1direction = 0xFF81A9
 local p2direction = 0xFF85A9
 
-local p1state = 0xFF81A4
-local p2state = 0xFF85A4
+local p1state = 0xFF81A3 -- word
+local p2state = 0xFF85A3
 local state = {
-	knockdown = 0x08,
-	thrown = 0x0C,
-	hitstun = 0x10,
+	crouch = 0x04,
+	jump = 0x08,
+	landingrecovery = 0x0C,
+	attacking = 0x0400,
+	specialattacking = 0x0404,
+	knockdown = 0x0408,
+	thrown = 0x040C,
+	hitstun = 0x0410,
 }
+
+local screenfreeze = 0xFFEBA4
 --[[ Possible addresses related to hitstun or character state
 	0xFF85A4
 	0xFF85A8
@@ -121,13 +128,37 @@ function playerTwoFacingLeft()
 end
 
 function playerOneInHitstun()
-	local value = rb(p1state)
+	local value = rw(p1state)
 	return value == state.hitstun or value == state.thrown or value == state.knockdown
 end
 
 function playerTwoInHitstun()
-	local value = rb(p2state)
+	local value = rw(p2state)
 	return value == state.hitstun or value == state.thrown or value == state.knockdown
+end
+
+local lastscreenfreeze = 0
+
+local function lastStartupOffset()
+	local ret = lastscreenfreeze
+	lastscreenfreeze = 0
+	return ret
+end
+
+playerOneLastStartupOffset = lastStartupOffset
+playerTwoLastStartupOffset = lastStartupOffset
+
+local function inAnimation(_state)
+	return _state == state.attacking or
+	       _state == state.specialattacking
+end
+
+function playerOneInAnimation()
+	return playerOneInHitstun() or inAnimation(rw(p1state))
+end
+
+function playerTwoInAnimation()
+	return playerTwoInHitstun() or inAnimation(rw(p2state))
 end
 
 function readPlayerOneHealth()
@@ -168,6 +199,10 @@ function infiniteTime()
 end
 
 function Run()
+	local _screenfreeze = rb(screenfreeze)
+	if _screenfreeze > lastscreenfreeze then
+		lastscreenfreeze = _screenfreeze
+	end
 	infiniteTime()
 	wb(0xff470c, 48) -- set arms to max
 	wb(0xff870c, 48) -- set arms to max

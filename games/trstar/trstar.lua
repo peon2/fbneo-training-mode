@@ -18,6 +18,14 @@ local function setTRSTARConstants()
 end
 setTRSTARConstants()
 
+local _reloadguipages = false
+
+local function newRound()
+	setTRSTARConstants() -- get new character data
+	setGameConstants() -- update the training mode with that data
+	_reloadguipages = true -- if reloading the gui is called here, the script crashes during savestate loading for some reason. Reload the gui during the next Run instance instead
+end
+
 translationtable = {
 	"left",
 	"right",
@@ -138,9 +146,15 @@ end
 
 function Run() -- runs every frame
 	if rw(timer) == maxtime then
-		setTRSTARConstants()
-		setGameConstants()
-		reloadGUIPages()
+		newRound()
 	end
 	infiniteTime()
+	if _reloadguipages then
+		_reloadguipages = false
+		reloadGUIPages()
+	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end

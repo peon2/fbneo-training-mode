@@ -18,7 +18,6 @@ local p2direction = 0x10058c
 function gamemsg()
 	print "Known issues with aof3:"
 	print "Hitstun detector can update a few frames after actually losing health for inconsistent combos"
-	print "No hitboxes"
 end
 
 translationtable = {

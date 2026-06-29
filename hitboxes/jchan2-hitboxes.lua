@@ -1,4 +1,5 @@
--- quick and dirty port of jedpossum's script (https://github.com/jedpossum/EmuLuaScripts/blob/master/jchan2.lua)
+-- Quick and dirty port of jedpossum's script https://github.com/jedpossum/EmuLuaScripts/blob/master/jchan2.lua
+-- Edited to work with https://github.com/peon2/fbneo-training-mode/
 
 local rb, rbs, rw, rws, rd = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword
 local wb, ww, wd = memory.writebyte, memory.writeword, memory.writedword
@@ -36,7 +37,7 @@ local hexval = function(val)
 	return val
 end
 
-local player = function()
+function drawHitboxes()
 	proadr = 0x2017F0 - 0x7A
 	for proj = 0,15,1 do
 		proadr = proadr + 0x7A
@@ -106,13 +107,4 @@ local player = function()
 			end
 		end
 	end
-end
-
-function hitboxesReg()
-	if hitboxes.enabled then
-		player()
-	end
-end
-
-function hitboxesRegAfter()
 end

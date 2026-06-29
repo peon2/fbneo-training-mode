@@ -36,7 +36,7 @@ uidoffset = {
 	state = 0xBC, -- word
 }
 
-function samshoNewRound() -- uid locations update each round
+function newRound() -- uid locations update each round
 	p1uid = rdw(uidoffset.P1UIDLocation)
 	p2uid = rdw(uidoffset.P2UIDLocation)
 	p1char = rb(p1uid+uidoffset.character)
@@ -47,9 +47,9 @@ function samshoNewRound() -- uid locations update each round
 	p2maxstun = rw(2+samshostunlookup+p2char*4)
 end
 
-samshoNewRound()
+newRound()
 
-local character_state = { -- found by lansingwolverine
+character_state = { -- found by lansingwolverine
 	neutral = 0x0000,
 	forward = 0x0001,
 	backwards = 0x0002,
@@ -59,18 +59,37 @@ local character_state = { -- found by lansingwolverine
 	neutraljump = 0x0006,
 	forwardjump = 0x0008,
 	backjump = 0x0009,
+	preguard = 0x000E,
+	standingproximityguard = 0x000F, -- also the end of blockstun
+	crouchingproximityguard = 0x0010,
+	crouchingendguard = 0x0011,
 	landingrecovery = 0x0012,
 	stunned = 0x0015,
 	rageanimation = 0x002E, -- Samsho2, I'm still not sure about this one
-	attacking = 0x0100, -- the second byte indicates which attack
-	hitstun = 0x0300,
+	backdash = 0x001D,
+	run = 0x001E,
+	lightbladebounceback = 0x001F,
+	heavybladebounceback = 0x0020,
+	lightheavybladebounceback = 0x0032,
+	crouchheavybladebounceback = 0x0033,
+	-- attacks seems to be between 0x0100 and 0x011F?
+	Cthrown = 0x0120,
+	Dthrown = 0x0123,
+	-- special attacks seems to be between 0x0124 and 0x0200?
 	lightattackhitstun = 0x0304,
 	heavyattackhitstun = 0x0305,
+	lightattackcrouchhitstun = 0x0307,
+	heavyattackcrouchhitstun = 0x0308,
+	lightattackblockstun = 0x0312,
+	heavyattackblockstun = 0x0312,
+	lightattackcrouchblockstun = 0x0313,
+	heavyattackcrouchblockstun = 0x0313,
+	nobladestandblockstun = 0x0312,
+	nobladecrouchblockstun = 0x0313,
 	knockeddown = 0x0338,
 	gettingup = 0x0315,
-	thrown = 0x0500,
-	Cthrow = 0x0500,
-	Dthrow = 0x0502
+	Cthrow = 0x0327,
+	Dthrow = 0x0328,
 }
 
 translationtable = {
@@ -179,16 +198,39 @@ function playerTwoFacingLeft()
 	return rb(p2uid+uidoffset.direction)==1
 end
 
+local function inHitstun(state)
+	return (state >= character_state.Cthrown and state <= character_state.Dthrown) or
+	       (state == character_state.stunned) or
+		   (
+			(state >= 0x300 and state <= 0x400) and
+			(state < character_state.lightattackblockstun or state > character_state.nobladecrouchblockstun)
+		   )
+end
+
 function playerOneInHitstun()
-	local state = rw(p1uid + uidoffset.state)
-	local maskedhigh = AND(state, 0xFF00)
-	return maskedhigh == character_state.hitstun or maskedhigh == character_state.thrown or state == character_state.stunned
+	return inHitstun(rw(p1uid + uidoffset.state))
 end
 
 function playerTwoInHitstun()
-	local state = rw(p2uid + uidoffset.state)
-	local maskedhigh = AND(state, 0xFF00)
-	return maskedhigh == character_state.hitstun or maskedhigh == character_state.thrown or state == character_state.stunned
+	return inHitstun(rw(p2uid + uidoffset.state))
+end
+
+local function inAnimation(state)
+	return inHitstun(state) or
+	       (state >= 0x0100 and state <= 0x011F) or
+		   (state >= 0x0124 and state <= 0x0200) or
+		   (state >= character_state.lightattackblockstun and state <= character_state.nobladecrouchblockstun) or
+		   (state >= character_state.lightbladebounceback and state <= character_state.crouchheavybladebounceback) or
+		   (state >= character_state.Cthrow and state <= character_state.Dthrow) or
+		   state == character_state.rageanimation
+end
+
+function playerOneInAnimation()
+	return inAnimation(rw(p1uid + uidoffset.state))
+end
+
+function playerTwoInAnimation()
+	return inAnimation(rw(p2uid + uidoffset.state))
 end
 
 --[[
@@ -235,93 +277,6 @@ function infiniteTime()
 	wb(timer, timemax-1)
 end
 
-local p1previousanimation = false
-local p2previousanimation = false
-
-local frameadvantagecalc = false -- we only need to calculate once per animations playing
-
-local p1animationstart = emu.framecount()
-local p2animationstart = emu.framecount()
-
-local p1animationend = emu.framecount()
-local p2animationend = emu.framecount()
-
-local p1attackstartup = 0
-local p2attackstartup = 0
-
-local p1advantage = 0
-local p2advantage = 0
-
-local p1animationtotal = 0
-local p2animationtotal = 0
-
-local function inAnimation(state)
-	return AND(state, 0xFF00) == character_state.attacking or state == character_state.rageanimation
-end
-
-local function calcFrameAdvantage()
-	local fc = emu.framecount()
-	local p1state = rw(p1uid + uidoffset.state)
-	local p2state = rw(p2uid + uidoffset.state)
-	
-	local p1attacking = (AND(p1state, 0xFF00) == character_state.attacking)
-	local p2attacking = (AND(p2state, 0xFF00) == character_state.attacking)
-	
-	local p1animation = playerOneInHitstun() or p1attacking or (p1state == character_state.rageanimation)
-	local p2animation = playerTwoInHitstun() or p2attacking or (p2state == character_state.rageanimation)
-	
-	-- Animation started
-	if not p1previousanimation and p1animation then
-		p1animationstart = fc
-		p1animationend = fc
-	end
-	if not p2previousanimation and p2animation then
-		p2animationstart = fc
-		p2animationend = fc
-	end
-	
-	-- Animation ended
-	if p1previousanimation and not p1animation then
-		p1animationend = fc
-		frameadvantagecalc = true
-	end
-	if p2previousanimation and not p2animation then
-		p2animationend = fc
-		frameadvantagecalc = true
-	end
-
-	-- Both Animations have ended, calculate the values
-	if frameadvantagecalc and (not p1animation and not p2animation) then
-		frameadvantagecalc = false
-		p1attackstartup = 0
-		p2attackstartup = 0
-		p1animationtotal = 0
-		p2animationtotal = 0
-		if p2animationend < p1animationstart then -- P1 whiffed attack
-			p1animationtotal = p1animationend - p1animationstart
-			p1advantage = -p1animationtotal
-			p2advantage = p1animationtotal
-		elseif p1animationend < p2animationstart then -- P2 whiffed attack
-			p2animationtotal = p2animationend - p2animationstart
-			p2advantage = -p2animationtotal
-		else
-			local startup = p1animationstart - p2animationstart
-			if startup<0 then -- P1 attacked
-				p1attackstartup = math.abs(startup)
-			else -- P2 attacked
-				p2attackstartup = startup
-			end
-			p1advantage = p2animationend - p1animationend
-			p2advantage = p1animationend - p2animationend
-			p1animationtotal = p1animationend - p1animationstart
-			p2animationtotal = p2animationend - p2animationstart
-		end
-	end
-	
-	p1previousanimation = p1animation
-	p2previousanimation = p2animation
-end
-
 local function writePlayerOneStunReset(value)
 	ww(p1uid + uidoffset.stunreset, value)
 end
@@ -332,17 +287,20 @@ end
 
 function Run()
 	if rb(timer) == timemax then
-		samshoNewRound()
+		newRound()
 	end
 	infiniteTime()
-	calcFrameAdvantage()
-	
+
 	if samsho.p1stun then
 		writePlayerOneStunReset(0)
 	end
 	if samsho.p2stun then
 		writePlayerTwoStunReset(0)
 	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end
 
 initConfigTable("samsho", samsho, "config")
@@ -478,97 +436,5 @@ createHUDElement(
 			readPlayerTwoStun(),
 			p2maxstun
 		)
-	end
-)
-
-createHUDElement(
-	"p1framedata",
-	function(n)
-		if n then
-			changeConfig("samshoframedataxp1", n)
-		end
-		return samsho.framedata.P1.x
-	end,
-	function(n)
-		if n then
-			changeConfig("samshoframedatayp1", n)
-		end
-		return samsho.framedata.P1.y
-	end,
-	function(n)
-		if n~=nil then
-			changeConfig("samshoframedataenabledp1", n)
-		end
-		return samsho.framedata.P1.enabled
-	end,
-	function()
-		resetConfig("samshoframedataxp1")
-		resetConfig("samshoframedatayp1")
-		resetConfig("samshoframedataenabledp1")
-	end,
-	function()
-		local xoffset = samsho.framedata.P1.x
-		local yoffset = samsho.framedata.P1.y
-		gui.text(xoffset, yoffset, "Startup: ")
-		gui.text(xoffset+10*LETTER_WIDTH+1, yoffset, p1attackstartup, "green")
-		gui.text(xoffset, yoffset+10, "Advantage: ")
-		local advantagecolour = "green"
-		local _p1advantage = 0
-		if p1advantage < 0 then
-			advantagecolour = "red"
-			_p1advantage = p1advantage
-		elseif p1advantage > 0 then
-			_p1advantage = "+"..p1advantage
-			advantagecolour = "cyan"
-		end
-		gui.text(xoffset+10*LETTER_WIDTH+1, yoffset+10, _p1advantage, advantagecolour)
-		gui.text(xoffset, yoffset+20, "Total: ")
-		gui.text(xoffset+10*LETTER_WIDTH+1, yoffset+20, p1animationtotal, "green")
-	end
-)
-
-createHUDElement(
-	"p2framedata",
-	function(n)
-		if n then
-			changeConfig("samshoframedataxp2", n)
-		end
-		return samsho.framedata.P2.x
-	end,
-	function(n)
-		if n then
-			changeConfig("samshoframedatayp2", n)
-		end
-		return samsho.framedata.P2.y
-	end,
-	function(n)
-		if n~=nil then
-			changeConfig("samshoframedataenabledp2", n)
-		end
-		return samsho.framedata.P2.enabled
-	end,
-	function()
-		resetConfig("samshoframedataxp2")
-		resetConfig("samshoframedatayp2")
-		resetConfig("samshoframedataenabledp2")
-	end,
-	function()
-		local xoffset = samsho.framedata.P2.x
-		local yoffset = samsho.framedata.P2.y
-		gui.text(xoffset, yoffset, "Startup: ")
-		gui.text(xoffset+10*LETTER_WIDTH+1, yoffset, p2attackstartup, "green")
-		gui.text(xoffset, yoffset+10, "Advantage: ")
-		local advantagecolour = "green"
-		local _p2advantage = 0
-		if p2advantage < 0 then
-			advantagecolour = "red"
-			_p2advantage = p2advantage
-		elseif p2advantage > 0 then
-			_p2advantage = "+"..p2advantage
-			advantagecolour = "cyan"
-		end
-		gui.text(xoffset+10*LETTER_WIDTH+1, yoffset+10, _p2advantage, advantagecolour)
-		gui.text(xoffset, yoffset+20, "Total: ")
-		gui.text(xoffset+10*LETTER_WIDTH+1, yoffset+20, p2animationtotal, "green")
 	end
 )

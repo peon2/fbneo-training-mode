@@ -9,6 +9,8 @@
 --print("Lua hotkey 5: toggle throwable boxes")
 --]]
 
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
+
 local boxes = {
 	      ["vulnerability"] = {color = 0x7777FF, fill = 0x40, outline = 0xFF},
 	 ["ext. vulnerability"] = {color = 0x0000FF, fill = 0x40, outline = 0xFF}, --extended limbs during attacks
@@ -360,10 +362,6 @@ local frame_buffer = {}
 
 local display = true
 
-togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
-
-input.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
-
 local update_hitboxes = function()
 	for f = 1, DRAW_DELAY do
 		frame_buffer[f] = copytable(frame_buffer[f+1])
@@ -522,20 +520,12 @@ local whatgame = function()
 	--print("not prepared for: " .. emu.gamename())
 end
 
-
+--[[
 savestate.registerload(function()
 	initialize_fb()
 end)
-
+--]]
 whatgame()
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		render_hitboxes()
-	end
-end
-
-
-function hitboxesRegAfter()
-	update_hitboxes()
-end
+drawHitboxes = render_hitboxes
+updateHitboxes = update_hitboxes

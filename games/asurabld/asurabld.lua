@@ -3,8 +3,8 @@ assert(rb,"Run fbneo-training-mode.lua")
 p1maxhealth = 0xEF
 p2maxhealth = 0xEF
 
-p1maxmeter = 0x51
-p2maxmeter = 0x51
+local p1direction = 0x4037F9
+local p2direction = 0x4045AD
 
 local p1health1 = 0x403911
 local p1health2 = 0x40390F
@@ -12,8 +12,29 @@ local p1health2 = 0x40390F
 local p2health1 = 0x4046C3
 local p2health2 = 0x4046C5
 
+local p1meter = 0x403913
+local p2meter = 0x4046C7
+
+local function setAsuraBladeConstants()
+	p1maxmeter = rb(0x403917)
+	p2maxmeter = rb(0x4046CB)
+end
+
+setAsuraBladeConstants()
+
+local _reloadguipages = false
+
+local function newRound()
+	setAsuraBladeConstants() -- get new character data
+	setGameConstants() -- update the training mode with that data
+	_reloadguipages = true -- if reloading the gui is called here, the script crashes during savestate loading for some reason. Reload the gui during the next Run instance instead
+end
+
 local p1combocounter = 0x4041E7
 local p2combocounter = 0x40470B
+
+local p1character = 0x403DD1
+local p2character = 0x404B85
 
 translationtable = {
 	"left",
@@ -95,11 +116,11 @@ gamedefaultconfig = {
 }
 
 function playerOneFacingLeft()
-	return rb(0x4037F9) == 0
+	return rb(p1direction) == 0
 end
 
 function playerTwoFacingLeft()
-	return rb(0x4045AD) == 0
+	return rb(p2direction) == 0
 end
 
 function playerOneInHitstun()
@@ -129,23 +150,26 @@ function writePlayerTwoHealth(health)
 end
 
 function readPlayerOneMeter()
-	return rb(0x403913)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(0x403913, meter)
+	wb(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(0x4046C7)
+	return rb(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0x4046C7, meter)
+	wb(p2meter, meter)
 end
 
+local timer = 0x40000A
+local maxtime = 0x90
+
 function infiniteTime()
-	wb(0x40000A,0x99)
+	wb(timer, maxtime-7) -- represented in hex internally
 end
 
 function maxCredits()
@@ -153,6 +177,23 @@ function maxCredits()
 end
 
 function Run() -- runs every frame
+	if (rb(timer) == maxtime) then
+		newRound()
+	end
 	infiniteTime()
 	maxCredits()
+	if P1SelectCharacter then
+		wb(p1character, P1SelectCharacter)
+	end
+	if P2SelectCharacter then
+		wb(p2character, P2SelectCharacter)
+	end
+	if _reloadguipages then
+		_reloadguipages = false
+		reloadGUIPages()
+	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end

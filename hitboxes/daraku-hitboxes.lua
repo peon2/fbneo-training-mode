@@ -1,14 +1,14 @@
--- quick and dirty port of jedpossum's script (https://github.com/jedpossum/EmuLuaScripts/blob/master/Daraku.lua)
+-- Quick and dirty port of jedpossum's script https://github.com/jedpossum/EmuLuaScripts/blob/master/Daraku.lua
+-- Edited to work with https://github.com/peon2/fbneo-training-mode/
 
 local rb, rbs, rw, rws, rd = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword
-
 local wb, ww, wd = memory.writebyte, memory.writeword, memory.writedword
 
 local axis_length = 8
 
 local scale = function(val) return val*(rw(0x602ddb0)/0x003F) end
 
-local player = function()
+function drawHitboxes()
 	local adr = 0x602DDA0 - 0x200
 
 	for player = 0,1,1 do
@@ -90,14 +90,4 @@ local player = function()
 		gui.drawline(px+axis_length,py,px-axis_length,py)
 
 	end
-end
-
-
-function hitboxesReg()
-	if hitboxes.enabled then
-		player()
-	end
-end
-
-function hitboxesRegAfter()
 end

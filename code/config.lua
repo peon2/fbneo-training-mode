@@ -29,7 +29,7 @@ combovars = {
 
 }
 
-hud = { health = { P1 = { }, P2 = { } }, meter = { P1 = { }, P2 = { } }, combotext = { }, kb = { }, fillbar = { } }
+hud = { health = { P1 = { }, P2 = { } }, meter = { P1 = { }, P2 = { } }, combotext = { }, frameadvantage = { }, kb = { }, fillbar = { } }
 
 inputs = {
 	properties = {
@@ -38,6 +38,7 @@ inputs = {
 		kb = { },
 		enableinputswap = false,
 		holddirection = nil,
+		holddirectionrelative = false,
 	},
 	hotkeys = {
 		hotkeyin = false,
@@ -113,7 +114,7 @@ gamevars = {
 local config = {
 	gamevars = { P1 = { }, P2 = { } },
 	combovars = { P1 = { }, P2 = { } },
-	hud = { health = { P1 = { }, P2 = { } }, meter = { P1 = { }, P2 = { } }, combotext = { }, kb = { } },
+	hud = { health = { P1 = { }, P2 = { } }, meter = { P1 = { }, P2 = { } }, combotext = { }, frameadvantage = { }, kb = { } },
 	inputs = { simple = { P1 = { }, P2 = { } }, scrolling = { P1 = { }, P2 = { } } },
 	hitboxes = { },
 	interactivegui = { },
@@ -842,6 +843,27 @@ configitems = {
 		varpointer = hud.combotext,
 		config = config,
 	},
+	frameadvantageenabled = {
+		name = "enabled",
+		default = false,
+		configpointer = config.hud.frameadvantage,
+		varpointer = hud.frameadvantage,
+		config = config,
+	},
+	frameadvantagex = {
+		name = "x",
+		default = 20,
+		configpointer = config.hud.frameadvantage,
+		varpointer = hud.frameadvantage,
+		config = config,
+	},
+	frameadvantagey = {
+		name = "y",
+		default = 42,
+		configpointer = config.hud.frameadvantage,
+		varpointer = hud.frameadvantage,
+		config = config,
+	},
 	kbenabled = {
 		name = "enabled",
 		default = false,
@@ -961,6 +983,13 @@ configitems = {
 		configpointer = config.inputs.scrolling,
 		varpointer = inputs.properties.scrolling,
 		config = config,
+	},
+	holddirectionrelative = {
+		name = "holddirectionrelative",
+		default = false,
+		configpointer = config.inputs,
+		varpointer = inputs.properties,
+		config = config
 	},
 --------- GUI ---------
 	guiboxxd = {
@@ -1178,6 +1207,14 @@ configitems = {
 		config = colourconfig,
 		displayname = "HUD Bar Fill Colour"
 	},
+	colourhudpreviewcolour = {
+		name = "previewcolour",
+		default = 0x0000FFFF,
+		configpointer = colourconfig.hud,
+		varpointer = hud,
+		config = colourconfig,
+		displayname = "HUD Element Preview Colour"
+	},
 	colourguiselect = {
 		name = "selectcolour",
 		default = 0xFF0000FF,
@@ -1259,6 +1296,13 @@ configitems = {
 	},
 	recordinghitslot = {
 		name = "hitslot",
+		default = 0,
+		configpointer = recording.config,
+		varpointer = recording,
+		config = recording.config,
+	},
+	recordingblockslot = {
+		name = "blockslot",
 		default = 0,
 		configpointer = recording.config,
 		varpointer = recording,

@@ -1,15 +1,18 @@
 assert(rb,"Run fbneo-training-mode.lua")
 
 -- load images
-local savestateslot_icon=gd.createFromPng("resources/replay/savestateslot.png"):gdStr()
-local hitplayback_icon=gd.createFromPng("resources/replay/hitplayback.png"):gdStr()
-local savestateslotselected_icon=gd.createFromPng("resources/replay/savestateslotselected.png"):gdStr()
-local hitplaybackselected_icon=gd.createFromPng("resources/replay/hitplaybackselected.png"):gdStr()
+local savestateslot_icon=gd.createFromPng(REPLAY_ICONS_RESOURCEPATH.."savestateslot.png"):gdStr()
+local hitplayback_icon=gd.createFromPng(REPLAY_ICONS_RESOURCEPATH.."hitplayback.png"):gdStr()
+local blockplayback_icon=gd.createFromPng(REPLAY_ICONS_RESOURCEPATH.."blockplayback.png"):gdStr()
+local savestateslotselected_icon=gd.createFromPng(REPLAY_ICONS_RESOURCEPATH.."savestateslotselected.png"):gdStr()
+local hitplaybackselected_icon=gd.createFromPng(REPLAY_ICONS_RESOURCEPATH.."hitplaybackselected.png"):gdStr()
+local blockplaybackselected_icon=gd.createFromPng(REPLAY_ICONS_RESOURCEPATH.."blockplaybackselected.png"):gdStr()
 
 function drawReplayInfo(x, y)
 	local selectcolour = interactivegui.page == "recordingslot" and colour.recordingselected or colour.recordingselect
 	local savestateslot = interactivegui.page == "savestateslot" and savestateslotselected_icon or savestateslot_icon
 	local hitplayback = interactivegui.page == "hitslot" and hitplaybackselected_icon or hitplayback_icon
+	local blockplayback = interactivegui.page == "blockslot" and blockplaybackselected_icon or blockplayback_icon
 
 	for i = 1, REPLAY_SLOTS_COUNT do
 		if recording.recordingslot == i then
@@ -22,6 +25,9 @@ function drawReplayInfo(x, y)
 		end
 		if recording.hitslot == i then
 			gui.gdoverlay(x, y+LETTER_HEIGHT*i-2, hitplayback)
+		end
+		if recording.blockslot == i then
+			gui.gdoverlay(x-10, y+LETTER_HEIGHT*i-2, blockplayback)
 		end
 		-- check if anything is recorded in that slot
 		if (recording[i].p1start~=recording[i].p1finish and recording[i].p1finish and recording[i].p2start~=recording[i].p2finish and recording[i].p2finish) then
@@ -105,10 +111,10 @@ local function serialise(recordslot) -- serialise and remove uncompressed data
 		--final bit to track direction
 		if recordslot[i].p1facingleft then num = bit.bor(num, bit.lshift(1, recordslot._stable.P1.len+recordslot._stable.P2.len)) end
 		if recordslot[i].p2facingleft then num = bit.bor(num, bit.lshift(1, recordslot._stable.P1.len+recordslot._stable.P2.len+1)) end
-		
+
 		recordslot.serial_player[i] = num -- combined P1 & P2 inputs
 		if isEmpty(recordslot.serial_other[i]) then recordslot.serial_other[i] = nil end -- more often than not dipswitches won't change
-		
+
 		recordslot[i].p1facingleft = nil -- we don't want to save these values
 		recordslot[i].p2facingleft = nil
 		recordslot[i].raw = nil
@@ -165,12 +171,6 @@ function replaySave()
 			else
 				recordslot.p1start = recordslot.p1start or #recordslot
 				recordslot.p2start = recordslot.p2start or #recordslot
-				for i=#recordslot,recordslot.p1start,-1 do
-					if recordslot[i].raw.P1 then recordslot[i].raw.P1.Coin = false end -- clear coin
-				end
-				for i=#recordslot,recordslot.p2start,-1 do
-					if recordslot[i].raw.P2 then recordslot[i].raw.P2.Coin = false end -- clear coin
-				end
 				serialiseInit(recordslot)
 				serialise(recordslot)
 			end
@@ -205,11 +205,26 @@ function replayLoad()
 			write("Tried to load replaypack for game: "..metadata.gamename)
 			return
 		end
+		if metadata.version ~= FBNEO_TRAINING_MODE_VERSION then
+			addTextItem(
+				"Warning: Loading a replay for a different version of the training mode.",
+				0,
+				0,
+				"red",
+				60*3 -- ~3 seconds
+			)
+		end
 		local newrecording = loadDataFromFile(filename)
 		for i, recordslot in ipairs(newrecording) do -- copy over replayslots
 			recording[i] = recordslot
 		end
-		updateReplayConfig(newrecording.config)
+		local config = {}
+		for i, v in pairs(newrecording) do
+			if type(i) ~= "number" and i~="config" then
+				config[i] = v
+			end
+		end
+		updateReplayConfig(config)
 	else
 		return
 	end
@@ -262,6 +277,8 @@ function toggleRecording(bool, vargs)
 end
 
 local function processInputFrameForRecording(recordslot, frameinputs)
+	for _, v in pairs(frameinputs.raw) do v.Coin = false end -- never Record Coin
+
 	for i, v in pairs(frameinputs.raw.P1 or {}) do
 		if recordslot.constants["P1 "..i]~=v then recordslot.constants["P1 "..i]=nil end -- remove non-duping values from table
 	end
@@ -383,6 +400,34 @@ function togglePlayBack(bool, vargs)
 	end
 end
 
+function hitPlayBack()
+	if recording.hitslot < 1 or recording.hitslot > REPLAY_SLOTS_COUNT then return end
+	local shouldplayback
+	if gamefunctions.playertwocanhitreversal then
+		shouldplayback = playerTwoCanHitReversal() -- accurate reversal timing
+	else
+		shouldplayback = combovars.P2.previouscombo > combovars.P2.combo -- basic implementation
+	end
+	if shouldplayback then
+		recording.playbackslot = recording.hitslot
+		togglePlayBack(true)
+	end
+end
+
+function blockPlayBack()
+	if recording.blockslot < 1 or recording.blockslot > REPLAY_SLOTS_COUNT then return end
+	if gamevars.P2.canblockreversal then
+		recording.playbackslot = recording.blockslot
+		togglePlayBack(true)
+	end
+end
+
+function savestatePlayBack()
+	if recording.savestateslot < 1 or recording.savestateslot > REPLAY_SLOTS_COUNT then return end
+	recording.playbackslot = recording.savestateslot
+	togglePlayBack(true)
+end
+
 function playBack()
 	if not recording.playback then return end
 	recording.playbackslot = recording.playbackslot or recording.recordingslot
@@ -440,19 +485,6 @@ function playBack()
 		inputs.setinputs = combinePlayerInputs(inputs.P1, raw.P2, raw.other)
 	end
 	raw = nil
-end
-
-function hitPlayBack()
-	if recording.hitslot < 1 or recording.hitslot > REPLAY_SLOTS_COUNT then return end
-	if combovars.P2.previouscombo <= combovars.P2.combo then return end
-	recording.playbackslot = recording.hitslot
-	togglePlayBack(true)
-end
-
-function savestatePlayBack()
-	if recording.savestateslot < 1 or recording.savestateslot > REPLAY_SLOTS_COUNT then return end
-	recording.playbackslot = recording.savestateslot
-	togglePlayBack(true)
 end
 
 ----------------------------------------------

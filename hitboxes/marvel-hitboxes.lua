@@ -9,6 +9,8 @@
 --print("Lua hotkey 5: toggle throwable boxes")
 --]]
 
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
+
 local boxes = {
 	      ["vulnerability"] = {color = 0x7777FF, fill = 0x20, outline = 0xFF},
 	             ["attack"] = {color = 0xFF0000, fill = 0x40, outline = 0xFF},
@@ -466,7 +468,7 @@ any_true = function(condition)
 end
 
 
-local update_push = function(base_1, base_2, offset)
+update_push = function(base_1, base_2, offset)
 	no_push[base_1] = rb(base_1 + offset) > 0
 	no_push[base_2] = rb(base_2 + offset) > 0
 end
@@ -476,8 +478,8 @@ end
 -- prepare the hitboxes
 
 local display = true
-local togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
-input.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
+--local togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
+--input.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
 
 local get_address = function(obj, box, box_entry)
 	box.id = box_entry.id or rw(obj.base + box_entry.id_ptr)
@@ -778,20 +780,13 @@ local whatgame = function()
 	--print("unsupported game: " .. emu.gamename())
 end
 
-
+--[[
 savestate.registerload(function()
 	initialize_fb()
 end)
-
+--]]
 whatgame()
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		render_hitboxes()
-	end
-end
+drawHitboxes = render_hitboxes
 
-function hitboxesRegAfter()
-	update_hitboxes()
-end
-
+updateHitboxes = update_hitboxes

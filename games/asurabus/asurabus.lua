@@ -3,14 +3,35 @@ assert(rb,"Run fbneo-training-mode.lua")
 p1maxhealth = 0xEF
 p2maxhealth = 0xEF
 
-p1maxmeter = 0x40
-p2maxmeter = 0x40
+p1character = 0x4039A7
+p2character = 0x404667
 
 local p1direction = 0x4033DB
 local p2direction = 0x404091
 
 local p1combocounter = 0x403DBD
 local p2combocounter = 0x404A7D
+
+local p1health = 0x4034EB
+local p2health = 0x4041A5
+
+local p1meter = 0x4034EF
+local p2meter = 0x4041A9
+
+local function setAsuraBusterConstants()
+	p1maxmeter = rb(0x4034F3)
+	p2maxmeter = rb(0x4041AD)
+end
+
+setAsuraBusterConstants()
+
+local _reloadguipages = false
+
+local function newRound()
+	setAsuraBusterConstants() -- get new character data
+	setGameConstants() -- update the training mode with that data
+	_reloadguipages = true -- if reloading the gui is called here, the script crashes during savestate loading for some reason. Reload the gui during the next Run instance instead
+end
 
 translationtable = {
 	"left",
@@ -108,49 +129,76 @@ function playerTwoInHitstun()
 end
 
 function readPlayerOneHealth()
-	return rb(0x4034EB)
+	return rb(p1health)
 end
 
 function writePlayerOneHealth(health)
-	wb(0x4034EB, health)
+	wb(p1health, health)
 end
 
 function readPlayerTwoHealth()
-	return rb(0x4041A5)
+	return rb(p2health)
 end
 
 function writePlayerTwoHealth(health)
-	wb(0x4041A5, health)
+	wb(p2health, health)
 end
 
 function readPlayerOneMeter()
-	return rb(0x4034EF)
+	return rb(p1meter)
 end
 
 function writePlayerOneMeter(meter)
-	wb(0x4034EF, meter)
-	wb(0x4034F3, meter)
+	wb(p1meter, meter)
 end
 
 function readPlayerTwoMeter()
-	return rb(0x4041A9)
+	return rb(p2meter)
 end
 
 function writePlayerTwoMeter(meter)
-	wb(0x4041AD, meter)
-	wb(0x4041A9, meter)
+	wb(p2meter, meter)
 end
 
+local timer = 0x40000A
+local maxtime = 0x90
+
 function infiniteTime()
-	wb(0x40000A, 0x99)
+	wb(timer, maxtime-1)
+	wb(0x400006, 0x99) -- char select timer
+end
+
+function maxCredits()
+	wb(0x407A7F, 0x09)
 end
 
 function secretCharacters()
-	wb(0x408837, 0x01)
-	wb(0x408839, 0x01)
+	wb(0x408837, 0x01) -- Alice!
+	--wb(0x408839, 0x01) -- Nanami
 end
 
+P1SelectVebel = false
+P2SelectVebel = false
+
 function Run() -- runs every frame
+	if (rb(timer) == maxtime) then
+		newRound()
+	end
 	infiniteTime()
+	maxCredits()
 	secretCharacters()
+	if P1SelectVebel then
+		wb(p1character, 0x0D)
+	end
+	if P2SelectVebel then
+		wb(p2character, 0x0D)
+	end
+	if _reloadguipages then
+		_reloadguipages = false
+		reloadGUIPages()
+	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end

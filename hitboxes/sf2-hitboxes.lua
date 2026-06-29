@@ -9,6 +9,8 @@
 --print("Lua hotkey 5: toggle throwable boxes")
 --]]
 
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
+
 local boxes = {
 	      ["vulnerability"] = {color = 0x7777FF, fill = 0x40, outline = 0xFF},
 	             ["attack"] = {color = 0xFF0000, fill = 0x40, outline = 0xFF},
@@ -159,9 +161,8 @@ emu.registerfuncs = fba and memory.registerexec --0.0.7+
 
 local display = true
 
-togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
-
-input.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
+--togglehitboxdisplay = function() display = not display globals.draw_axis = not globals.draw_axis end
+--input.registerhotkey(3, togglehitboxdisplay) -- Has to be here or script crashes
 
 local get_box_parameters = {
 	[1] = function(box)
@@ -300,8 +301,8 @@ local update_object = function(f, obj)
 	obj.pos_y         = rws(obj.base + 0x0A)
 	obj.pos_y         = emu.screenheight() - (obj.pos_y - 0x0F) + f.screen_top
 	obj.flip_x        = rb(obj.base + 0x12)
-	obj.animation_ptr = rd(obj.base + 0x1A)
-	obj.hitbox_ptr    = rd(obj.base + 0x34)
+	obj.animation_ptr = rdw(obj.base + 0x1A)
+	obj.hitbox_ptr    = rdw(obj.base + 0x34)
 
 	for _, box_entry in ipairs(game.box_list) do
 		table.insert(obj, define_box(obj, box_entry))
@@ -524,7 +525,7 @@ local initialize_throw_buffer = function()
 end
 
 
-get_thrower = function(f)
+local get_thrower = function(f)
 	local base = bit.band(0xFFFFFF, memory.getregister("m68000.a6"))
 	for _, obj in ipairs(f) do
 		if base == obj.base then
@@ -582,19 +583,12 @@ local whatgame = function()
 	--print("unsupported game: " .. emu.gamename())
 end
 
-
+--[[
 savestate.registerload(function()
 	initialize_fb()
 end)
-
+--]]
 whatgame()
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		render_hitboxes()
-	end
-end
-
-function hitboxesRegAfter()
-	update_hitboxes()
-end
+drawHitboxes = render_hitboxes
+updateHitboxes = update_hitboxes

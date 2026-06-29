@@ -207,16 +207,27 @@ local function infiniteTime()
 	wb(0x2010167, timemax-1)
 end
 
+local _reloadguipages = false
+
+local function newRound()
+	setSFIII2Constants() -- get new character data
+	setGameConstants() -- update the training mode with that data
+	-- Make sure the stun values fit the character
+	if sfiii2.stun.P1.value > p1maxstun then
+		changeConfig("sfiii2stunp1", p1maxstun)
+	end
+	if sfiii2.stun.P2.value > p2maxstun then
+		changeConfig("sfiii2stunp2", p2maxstun)
+	end
+	_reloadguipages = true -- if reloading the gui is called here, the script crashes during savestate loading for some reason. Reload the gui during the next Run instance instead
+end
+
 function Run() -- runs every frame
 	wb(0x206510D, 0x02) -- unlock Akuma
 	if (rb(timer) == timemax) then -- should be checking if char/super has changed instead...
-		setSFIII2Constants()
-		setGameConstants()
-		reloadGUIPages()
-		-- Reset these changeable values
-		changeConfig("sfiii2stunp1", 0)
-		changeConfig("sfiii2stunp2", 0)
+		newRound()
 	end
+	infiniteTime()
 	if sfiii2.stun.P1.enabled then
 		if sfiii2.stun.P1.aftercombo then
 			if not playerOneInHitstun() then
@@ -236,7 +247,14 @@ function Run() -- runs every frame
 			writePlayerTwoStun(sfiii2.stun.P2.value)
 		end
 	end
-	infiniteTime()
+	if _reloadguipages then
+		_reloadguipages = false
+		reloadGUIPages()
+	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end
 
 
@@ -286,6 +304,9 @@ createHUDElement(
 	end,
 	function()
 		gui.text(sfiii2.stun.hud.P1.x, sfiii2.stun.hud.P1.y, readPlayerOneStun(), colours.stunp1)
+	end,
+	function()
+		gui.text(sfiii2.stun.hud.P1.x, sfiii2.stun.hud.P1.y, readPlayerOneStun(), hud.previewcolour)
 	end
 )
 createHUDElement(
@@ -315,5 +336,8 @@ createHUDElement(
 	end,
 	function()
 		gui.text(sfiii2.stun.hud.P2.x, sfiii2.stun.hud.P2.y, readPlayerTwoStun(), colours.stunp2)
+	end,
+	function()
+		gui.text(sfiii2.stun.hud.P2.x, sfiii2.stun.hud.P2.y, readPlayerTwoStun(), hud.previewcolour)
 	end
 )

@@ -5,5 +5,5 @@ addons_run = {
 	"mute.lua"
 }
 DEBUG_addons_run = {
-	"memory_watcher.lua",
+	"memory-watcher/memory_watcher.lua",
 }

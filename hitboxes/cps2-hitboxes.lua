@@ -8,6 +8,9 @@
 --print("Lua hotkey 4: toggle pushboxes")
 --print("Lua hotkey 5: toggle throwable boxes")
 --]]
+
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
+
 local boxes = {
 	      ["vulnerability"] = {color = 0x7777FF, fill = 0x40, outline = 0xFF},
 	             ["attack"] = {color = 0xFF0000, fill = 0x40, outline = 0xFF},
@@ -1143,19 +1146,12 @@ local whatgame = function()
 	--print("unsupported game: " .. emu.gamename())
 end
 
-
+--[[
 savestate.registerload(function()
 	initialize_fb()
 end)
-
+--]]
 whatgame()
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		render_hitboxes()
-	end
-end
-
-function hitboxesRegAfter()
-	update_hitboxes()
-end
+drawHitboxes = render_hitboxes
+updateHitboxes = update_hitboxes

@@ -7,6 +7,9 @@ local force32 = {
 	olcolour = "black",
 	bgcolour = colour.boolfalse,
 	info = "Forces any password you input at char select to be a lvl32 password. Doesn't work if you don't input a password.",
+	reset = function()
+		resetConfig("redearthforce32")
+	end,
 	func = function()
 		changeConfig("redearthforce32", not getConfigValue("redearthforce32"))
 	end,
@@ -31,6 +34,9 @@ local orb = {
 	y = 45,
 	info = "Selects what colour new orbs will be",
 	olcolour = colour.olcolour,
+	reset = function()
+		resetConfig("redearthorb")
+	end,
 	func = function()
 		changePageAndSelection("redearthorb", getConfigValue("redearthorb"))
 	end,
@@ -57,6 +63,9 @@ local sword = {
 	y = leo.y,
 	olcolour = colour.olcolour,
 	info = "Changes Leo's Sword",
+	reset = function()
+		resetConfig("redearthsword")
+	end,
 	func = function()
 		changePageAndSelection("redearthsword", getConfigValue("redearthsword")+1)
 	end,
@@ -77,6 +86,9 @@ local shield = {
 	y = leo.y,
 	olcolour = colour.olcolour,
 	info = "Changes Leo's Shield",
+	reset = function()
+		resetConfig("redearthshield")
+	end,
 	func = function()
 		changePageAndSelection("redearthshield", getConfigValue("redearthshield")+1)
 	end,

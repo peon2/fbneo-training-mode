@@ -4,6 +4,11 @@
 -- Homepage: http://code.google.com/p/mame-rr/
 ----------------------------------------------------------------------------------------------------
 
+-- Edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
+
+local rb, rbs, rw, rws, rdw = memory.readbyte, memory.readbytesigned, memory.readword, memory.readwordsigned, memory.readdword
+local wb, ww, wd = memory.writebyte, memory.writeword, memory.writedword
+
 local boxes = {
 	      ["vulnerability"] = {color = 0x0000FF, fill = 0x00, outline = 0xFF},
 	             ["attack"] = {color = 0xFF0000, fill = 0x00, outline = 0xFF},
@@ -88,7 +93,7 @@ local function adjust_delay(address)
 	if not address or not mame then
 		return DRAW_DELAY
 	end
-	local stage = memory.readbyte(address)
+	local stage = rb(address)
 	for _, val in ipairs({
 		0xA, --Boxer
 		0xC, --Cammy
@@ -106,21 +111,21 @@ end
 
 local get_status = {
 	["normal"] = function()
-		if bit.band(memory.readword(0xFF8008), 0x08) > 0 then
+		if bit.band(rw(0xFF8008), 0x08) > 0 then
 			return true
 		end
 	end,
 
 	["hsf2"] = function()
-		if memory.readword(0xFF8004) == 0x08 then
+		if rw(0xFF8004) == 0x08 then
 			return true
 		end
 	end,
 }
 
 local function update_globals()
-	globals.left_screen_edge = memory.readword(game.address.left_screen_edge)
-	globals.top_screen_edge  = memory.readword(game.address.left_screen_edge + 0x4)
+	globals.left_screen_edge = rw(game.address.left_screen_edge)
+	globals.top_screen_edge  = rw(game.address.left_screen_edge + 0x4)
 	globals.game_playing     = get_status[game.status_type]()
 end
 
@@ -137,21 +142,21 @@ end
 
 local get_box_parameters = {
 	[1] = function(box)
-		box.hval   = memory.readbytesigned(box.address + 0)
-		box.hval2  = memory.readbyte(box.address + 5)
+		box.hval   = rbs(box.address + 0)
+		box.hval2  = rb(box.address + 5)
 		if box.hval2 >= 0x80 and box.type == "attack" then
 			box.hval = -box.hval2
 		end
-		box.vval   = memory.readbytesigned(box.address + 1)
-		box.hrad   = memory.readbyte(box.address + 2)
-		box.vrad   = memory.readbyte(box.address + 3)
+		box.vval   = rbs(box.address + 1)
+		box.hrad   = rb(box.address + 2)
+		box.vrad   = rb(box.address + 3)
 	end,
 
 	[2] = function(box)
-		box.hval   = memory.readwordsigned(box.address + 0)
-		box.vval   = memory.readwordsigned(box.address + 2)
-		box.hrad   = memory.readword(box.address + 4)
-		box.vrad   = memory.readword(box.address + 6)
+		box.hval   = rws(box.address + 0)
+		box.vval   = rws(box.address + 2)
+		box.hrad   = rw(box.address + 4)
+		box.vrad   = rw(box.address + 6)
 	end,
 }
 
@@ -163,7 +168,7 @@ local process_box_type = {
 	["attack"] = function(obj, box)
 		if obj.projectile then
 			box.type = "proj. attack"
-		elseif memory.readbyte(obj.base + 0x03) == 0 then
+		elseif rb(obj.base + 0x03) == 0 then
 			return false
 		end
 	end,
@@ -177,8 +182,8 @@ local process_box_type = {
 	end,
 
 	["weak"] = function(obj, box)
-		if (game.char_mode and memory.readbyte(obj.base + game.char_mode) ~= 0x4)
-			or memory.readbyte(obj.animation_ptr + 0x15) ~= 2 then
+		if (game.char_mode and rb(obj.base + game.char_mode) ~= 0x4)
+			or rb(obj.animation_ptr + 0x15) ~= 2 then
 			return false
 		end
 	end,
@@ -190,7 +195,7 @@ local process_box_type = {
 		end
 
 		for offset = 0,6,2 do
-			memory.writeword(box.address + offset, 0) --bad
+			ww(box.address + offset, 0) --bad
 		end
 
 		box.hval   = obj.pos_x + box.hval * (obj.facing_dir == 1 and -1 or 1)
@@ -203,21 +208,21 @@ local process_box_type = {
 
 	["throwable"] = function(obj, box)
 		if not DRAW_THROWABLE_BOXES or
-			(memory.readbyte(obj.animation_ptr + 0x8) == 0 and
-			memory.readbyte(obj.animation_ptr + 0x9) == 0 and
-			memory.readbyte(obj.animation_ptr + 0xA) == 0) or
-			memory.readbyte(obj.base + 0x3) == 0x0E or
-			memory.readbyte(obj.base + 0x3) == 0x14 or
-			memory.readbyte(obj.base + 0x143) > 0 or
-			memory.readbyte(obj.base + 0x1BF) > 0 or
-			memory.readbyte(obj.base + 0x1A1) > 0 then
+			(rb(obj.animation_ptr + 0x8) == 0 and
+			rb(obj.animation_ptr + 0x9) == 0 and
+			rb(obj.animation_ptr + 0xA) == 0) or
+			rb(obj.base + 0x3) == 0x0E or
+			rb(obj.base + 0x3) == 0x14 or
+			rb(obj.base + 0x143) > 0 or
+			rb(obj.base + 0x1BF) > 0 or
+			rb(obj.base + 0x1A1) > 0 then
 			return false
-		elseif memory.readbyte(obj.base + 0x181) > 0 then
+		elseif rb(obj.base + 0x181) > 0 then
 			box.type = "air throwable"
 		end
 
-		box.hrad = memory.readword(box.address + 0)
-		box.vrad = memory.readword(box.address + 2)
+		box.hrad = rw(box.address + 0)
+		box.vrad = rw(box.address + 2)
 		box.hval = obj.pos_x
 		box.vval = obj.pos_y - box.vrad/2
 		box.left   = box.hval - box.hrad
@@ -231,14 +236,14 @@ local process_box_type = {
 local function define_box(obj, entry)
 	local box = {
 		type = game.box_list[entry].type,
-		id = memory.readbyte(obj.animation_ptr + game.box_list[entry].id_ptr),
+		id = rb(obj.animation_ptr + game.box_list[entry].id_ptr),
 	}
 
 	if box.id == 0 or process_box_type[box.type](obj, box) == false then
 		return nil
 	end
 
-	local addr_table = obj.hitbox_ptr + memory.readwordsigned(obj.hitbox_ptr + game.box_list[entry].addr_table)
+	local addr_table = obj.hitbox_ptr + rws(obj.hitbox_ptr + game.box_list[entry].addr_table)
 	box.address = addr_table + box.id * game.box_list[entry].id_space
 	get_box_parameters[game.box_parameter_size](box)
 
@@ -255,7 +260,7 @@ end
 local function returnBoxType(obj, entry)
 	local box = {
 		type = game.box_list[entry].type,
-		id = memory.readbyte(obj.animation_ptr + game.box_list[entry].id_ptr),
+		id = rb(obj.animation_ptr + game.box_list[entry].id_ptr),
 	}
 
 	if box.id == 0 or process_box_type[box.type](obj, box) == false then
@@ -279,19 +284,19 @@ end
 
 
 local function update_game_object(obj)
-	obj.facing_dir    = memory.readbyte(obj.base + 0x12)
-	obj.pos_x         = get_x(memory.readwordsigned(obj.base + 0x06))
-	obj.pos_y         = get_y(memory.readwordsigned(obj.base + 0x0A))
-	obj.animation_ptr = memory.readdword(obj.base + 0x1A)
-	obj.hitbox_ptr    = memory.readdword(obj.base + 0x34)
+	obj.facing_dir    = rb(obj.base + 0x12)
+	obj.pos_x         = get_x(rws(obj.base + 0x06))
+	obj.pos_y         = get_y(rws(obj.base + 0x0A))
+	obj.animation_ptr = rdw(obj.base + 0x1A)
+	obj.hitbox_ptr    = rdw(obj.base + 0x34)
 
 	for entry in ipairs(game.box_list) do
 		table.insert(obj, define_box(obj, entry))
 	end
 end
 
-function updateGameObjectBoxes(_player_obj)
-	_player_obj.animation_ptr = memory.readdword(_player_obj.base + 0x1A)
+local function updateGameObjectBoxes(_player_obj)
+	_player_obj.animation_ptr = rdw(_player_obj.base + 0x1A)
 	_player_obj.boxes = {}
 	for i = 1, #_player_obj.boxes do
 		player_obj.boxes[i] = nil
@@ -306,7 +311,7 @@ local function read_projectiles()
 
 	for i = 1, MAX_GAME_PROJECTILES do
 		local obj = {base = game.address.projectile + (i-1) * 0xC0}
-		if memory.readword(obj.base) == 0x0101 then
+		if rw(obj.base) == 0x0101 then
 			obj.projectile = true
 			update_game_object(obj)
 			table.insert(current_projectiles, obj)
@@ -315,7 +320,7 @@ local function read_projectiles()
 
 	for i = 1, MAX_BONUS_OBJECTS do
 		local obj = {base = game.address.projectile + (MAX_GAME_PROJECTILES + i-1) * 0xC0}
-		if bit.band(0xff00, memory.readword(obj.base)) == 0x0100 then
+		if bit.band(0xff00, rw(obj.base)) == 0x0100 then
 			update_game_object(obj)
 			table.insert(current_projectiles, obj)
 		end
@@ -343,7 +348,7 @@ local function update_sf2_hitboxes()
 	frame_buffer[effective_delay+1].status = globals.game_playing
 	for p = 1, NUMBER_OF_PLAYERS do
 		player[p] = {base = game.address.player + (p-1) * game.player_space}
-		if memory.readword(player[p].base) > 0x0100 then
+		if rw(player[p].base) > 0x0100 then
 			update_game_object(player[p])
 		end
 		frame_buffer[effective_delay+1][player][p] = player[p]
@@ -474,12 +479,5 @@ end
 
 whatgame()
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		render_sf2_hitboxes()
-	end
-end
-
-function hitboxesRegAfter()
-	update_sf2_hitboxes()
-end
+drawHitboxes = render_sf2_hitboxes
+updateHitboxes = update_sf2_hitboxes

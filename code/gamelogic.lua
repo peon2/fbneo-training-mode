@@ -40,8 +40,13 @@ gamefunctions = {}
 function checkGameFunctions() -- set gamefunctions table
 	-- Training mode functions
 	if Run then gamefunctions.run = true end
+	if OnSaveStateLoad then gamefunctions.onsavestateload = true end
 	if playerOneInHitstun then gamefunctions.playeroneinhitstun = true end
 	if playerTwoInHitstun then gamefunctions.playertwoinhitstun = true end
+	if playerOneCanHitReversal then gamefunctions.playeronecanhitreversal = true end
+	if playerTwoCanHitReversal then gamefunctions.playertwocanhitreversal = true end
+	if playerOneCanBlockReversal then gamefunctions.playeronecanblockreversal = true end
+	if playerTwoCanBlockReversal then gamefunctions.playertwocanblockreversal = true end
 	if readPlayerOneHealth then gamefunctions.readplayeronehealth = true end
 	if writePlayerOneHealth and not REPLAY then gamefunctions.writeplayeronehealth = true end
 	if readPlayerTwoHealth then gamefunctions.readplayertwohealth = true end
@@ -52,10 +57,21 @@ function checkGameFunctions() -- set gamefunctions table
 	if writePlayerTwoMeter and not REPLAY then gamefunctions.writeplayertwometer = true end
 	if playerOneFacingLeft then gamefunctions.playeronefacingleft = true end
 	if playerTwoFacingLeft then gamefunctions.playertwofacingleft = true end
+	if readPlayerOneXPos then gamefunctions.readplayeronexpos = true end
+	if readPlayerTwoXPos then gamefunctions.readplayertwoxpos = true end
+	if readPlayerOneYPos then gamefunctions.readplayeroneypos = true end
+	if readPlayerTwoYPos then gamefunctions.readplayertwoypos = true end
+	if playerOneInAnimation then gamefunctions.playeroneinanimation = true end
+	if playerTwoInAnimation then gamefunctions.playertwoinanimation = true end
+	if playerOneLastStartupOffset then gamefunctions.playeronelaststartupoffset = true end
+	if playerTwoLastStartupOffset then gamefunctions.playertwolaststartupoffset = true end
+	if playerOneLastHitstopOffset then gamefunctions.playeronelasthitstopoffset = true end
+	if playerTwoLastHitstopOffset then gamefunctions.playertwolasthitstopoffset = true end
+	
 	--
 	-- Hitbox functions
-	if hitboxesReg then gamefunctions.hitboxesreg = true end
-	if hitboxesRegAfter then gamefunctions.hitboxesregafter = true end
+	if drawHitboxes then gamefunctions.drawhitboxes = true end
+	if updateHitboxes then gamefunctions.updatehitboxes = true end
 	--
 	-- Inputs functions try to get these to load a global input table to avoid multiple joypad.get()'s?
 	if inputDisplayReg then gamefunctions.inputdisplayreg = true end
@@ -72,12 +88,25 @@ function checkGameFunctions() -- set gamefunctions table
 end
 
 function updategamevars()
-	if gamefunctions.playertwoinhitstun then
-		gamevars.P2.inhitstun = playerTwoInHitstun()
-	end
 	if gamefunctions.playeroneinhitstun then
 		gamevars.P1.inhitstun = playerOneInHitstun()
 	end
+	if gamefunctions.playertwoinhitstun then
+		gamevars.P2.inhitstun = playerTwoInHitstun()
+	end
+	if gamefunctions.playeronecanhitreversal then
+		gamevars.P1.canhitreversal = playerOneCanHitReversal()
+	end
+	if gamefunctions.playertwocanhitreversal then
+		gamevars.P2.canhitreversal = playerTwoCanHitReversal()
+	end
+	if gamefunctions.playeronecanblockreversal then
+		gamevars.P1.canblockreversal = playerOneCanBlockReversal()
+	end
+	if gamefunctions.playertwocanblockreversal then
+		gamevars.P2.canblockreversal = playerTwoCanBlockReversal()
+	end
+	
 
 	if gamefunctions.readplayeronehealth then
 		gamevars.P1.previoushealth = gamevars.P1.health
@@ -107,6 +136,14 @@ end
 ----------------------------------------------
 -- FUNCTIONS RAN EVERY FRAME
 ----------------------------------------------
+
+function readPlayerHealth(player)
+	if (player == "P1" and gamefunctions.readplayeronehealth) then
+		return readPlayerOneHealth()
+	elseif(player == "P2" and gamefunctions.readplayertwohealth) then
+		return readPlayerTwoHealth()
+	end
+end
 
 function writePlayerHealth(player, health)
 	if (player == "P1" and gamefunctions.writeplayeronehealth) then
@@ -202,6 +239,8 @@ end
 function instantHealth(player)
 	if not combovars[player].refillhealthenabled then return end
 	if not combovars[player].instantrefillhealth then return end
+	gamevars[player].previoushealth = gamevars[player].health
+	gamevars[player].health = readPlayerHealth(player)
 	writePlayerHealth(player, gamevars[player].maxhealth)
 end
 
@@ -209,4 +248,81 @@ function instantMeter(player)
 	if not combovars[player].refillmeterenabled then return end
 	if not combovars[player].instantrefillmeter then return end
 	writePlayerMeter(player, gamevars[player].maxmeter)
+end
+
+frameadvantage = { P1 = {}, P2 = {} }
+
+for _, player in ipairs({frameadvantage.P1, frameadvantage.P2}) do
+	player.previousanimation = false
+	player.animationstart = emu.framecount()
+	player.animationend = emu.framecount()
+	player.attackstartup = nil
+	player.advantage = nil
+	player.animationtotal = 0
+end
+
+local frameadvantagecalc = false -- we only need to calculate once per animations playing
+
+function frameAdvantage()
+	local p1animation = playerOneInAnimation()
+	local p2animation = playerTwoInAnimation()
+
+	local P1 = frameadvantage.P1
+	local P2 = frameadvantage.P2
+
+	-- Animation started
+	if not P1.previousanimation and p1animation then
+		P1.animationstart = fc
+		P1.animationend = fc
+	end
+	if not P2.previousanimation and p2animation then
+		P2.animationstart = fc
+		P2.animationend = fc
+	end
+
+	-- Animation ended
+	if P1.previousanimation and not p1animation then
+		P1.animationend = fc
+		frameadvantagecalc = true
+	end
+	if P2.previousanimation and not p2animation then
+		P2.animationend = fc
+		frameadvantagecalc = true
+	end
+
+	-- Both Animations have ended, calculate the values
+	if frameadvantagecalc and (not p1animation and not p2animation) then
+		frameadvantagecalc = false
+		P1.attackstartup = nil
+		P2.attackstartup = nil
+		if P2.animationend < P1.animationstart then -- P1 whiffed attack
+			P1.animationtotal = P1.animationend - P1.animationstart
+			P1.advantage = nil
+		elseif P1.animationend < P2.animationstart then -- P2 whiffed attack
+			P2.animationtotal = P2.animationend - P2.animationstart
+			P2.advantage = nil
+		else
+			local animationstart = P1.animationstart - P2.animationstart
+			local startup
+			local hitstop
+			if animationstart<0 then -- P1 attacked
+				startup = playerOneLastStartupOffset()
+				P1.attackstartup = math.abs(animationstart) - startup
+				if P1.attackstartup < 0 then P1.attackstartup = 0 end
+				hitstop = playerOneLastHitstopOffset()
+			else -- P2 attacked
+				startup = playerTwoLastStartupOffset()
+				P2.attackstartup = animationstart - startup
+				if P2.attackstartup < 0 then P2.attackstartup = 0 end
+				hitstop = playerTwoLastHitstopOffset()
+			end
+			P1.advantage = P2.animationend - P1.animationend
+			P2.advantage = P1.animationend - P2.animationend
+			P1.animationtotal = P1.animationend - P1.animationstart - hitstop - startup
+			P2.animationtotal = P2.animationend - P2.animationstart - hitstop - startup
+		end
+	end
+
+	P1.previousanimation = p1animation
+	P2.previousanimation = p2animation
 end

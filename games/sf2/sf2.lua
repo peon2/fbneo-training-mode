@@ -14,6 +14,9 @@ local directionoffset = 0x12
 
 local stateoffset = 0x03
 local state = {
+	neutral = 0x00,
+	crouching = 0x02,
+	jumping = 0x04,
 	hitstun = 0x0E,
 	thrown = 0x14
 }
@@ -111,6 +114,17 @@ function playerTwoInHitstun()
 	local val = rb(p2uid + stateoffset)
 	return val == state.hitstun or val == state.thrown
 end
+
+function playerOneInAnimation()
+	return rb(p1uid + stateoffset)>state.jumping or
+	       rb(p1uid + stateoffset + 1)==6 -- jumping attack
+end
+
+function playerTwoInAnimation()
+	return rb(p2uid + stateoffset)>state.jumping or
+	       rb(p2uid + stateoffset + 1)==6 -- jumping attack
+end
+
 -- Health is 1f behind combos
 local p1previoushealth = p1maxhealth
 function readPlayerOneHealth()
@@ -220,8 +234,8 @@ createHUDElement(
 			sf2.stun.P1.y,
 			readPlayerOneStun(),
 			LETTER_WIDTH*2,
-			readPlayerOneStun(),
-			maxstun
+			readPlayerOneStun()*2,
+			maxstun*2
 		)
 		drawFillBar(
 			sf2.stun.P1.x,
@@ -265,8 +279,8 @@ createHUDElement(
 			sf2.stun.P2.y,
 			readPlayerTwoStun(),
 			LETTER_WIDTH*2,
-			readPlayerTwoStun(),
-			maxstun
+			readPlayerTwoStun()*2,
+			maxstun*2
 		)
 		drawFillBar(
 			sf2.stun.P2.x,

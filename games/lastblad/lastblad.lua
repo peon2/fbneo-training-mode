@@ -14,7 +14,7 @@ local p2meter
 local p1direction
 local p2direction
 
-local function setLastBladeConstants()
+local function newRound()
 	local p1uid = rdw(0x10AC98)
 	local p2uid = rdw(0x10AC9C)
 
@@ -28,7 +28,7 @@ local function setLastBladeConstants()
 	p2direction = p2uid+0xE3
 end
 
-setLastBladeConstants()
+newRound()
 
 local p1combocounter = 0x10E294 -- byte
 local p2combocounter = 0x10E295
@@ -69,24 +69,24 @@ gamedefaultconfig = {
 			P1 = {
 				x = 17,
 				y = 16,
-				enabled = true,
+				enabled = false,
 			},
 			P2 = {
 				x = 292,
 				y = 16,
-				enabled = true,
+				enabled = false,
 			}
 		},
 		meter = {
 			P1 = {
 				x = 105,
 				y = 209,
-				enabled = true,
+				enabled = false,
 			},
 			P2 = {
-				x = 210,
+				x = 207,
 				y = 209,
-				enabled = true,
+				enabled = false,
 			}
 		}
 	},
@@ -173,9 +173,11 @@ end
 
 function Run()
 	if rb(timer) == maxtime then
-		setLastBladeConstants()
-		setGameConstants()
-		reloadGUIPages()
+		newRound()
 	end
 	infiniteTime()
+end
+
+function OnSaveStateLoad()
+	newRound()
 end

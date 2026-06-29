@@ -1,4 +1,5 @@
--- based on the following trading mode by an unknown author that seems to be based off jed's training mode (https://github.com/jedpossum/EmuLuaScripts/blob/master/Rotd.lua)
+-- based on the following training mode by an unknown author that seems to be based off jed's training mode (https://github.com/jedpossum/EmuLuaScripts/blob/master/Rotd.lua)
+-- Created by dammit, edited by peon2 to work with https://github.com/peon2/fbneo-training-mode/
 --[[
 print("rotd script")
 print("Lua hotkey 1: toggle endless")
@@ -278,7 +279,7 @@ local get_player_state = function(player)
 	end
 end
 
-function colbox(addr, x, y, flip, color)
+local function colbox(addr, x, y, flip, color)
 	x1 = x  - read2s( addr + 0x00 ) * flip
 	x2 = x1 - read2s( addr + 0x04 ) * flip
 	y1 = y  + read2s( addr + 0x02 )
@@ -316,14 +317,9 @@ local disp_hitbox = function(player)
 	end
 end
 
-function hitboxesReg()
-	if hitboxes.enabled then
-		get_player_state(1)
-		get_player_state(2)
-		disp_hitbox(1)
-		disp_hitbox(2)
-	end
-end
-
-function hitboxesRegAfter()
+function drawHitboxes()
+	get_player_state(1)
+	get_player_state(2)
+	disp_hitbox(1)
+	disp_hitbox(2)
 end

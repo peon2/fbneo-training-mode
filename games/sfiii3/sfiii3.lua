@@ -30,7 +30,7 @@ local p1meterstocks = 0x20695BE
 local p2meterbar = 0x20695E1
 local p2meterstocks = 0x20695EB
 
-local p1direction = 0x2068C76 
+local p1direction = 0x2068C76
 local p2direction = 0x2068C77
 
 local p1hitstun = 0x20288A8
@@ -204,22 +204,32 @@ end
 local timer = 0x2011377
 local timemax = 0x63
 
-local function clockControl()
+local function clockControl() -- We should only ever need to write to the clock once a round like this rather than every frame
 	wb(timer, timemax-1)
 	wb(0x2028682, 0x0) -- stops timer flash
 	ww(0x2028688, 0xFFFF) -- how many frames must pass before decrementing the clock, it should take over a day for the timer to reduce from 99 seconds to 0
 end
 clockControl()
 
+local _reloadguipages = false
+
+local function newRound()
+	setSFIII3Constants() -- get new character data
+	setGameConstants() -- update the training mode with that data
+	clockControl() -- update timer
+	-- Make sure the stun values fit the character
+	if sfiii3.stun.P1.value > p1maxstun then
+		changeConfig("sfiii3stunp1", p1maxstun)
+	end
+	if sfiii3.stun.P2.value > p2maxstun then
+		changeConfig("sfiii3stunp2", p2maxstun)
+	end
+	_reloadguipages = true -- if reloading the gui is called here, the script crashes during savestate loading for some reason. Reload the gui during the next Run instance instead
+end
+
 function Run() -- runs every frame
 	if (rb(timer) == timemax) then
-		setSFIII3Constants()
-		setGameConstants()
-		reloadGUIPages()
-		clockControl()
-		-- Reset these changeable values
-		changeConfig("sfiii3stunp1", 0)
-		changeConfig("sfiii3stunp2", 0)
+		newRound()
 	end
 	if sfiii3.stun.P1.enabled then
 		if sfiii3.stun.P1.aftercombo then
@@ -240,6 +250,14 @@ function Run() -- runs every frame
 			writePlayerTwoStun(sfiii3.stun.P2.value)
 		end
 	end
+	if _reloadguipages then
+		_reloadguipages = false
+		reloadGUIPages() -- reset the GUI so it reflects the new values
+	end
+end
+
+function OnSaveStateLoad()
+	newRound()
 end
 
 initConfigTable("sfiii3", sfiii3, "config")
@@ -288,6 +306,9 @@ createHUDElement(
 	end,
 	function()
 		gui.text(sfiii3.stun.hud.P1.x, sfiii3.stun.hud.P1.y, readPlayerOneStun(), colours.stunp1)
+	end,
+	function()
+		gui.text(sfiii3.stun.hud.P1.x, sfiii3.stun.hud.P1.y, readPlayerOneStun(), hud.previewcolour)
 	end
 )
 createHUDElement(
@@ -317,5 +338,8 @@ createHUDElement(
 	end,
 	function()
 		gui.text(sfiii3.stun.hud.P2.x, sfiii3.stun.hud.P2.y, readPlayerTwoStun(), colours.stunp2)
+	end,
+	function()
+		gui.text(sfiii3.stun.hud.P2.x, sfiii3.stun.hud.P2.y, readPlayerTwoStun(), hud.previewcolour)
 	end
 )

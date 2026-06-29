@@ -1,0 +1,3 @@
+[submodule "addon/memory-watcher"]
+	path = addon/memory-watcher
+	url = https://github.com/peon2/memory-watcher.git

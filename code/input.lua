@@ -169,28 +169,36 @@ function setInputs()
 	inputs.properties.enableinputset = false
 end
 
-function setHoldDirection(direction) -- getting a player to hold down/up etc.
+function setHoldDirection(direction) -- set P2 to hold left/right/up/down etc.
 	if direction == {} then
 		inputs.properties.holddirection = nil
 	else
-		inputs.properties.holddirection = {}
-		for _,v in ipairs(direction) do
-			table.insert(inputs.properties.holddirection, gamevars.constants.inversetranslationtable[gamevars.constants.inversetranslationtable[v]])
-		end
+		inputs.properties.holddirection = direction
 	end
-	for _, v in pairs(inputs.properties.holddirection) do -- so it also happens same frame
-		inputs.setinputs["P2 " ..v] = true
-		inputs.P2[v] = true
-	end
-	inputs.properties.enableinputset = true
+	applyHoldDirection() -- so it also happens same frame
 end
 
-function applyHoldDirection() -- getting a player to hold down/up etc.
+function applyHoldDirection() -- set P1/P2 to hold left/right/up/down etc.
 	if not inputs.properties.holddirection then return end
-	for _, v in pairs(inputs.properties.holddirection) do
-		inputs.setinputs["P2 " ..v] = true
-		inputs.P2[v] = true
+	local directions = inputs.properties.holddirection
+	if inputs.properties.enableinputswap then
+		if gamevars.P1.facingleft and inputs.properties.holddirectionrelative then
+			directions = swapPlayerDirection(directions)
+		end
+		for direction, v in pairs(directions) do
+			inputs.P2[direction] = v
+			inputs.setinputs["P1 " ..direction] = v
+		end
+	else
+		if gamevars.P2.facingleft and inputs.properties.holddirectionrelative then
+			directions = swapPlayerDirection(directions)
+		end
+		for direction, v in pairs(directions) do
+			inputs.P2[direction] = v
+			inputs.setinputs["P2 " ..direction] = v
+		end
 	end
+	directions = nil
 	inputs.properties.enableinputset = true
 end
 
