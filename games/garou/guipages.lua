@@ -64,8 +64,8 @@ local p1guardbar = {
 }
 
 local p1jd = {
-	text = "Toggle Force Just Defend",
-	x = interactivegui.boxxhalflength-#"Toggle Force Just Defend"*LETTER_HALFWIDTH,
+	text = "Force Just Defend",
+	x = interactivegui.boxxhalflength-#"Force Just Defend"*LETTER_WIDTH - LETTER_WIDTH,
 	y = p1guard.y+15,
 	olcolour = "black",
 	info = "Toggle if P1 Just Defends every attack",
@@ -78,6 +78,28 @@ local p1jd = {
 	end,
 	autofunc = function(this)
 		if getConfigValue("garouforcejdp1") then
+			this.bgcolour = colour.booltrue
+		else
+			this.bgcolour = colour.boolfalse
+		end
+	end
+}
+
+local p1counterhit = {
+	text = "Force Counter-hit",
+	x = interactivegui.boxxhalflength + LETTER_WIDTH,
+	inline = true,
+	olcolour = "black",
+	info = "Toggle if P1 is counterhit",
+	canhotkey = true,
+	reset = function()
+		resetConfig("garouforcecounterp1")
+	end,
+	func = function()
+		changeConfig("garouforcecounterp1", not getConfigValue("garouforcecounterp1"))
+	end,
+	autofunc = function(this)
+		if getConfigValue("garouforcecounterp1") then
 			this.bgcolour = colour.booltrue
 		else
 			this.bgcolour = colour.boolfalse
@@ -134,8 +156,8 @@ local p2guardbar = {
 }
 
 local p2jd = {
-	text = "Toggle Force Just Defend",
-	x = interactivegui.boxxhalflength-#"Toggle Force Just Defend"*LETTER_HALFWIDTH,
+	text = "Force Just Defend",
+	x = interactivegui.boxxhalflength-#"Force Just Defend"*LETTER_WIDTH - LETTER_WIDTH,
 	y = p2guard.y+15,
 	olcolour = "black",
 	info = "Toggle if P2 Just Defends every attack",
@@ -148,6 +170,28 @@ local p2jd = {
 	end,
 	autofunc = function(this)
 		if getConfigValue("garouforcejdp2") then
+			this.bgcolour = colour.booltrue
+		else
+			this.bgcolour = colour.boolfalse
+		end
+	end
+}
+
+local p2counterhit = {
+	text = "Force Counter-hit",
+	x = interactivegui.boxxhalflength + LETTER_HALFWIDTH,
+	inline = true,
+	olcolour = "black",
+	info = "Toggle if P2 is counterhit",
+	canhotkey = true,
+	reset = function()
+		resetConfig("garouforcecounterp2")
+	end,
+	func = function()
+		changeConfig("garouforcecounterp2", not getConfigValue("garouforcecounterp2"))
+	end,
+	autofunc = function(this)
+		if getConfigValue("garouforcecounterp2") then
 			this.bgcolour = colour.booltrue
 		else
 			this.bgcolour = colour.boolfalse
@@ -254,9 +298,11 @@ guicustompage = {
 	p1guard,
 	p1guardbar,
 	p1jd,
+	p1counterhit,
 	p2guard,
 	p2guardbar,
 	p2jd,
+	p2counterhit,
 	guardcancelplayback,
 	jdbar,
 	reversalwindow,

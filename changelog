@@ -1,3 +1,8 @@
+v0.26.07
+
+garou:
+Added forcing counterhit
+
 v0.26.06
 
 Hold Direction now defaults to being relative to the character's direction.
