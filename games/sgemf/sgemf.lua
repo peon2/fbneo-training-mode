@@ -1,5 +1,5 @@
 assert(rb,"Run fbneo-training-mode.lua")
--- most of these values came from FlabCaptain's sgemf training mode script
+-- most of these values came from FlabCaptain's sgemf training mode script: https://github.com/FlabCaptain/Gemini
 
 function gamemsg()
 	print "Known issues with sgemf:"
@@ -18,6 +18,7 @@ p2maxmeter = meterbarmax*meterstockmax
 local P1, P2 = {uid = 0xFF8400}, {uid = 0xFF8800}
 
 local uidoffsets = {
+	state = 0x6, -- word
 	direction = 0x0B,
 	health = 0x40, -- word
 	combocounter = 0x144,

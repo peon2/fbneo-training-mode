@@ -384,13 +384,16 @@ end
 local function newRound()
 	p1character = rw(P1.characterid)
 	if p1character > characters.KAIN then p1character = characters.TERRY end
+	local prevp2character = p2character
 	p2character = rw(P2.characterid)
 	if p2character > characters.KAIN then p2character = characters.TERRY end
 
 	garou_p1maxguard = character_max_guard[p1character]
 	garou_p2maxguard = character_max_guard[p2character]
-	changeConfig("garouwakeupwindow", characterwakeups[p2character].window)
-	garou_setwakeupreversalwindow(characterwakeups[p2character].window)
+	if p2character ~= prevp2character then
+		garou_setwakeupreversalwindow(characterwakeups[p2character].window, p2character)
+		changeConfig("garouwakeupwindow", characterwakeups[p2character].window)
+	end
 end
 
 translationtable = {
